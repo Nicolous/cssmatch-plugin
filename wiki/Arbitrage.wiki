@@ -12,8 +12,8 @@
 === Vérifier que l'on est arbitre et utilisation du menu d'arbitrage : ===
   # Bindez la touche suivante dans votre config.cfg ou via votre console : `cssmatch`
   # Connectez-vous à votre serveur, puis appyez sur la touche que vous avez bindé
-  * Si vous voyez le menu, vous êtes bien arbitre
-  * Si un message apparaît comme quoi vous n'êtes pas arbitre, votre steamID n'est pas le bon, vous n'avez pas uploadé le fichier sur le serveur, ou vous n'avez ni changé de map ni rebootez votre serveur après édition de l'adminlist.txt
+    * Si vous voyez le menu, vous êtes bien arbitre
+    * Si un message apparaît comme quoi vous n'êtes pas arbitre, votre steamID n'est pas le bon, vous n'avez pas uploadé le fichier sur le serveur, ou vous n'avez ni changé de map ni rebootez votre serveur après édition de l'adminlist.txt
   # Si vous ne voyez aucun message, le plugin est mal installé
 
 _*Note :* si des steamID sont déjà présent dans votre adminlist.txt au moment de l'installation du plugin, supprimez les du fichier par prudence._
