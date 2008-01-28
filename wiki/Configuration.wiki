@@ -1,0 +1,48 @@
+#summary Configurer le plugin / Configurer un match
+
+= Configurer le plugin / Configurer un match =
+
+  .
+== Comment configurer le plugin ? ==
+
+Le plugin ne se configure que par l'intermédiaire de vos fichiers de configuration de match. 
+Pour celà, lisez la suite de ce tutoriel.
+
+  .
+== Comment configurer un match ? ==
+  # Allez dans le dossier _cfg/cssmatch/configurations_. Ce dossier contient toutes les configurations différentes de match que vous pouvez exécuter (au choix) lors du lancement d'un match. Les fichiers .cfg présents dans ce dossier sont automatiquement listé dans le menu du plugin.
+  # Ouvrez le fichier _default.cfg_. Ce fichier est un exemple de configuration de match. Vous y trouverez les "variables" spécifiques au plugin (pour structurer le match à votre guise) toutes préfixées par "cssmatch_" ainsi que des exemples de variables modifiant la configuration du serveur pendant le match.
+  * Modifiez les variables du plugin comme vous le souhaitez (elles sont toutes documentées dans le fichier)
+  * Ajoutez/Modifiez/Supprimez les variables du jeu comme vous le souhaitez
+
+
+  .
+=== Ajouter des fichiers de configuration : ===
+
+*Utilité :* Si vous jouez pour une ligue, celle-ci vous imposera probablement une configuration. Il est utile de pouvoir choisir entre cette configuration et votre configuration habituelle dans le menu.
+
+Comme dit plus haut, les fichiers .cfg présents dans le dossier _cfg/cssmatch/configurations_ sont automatiquement listés dans le menu du plugin lors du lancement d'un match.
+
+*Pour ajouter un fichier de configuration personnel :*
+
+  # Créer un nouveau fichier dans un éditeur de texte
+  # "Enregistrez-le sous" avec le nom que vous voulez, et ajoutez au bout ".cfg" 
+  # Les fichiers .cfg peuvent être ouvert avec n'importe quel éditeur de texte, ouvrez votre fichier .cfg ainsi créé
+  # Ouvrez également le fichier default.cfg
+  # Copiez/collez les variables spécifiques au match dans votre nouveau fichier de configuration (elles sont préfixées par "cssmatch_")
+  # Ajoutez la configuration du serveur à la suite du fichier
+  # Enregistrez puis envoyez le fichier sur le serveur dans le dossier _cfg/cssmatch/configurations_
+  # Changez de map ou rebootez votre serveur
+
+
+*Pour ajouter un fichier de configuration d'une ligue :*
+
+Dans le principe ce n'est pas différent, sauf que ce n'est pas à vous de créer ou modifier le contenu du fichier fournit par votre ligue.
+
+
+  .
+=== "Mon fichier n'apparaît pas dans la liste des fichiers au moment de lancer le match :" ===
+  * Vérifiez que le fichier est bien dans le dossier _cfg/cssmatch/configurations_ de votre serveur
+  * Vérifier que l'extension du fichier est bien ".cfg", s'il faut "enregistrez-le à nouveau sous" en ajoutant ".cfg" au bout du nom du fichier.
+  * Assurez-vous d'avoir bien changé de map ou rebooté le serveur depuis l'envoie du fichier (s'il faut refaite le)
+Si vous n'arrivez toujours pas à ajouter de fichier dans la liste des configurations, venez poster sur le forum en donnant l'emplacement du fichier sur le serveur, et en mettant en *pièce jointe* le fichier en question.
