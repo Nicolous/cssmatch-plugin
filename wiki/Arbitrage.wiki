@@ -1,0 +1,16 @@
+#summary Déclarer un arbitre via la console
+
+== Déclarer un arbitre via la console  ==
+
+_*Attention :* Si vous possédez la version 1.0.4 du plugin, cette commande fait planter votre serveur_ !
+
+Il est parfois pratique d'ajouter un arbitre au dernier moment sans avoir à retourner sur le FTP modifier un fichier puis changer de map.
+
+Pour celà il existe la commande "*cssmatch_grant*". Cette commande permet d'ajouter un arbitre via le RCON. 
+
+Exemple d'utilisation :
+{{{
+rcon cssmatch_grant "STEAM_0:1:6823445"
+}}}
+
+_*Note :* le droit d'arbitrage sera effectif jusqu'au prochain changement de map._
