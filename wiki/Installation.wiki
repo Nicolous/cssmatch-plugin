@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Comment installer le plugin ?
 
 == Comment installer le plugin ? ==
 
