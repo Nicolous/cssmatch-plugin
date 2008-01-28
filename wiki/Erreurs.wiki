@@ -1,0 +1,22 @@
+#summary Messages d'erreur colorés concernant SourceTV
+
+== Messages d'erreur colorés concernant SourceTV ==
+
+Voici les erreurs possibles et leur signification :
+
+  *  CSSMatch : Impossible de lancer l'enregistrement sourceTV car tv_enable est sur 0
+  "J'ai ce message d'erreur, pourtant sourceTV est bien sur le serveur."
+*Signification :* la variable "tv_enable" est à "0" au moment où le plugin tente de lancer sourceTV. 
+
+*Solution :* vérifiez que votre fichier de configuration ne met pas cette variable à 0. Le cas échéant si vous êtes pressés ajouter cette ligne dans votre fichier de configuration :
+{{{
+tv_enable 1
+}}}
+
+  
+  *  CSSMatch : Impossible de lancer l'enregistrement sourceTV car celle-ci n'est pas sur le serveur
+  "J'ai ce message d'erreur, pourtant tv_enable est bien à 1 dans ma configuration."
+
+*Signification :* Ce message n'est effectivement visible que si tv_enable est sur "1". SourceTV n'est pas sur le serveur au moment où le plugin tente de lancer l'enregistrement.
+
+*Solution :* Changez simplement de map pour que SourceTV soit connectée.
