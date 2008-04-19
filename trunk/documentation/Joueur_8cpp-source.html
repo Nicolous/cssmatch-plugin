@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de Joueur/Joueur.cpp</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>Joueur/Joueur.cpp</h1><a href="Joueur_8cpp.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include "<a class="code" href="Joueur_8h.html">Joueur.h</a>"</span>
+<a name="l00024"></a>00024 
+<a name="l00025"></a><a class="code" href="classJoueur.html#dd6c98be3020651d84f6d75ccc1d867e">00025</a> <a class="code" href="classJoueur.html#dd6c98be3020651d84f6d75ccc1d867e">Joueur::Joueur</a>()
+<a name="l00026"></a>00026 {
+<a name="l00027"></a>00027         <a class="code" href="classJoueur.html#b3d61eed414cfc7afe9be8249cfbdeab">index</a> = 0;
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029         <a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a> = 0;
+<a name="l00030"></a>00030         <a class="code" href="classJoueur.html#a49b0ee0c821df1e11509e16f881fdb3">killsDernierRound</a> = 0;
+<a name="l00031"></a>00031         <a class="code" href="classJoueur.html#d66fe9aceab22ff93f9c4e9462a87515">killsDerniereManche</a> = 0;
+<a name="l00032"></a>00032         <a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a> = 0;
+<a name="l00033"></a>00033         <a class="code" href="classJoueur.html#248e2f7a2708d76f427b2ff257b6fa2d">deathsDernierRound</a> = 0;
+<a name="l00034"></a>00034         <a class="code" href="classJoueur.html#7f22345da7990f4e08e079cd781f3b52">deathsDerniereManche</a> = 0;
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036         <span class="comment">// Initialisation avec un menu bidon</span>
+<a name="l00037"></a>00037         <a class="code" href="classJoueur.html#670ecec1ae4c83530584f8d1cc683519">menu</a> = <a class="code" href="classMenu.html">Menu</a>();
+<a name="l00038"></a>00038         <a class="code" href="classJoueur.html#f9d93b543c6535631782c8b40ce5a121">pageMenu</a> = 0;
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040         <a class="code" href="classJoueur.html#06d1846d3e78ac9c41214aea9d149e08">useridCible</a> = <a class="code" href="API_8h.html#d027c44555c18c51ee3934b4adcd9f6c">USERID_INVALIDE</a>;
+<a name="l00041"></a>00041 }
+<a name="l00042"></a>00042 
+<a name="l00043"></a><a class="code" href="classJoueur.html#ed2d5abfc4212aedbbb312754ffe6417">00043</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#ed2d5abfc4212aedbbb312754ffe6417">Joueur::setIndex</a>(<span class="keywordtype">int</span> <a class="code" href="classJoueur.html#b3d61eed414cfc7afe9be8249cfbdeab">index</a>)
+<a name="l00044"></a>00044 {
+<a name="l00045"></a>00045         this-&gt;index = index;
+<a name="l00046"></a>00046 }
+<a name="l00047"></a>00047 
+<a name="l00048"></a><a class="code" href="classJoueur.html#f4e52f49c67ca501ef5c2adabaf75d31">00048</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#f4e52f49c67ca501ef5c2adabaf75d31">Joueur::getIndex</a>()<span class="keyword"> const</span>
+<a name="l00049"></a>00049 <span class="keyword"></span>{
+<a name="l00050"></a>00050         <span class="keywordflow">return</span> <a class="code" href="classJoueur.html#b3d61eed414cfc7afe9be8249cfbdeab">index</a>;
+<a name="l00051"></a>00051 }
+<a name="l00052"></a>00052 
+<a name="l00053"></a><a class="code" href="classJoueur.html#e81c2a41c76127ad7ed267c65d6b28d3">00053</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#e81c2a41c76127ad7ed267c65d6b28d3">Joueur::getKills</a>()<span class="keyword"> const</span>
+<a name="l00054"></a>00054 <span class="keyword"></span>{
+<a name="l00055"></a>00055         <span class="keywordflow">return</span> <a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>;
+<a name="l00056"></a>00056 }
+<a name="l00057"></a>00057 
+<a name="l00058"></a><a class="code" href="classJoueur.html#504704043bc43828a3a54f0be7d12b18">00058</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#504704043bc43828a3a54f0be7d12b18">Joueur::incKills</a>()
+<a name="l00059"></a>00059 {
+<a name="l00060"></a>00060         <span class="keywordflow">return</span> ++<a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>;
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062 
+<a name="l00063"></a><a class="code" href="classJoueur.html#7c7cea28d42d275f2c8592f1043a78c5">00063</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#7c7cea28d42d275f2c8592f1043a78c5">Joueur::decKills</a>()
+<a name="l00064"></a>00064 {
+<a name="l00065"></a>00065         <span class="keywordflow">return</span> --<a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>;
+<a name="l00066"></a>00066 }
+<a name="l00067"></a>00067 
+<a name="l00068"></a><a class="code" href="classJoueur.html#5a67e005e23c58af58417e4156bac9c3">00068</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#5a67e005e23c58af58417e4156bac9c3">Joueur::setKills</a>(<span class="keywordtype">int</span> <a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>)
+<a name="l00069"></a>00069 {
+<a name="l00070"></a>00070         this-&gt;kills = kills;
+<a name="l00071"></a>00071 }
+<a name="l00072"></a>00072 
+<a name="l00073"></a><a class="code" href="classJoueur.html#54deae667c58f3c74133e371bd5329bf">00073</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#54deae667c58f3c74133e371bd5329bf">Joueur::getDeaths</a>()<span class="keyword"> const</span>
+<a name="l00074"></a>00074 <span class="keyword"></span>{
+<a name="l00075"></a>00075         <span class="keywordflow">return</span> <a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>;
+<a name="l00076"></a>00076 }
+<a name="l00077"></a>00077 
+<a name="l00078"></a><a class="code" href="classJoueur.html#f331164e3e0628f0ec5635f4ed37ec9f">00078</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#f331164e3e0628f0ec5635f4ed37ec9f">Joueur::incDeaths</a>()
+<a name="l00079"></a>00079 {
+<a name="l00080"></a>00080         <span class="keywordflow">return</span> ++<a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>;
+<a name="l00081"></a>00081 }
+<a name="l00082"></a>00082 
+<a name="l00083"></a><a class="code" href="classJoueur.html#21592e4647ad4de3f41adb6b40729bc1">00083</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#21592e4647ad4de3f41adb6b40729bc1">Joueur::decDeaths</a>()
+<a name="l00084"></a>00084 {
+<a name="l00085"></a>00085         <span class="keywordflow">return</span> --<a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>;
+<a name="l00086"></a>00086 }
+<a name="l00087"></a>00087 
+<a name="l00088"></a><a class="code" href="classJoueur.html#3987155564815dfbdff3a7dc938ec01f">00088</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#3987155564815dfbdff3a7dc938ec01f">Joueur::setDeaths</a>(<span class="keywordtype">int</span> <a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>)
+<a name="l00089"></a>00089 {
+<a name="l00090"></a>00090         this-&gt;deaths = deaths;
+<a name="l00091"></a>00091 }
+<a name="l00092"></a>00092 
+<a name="l00093"></a><a class="code" href="classJoueur.html#fefb6f8f2b0df9dd402cabd12d2f5a4f">00093</a> <span class="keywordtype">float</span> <a class="code" href="classJoueur.html#fefb6f8f2b0df9dd402cabd12d2f5a4f">Joueur::getRatio</a>()<span class="keyword"> const</span>
+<a name="l00094"></a>00094 <span class="keyword"></span>{
+<a name="l00095"></a>00095         <span class="keywordflow">if</span> (<a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>&gt;0)
+<a name="l00096"></a>00096                 <span class="keywordflow">return</span> (<span class="keywordtype">float</span>)<a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>/(float)<a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>;
+<a name="l00097"></a>00097         <span class="keywordflow">return</span> (<span class="keywordtype">float</span>)<a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>;
+<a name="l00098"></a>00098 }
+<a name="l00099"></a>00099 
+<a name="l00100"></a><a class="code" href="classJoueur.html#c4e25a8defc4b8c7b6079ee43528c84f">00100</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#c4e25a8defc4b8c7b6079ee43528c84f">Joueur::sauveStatsRound</a>()
+<a name="l00101"></a>00101 {
+<a name="l00102"></a>00102         <a class="code" href="classJoueur.html#a49b0ee0c821df1e11509e16f881fdb3">killsDernierRound</a> = <a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>;
+<a name="l00103"></a>00103         <a class="code" href="classJoueur.html#248e2f7a2708d76f427b2ff257b6fa2d">deathsDernierRound</a> = <a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>;
+<a name="l00104"></a>00104 }
+<a name="l00105"></a>00105 
+<a name="l00106"></a><a class="code" href="classJoueur.html#0ac11be99c8c13b351623fd102538ce8">00106</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#0ac11be99c8c13b351623fd102538ce8">Joueur::sauveStatsManche</a>()
+<a name="l00107"></a>00107 {
+<a name="l00108"></a>00108         <a class="code" href="classJoueur.html#d66fe9aceab22ff93f9c4e9462a87515">killsDerniereManche</a> = <a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a>;
+<a name="l00109"></a>00109         <a class="code" href="classJoueur.html#7f22345da7990f4e08e079cd781f3b52">deathsDerniereManche</a> = <a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a>;
+<a name="l00110"></a>00110 }
+<a name="l00111"></a>00111 
+<a name="l00112"></a><a class="code" href="classJoueur.html#b6c4b504b908fdcaf965470043a46b84">00112</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#b6c4b504b908fdcaf965470043a46b84">Joueur::restoreStatsRound</a>()
+<a name="l00113"></a>00113 {
+<a name="l00114"></a>00114         <a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a> = <a class="code" href="classJoueur.html#a49b0ee0c821df1e11509e16f881fdb3">killsDernierRound</a>;
+<a name="l00115"></a>00115         <a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a> = <a class="code" href="classJoueur.html#248e2f7a2708d76f427b2ff257b6fa2d">deathsDernierRound</a>;
+<a name="l00116"></a>00116 }
+<a name="l00117"></a>00117 
+<a name="l00118"></a><a class="code" href="classJoueur.html#fcd5bacb7a5a597e44d54195aaecbba7">00118</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#fcd5bacb7a5a597e44d54195aaecbba7">Joueur::restoreStatsManche</a>()
+<a name="l00119"></a>00119 {
+<a name="l00120"></a>00120         <a class="code" href="classJoueur.html#5efcf1fd0020ea039df345379310ea07">kills</a> = <a class="code" href="classJoueur.html#d66fe9aceab22ff93f9c4e9462a87515">killsDerniereManche</a>;
+<a name="l00121"></a>00121         <a class="code" href="classJoueur.html#6ae3276efd3978e2a01a17f116fd2936">deaths</a> = <a class="code" href="classJoueur.html#7f22345da7990f4e08e079cd781f3b52">deathsDerniereManche</a>;
+<a name="l00122"></a>00122 }
+<a name="l00123"></a>00123 
+<a name="l00124"></a><a class="code" href="classJoueur.html#e4ef18a1846734b12582167684f90533">00124</a> <a class="code" href="classMenu.html">Menu</a> * <a class="code" href="classJoueur.html#e4ef18a1846734b12582167684f90533">Joueur::getMenu</a>()
+<a name="l00125"></a>00125 {
+<a name="l00126"></a>00126         <span class="keywordflow">return</span> &amp;<a class="code" href="classJoueur.html#670ecec1ae4c83530584f8d1cc683519">menu</a>;
+<a name="l00127"></a>00127 }
+<a name="l00128"></a>00128 
+<a name="l00129"></a><a class="code" href="classJoueur.html#1117fae564a39888882e6154057be1e6">00129</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#1117fae564a39888882e6154057be1e6">Joueur::setMenu</a>(<a class="code" href="classMenu.html">Menu</a> <a class="code" href="classJoueur.html#670ecec1ae4c83530584f8d1cc683519">menu</a>)
+<a name="l00130"></a>00130 {
+<a name="l00131"></a>00131         <a class="code" href="classJoueur.html#f9d93b543c6535631782c8b40ce5a121">pageMenu</a> = 1;
+<a name="l00132"></a>00132         this-&gt;menu = menu;
+<a name="l00133"></a>00133 }
+<a name="l00134"></a>00134 
+<a name="l00135"></a><a class="code" href="classJoueur.html#e62785cfeccc280050d94c8b8324b687">00135</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#e62785cfeccc280050d94c8b8324b687">Joueur::getPageMenu</a>()<span class="keyword"> const</span>
+<a name="l00136"></a>00136 <span class="keyword"></span>{
+<a name="l00137"></a>00137         <span class="keywordflow">return</span> <a class="code" href="classJoueur.html#f9d93b543c6535631782c8b40ce5a121">pageMenu</a>;
+<a name="l00138"></a>00138 }
+<a name="l00139"></a>00139 
+<a name="l00140"></a><a class="code" href="classJoueur.html#eadde79864f6cdc710098088342031a8">00140</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#eadde79864f6cdc710098088342031a8">Joueur::setPageMenu</a>(<span class="keywordtype">int</span> p)
+<a name="l00141"></a>00141 {
+<a name="l00142"></a>00142         <a class="code" href="classJoueur.html#f9d93b543c6535631782c8b40ce5a121">pageMenu</a> = p;
+<a name="l00143"></a>00143 }
+<a name="l00144"></a>00144 
+<a name="l00145"></a><a class="code" href="classJoueur.html#63ff8ac96d1f6f91daa0ed38f02c896f">00145</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#63ff8ac96d1f6f91daa0ed38f02c896f">Joueur::incPageMenu</a>()
+<a name="l00146"></a>00146 {
+<a name="l00147"></a>00147         <span class="keywordflow">return</span> ++<a class="code" href="classJoueur.html#f9d93b543c6535631782c8b40ce5a121">pageMenu</a>;
+<a name="l00148"></a>00148 }
+<a name="l00149"></a>00149 
+<a name="l00150"></a><a class="code" href="classJoueur.html#d71a75ec3400061a21c8251133e9b5b1">00150</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#d71a75ec3400061a21c8251133e9b5b1">Joueur::decPageMenu</a>()
+<a name="l00151"></a>00151 {
+<a name="l00152"></a>00152         <span class="keywordflow">return</span> --<a class="code" href="classJoueur.html#f9d93b543c6535631782c8b40ce5a121">pageMenu</a>;
+<a name="l00153"></a>00153 }
+<a name="l00154"></a>00154 
+<a name="l00155"></a><a class="code" href="classJoueur.html#dc67ddd51bb5c141f33d9f79c827151b">00155</a> <span class="keywordtype">int</span> <a class="code" href="classJoueur.html#dc67ddd51bb5c141f33d9f79c827151b">Joueur::getUseridCible</a>()<span class="keyword"> const</span>
+<a name="l00156"></a>00156 <span class="keyword"></span>{
+<a name="l00157"></a>00157         <span class="keywordflow">return</span> <a class="code" href="classJoueur.html#06d1846d3e78ac9c41214aea9d149e08">useridCible</a>;
+<a name="l00158"></a>00158 }
+<a name="l00159"></a>00159 
+<a name="l00160"></a><a class="code" href="classJoueur.html#47819b959d85f302750e1ac3eac168ca">00160</a> <span class="keywordtype">void</span> <a class="code" href="classJoueur.html#47819b959d85f302750e1ac3eac168ca">Joueur::setUseridCible</a>(<span class="keywordtype">int</span> <a class="code" href="classJoueur.html#06d1846d3e78ac9c41214aea9d149e08">useridCible</a>)
+<a name="l00161"></a>00161 {
+<a name="l00162"></a>00162         this-&gt;useridCible = useridCible;
+<a name="l00163"></a>00163 }
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Sat Apr 19 11:58:03 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

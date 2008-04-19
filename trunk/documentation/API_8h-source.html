@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de API/API.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>API/API.h</h1><a href="API_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022  
+<a name="l00029"></a>00029 <span class="comment">// Visual C++ 2005/.NET FrameWork ne supporte pas la spécification des exceptions dans la déclaration des fonctions</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#pragma warning( disable : 4290 )</span>
+<a name="l00031"></a>00031 <span class="preprocessor"></span>
+<a name="l00032"></a>00032 <span class="comment">// Je suis au courant ! (variables locales non référencées, typiquement dans les catch(){})</span>
+<a name="l00033"></a>00033 <span class="preprocessor">#pragma warning( disable : 4101 )</span>
+<a name="l00034"></a>00034 <span class="preprocessor"></span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;vector&gt;</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;map&gt;</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<a name="l00038"></a>00038 <span class="preprocessor">#include &lt;ctime&gt;</span>
+<a name="l00039"></a>00039 <span class="preprocessor">#include &lt;string&gt;</span>
+<a name="l00040"></a>00040 <span class="preprocessor">#include &lt;sstream&gt;</span>
+<a name="l00041"></a>00041 <span class="preprocessor">#include &lt;stdexcept&gt;</span>
+<a name="l00042"></a>00042 <span class="preprocessor">#include &lt;time.h&gt;</span>
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044 <span class="preprocessor">#include "interface.h"</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include "filesystem.h"</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include "engine/iserverplugin.h"</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include "dlls/iplayerinfo.h"</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include "eiface.h"</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include "igameevents.h"</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include "convar.h"</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include "Color.h"</span>
+<a name="l00052"></a>00052 <span class="preprocessor">#include "vstdlib/random.h"</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include "engine/IEngineTrace.h"</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include "ICvar.h"</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include "bitbuf.h"</span>
+<a name="l00062"></a>00062 <span class="preprocessor">#include "../MRecipientFilter/MRecipientFilter.h"</span>
+<a name="l00063"></a>00063 
+<a name="l00065"></a><a class="code" href="API_8h.html#c0ad106314255a7c783450ad64a0fb59">00065</a> <span class="preprocessor">#define GAME_DLL 1</span>
+<a name="l00066"></a>00066 <span class="preprocessor"></span><span class="preprocessor">#include "cbase.h"</span>
+<a name="l00067"></a>00067 <span class="preprocessor">#include "engine/IStaticPropMgr.h"</span>
+<a name="l00068"></a>00068 <span class="preprocessor">#include "entityapi.h"</span>
+<a name="l00069"></a>00069 <span class="preprocessor">#include "entitylist.h"</span>
+<a name="l00070"></a>00070 <span class="preprocessor">#include "baseentity.h"</span>
+<a name="l00071"></a>00071 
+<a name="l00073"></a>00073 <span class="preprocessor">#include "tier0/memdbgon.h"</span>
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075 <span class="preprocessor">#ifndef __API_H__</span>
+<a name="l00076"></a>00076 <span class="preprocessor"></span><span class="preprocessor">#define __API_H__</span>
+<a name="l00077"></a>00077 <span class="preprocessor"></span>
+<a name="l00079"></a><a class="code" href="API_8h.html#243eed4eff8b086ca5fa88586b930d4f">00079</a> <span class="preprocessor">#define CSSMATCH_VERSION_LIGHT "1.1.0"</span>
+<a name="l00080"></a>00080 <span class="preprocessor"></span>
+<a name="l00082"></a><a class="code" href="API_8h.html#7ded10b34d7248869bed237056ef8697">00082</a> <span class="preprocessor">#define CSSMATCH_SITE "http://nicolasmaingot.leobaillard.org/forums/"</span>
+<a name="l00083"></a>00083 <span class="preprocessor"></span>
+<a name="l00085"></a><a class="code" href="API_8h.html#76dd962e9d09e920802f2ce6a34ae4b9">00085</a> <span class="preprocessor">#define CSSMATCH_VERSION "CSSMatch v" CSSMATCH_VERSION_LIGHT ", by Nicolous " CSSMATCH_SITE</span>
+<a name="l00086"></a>00086 <span class="preprocessor"></span>
+<a name="l00088"></a><a class="code" href="API_8h.html#d027c44555c18c51ee3934b4adcd9f6c">00088</a> <span class="preprocessor">#define USERID_INVALIDE -1</span>
+<a name="l00089"></a>00089 <span class="preprocessor"></span>
+<a name="l00091"></a><a class="code" href="API_8h.html#d4bc4690f126fc9469035852fa498e01">00091</a> <span class="preprocessor">#define INDEX_INVALIDE 0</span>
+<a name="l00092"></a>00092 <span class="preprocessor"></span>
+<a name="l00094"></a><a class="code" href="API_8h.html#75e239a52e10e41d047fdd12fff2af6f">00094</a> <span class="preprocessor">#define DEFAUT_MAXPLAYERS 64</span>
+<a name="l00095"></a>00095 <span class="preprocessor"></span>
+<a name="l00101"></a><a class="code" href="API_8h.html#02a4cc445536ada2787190bba9d6a9e3">00101</a> <span class="preprocessor">#define GETINTERFACE(factory, retvar, interfacename, rettype, required) retvar = (rettype *)factory(interfacename, NULL); if (retvar == NULL) { Msg("Unable to get " interfacename " interface\n"); if (required) { return false; } } </span>
+<a name="l00102"></a>00102 <span class="preprocessor"></span>
+<a name="l00104"></a><a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">00104</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a>
+<a name="l00105"></a>00105 {
+<a name="l00107"></a><a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a9f5ac8be569c25ef23290ce3b4894a3a">00107</a>         <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a9f5ac8be569c25ef23290ce3b4894a3a">TEAM_INVALIDE</a> = -1,
+<a name="l00109"></a><a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72af4b6a712d03e1760203e08000cb2d762">00109</a>         <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72af4b6a712d03e1760203e08000cb2d762">TEAM_UN</a> = 0,
+<a name="l00111"></a><a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a80125a395498264fc233f38e8a943f3b">00111</a>         <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a80125a395498264fc233f38e8a943f3b">TEAM_SPEC</a>,
+<a name="l00113"></a><a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a0a2527307e6dd07cdbebe40f256786d8">00113</a>         <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a0a2527307e6dd07cdbebe40f256786d8">TEAM_T</a>,
+<a name="l00115"></a><a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72af37e026d79f2eaa1621382336125a8e7">00115</a>         <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72af37e026d79f2eaa1621382336125a8e7">TEAM_CT</a>,
+<a name="l00117"></a><a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a13c8ffd921954e71a549ccab70afec8f">00117</a>         <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a13c8ffd921954e71a549ccab70afec8f">TEAM_ALL</a>
+<a name="l00118"></a>00118 };
+<a name="l00119"></a>00119 
+<a name="l00121"></a><a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e">00121</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e">CodeWeaponSlot</a>
+<a name="l00122"></a>00122 {
+<a name="l00123"></a><a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e34fde8c6ed2b64d3849eac7eeb65eb63">00123</a>         <a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e34fde8c6ed2b64d3849eac7eeb65eb63">WEAPON_SLOT1</a> = 0,
+<a name="l00124"></a><a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e289832eb55ca9a313dd9d72aa71cd8bc">00124</a>         <a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e289832eb55ca9a313dd9d72aa71cd8bc">WEAPON_SLOT2</a>,
+<a name="l00125"></a><a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e46a06ae5c9075ca6dd2991205663b1bf">00125</a>         <a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e46a06ae5c9075ca6dd2991205663b1bf">WEAPON_SLOT3</a>, 
+<a name="l00126"></a><a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72ed13c6a73b187b325b59cdb1d9e48d274">00126</a>         <a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72ed13c6a73b187b325b59cdb1d9e48d274">WEAPON_SLOT4</a>,
+<a name="l00127"></a><a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e75efe6a5f94039e844753133c4b31f31">00127</a>         <a class="code" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e75efe6a5f94039e844753133c4b31f31">WEAPON_SLOT5</a>
+<a name="l00128"></a>00128 };
+<a name="l00129"></a>00129 
+<a name="l00131"></a><a class="code" href="classAPI.html">00131</a> <span class="keyword">class </span><a class="code" href="classAPI.html">API</a>
+<a name="l00132"></a>00132 {
+<a name="l00133"></a>00133 <span class="keyword">public</span>:
+<a name="l00135"></a><a class="code" href="classAPI.html#f3627d55b24b71360ffdc5116711f28d">00135</a>         <span class="keyword">static</span> IVEngineServer * <a class="code" href="classAPI.html#f3627d55b24b71360ffdc5116711f28d">engine</a>;
+<a name="l00137"></a><a class="code" href="classAPI.html#c5cdc1a816de93620e92b055b3c91899">00137</a>         <span class="keyword">static</span> IFileSystem * <a class="code" href="classAPI.html#c5cdc1a816de93620e92b055b3c91899">filesystem</a>;
+<a name="l00139"></a><a class="code" href="classAPI.html#f9f5bd07071fa8c13cb36581ac245446">00139</a>         <span class="keyword">static</span> IGameEventManager2 * <a class="code" href="classAPI.html#f9f5bd07071fa8c13cb36581ac245446">gameeventmanager</a>;
+<a name="l00141"></a><a class="code" href="classAPI.html#592c0e736125afc069492fbe1f0d6587">00141</a>         <span class="keyword">static</span> IPlayerInfoManager * <a class="code" href="classAPI.html#592c0e736125afc069492fbe1f0d6587">playerinfomanager</a>;
+<a name="l00143"></a><a class="code" href="classAPI.html#fb5022d02c64915d4581bf36689b072d">00143</a>         <span class="keyword">static</span> IBotManager * <a class="code" href="classAPI.html#fb5022d02c64915d4581bf36689b072d">botmanager</a>;
+<a name="l00145"></a><a class="code" href="classAPI.html#9073ab9ec89b8f4fe570701bf65633ab">00145</a>         <span class="keyword">static</span> IServerPluginHelpers * <a class="code" href="classAPI.html#9073ab9ec89b8f4fe570701bf65633ab">helpers</a>;
+<a name="l00147"></a><a class="code" href="classAPI.html#38ff040c8f819c687d3be98ab164b5b8">00147</a>         <span class="keyword">static</span> IUniformRandomStream * <a class="code" href="classAPI.html#38ff040c8f819c687d3be98ab164b5b8">randomStr</a>;
+<a name="l00149"></a><a class="code" href="classAPI.html#3443326df0fc032993fe24baa93ddcb5">00149</a>         <span class="keyword">static</span> IEngineTrace * <a class="code" href="classAPI.html#3443326df0fc032993fe24baa93ddcb5">enginetrace</a>;
+<a name="l00151"></a><a class="code" href="classAPI.html#3901a7ed492127b1c60b7d166557b612">00151</a>         <span class="keyword">static</span> CGlobalVars * <a class="code" href="classAPI.html#3901a7ed492127b1c60b7d166557b612">gpGlobals</a>;
+<a name="l00153"></a><a class="code" href="classAPI.html#0fcf7af7c6ca8a062cf415703dc3d58e">00153</a>         <span class="keyword">static</span> ICvar * <a class="code" href="classAPI.html#0fcf7af7c6ca8a062cf415703dc3d58e">cvars</a>;
+<a name="l00154"></a>00154 
+<a name="l00156"></a><a class="code" href="classAPI.html#bd894fdeb0f5e6727438e1ad2a913157">00156</a>         <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classAPI.html#bd894fdeb0f5e6727438e1ad2a913157">maxplayers</a>;
+<a name="l00157"></a>00157 
+<a name="l00161"></a>00161         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classAPI.html#58b740637f533ef974275f00a01b0549">initialisation</a>(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
+<a name="l00163"></a>00163         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#825359778fdb2b09ffec8005dfcf5b52">serveurExecute</a>(<span class="keyword">const</span> std::string &amp; cmd);
+<a name="l00167"></a>00167         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#ffa8d0901ce8f9110f4cdf958f115259">configExecute</a>(<span class="keyword">const</span> std::string &amp; config);
+<a name="l00169"></a>00169         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classAPI.html#39121f3f09efc9dd7d1815025b4608fa">hltvPresente</a>();
+<a name="l00173"></a>00173         <span class="keyword">static</span> IPlayerInfo * <a class="code" href="classAPI.html#954c6f34e5282bf847230ba24cd7fbc1">getIPlayerInfoFromEntity</a>(edict_t * pEntity) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00177"></a>00177         <span class="keyword">static</span> edict_t * <a class="code" href="classAPI.html#17b70d68997329bfcb80f5dae2a49717">getEntityFromID</a>(<span class="keywordtype">int</span> userid) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00179"></a>00179         <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classAPI.html#d9990d8c1373d8455963b1d9d03aefc7">getIndexFromUserId</a>(<span class="keywordtype">int</span> userid);
+<a name="l00181"></a>00181         <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classAPI.html#82ed72260cdb2948c3bde1d317b6a30e">getUseridFromUsername</a>(<span class="keyword">const</span> std::string &amp; pseudo);
+<a name="l00183"></a>00183         <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classAPI.html#3666e0f4a53f4236e9428bc2f15057c1">getUseridFromPEntity</a>(edict_t * pEntity);
+<a name="l00185"></a>00185         <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classAPI.html#6bafd14445d81bcfb04c91f4ac5e8cd9">getIndexFromUsername</a>(<span class="keyword">const</span> std::string &amp; pseudo);
+<a name="l00189"></a>00189         <span class="keyword">static</span> IServerEntity * <a class="code" href="classAPI.html#3fa56ada0489957efdc3e4db5b89df27">getIServerEntityFromEdict</a>(edict_t * pEntity) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00193"></a>00193         <span class="keyword">static</span> CBaseEntity * <a class="code" href="classAPI.html#dd887c1bddc050d21495b4eeeb91b209">getCBaseEntityFromEntity</a>(edict_t * pEntity) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00195"></a>00195         <span class="keyword">static</span> <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> <a class="code" href="classAPI.html#7baf47f4ad234ead31025e1fff639121">getPEntityTeam</a>(edict_t * pEntity);
+<a name="l00199"></a>00199         <span class="keyword">static</span> CBaseCombatCharacter * <a class="code" href="classAPI.html#3549404d757e5a9668a27ad4c8f64a1d">getCBaseCombatCharacterFromEntity</a>(edict_t * pEntity) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00203"></a>00203         <span class="keyword">static</span> CBaseCombatWeapon * <a class="code" href="classAPI.html#b06283f5beae1defe48856d0f43ad202">getCBaseCombatWeaponFromSlot</a>(edict_t * pEntity, <span class="keywordtype">int</span> slot) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00207"></a>00207         <span class="keyword">static</span> CBasePlayer * <a class="code" href="classAPI.html#17b8335f97642f50ea5a29e40f95c7a3">getCBasePlayerFromEntity</a>(edict_t * pEntity) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00209"></a>00209         <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classAPI.html#c7a438a4e2503e9db3ccd808a8f91f24">getPlayerCount</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam);
+<a name="l00213"></a>00213         <span class="keyword">static</span> std::string <a class="code" href="classAPI.html#6186ba3fd603482fa7e1b8ffdd0d007d">getPlayerName</a>(edict_t * pEntity) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00217"></a>00217         <span class="keyword">static</span> std::string <a class="code" href="classAPI.html#efc7f927af0bd1fb5a28bb275167ccd3">getPlayerSteamID</a>(edict_t * pEntity) <span class="keywordflow">throw</span> (std::out_of_range);
+<a name="l00218"></a>00218 
+<a name="l00220"></a>00220         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#6c3b37781967668ac6532a1ab0cfbe7e">kickid</a>(<span class="keywordtype">int</span> useridCible, <span class="keyword">const</span> std::string &amp; motif);
+<a name="l00222"></a>00222         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#df81c6f82e2619d570b7c669000c67e8">banid</a>(<span class="keywordtype">int</span> temps, <span class="keywordtype">int</span> useridCible, <span class="keyword">const</span> std::string &amp; motif);
+<a name="l00224"></a>00224         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#340601583ebf572162f2d747021da704">cexec</a>(edict_t * pEntity, <span class="keyword">const</span> std::string &amp; cmd);
+<a name="l00226"></a>00226         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#61d2484932c290e3c7d8354e763c5410">cexecGroupe</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam, <span class="keyword">const</span> std::string &amp; cmd);
+<a name="l00228"></a>00228         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#da1aa9907b83edd590be3a8ac3b2fc82">sexec</a>(edict_t * pEntity, <span class="keyword">const</span> std::string &amp; cmd);
+<a name="l00230"></a>00230         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#074e04c1dda22203f10e6543b55c3ef7">sexecGroupe</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam, <span class="keyword">const</span> std::string &amp; cmd);
+<a name="l00232"></a>00232         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#71688e5d3b2fc28f7b994bf9a7ec43c6">swap</a>(IPlayerInfo * player);
+<a name="l00234"></a>00234         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#3fca3189f02a86799046ede62d09413e">swapGroupe</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam);
+<a name="l00236"></a>00236         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#8618de677f48de706c9fc8f57e8f6c10">spec</a>(IPlayerInfo * player);
+<a name="l00238"></a>00238         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#daefbee82abf2dd57649ec4c766eb79b">specGroupe</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam);
+<a name="l00240"></a>00240         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#e2f01376b2d9785c76dc8f495cff7bc9">setHealth</a>(edict_t * pEntity, <span class="keywordtype">int</span> nombreHP);
+<a name="l00242"></a>00242         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#061ae0162a6d9e58a9b82452676f9d5b">detruitArme</a>(edict_t * pEntity, <span class="keywordtype">int</span> slot);
+<a name="l00243"></a>00243 
+<a name="l00247"></a>00247         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classAPI.html#5d188cc82310b50d06848d192892a2db">estNulleOuCommentee</a>(<span class="keyword">const</span> std::string &amp; chaine);
+<a name="l00249"></a>00249         <span class="keyword">static</span> std::string <a class="code" href="classAPI.html#6bbc202a4d460ed38e1104e25102c88b">extraitChaineFormelle</a>(<span class="keyword">const</span> std::string &amp; chaine);
+<a name="l00254"></a>00254         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#97c91437b40cc62cd3de6d95675dc2d6">valideNomDeFichier</a>(std::string &amp; nom);
+<a name="l00255"></a>00255 
+<a name="l00257"></a>00257         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classAPI.html#01b2394a47a2f1fa86086c82b338eae8">isValidePEntity</a>(edict_t * pEntity);
+<a name="l00259"></a>00259         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classAPI.html#18079b39ffd67cced3f808e1ed60a57c">isValidePlayer</a>(IPlayerInfo * player);
+<a name="l00261"></a>00261         <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classAPI.html#a4ade2445852402e3be183f57835ab05">isValideIndex</a>(<span class="keywordtype">int</span> index);
+<a name="l00262"></a>00262 
+<a name="l00264"></a>00264         <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classAPI.html#21ca2cbf406cdb3d89aef37853d421b4">debug</a>(<span class="keyword">const</span> std::string &amp; message);
+<a name="l00265"></a>00265 };
+<a name="l00266"></a>00266 
+<a name="l00272"></a>00272 <span class="keywordtype">void</span> <a class="code" href="API_8h.html#ee7275733e5a6821929c75608a1db0d8">InitCVars</a>( CreateInterfaceFn cvarFactory );
+<a name="l00273"></a>00273 
+<a name="l00279"></a>00279 <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="API_8h.html#050b0291e18f66f47e32d73ca3dee3cd">FStrEq</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *sz1, <span class="keyword">const</span> <span class="keywordtype">char</span> *sz2);
+<a name="l00280"></a>00280 
+<a name="l00282"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b">00282</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b">CodeMenu</a>
+<a name="l00283"></a>00283 {
+<a name="l00285"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b479470703fdbf3c63d0283d3fb798010">00285</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b479470703fdbf3c63d0283d3fb798010">CODE_MENU_INVALIDE</a> = 0,
+<a name="l00287"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b6438aef2d962f2be493059360bc5586d">00287</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b6438aef2d962f2be493059360bc5586d">CODE_MENU_DEV</a>,
+<a name="l00289"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b1a2da5a0f9307de7907b3353a5dbe771">00289</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b1a2da5a0f9307de7907b3353a5dbe771">CODE_MENU_CONFIG</a>,
+<a name="l00291"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b56365ea0a9b8e1455c12188e72f29a77">00291</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b56365ea0a9b8e1455c12188e72f29a77">CODE_MENU_CUTROUND_QUESTION</a>,
+<a name="l00293"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bac994ed0e190f8f791aa0b56b26bc82c">00293</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bac994ed0e190f8f791aa0b56b26bc82c">CODE_MENU_OFF</a>,
+<a name="l00295"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bb96d668ba435c2625a2e3425de947263">00295</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bb96d668ba435c2625a2e3425de947263">CODE_MENU_CUTROUND</a>,
+<a name="l00297"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b34d7f84c35d214c6a505565ab0ac581d">00297</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b34d7f84c35d214c6a505565ab0ac581d">CODE_MENU_STRATS</a>,
+<a name="l00299"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b7c0b8861f34fac138a36c937061ede7c">00299</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b7c0b8861f34fac138a36c937061ede7c">CODE_MENU_MATCH</a>,
+<a name="l00301"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13ba5c7530b1e0ee979941b98ed7e5c4a62">00301</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13ba5c7530b1e0ee979941b98ed7e5c4a62">CODE_MENU_ADMIN</a>,
+<a name="l00303"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b9e264fabcd7980489384b25a15d4539f">00303</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b9e264fabcd7980489384b25a15d4539f">CODE_MENU_CHANGELEVEL</a>,
+<a name="l00305"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13be9ac7f9055fd76f5dc0a80dc7f501aba">00305</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13be9ac7f9055fd76f5dc0a80dc7f501aba">CODE_MENU_KICK</a>,
+<a name="l00307"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bb61f6b70a5c22e8eb920537a6b6ebb37">00307</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bb61f6b70a5c22e8eb920537a6b6ebb37">CODE_MENU_BAN</a>,
+<a name="l00309"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bc4164afb862d1f4b1ff945c338c39ab5">00309</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13bc4164afb862d1f4b1ff945c338c39ab5">CODE_MENU_BAN_TIME</a>,
+<a name="l00311"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b4cd675c4a63d4bc6afaecd971bde4602">00311</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b4cd675c4a63d4bc6afaecd971bde4602">CODE_MENU_SWAP</a>,
+<a name="l00313"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b8284582606cab91b3bcab7bafbeb0865">00313</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b8284582606cab91b3bcab7bafbeb0865">CODE_MENU_SPEC</a>,
+<a name="l00315"></a><a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b33b6cc00c4598e01632e6c754f581c16">00315</a>         <a class="code" href="API_8h.html#74ffed93cb77f93a075ff877d00ea13b33b6cc00c4598e01632e6c754f581c16">CODE_MENU_FINMATCH</a>
+<a name="l00316"></a>00316 };
+<a name="l00317"></a>00317 
+<a name="l00319"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847">00319</a> <span class="keyword">enum</span> <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847">CodeMessages</a>
+<a name="l00320"></a>00320 {
+<a name="l00321"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847d9189ab3e523f629acec5ed264299e75">00321</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847d9189ab3e523f629acec5ed264299e75">MESSAGE_GEIGER</a> = 0,
+<a name="l00322"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84762f56bf30d23bd0571119a1ddd1dbaac">00322</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84762f56bf30d23bd0571119a1ddd1dbaac">MESSAGE_TRAIN</a>,
+<a name="l00323"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847fc0b5d6c80950acfbfdc0d04db442add">00323</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847fc0b5d6c80950acfbfdc0d04db442add">MESSAGE_HUDTEXT</a>,
+<a name="l00325"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84736465ad8fe72e23f0a1cb75d98191dfa">00325</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84736465ad8fe72e23f0a1cb75d98191dfa">MESSAGE_SAYTEXT</a>,
+<a name="l00327"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847ebb09ac889479d3e9b4bcfc20540dda6">00327</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847ebb09ac889479d3e9b4bcfc20540dda6">MESSAGE_SAYTEXT2</a>,
+<a name="l00329"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8479544af4efccf5412b0c8aa0ae82c95a5">00329</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8479544af4efccf5412b0c8aa0ae82c95a5">MESSAGE_TEXTMSG</a>,
+<a name="l00330"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847222083b7a8fae46a24fd9c6c31e7980e">00330</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847222083b7a8fae46a24fd9c6c31e7980e">MESSAGE_HUDMSG</a>,
+<a name="l00331"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847596afcd19704460ebdfa2bf3710817e1">00331</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847596afcd19704460ebdfa2bf3710817e1">MESSAGE_RESETHUD</a>,
+<a name="l00332"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84774e1f24addaa8a90b20af19daf882cb4">00332</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84774e1f24addaa8a90b20af19daf882cb4">MESSAGE_GAMETITLE</a>,
+<a name="l00333"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8477f603cbf95a585389a52d0aaa5d98043">00333</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8477f603cbf95a585389a52d0aaa5d98043">MESSAGE_ITEMPICKUP</a>,
+<a name="l00335"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847bde227ab9f7430e7a65b0c8215ef9b03">00335</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847bde227ab9f7430e7a65b0c8215ef9b03">MESSAGE_SHOWMENU</a>,
+<a name="l00337"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847368c7ca473c50278a203e86b098312e5">00337</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847368c7ca473c50278a203e86b098312e5">MESSAGE_SHAKE</a>,
+<a name="l00339"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8476fb367648b63bf2b06f7dd0d0ec0c263">00339</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8476fb367648b63bf2b06f7dd0d0ec0c263">MESSAGE_FADE</a>,
+<a name="l00340"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847383c6bddd82c73dd356f554b77ed34ac">00340</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847383c6bddd82c73dd356f554b77ed34ac">MESSAGE_VGUIMENU</a>,
+<a name="l00341"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847e09e4135a55fe55faafc2799dbcc1585">00341</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847e09e4135a55fe55faafc2799dbcc1585">MESSAGE_CLOSECAPTION</a>,
+<a name="l00342"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847273ef28b35ed7e0af9f41f0520ece943">00342</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847273ef28b35ed7e0af9f41f0520ece943">MESSAGE_SENDAUDIO</a>,
+<a name="l00343"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847a6d310020d7a2d09f9e9e32889f16988">00343</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847a6d310020d7a2d09f9e9e32889f16988">MESSAGE_RAWAUDIO</a>,
+<a name="l00344"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8473036989fdd82a73abc72ca0b341777a3">00344</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8473036989fdd82a73abc72ca0b341777a3">MESSAGE_VOICEMASK</a>,
+<a name="l00345"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847dcc8ea4ba15c142f245025c943de65be">00345</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847dcc8ea4ba15c142f245025c943de65be">MESSAGE_REQUESTSTATE</a>,
+<a name="l00346"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847364b2269062a1e326a02dfcc1d8994d5">00346</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847364b2269062a1e326a02dfcc1d8994d5">MESSAGE_BARTIME</a>,
+<a name="l00347"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84771bfec2b9ab1307eac719a6e6d473417">00347</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84771bfec2b9ab1307eac719a6e6d473417">MESSAGE_DAMAGE</a>,
+<a name="l00348"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84767ad6a0bfabf64b4bc6671089036b5ff">00348</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84767ad6a0bfabf64b4bc6671089036b5ff">MESSAGE_RADIOTEXT</a>,
+<a name="l00350"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84727ee178774eeb63fdef680590b69105b">00350</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a84727ee178774eeb63fdef680590b69105b">MESSAGE_HINTTEXT</a>,
+<a name="l00351"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847c0a65f9dd7a149c9177903970a49c2b4">00351</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847c0a65f9dd7a149c9177903970a49c2b4">MESSAGE_RELOADEFFECT</a>,
+<a name="l00352"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8470e1b1163f6fcaa6e7a5040d56a442617">00352</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8470e1b1163f6fcaa6e7a5040d56a442617">MESSAGE_PLAYERANIMEVENT</a>,
+<a name="l00353"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8477fd7b2a5fa059400b87f037b6f8293e4">00353</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8477fd7b2a5fa059400b87f037b6f8293e4">MESSAGE_AMMODENIED</a>,
+<a name="l00354"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8471bf4edea1658e40798739e7459d70468">00354</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a8471bf4edea1658e40798739e7459d70468">MESSAGE_UPDATERADAR</a>,
+<a name="l00355"></a><a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847f211d92aa28c51a59ce23f268edf49d3">00355</a>         <a class="code" href="API_8h.html#770a07d2881c211487ad5a29b125a847f211d92aa28c51a59ce23f268edf49d3">MESSAGE_KILLCAM</a>
+<a name="l00356"></a>00356 };
+<a name="l00357"></a>00357 
+<a name="l00359"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4">00359</a> <span class="keyword">enum</span> <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4">OptionsSensibles</a>
+<a name="l00360"></a>00360 {
+<a name="l00361"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc48b5967605569bcf2c33419fdc1363460">00361</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc48b5967605569bcf2c33419fdc1363460">OPTION_1</a> = 1&lt;&lt;0,
+<a name="l00362"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc48010d79005918e315e0fb33367309ac9">00362</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc48010d79005918e315e0fb33367309ac9">OPTION_2</a> = 1&lt;&lt;1,
+<a name="l00363"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc41b796fd54b8bb0e6d2aa5c1787bdc3f5">00363</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc41b796fd54b8bb0e6d2aa5c1787bdc3f5">OPTION_3</a> = 1&lt;&lt;2,
+<a name="l00364"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4177527ab5985808f227d2da8463ab5d3">00364</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4177527ab5985808f227d2da8463ab5d3">OPTION_4</a> = 1&lt;&lt;3,
+<a name="l00365"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4a7231115b1ad8ca7ac3830f6f0f7bfe4">00365</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4a7231115b1ad8ca7ac3830f6f0f7bfe4">OPTION_5</a> = 1&lt;&lt;4,
+<a name="l00366"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4fe38c0be36cb2ded3feba0630dcfe593">00366</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4fe38c0be36cb2ded3feba0630dcfe593">OPTION_6</a> = 1&lt;&lt;5,
+<a name="l00367"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc465e4fb99f5de5a60f2be65a7508c6bee">00367</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc465e4fb99f5de5a60f2be65a7508c6bee">OPTION_7</a> = 1&lt;&lt;6,
+<a name="l00368"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc41d878a60def1fa990f26760ef887d48e">00368</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc41d878a60def1fa990f26760ef887d48e">OPTION_8</a> = 1&lt;&lt;7,
+<a name="l00369"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4728d953ec2b9bcf67942ee7b81dce50a">00369</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4728d953ec2b9bcf67942ee7b81dce50a">OPTION_9</a> = 1&lt;&lt;8,
+<a name="l00371"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4af843df3eb0b607e0f770d88a0d8fe75">00371</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4af843df3eb0b607e0f770d88a0d8fe75">OPTION_ANNULER</a> = 1&lt;&lt;9,
+<a name="l00373"></a><a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc46e419b2380b816105cd93ebadc050655">00373</a>         <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc46e419b2380b816105cd93ebadc050655">OPTION_ALL</a> = <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4af843df3eb0b607e0f770d88a0d8fe75">OPTION_ANNULER</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc48b5967605569bcf2c33419fdc1363460">OPTION_1</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc48010d79005918e315e0fb33367309ac9">OPTION_2</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc41b796fd54b8bb0e6d2aa5c1787bdc3f5">OPTION_3</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4177527ab5985808f227d2da8463ab5d3">OPTION_4</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4a7231115b1ad8ca7ac3830f6f0f7bfe4">OPTION_5</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4fe38c0be36cb2ded3feba0630dcfe593">OPTION_6</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc465e4fb99f5de5a60f2be65a7508c6bee">OPTION_7</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc41d878a60def1fa990f26760ef887d48e">OPTION_8</a> | <a class="code" href="API_8h.html#824f028f325d6b8e1fffc1e3d7705cc4728d953ec2b9bcf67942ee7b81dce50a">OPTION_9</a>
+<a name="l00374"></a>00374 
+<a name="l00375"></a>00375 };
+<a name="l00376"></a>00376 
+<a name="l00378"></a><a class="code" href="API_8h.html#f89d58b3bfe8aa0f96f22b15962ae791">00378</a> <span class="preprocessor">#define MENU_RETOUR "Retour"</span>
+<a name="l00379"></a>00379 <span class="preprocessor"></span>
+<a name="l00380"></a><a class="code" href="API_8h.html#ef57826e738dce56ea2d68e7cb76768f">00380</a> <span class="preprocessor">#define MENU_SUIVANT "Suivant"</span>
+<a name="l00381"></a>00381 <span class="preprocessor"></span>
+<a name="l00383"></a><a class="code" href="API_8h.html#eb5b31d13dd53157fbb8461f8423fbc8">00383</a> <span class="preprocessor">#define MENU_CODE_RETOUR -2</span>
+<a name="l00384"></a>00384 <span class="preprocessor"></span>
+<a name="l00386"></a><a class="code" href="API_8h.html#537334a179a8e01c1cb1233b449461d3">00386</a> <span class="preprocessor">#define MENU_CODE_SUIVANT -1</span>
+<a name="l00387"></a>00387 <span class="preprocessor"></span>
+<a name="l00389"></a><a class="code" href="API_8h.html#113f891bff19b4f03182cab286b0f2a1">00389</a> <span class="preprocessor">#define MENU_TAILLE_LIMITE 255</span>
+<a name="l00390"></a>00390 <span class="preprocessor"></span>
+<a name="l00392"></a><a class="code" href="API_8h.html#b07b401c30dceb09fa6fba6497ee2574">00392</a> <span class="preprocessor">#define FICHIER_MAPLIST "cfg/cssmatch/maplist.txt"</span>
+<a name="l00393"></a>00393 <span class="preprocessor"></span>
+<a name="l00395"></a><a class="code" href="API_8h.html#fa1d1f5ba8a4b2a558b6377f5b42fa9b">00395</a> <span class="preprocessor">#define DOSSIER_CONFIGURATIONS_MATCH "cfg/cssmatch/configurations"</span>
+<a name="l00396"></a>00396 <span class="preprocessor"></span>
+<a name="l00397"></a>00397 <span class="preprocessor">#endif // __API_H__</span>
+<a name="l00398"></a>00398 <span class="preprocessor"></span>
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Sat Apr 19 11:58:03 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

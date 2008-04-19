@@ -1,0 +1,358 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch: Référence de la classe Rapport</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li><a href="hierarchy.html"><span>Hiérarchie&nbsp;des&nbsp;classes</span></a></li>
+      <li><a href="functions.html"><span>Champs&nbsp;de&nbsp;donnée</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Référence de la classe Rapport</h1><!-- doxytag: class="Rapport" --><code>#include &lt;<a class="el" href="Rapport_8h-source.html">Rapport.h</a>&gt;</code>
+<p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Fonctions membres publiques statiques</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#d6e06a73bc2faab8c0583a885c65a3de">genereRapport</a> (<a class="el" href="classMatch.html">Match</a> &amp;match)</td></tr>
+
+<tr><td colspan="2"><br><h2>Fonctions membres privées statiques</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#e1b19b05174ba466560fd96514d3ac2b">ecritEntete</a> (FileHandle_t &amp;fh)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#53ee9f8ea5b7e1246aef07dfa3a4af77">ecritSituationMatch</a> (FileHandle_t &amp;fh, <a class="el" href="classMatch.html">Match</a> &amp;match)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#5885557ce37fd4b6cfb262e2e3be7162">ecritScores</a> (FileHandle_t &amp;fh, <a class="el" href="classMatch.html">Match</a> &amp;match)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#18b40edf4ba9a32f0c74797ba8c49a85">ecritLignupT</a> (FileHandle_t &amp;fh, <a class="el" href="classMatch.html">Match</a> &amp;match, const std::vector&lt; int &gt; &amp;lignupT, const std::string *tagT)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#b75fd7daa771c23b943807331517831a">ecritLignupCT</a> (FileHandle_t &amp;fh, <a class="el" href="classMatch.html">Match</a> &amp;match, const std::vector&lt; int &gt; &amp;lignupCT, const std::string *tagCT)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#96ec836108e94cec11f718ce671e196b">ecritLignupSpec</a> (FileHandle_t &amp;fh, <a class="el" href="classMatch.html">Match</a> &amp;match, const std::vector&lt; int &gt; &amp;lignupSpec)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#09a740029c7121afdf15bfb52f8e1c5a">ecritLignups</a> (FileHandle_t &amp;fh, <a class="el" href="classMatch.html">Match</a> &amp;match)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRapport.html#c4bd530ca53ef98d3e481b75ad058802">ecritEnregistrements</a> (FileHandle_t &amp;fh, <a class="el" href="classMatch.html">Match</a> &amp;match)</td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Description détaillée</h2>
+Classe statique représentant un rapport de match sauvegardé dans le dossier cssmatch/rapports/ au format .txt 
+<p>Définition à la ligne <a class="el" href="Rapport_8h-source.html#l00035">35</a> du fichier <a class="el" href="Rapport_8h-source.html">Rapport.h</a>.</p>
+<hr><h2>Documentation des fonctions membres</h2>
+<a class="anchor" name="e1b19b05174ba466560fd96514d3ac2b"></a><!-- doxytag: member="Rapport::ecritEntete" ref="e1b19b05174ba466560fd96514d3ac2b" args="(FileHandle_t &amp;fh)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Rapport::ecritEntete           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit l'entête dans le fichier 
+<p>Définition à la ligne <a class="el" href="Rapport_8cpp-source.html#l00029">29</a> du fichier <a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="53ee9f8ea5b7e1246aef07dfa3a4af77"></a><!-- doxytag: member="Rapport::ecritSituationMatch" ref="53ee9f8ea5b7e1246aef07dfa3a4af77" args="(FileHandle_t &amp;fh, Match &amp;match)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Rapport::ecritSituationMatch           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit la situation du match 
+<p>Définition à la ligne <a class="el" href="Rapport_8cpp-source.html#l00035">35</a> du fichier <a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="5885557ce37fd4b6cfb262e2e3be7162"></a><!-- doxytag: member="Rapport::ecritScores" ref="5885557ce37fd4b6cfb262e2e3be7162" args="(FileHandle_t &amp;fh, Match &amp;match)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Rapport::ecritScores           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit les scores des teams et par teams 
+<p>Définition à la ligne <a class="el" href="Rapport_8cpp-source.html#l00053">53</a> du fichier <a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="18b40edf4ba9a32f0c74797ba8c49a85"></a><!-- doxytag: member="Rapport::ecritLignupT" ref="18b40edf4ba9a32f0c74797ba8c49a85" args="(FileHandle_t &amp;fh, Match &amp;match, const std::vector&lt; int &gt; &amp;lignupT, const std::string *tagT)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void Rapport::ecritLignupT           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>lignupT</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string *&nbsp;</td>
+          <td class="paramname"> <em>tagT</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit la lignup de la team 1 
+</div>
+</div><p>
+<a class="anchor" name="b75fd7daa771c23b943807331517831a"></a><!-- doxytag: member="Rapport::ecritLignupCT" ref="b75fd7daa771c23b943807331517831a" args="(FileHandle_t &amp;fh, Match &amp;match, const std::vector&lt; int &gt; &amp;lignupCT, const std::string *tagCT)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void Rapport::ecritLignupCT           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>lignupCT</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string *&nbsp;</td>
+          <td class="paramname"> <em>tagCT</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit la lignup de la team 2 
+</div>
+</div><p>
+<a class="anchor" name="96ec836108e94cec11f718ce671e196b"></a><!-- doxytag: member="Rapport::ecritLignupSpec" ref="96ec836108e94cec11f718ce671e196b" args="(FileHandle_t &amp;fh, Match &amp;match, const std::vector&lt; int &gt; &amp;lignupSpec)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Rapport::ecritLignupSpec           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>lignupSpec</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit la lignup des spectateurs 
+<p>Définition à la ligne <a class="el" href="Rapport_8cpp-source.html#l00132">132</a> du fichier <a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="09a740029c7121afdf15bfb52f8e1c5a"></a><!-- doxytag: member="Rapport::ecritLignups" ref="09a740029c7121afdf15bfb52f8e1c5a" args="(FileHandle_t &amp;fh, Match &amp;match)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Rapport::ecritLignups           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit la liste des joueurs et leur score par team 
+<p>Définition à la ligne <a class="el" href="Rapport_8cpp-source.html#l00161">161</a> du fichier <a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="c4bd530ca53ef98d3e481b75ad058802"></a><!-- doxytag: member="Rapport::ecritEnregistrements" ref="c4bd530ca53ef98d3e481b75ad058802" args="(FileHandle_t &amp;fh, Match &amp;match)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Rapport::ecritEnregistrements           </td>
+          <td>(</td>
+          <td class="paramtype">FileHandle_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>fh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static, private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ecrit le nom des enregistrements sourceTV 
+<p>Définition à la ligne <a class="el" href="Rapport_8cpp-source.html#l00209">209</a> du fichier <a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="d6e06a73bc2faab8c0583a885c65a3de"></a><!-- doxytag: member="Rapport::genereRapport" ref="d6e06a73bc2faab8c0583a885c65a3de" args="(Match &amp;match)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Rapport::genereRapport           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classMatch.html">Match</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>match</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Génère un rapport basé sur un match 
+<p>Définition à la ligne <a class="el" href="Rapport_8cpp-source.html#l00228">228</a> du fichier <a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a>.</p>
+
+</div>
+</div><p>
+<hr>La documentation de cette classe a été générée à partir des fichiers suivants :<ul>
+<li>Rapport/<a class="el" href="Rapport_8h-source.html">Rapport.h</a><li>Rapport/<a class="el" href="Rapport_8cpp-source.html">Rapport.cpp</a></ul>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Sat Apr 19 11:58:03 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

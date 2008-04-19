@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de Team/Team.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>Team/Team.h</h1><a href="Team_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#ifndef __TEAM_H__</span>
+<a name="l00024"></a>00024 <span class="preprocessor"></span><span class="preprocessor">#define __TEAM_H__</span>
+<a name="l00025"></a>00025 <span class="preprocessor"></span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "../API/API.h"</span>
+<a name="l00027"></a>00027 
+<a name="l00029"></a><a class="code" href="classTeam.html">00029</a> <span class="keyword">class </span><a class="code" href="classTeam.html">Team</a>
+<a name="l00030"></a>00030 {
+<a name="l00031"></a>00031 <span class="keyword">private</span>:
+<a name="l00033"></a><a class="code" href="classTeam.html#da76a4e89c6e20db9fd4ccbf11bce18d">00033</a>         std::string <a class="code" href="classTeam.html#da76a4e89c6e20db9fd4ccbf11bce18d">tag</a>;
+<a name="l00035"></a><a class="code" href="classTeam.html#1a96dc6a767b218426d933c128458b72">00035</a>         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#1a96dc6a767b218426d933c128458b72">score</a>;
+<a name="l00037"></a><a class="code" href="classTeam.html#95b68514b773dcfef1fc2ec92080bdcc">00037</a>         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#95b68514b773dcfef1fc2ec92080bdcc">scoreT</a>;
+<a name="l00039"></a><a class="code" href="classTeam.html#0ee5edcee971043e669019920fcc1895">00039</a>         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#0ee5edcee971043e669019920fcc1895">scoreCT</a>;
+<a name="l00040"></a>00040 
+<a name="l00042"></a><a class="code" href="classTeam.html#e15f854e066e495542bfc9310d6c3866">00042</a>         <span class="keywordtype">bool</span> <a class="code" href="classTeam.html#e15f854e066e495542bfc9310d6c3866">goStrats</a>;
+<a name="l00043"></a>00043 
+<a name="l00045"></a>00045         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#78e10a939b15ac3cb268687099d1dcfb">aucunTag</a>();
+<a name="l00046"></a>00046 
+<a name="l00048"></a>00048         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#f9b2fd3a60c76907aa73053e26567043">aucuneTeam</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam);
+<a name="l00049"></a>00049 
+<a name="l00051"></a>00051         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#8a588e2429051e5649e581f525c9a540">determineTag</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam);
+<a name="l00052"></a>00052 
+<a name="l00062"></a>00062         <span class="keywordtype">bool</span> <a class="code" href="classTeam.html#7db448e2bb3592c8bb7f7eeacdde11de">confirmeTag</a>(<span class="keyword">const</span> std::string &amp; pseudoJ1, <span class="keywordtype">int</span> i, <span class="keyword">const</span> std::string &amp; pseudoJ2, <span class="keywordtype">int</span> j);
+<a name="l00063"></a>00063         <span class="comment">// Nom alternatif : confirmePointCommun...</span>
+<a name="l00064"></a>00064 
+<a name="l00065"></a>00065 <span class="keyword">public</span>:
+<a name="l00066"></a>00066         <a class="code" href="classTeam.html#ada295895b747960576b69d8c87a54ba">Team</a>();
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068         <span class="comment">// Gestion du score</span>
+<a name="l00069"></a>00069         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#bdad4c96dbd535ef5a7e7359b8c54f6a">getScore</a>();
+<a name="l00070"></a>00070         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#fdfb30c79532a17b9182e205426f7fd5">incScore</a>();
+<a name="l00071"></a>00071         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#0c71870aa0a6dd2121fbfb2e97d82897">setScore</a>(<span class="keywordtype">int</span> <a class="code" href="classTeam.html#1a96dc6a767b218426d933c128458b72">score</a>);
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073         <span class="comment">// Gestion du score en terro</span>
+<a name="l00074"></a>00074         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#96abf18098bea1b9ba2f53672604ad56">getScoreT</a>();
+<a name="l00075"></a>00075         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#c33c32b2b1a7694346706eb9c6b51d31">incScoreT</a>();
+<a name="l00076"></a>00076         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#21c756097f7c10470b278455cdf9c44a">setScoreT</a>(<span class="keywordtype">int</span> <a class="code" href="classTeam.html#95b68514b773dcfef1fc2ec92080bdcc">scoreT</a>);
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078         <span class="comment">// Gestion du score en CT</span>
+<a name="l00079"></a>00079         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#c2831dae884100a0c000d16bbb44a1a2">getScoreCT</a>();
+<a name="l00080"></a>00080         <span class="keywordtype">int</span> <a class="code" href="classTeam.html#eac9b684d5ee5ee12942361d0b476aa9">incScoreCT</a>();
+<a name="l00081"></a>00081         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#9f398965dcc973e976997a530379547b">setScoreCT</a>(<span class="keywordtype">int</span> <a class="code" href="classTeam.html#0ee5edcee971043e669019920fcc1895">scoreCT</a>);
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083         <span class="comment">// Gestion du tag</span>
+<a name="l00084"></a>00084         <span class="keyword">const</span> std::string &amp; <a class="code" href="classTeam.html#1bf5db590b5db5a7aafec42c71e0dc33">getTag</a>() <span class="keyword">const</span>;
+<a name="l00085"></a>00085         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#a40cc5330a867b5b5128e2ebd695afc4">setTag</a>(<span class="keyword">const</span> std::string &amp; <a class="code" href="classTeam.html#da76a4e89c6e20db9fd4ccbf11bce18d">tag</a>);
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087         <span class="comment">// Gestion du !go en StratsTime</span>
+<a name="l00088"></a>00088         <span class="keywordtype">void</span> <a class="code" href="classTeam.html#46400f0f26a02321aab465adc0d7ab06">setGoStrats</a>(<span class="keywordtype">bool</span> go);
+<a name="l00089"></a>00089         <span class="keywordtype">bool</span> <a class="code" href="classTeam.html#9d8bd4e769a0d6b2e8e1911606d09516">getGoStrats</a>() <span class="keyword">const</span>;
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091         <span class="comment">// Recherche le tag de la team à partir d'un codeTeam de joueurs à rechercher</span>
+<a name="l00092"></a>00092         <span class="comment">// Ici codeTeam désigne les camps du jeu : un, spec, t et ct...</span>
+<a name="l00093"></a>00093         <span class="comment">// Retourne le tag trouvé</span>
+<a name="l00094"></a>00094         <span class="keyword">const</span> std::string &amp; <a class="code" href="classTeam.html#754a0eee8812a012258330aa04bf8fdc">chercheTag</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam);
+<a name="l00095"></a>00095 };
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097 <span class="preprocessor">#endif // __TEAM_H__</span>
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Sat Apr 19 11:58:03 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>
