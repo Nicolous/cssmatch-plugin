@@ -1,0 +1,138 @@
+#summary Arbitrage d'un match par RCON
+
+=Introduction=
+
+Il se peut que vous soyez amené à administrer le match par RCON. Même si ça semble peut probable, certaines des commandes que je vais présenter dans cet article peuvent être utiles dans plusieurs cas (exemple : une page du menu est buguée :-P).
+
+
+=Présentation des commandes=
+
+----
+==cssm_help==
+
+====Description====
+
+Cette commande liste toutes les commandes du plugin avec une brève description de chacune d'elles.
+
+====Exemple====
+
+`cssm_help`
+
+----
+==cssm_start [fichier de config [-cutround]]==
+
+====Description====
+
+Cette commande permet de lancer un match. Ce qui est entre crochet ci-dessus sont des paramètres optionnels. 
+  * Si aucun fichier fichier de configuration n'est spécifié, le fichier *default.cfg* est recherché. Le match ne sera pas lancé si ce fichier n'existe pas.
+  * Si un fichier de configuration est spécifié, le match sera lancé avec la configuration définie par ce fichier
+  * Si vous ne voulez pas faire de round au couteau, vous devez spécifier un fichier de configuration et ajouter _-cutround_ à la fin de la commande.
+
+====Exemple===
+
+`cssm_start default.cfg -cutround`
+
+----
+==cssm_stop==
+
+====Description====
+
+Cette commande stoppe le match en cours.
+
+====Exemple====
+
+`cssm_stop`
+
+----
+==cssm_retag==
+
+====Description====
+
+Déclenche la redétection des tags des teams. Particulièrement utile si CSSMatch n'a pas su détecter les tags au bon moment.
+
+====Exemple====
+
+`cssm_retag`
+
+----
+==cssm_go==
+
+====Description====
+
+Force la fin du Strats Time.
+
+====Exemple====
+
+`cssm_go`
+
+----
+==cssm_restartmanche==
+
+====Description====
+
+Permet de relancer la manche en cours. Les scores des équipes et des joueurs sont rétablis comme lors du début de la manche.
+
+====Exemple====
+
+`cssm_restartmanche` 
+
+----
+==cssm_restartround==
+
+====Description====
+
+Permet de relancer le round en cours. Les scores des joueurs sont rétablis comme lors du début du round.
+
+==cssm_grant "steamID"==
+
+====Description====
+
+Donner temporairement les droits d'arbitrage à un joueur. Ces droits sont perdus à la fin de la map.
+
+====Exemple====
+
+`cssm_grant "SteamID"`
+
+----
+==cssm_revoke "steamID"==
+
+====Description====
+
+Suspend temporairement les droits d'un arbitre. Ses droits sont rétablis dès la fin de la map.
+
+====Exemple====
+
+`cssm_revoke "STEAM_0:1:454545"`
+
+----
+==cssm_teamt tag de la team terroriste==
+
+====Description====
+
+Permet d'éditer le tag de la team qui est actuellement en terroriste.
+
+====Exemple====
+
+`cssm_teamct *Fragueurs*`
+
+----
+==cssm_swap UserID==
+
+====Description====
+
+Envoi un joueur dans le camp opposé. L'UserID du joueur peut être trouvé en tapant `status` dans votre console.
+
+====Exemple====
+
+`cssm_swap 15`
+
+----
+==cssm_spec UserID==
+
+====Description====
+
+Permet d'envoyer un joueur en spectateur. L'UserID du joueur peut être trouvé en tapant `status` dans votre console.
+
+====Exemple====
+
+`cssm_spec 15`
