@@ -19,11 +19,11 @@ Cette commande liste toutes les commandes du plugin avec une brève description 
 `cssm_help`
 
 ----
-==cssm_start [fichier de config [-cutround]]==
+==cssm_start <fichier de config <-cutround>>==
 
 ====Description====
 
-Cette commande permet de lancer un match. Ce qui est entre crochet ci-dessus sont des paramètres optionnels. 
+Cette commande permet de lancer un match. Ce qui est entre chevrons ci-dessus sont des paramètres optionnels. 
   * Si aucun fichier fichier de configuration n'est spécifié, le fichier *default.cfg* est recherché. Le match ne sera pas lancé si ce fichier n'existe pas.
   * Si un fichier de configuration est spécifié, le match sera lancé avec la configuration définie par ce fichier
   * Si vous ne voulez pas faire de round au couteau, vous devez spécifier un fichier de configuration et ajouter _-cutround_ à la fin de la commande.
