@@ -1,0 +1,102 @@
+#summary server.cfg
+
+Souvent, lorsque vous rencontrez des problèmes de configuration de serveur après un match, c'est que votre fichier "server.cfg" est incomplet.
+
+Voici un fichier "server.cfg" complet. En adaptant ce fichier à votre serveur, vous augmentez vos chances de correctement rétablir la configuration par défaut de votre serveur.
+
+{{{
+// -------------------------------------------------------------------------------------
+// Identification du Serveur
+// -------------------------------------------------------------------------------------
+
+hostname "mon nom de serveur" // Nom du Serveur
+sv_contact "mon mail" // Adresse Email de l'administrateur du serveur de jeux
+sv_lan 0 // Visibilité du serveur : (0) Visible sur Internet et LAN (1) Visible uniquement en LAN = local
+sv_region 3 // Localisation géographique du serveur : (0) Côté Est des USA, (1) Côté Ouest des USA, (2) Amérique du Sud, (3) Europe, (4) Asie, (5) Australie, (6) Orient, (7) Afrique, (255) le Monde
+// sv_visiblemaxplayers 17 // Nombre de joueurs maximums visibles sur le serveur; cela permet de reduire le nombre de place d'un serveur pour les match ou autres...
+
+// -------------------------------------------------------------------------------------
+// Sécurité RCON et Password
+// -------------------------------------------------------------------------------------
+
+rcon_password "hdhd" // Définir le Passe Admin du Serveur
+sv_password "blabla" // Activer un Passe sur le Serveur (si aucun password ne rien mettre entre les guillemets)
+sv_rcon_banpenalty 0 // Temps (en Min) de bannissement du joueur qui s'est trompé dans l'authentification RCON
+sv_rcon_minfailures 5 // Nb de fois qu'un joueur peut échouer à l'authentification de RCON dans le sv_rcon_minfailuretime avant d'être banni (5 par défault)
+sv_rcon_minfailuretime 30 // Temps (en s) pour s'authentifier (30 par défault)
+sv_rcon_maxfailures 10 // Nb d'essai Maximum pour s'authentifier au RCON (10 par défault; 20 Max)
+
+// -------------------------------------------------------------------------------------
+// Logs du Serveur
+// -------------------------------------------------------------------------------------
+
+log on // Activer (on) ou Désactiver (off) les logs du serveur
+sv_logbans 1 // Activer (1) les logs des bannis du serveur
+sv_logecho 1 // Activer (1) l'écriture des logs dans la console
+sv_logfile 1 // Activer (1) le log des informations du serveur dans le dossier log
+sv_log_onefile 1 // Ecrire les logs dans un seul fichier (1) oui, (0) non
+
+// -------------------------------------------------------------------------------------
+// Fichiers Exécutés au Démarrage du Serveur
+// -------------------------------------------------------------------------------------
+
+exec banned_user.cfg // Prise en compte de la liste des bannis par SteamID
+exec banned_ip.cfg // Prise en compte de la liste des bannis par IP
+exec mani_server.cfg // Configuration du fichier Mani's Admin Plugin
+
+// -------------------------------------------------------------------------------------
+// Bande Passante du Serveur
+// -------------------------------------------------------------------------------------
+
+decalfrequency 10 // Temps Max (en s) qu'un joueur a pour faire ses 'decals' (10 par défault)
+sv_allowdownload 1 // Activer (1) le téléchargement des fichiers pour les joueurs qui se connectent
+sv_allowupload 1 // Activer (1) l'upload des 'decals' perso d'un joueur sur le serveur
+sv_minrate 0 // Taux Minimum de la Bande Passante Alloué au Serveur; (0) illimité
+sv_minupdaterate 20 // Temps minimum (en s) alloué aux des Mise à Jour du serveur (10 par défault)
+sv_maxrate 0 // Taux Maximum de la Bande Passante Alloué au Serveur; (0) illimité
+sv_maxupdaterate 60 // Temps maximum (en s) alloué aux des Mise à Jour du serveur (60 par défault)
+
+// -------------------------------------------------------------------------------------
+// Configuration du Serveur
+// -------------------------------------------------------------------------------------
+
+mp_allowspectators 1 // Activer (1) le statut Spectateur
+mp_autocrosshair 0 // Activer (1) la visée automatique
+mp_autokick 0 // Activer (1) Autokick des AFK et TK
+mp_autoteambalance 1 // Activer (1) l'Equilibrage Automatique
+mp_buytime 1.5 // Temps (en Min) pour Acheter des Armes
+mp_c4timer 35 // Temps (en s) avant que le C4 Explose
+mp_chattime 6 // Temps à la fin de la map pour parler avant la map suivante
+mp_fadetoblack 0 // Désactiver l'Overview (0), l'Ecran du Joueur Mort Devient Noir
+mp_flashlight 1 // Activer (1) les Flash
+mp_footsteps 1 // Activer (1) les Empreintes
+mp_forcecamera 0 // Activer (1) le mode Spectateur
+mp_fraglimit 0 // Nb de Frags Limite avant le Changement de Map
+mp_freezetime 0 // Temps (en s) où les Joueurs sont bloqués au début d'un Round
+mp_friendlyfire 1 // Activer (1) le Friendly Fire
+mp_hostagepenalty 0 // Nb d'otages Tués par les Terro avant d'être kickés
+mp_limitteams 0 // Nb Max de Différrence de Joueurs entre les 2 Teams
+mp_maxrounds 0 // Nb Max de Rounds avant le Changement de Map
+mp_playerid 0 // Type d'affichage de la bar de status ( Tab) d'un joueur : (0)Tout, (1) Pseudos de sa Team, (2) pas de Pseudos
+mp_roundtime 3 // Temps Max (en Min) d'un Round
+mp_spawnprotectiontime 0 // Temps (en s) en début de partie pendant lequel un TK est immédiatement sanctionné par la mort de l'agresseur (5 par défault); Equivalent au mani_tk_spawn_time
+mp_startmoney 800 // Argent Disponible au Début de la Partie
+mp_timelimit 20 // Temps Max (en Min) par Map avant le changement de Map
+mp_tkpunish 1 // Activer (1) le TK Punish
+mp_weaponstay 1 // Les Armes restent au sol quand le round commence (pour les maps Fy...)
+mp_winlimit 0 // Nb Max de Round Gagnés par la même Team avant le Changement de Map
+sv_airaccelerate 10 // Vitesse des Saut
+sv_airmove 1 // Activer (1) les sauts
+sv_alltalk 1 // Activer (1) le All Talk
+sv_cheats 1 // Autoriser (1) des commandes de triche
+sv_clienttrace 1 // Supervisée Désactivée
+sv_consistency 1 // Activer (1) la vérification des fichiers indispensables avant la connection au serveur
+// sv_downloadurl "votre_url_rapide_finissant_par/cstrike" // Téléchargement rapide des Maps sur une url précise attention les maps absentes de l'url ne peuvent être téléchargées
+sv_gravity 800 // Définir la Gravité
+sv_maxspeed 320 // Vitesse Max d'un joueur quand il se déplace (320 par défaut)
+sv_pausable 1 // Activer (1) la fonction Pause du Serveur
+sv_timeout 120 // Temps Max (en s) avant d'être kickés par le serveur pour cause d'inactivité à la connexion (65s par défaut)
+sv_voiceenable 1 // Activer (1) les conversations audios
+phys_pushscale 1 // Vitesse de projection des "objets"
+phys_timescale 1
+}}}
