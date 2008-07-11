@@ -1,0 +1,63 @@
+Version 1.2.9 :
+
+Note : Cette mise à jour correspond à des mois de travail. Tout au long de ces mois, elle a été testé en plusieurs fois par une équipe de BETA-testeurs. Toutefois, comme pour la version 1.1, sa stabilité ne pourra être certifié qu'après quelques semaines d'utilisation : votre utilisation. Aussi je vous conseille de tester cette version avec votre configuration habituelle de match avant de vous en servir pour jouer en match "sérieux".
+
+
+Bugs corrigés :
+* Correction d'un bug sur l'affichage de la liste des joueurs dans les menus d'administration
+* Le tag de la team gagnant le CutRound inscrit dans les rapports sera maintenant mis à jour si les tags changent
+* Correction d'une interférence entre la question sur le round au couteau en début de match et le fichier de configuration de match choisit
+
+Nouveautés :
+* Les rapports seront maintenant générés au format XML : celà permet une récupération et l'exploitation facile des rapports à partir d'un programme externe (ex : un script PHP)
+* Ajout d'une variable "cssmatch_manches" qui détermine le nombre de manches à jouer par match. Libre à vous de l'ajouter à votre fichier de configuration.
+* Ajout d'une commande TCHAT "cssmatch" qui permet d'ouvrir le menu d'arbitrage 
+* A partir de la première manche, les joueurs ne pourront plus eux-même changer de camp. Cela évite que des joueurs se swap eux-même au demi-match puis qu'ils soient "re-swappé" dans le mauvais camp
+* Ajout d'une commande RCON et cliente "cssm_rates", qui affiche un tableau présentant les joueurs en fonction de leur rates
+* Lecture de sons lors des actions sur le menu du plugin
+* Ajout d'une commande !score qui produit le même effet que !scores
+* Les plugins et leur statut sont maintenant listés dans les log du serveur au lancement du match et à chaque fin de manche
+* Le Alltalk peut maintenant être activé ou désactivé dans le menu avant le lancement d'un match
+
+Amélioration des fonctionnalités existantes :
+* Pendant le round au couteau, la réserve d'argent des joueurs est maintenant égale à 0$
+* Le plugin laissera maintenant le choix entre jouer ou ne pas jouer les strats si cssmatch_strats_time est différent de 0.
+* Lorsqu'un joueur quitte le match le mot de passe du serveur est maintenant rappelé
+* Le menu ne sera plus refermé après un swap, un kick ou un ban
+* Les tags seront automatiquement redétectés si la situation passe de 0vsN à 1vsN, ou de 1vsN à NvsN
+* Si le premier round est relancé 3 restarts seront maintenant effectués
+* Le nom des enregistrements sourceTV seront maintenant de la forme suivante : "année-mois-jour_heure_map_manche.dem"
+* Le nom des rapports sera maintenant de la forme suivante : "année-mois-jour_heure_map.dem". Cela corrige plusieurs inconvénients : les conflits de noms sur le FTP, la difficulté de tri des fichiers et les problèmes d'ouverture des rapports XML avec FireFox.
+* Via le fichier de configuration il est maintenant possible de ne jouer que les phases qui vous intéresse (cutround et/ou strats et/ou match)
+* Les commandes TCHAT nécessitants des droits d'arbitrage sont maintenant "silencieuses". C'est-à-dire qu'elles n'apparaitront plus dans le TCHAT lorsqu'elles seront tapées.
+
+Je n'ai pas tout signalé (optimisations, améliorations, amélioration du code, etc.)
+
+Enorme MERCI aux BETA-testeurs (http://cssmatch.frenchboard.com/groupcp.forum?g=3) pour ces nombreux mois de tests (j'ai arrêté de les compter lol) :
+ActionM@n
+ayente
+Batu.fR (site : http://tsubawar.verygames.net/)
+Coldfir3
+crash (site : http://www.ga-css.com/)
+DarkSun (site : http://www.ao3-team.org/)
+ekudarius (site : http://csswarner.easyforum.fr/)
+Flippy
+LuLuCU (site : http://hunter.nitroserv.net/)
+nair02
+Nekromantix	(site : http://www.kforcrew.com/)
+Othon
+Sanjeev
+sKy
+SoPr[4]n0 (site : http://team-evil.mondialservers.fr/)
+Sylv@in
+XenoX
+C'est grâce à ceux personnes que CSSMatch est devenu ce qu'il est aujourd'hui : stable, simple et pratique.
+
+
+Pour ce qui est des rapports XML : les possibilités offertes sont infinies. Tous les langages informatiques possèdent des outils pour exploiter ces fichiers. De plus, un simple éditeur de texte permet d'en découvrir le contenu.
+Pour un humain, sans rien faire, ces rapports sont moins lisibles que les rapports TXT. C'est pourquoi, en attandant que des volontaires vous proposent mieux (ex : un module à installer sur votre site web), un système de visualisation des rapports via n'importe quel navigateur moderne a été mit en place :
+Rendez vous dans le dossier cfg/cssmatch/rapports Vous trouverez, entre autres, deux fichiers : cssmatch.xsl et cssmatch.css . Ces deux fichiers sont des scripts qui vous permettent de visualiser les rapports comme si vous visualisiez un site Internet. Ils doivent être dans le même dossier que le rapport à lire.
+Pour visualiser un rapport, ouvrez le avec un navigateur Internet (ex : Internet Explorer, Mozilla FireFox, Opera, Safari, etc.).
+=> Vous l'aurez compris, vous pouvez mettre les fichiers cssmatch.xsl et cssmatch.css dans un dossier de votre site web, puis placer tous vos rapports dans ce même dossier : il ne vous restera plus qu'à donner un lien vers les rapports pour que tout le monde puisse les lire.
+
+Ce système de visualisation est archaïque, mais il vous ferra patienter en attendant que des fans de PHP vous propose mieux :-)

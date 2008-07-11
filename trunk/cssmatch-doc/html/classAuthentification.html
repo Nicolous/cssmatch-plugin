@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch: Référence de la classe Authentification</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li><a href="hierarchy.html"><span>Hiérarchie&nbsp;des&nbsp;classes</span></a></li>
+      <li><a href="functions.html"><span>Champs&nbsp;de&nbsp;donnée</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Référence de la classe Authentification</h1><!-- doxytag: class="Authentification" --><code>#include &lt;<a class="el" href="Authentification_8h-source.html">Authentification.h</a>&gt;</code>
+<p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Fonctions membres publiques</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAuthentification.html#6702530e33977eac9779d4f28d3487e1">estAdmin</a> (const std::string &amp;steamID) const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAuthentification.html#bd9127249ec7eb9ffc9e602f76e668ac">logAdminlist</a> () const </td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAuthentification.html#ac72e1b00031515e9ed3ee6b5f096cb5">addAdmin</a> (const std::string &amp;steamID)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAuthentification.html#8a19c2ae4449ed4a19b705aa7b4c0982">removeAdmin</a> (const std::string &amp;steamID)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAuthentification.html#2589781eaa9a78ca9f78afc072dd7faa">parseAdminlist</a> (const std::string &amp;pathFichier)</td></tr>
+
+<tr><td colspan="2"><br><h2>Attributs privés</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">std::vector&lt; std::string &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAuthentification.html#39fd71bbc077e4e49c97701a03184121">adminlist</a></td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Description détaillée</h2>
+Système répertoriant le steamID des arbitres 
+<p>Définition à la ligne <a class="el" href="Authentification_8h-source.html#l00029">29</a> du fichier <a class="el" href="Authentification_8h-source.html">Authentification.h</a>.</p>
+<hr><h2>Documentation des fonctions membres</h2>
+<a class="anchor" name="6702530e33977eac9779d4f28d3487e1"></a><!-- doxytag: member="Authentification::estAdmin" ref="6702530e33977eac9779d4f28d3487e1" args="(const std::string &amp;steamID) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Authentification::estAdmin           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>steamID</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Détermine si le steamID est arbitre<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>steamID</em>&nbsp;</td><td>Le steamID du joueur </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Renvoie:</b></dt><dd>true si le joueur est arbitre </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="bd9127249ec7eb9ffc9e602f76e668ac"></a><!-- doxytag: member="Authentification::logAdminlist" ref="bd9127249ec7eb9ffc9e602f76e668ac" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Authentification::logAdminlist           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Log la liste des steamID arbitres 
+<p>Définition à la ligne <a class="el" href="Authentification_8cpp-source.html#l00049">49</a> du fichier <a class="el" href="Authentification_8cpp-source.html">Authentification.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="ac72e1b00031515e9ed3ee6b5f096cb5"></a><!-- doxytag: member="Authentification::addAdmin" ref="ac72e1b00031515e9ed3ee6b5f096cb5" args="(const std::string &amp;steamID)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Authentification::addAdmin           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>steamID</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Ajoute un steamID à authentifier comme arbitre<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>steamID</em>&nbsp;</td><td>Le steamID du joueur </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Renvoie:</b></dt><dd>false si le steamID est déjà authentifié arbitre </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="8a19c2ae4449ed4a19b705aa7b4c0982"></a><!-- doxytag: member="Authentification::removeAdmin" ref="8a19c2ae4449ed4a19b705aa7b4c0982" args="(const std::string &amp;steamID)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Authentification::removeAdmin           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>steamID</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Retire un steamID de la liste des authentifiés arbitre<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>steamID</em>&nbsp;</td><td>Le steamID du joueur </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Renvoie:</b></dt><dd>false si le steamID n'est pas authentifié arbitre </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="2589781eaa9a78ca9f78afc072dd7faa"></a><!-- doxytag: member="Authentification::parseAdminlist" ref="2589781eaa9a78ca9f78afc072dd7faa" args="(const std::string &amp;pathFichier)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Authentification::parseAdminlist           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>pathFichier</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Récupère une liste de steamID à authentifier à partir d'un fichier<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>pathFichier</em>&nbsp;</td><td>Le chemin vers le fichier (à partir du dossier cstrike) </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Renvoie:</b></dt><dd>false si le fichier n'a pu être trouvé ou n'a pu être lu </dd></dl>
+
+</div>
+</div><p>
+<hr><h2>Documentation des champs</h2>
+<a class="anchor" name="39fd71bbc077e4e49c97701a03184121"></a><!-- doxytag: member="Authentification::adminlist" ref="39fd71bbc077e4e49c97701a03184121" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; <a class="el" href="classAuthentification.html#39fd71bbc077e4e49c97701a03184121">Authentification::adminlist</a><code> [private]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Liste des steamID arbitres (admins du plugin) 
+<p>Définition à la ligne <a class="el" href="Authentification_8h-source.html#l00033">33</a> du fichier <a class="el" href="Authentification_8h-source.html">Authentification.h</a>.</p>
+
+</div>
+</div><p>
+<hr>La documentation de cette classe a été générée à partir des fichiers suivants :<ul>
+<li>Authentification/<a class="el" href="Authentification_8h-source.html">Authentification.h</a><li>Authentification/<a class="el" href="Authentification_8cpp-source.html">Authentification.cpp</a></ul>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:19 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

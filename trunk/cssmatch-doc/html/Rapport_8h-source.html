@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de Rapport/Rapport.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>Rapport/Rapport.h</h1><a href="Rapport_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include "../API/API.h"</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include "../Team/Team.h"</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include "../ConVars/ConVars.h"</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "../EnregistrementTV/EnregistrementTV.h"</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#include "../Match/Match.h"</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include "../Joueur/Joueur.h"</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include "../GestionJoueurs/GestionJoueurs.h"</span>
+<a name="l00030"></a>00030 
+<a name="l00031"></a>00031 <span class="preprocessor">#ifndef __RAPPORT_H__</span>
+<a name="l00032"></a>00032 <span class="preprocessor"></span><span class="preprocessor">#define __RAPPORT_H__</span>
+<a name="l00033"></a>00033 <span class="preprocessor"></span>
+<a name="l00035"></a><a class="code" href="classRapport.html">00035</a> <span class="keyword">class </span><a class="code" href="classRapport.html">Rapport</a>
+<a name="l00036"></a>00036 {
+<a name="l00037"></a>00037 <span class="keyword">protected</span>:
+<a name="l00039"></a><a class="code" href="classRapport.html#991c37aa33bde27441dcd2dd21d759cc">00039</a>         std::string <a class="code" href="classRapport.html#991c37aa33bde27441dcd2dd21d759cc">nom</a>;
+<a name="l00040"></a>00040 
+<a name="l00042"></a><a class="code" href="classRapport.html#741c23fc74697d3cd44ea7b770afdcce">00042</a>         <span class="keyword">struct </span>tm * <a class="code" href="classRapport.html#741c23fc74697d3cd44ea7b770afdcce">dateLocale</a>;
+<a name="l00043"></a>00043 
+<a name="l00045"></a><a class="code" href="classRapport.html#9e8bee9718bf27f70b77b475ce4ea6db">00045</a>         <a class="code" href="classMatch.html">Match</a> * <a class="code" href="classRapport.html#9e8bee9718bf27f70b77b475ce4ea6db">match</a>;
+<a name="l00046"></a>00046 
+<a name="l00048"></a><a class="code" href="classRapport.html#510326f13db55e04d8df22a0a1ef4470">00048</a>         std::vector&lt;int&gt; <a class="code" href="classRapport.html#510326f13db55e04d8df22a0a1ef4470">lignupT</a>;
+<a name="l00050"></a><a class="code" href="classRapport.html#c6a7b989562b90d6abe9994ab96d44a1">00050</a>         std::vector&lt;int&gt; <a class="code" href="classRapport.html#c6a7b989562b90d6abe9994ab96d44a1">lignupCT</a>;
+<a name="l00052"></a><a class="code" href="classRapport.html#97d96fda1a4f582b87a9279c96cdb032">00052</a>         std::vector&lt;int&gt; <a class="code" href="classRapport.html#97d96fda1a4f582b87a9279c96cdb032">lignupSpec</a>;
+<a name="l00053"></a>00053 
+<a name="l00059"></a>00059         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classRapport.html#ccaa027cf464d0b530a6bbacc0b2beb2">ecritEntete</a>(std::ofstream &amp; fichier) <span class="keyword">const</span> = 0;
+<a name="l00060"></a>00060 
+<a name="l00066"></a>00066         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classRapport.html#2028071cf15e30e792e55f434b12d3c5">ecritCorps</a>(std::ofstream &amp; fichier) <span class="keyword">const</span> = 0;
+<a name="l00067"></a>00067 
+<a name="l00073"></a>00073         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classRapport.html#b8267a41b76b2b643032fb5569407dbf">ecritPied</a>(std::ofstream &amp; fichier) <span class="keyword">const</span> = 0;
+<a name="l00074"></a>00074 
+<a name="l00076"></a>00076         <span class="keywordtype">void</span> <a class="code" href="classRapport.html#e1b267ad6a0fb4721d781796373b15bc">trouveLignups</a>();
+<a name="l00077"></a>00077 <span class="keyword">public</span>:
+<a name="l00083"></a>00083         <a class="code" href="classRapport.html#62a60936a3a1d74acfc65e87d5a84dfb">Rapport</a>(<a class="code" href="classMatch.html">Match</a> * <a class="code" href="classRapport.html#9e8bee9718bf27f70b77b475ce4ea6db">match</a>);
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085         <span class="keyword">virtual</span> <a class="code" href="classRapport.html#62b328785b5cb76069f8f1211ca6ac31">~Rapport</a>();
+<a name="l00086"></a>00086 
+<a name="l00088"></a>00088         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classRapport.html#c5671facb98bb2dc691fb72e75b7bfe2">ecrit</a>() = 0;
+<a name="l00089"></a>00089 };
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091 <span class="preprocessor">#endif // __RAPPORT_H__</span>
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:19 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

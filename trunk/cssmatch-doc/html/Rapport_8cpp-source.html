@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de Rapport/Rapport.cpp</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>Rapport/Rapport.cpp</h1><a href="Rapport_8cpp.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include "<a class="code" href="Rapport_8h.html">Rapport.h</a>"</span>
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025 <span class="keyword">using</span> std::string;
+<a name="l00026"></a>00026 
+<a name="l00027"></a><a class="code" href="classRapport.html#62a60936a3a1d74acfc65e87d5a84dfb">00027</a> <a class="code" href="classRapport.html#62a60936a3a1d74acfc65e87d5a84dfb">Rapport::Rapport</a>(<a class="code" href="classMatch.html">Match</a> * match)
+<a name="l00028"></a>00028 {
+<a name="l00029"></a>00029         <span class="comment">// Détermination de la date</span>
+<a name="l00030"></a>00030         time_t date = time(NULL);
+<a name="l00031"></a>00031         <a class="code" href="classRapport.html#741c23fc74697d3cd44ea7b770afdcce">dateLocale</a> = gmtime(&amp;date);
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033         <span class="keywordtype">char</span> datebuf[96];
+<a name="l00034"></a>00034         strftime(datebuf,<span class="keyword">sizeof</span>(datebuf),<span class="stringliteral">"%Y-%m-%d_%Hh%M"</span>,<a class="code" href="classRapport.html#741c23fc74697d3cd44ea7b770afdcce">dateLocale</a>);
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036         <span class="comment">// Mémorisation de l'adresse du match concerné</span>
+<a name="l00037"></a>00037         this-&gt;match = match;
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039         <span class="comment">// Construction du nom du fichier</span>
+<a name="l00040"></a>00040         <span class="comment">//string nomFichier(match-&gt;getTeam1()-&gt;getTag() + "_vs_" + match-&gt;getTeam2()-&gt;getTag() + "_" + Api::gpGlobals-&gt;mapname.ToCStr());</span>
+<a name="l00041"></a>00041         <span class="comment">//Api::valideNomDeFichier(nomFichier);</span>
+<a name="l00042"></a>00042         <span class="keywordtype">string</span> nomFichier(<span class="keywordtype">string</span>(datebuf) + <span class="stringliteral">"_"</span> + <a class="code" href="classApi.html#1df6ddb5e749c9fb6a2ed051b3c30201">Api::gpGlobals</a>-&gt;mapname.ToCStr());
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044         <span class="comment">// Construction du nom final du fichier avec son arborescence (sans l'extention)</span>
+<a name="l00045"></a>00045         <a class="code" href="classRapport.html#991c37aa33bde27441dcd2dd21d759cc">nom</a> = <span class="stringliteral">"cstrike/cfg/cssmatch/rapports/"</span> + nomFichier;
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047         <a class="code" href="classRapport.html#e1b267ad6a0fb4721d781796373b15bc">trouveLignups</a>();
+<a name="l00048"></a>00048 }
+<a name="l00049"></a>00049 
+<a name="l00050"></a><a class="code" href="classRapport.html#62b328785b5cb76069f8f1211ca6ac31">00050</a> <a class="code" href="classRapport.html#62b328785b5cb76069f8f1211ca6ac31">Rapport::~Rapport</a>()
+<a name="l00051"></a>00051 {
+<a name="l00052"></a>00052 }
+<a name="l00053"></a>00053 
+<a name="l00054"></a><a class="code" href="classRapport.html#e1b267ad6a0fb4721d781796373b15bc">00054</a> <span class="keywordtype">void</span> <a class="code" href="classRapport.html#e1b267ad6a0fb4721d781796373b15bc">Rapport::trouveLignups</a>()
+<a name="l00055"></a>00055 {
+<a name="l00056"></a>00056         <span class="comment">// Optimisation des vecteurs</span>
+<a name="l00057"></a>00057         <span class="keywordtype">int</span> appMaxParTeam = <a class="code" href="classApi.html#0cce2113bf802a18a1da8647cf0a5808">Api::maxplayers</a>/2;
+<a name="l00058"></a>00058         <a class="code" href="classRapport.html#510326f13db55e04d8df22a0a1ef4470">lignupT</a>.reserve(appMaxParTeam);
+<a name="l00059"></a>00059         <a class="code" href="classRapport.html#c6a7b989562b90d6abe9994ab96d44a1">lignupCT</a>.reserve(appMaxParTeam);
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061         <span class="comment">// Remplissage des vecteurs</span>
+<a name="l00062"></a>00062         <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=1;i&lt;=<a class="code" href="classApi.html#0cce2113bf802a18a1da8647cf0a5808">Api::maxplayers</a>;i++)
+<a name="l00063"></a>00063         {
+<a name="l00064"></a>00064                 <span class="keywordflow">try</span>
+<a name="l00065"></a>00065                 {
+<a name="l00066"></a>00066                         edict_t * pEntity = <a class="code" href="classApi.html#c31755c10161127469e046c8e3065975">Api::getPEntityFromIndex</a>(i);
+<a name="l00067"></a>00067                         IPlayerInfo * player = <a class="code" href="classApi.html#aaf907991e9b7ae906026dd8b21939d4">Api::getIPlayerInfoFromEntity</a>(pEntity);
+<a name="l00068"></a>00068                         <span class="keywordflow">switch</span>(player-&gt;GetTeamIndex())
+<a name="l00069"></a>00069                         {
+<a name="l00070"></a>00070                         <span class="keywordflow">case</span> <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a0a2527307e6dd07cdbebe40f256786d8">TEAM_T</a>:
+<a name="l00071"></a>00071                                 <a class="code" href="classRapport.html#510326f13db55e04d8df22a0a1ef4470">lignupT</a>.push_back(i);
+<a name="l00072"></a>00072                                 <span class="keywordflow">break</span>;
+<a name="l00073"></a>00073                         <span class="keywordflow">case</span> <a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72af37e026d79f2eaa1621382336125a8e7">TEAM_CT</a>:
+<a name="l00074"></a>00074                                 <a class="code" href="classRapport.html#c6a7b989562b90d6abe9994ab96d44a1">lignupCT</a>.push_back(i);
+<a name="l00075"></a>00075                                 <span class="keywordflow">break</span>;
+<a name="l00076"></a>00076                         <span class="keywordflow">default</span>:
+<a name="l00077"></a>00077                                 <a class="code" href="classRapport.html#97d96fda1a4f582b87a9279c96cdb032">lignupSpec</a>.push_back(i);
+<a name="l00078"></a>00078                         }
+<a name="l00079"></a>00079                 }
+<a name="l00080"></a>00080                 <span class="keywordflow">catch</span>(<span class="keyword">const</span> <a class="code" href="classCSSMatchApiException.html">CSSMatchApiException</a> &amp; e){}
+<a name="l00081"></a>00081         }
+<a name="l00082"></a>00082 }
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:19 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

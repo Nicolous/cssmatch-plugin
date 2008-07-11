@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de CSSMatch/CSSMatch.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>CSSMatch/CSSMatch.h</h1><a href="CSSMatch_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include "../API/API.h"</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include "../Authentification/Authentification.h"</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include "../ConVars/ConVars.h"</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "../GestionJoueurs/GestionJoueurs.h"</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#include "../Messages/Messages.h"</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include "../GestionTimers/GestionTimers.h"</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include "../Decompte/Decompte.h"</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#include "../Match/Match.h"</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#include "../EventListener/EventListener.h"</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include "../PlayerProp/PlayerProp.h"</span>
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="preprocessor">#ifndef __CSSMATCH_H__</span>
+<a name="l00035"></a>00035 <span class="preprocessor"></span><span class="preprocessor">#define __CSSMATCH_H__</span>
+<a name="l00036"></a>00036 <span class="preprocessor"></span>
+<a name="l00038"></a><a class="code" href="classCSSMatch.html">00038</a> <span class="keyword">class </span><a class="code" href="classCSSMatch.html">CSSMatch</a>: <span class="keyword">public</span> <a class="code" href="classIServerPluginCallbacks.html">IServerPluginCallbacks</a>
+<a name="l00039"></a>00039 {
+<a name="l00040"></a>00040 <span class="keyword">private</span>:
+<a name="l00042"></a><a class="code" href="classCSSMatch.html#c4d885c72cd57edf0346fb2a068dbf3c">00042</a>         <span class="keywordtype">int</span> <a class="code" href="classCSSMatch.html#c4d885c72cd57edf0346fb2a068dbf3c">m_iClientCommandIndex</a>;
+<a name="l00043"></a>00043 
+<a name="l00045"></a><a class="code" href="classCSSMatch.html#e16d8a5807926c17e54f9cbbcbf7fc9f">00045</a>         <a class="code" href="classEventListener.html">EventListener</a> <a class="code" href="classCSSMatch.html#e16d8a5807926c17e54f9cbbcbf7fc9f">ecouteur</a>;
+<a name="l00046"></a>00046 
+<a name="l00048"></a><a class="code" href="classCSSMatch.html#08a8ee1d4bdaf1bdb12222ba478ae2e4">00048</a>         <a class="code" href="classAuthentification.html">Authentification</a> <a class="code" href="classCSSMatch.html#08a8ee1d4bdaf1bdb12222ba478ae2e4">adminlist</a>;
+<a name="l00049"></a>00049 
+<a name="l00051"></a><a class="code" href="classCSSMatch.html#89dc89395339f6426c234957a35549cf">00051</a>         <a class="code" href="classMatch.html">Match</a> <a class="code" href="classCSSMatch.html#89dc89395339f6426c234957a35549cf">match</a>;
+<a name="l00052"></a>00052 
+<a name="l00054"></a><a class="code" href="classCSSMatch.html#e90532eded92fc16ab9d6b8804495b3b">00054</a>         <a class="code" href="classGestionTimers.html">GestionTimers</a> <a class="code" href="classCSSMatch.html#e90532eded92fc16ab9d6b8804495b3b">timers</a>;
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056         <a class="code" href="classCSSMatch.html#d77ef255d9e9ce580ceb4b77ddf9e685">CSSMatch</a>();
+<a name="l00057"></a>00057         <a class="code" href="classCSSMatch.html#a2991f11980e1d0376e13359dcb9664e">~CSSMatch</a>();
+<a name="l00058"></a>00058 
+<a name="l00060"></a><a class="code" href="classCSSMatch.html#35dd46489e23adbe7c12e95ee6bff164">00060</a>         <span class="keyword">static</span> <a class="code" href="classCSSMatch.html">CSSMatch</a> * <a class="code" href="classCSSMatch.html#35dd46489e23adbe7c12e95ee6bff164">instance</a>;
+<a name="l00061"></a>00061 
+<a name="l00062"></a>00062 <span class="keyword">public</span>: 
+<a name="l00064"></a><a class="code" href="classCSSMatch.html#223ea78b1912fcaeeb4be77f4599c2c6">00064</a>         <a class="code" href="classPlayerProp.html">PlayerProp</a> <a class="code" href="classCSSMatch.html#223ea78b1912fcaeeb4be77f4599c2c6">propCash</a>;
+<a name="l00065"></a>00065 
+<a name="l00067"></a><a class="code" href="classCSSMatch.html#884b36c66fb9870ce65f64b9a5fd0b21">00067</a>         <a class="code" href="classPlayerProp.html">PlayerProp</a> <a class="code" href="classCSSMatch.html#884b36c66fb9870ce65f64b9a5fd0b21">propLifeState</a>;
+<a name="l00068"></a>00068 
+<a name="l00070"></a>00070         <span class="keyword">static</span> <a class="code" href="classCSSMatch.html">CSSMatch</a> * <a class="code" href="classCSSMatch.html#4484ec5f3e41e44ec5646515a8212e44">getInstance</a>();
+<a name="l00071"></a>00071 
+<a name="l00080"></a>00080         <span class="keywordtype">bool</span> <a class="code" href="classCSSMatch.html#9ecf5a5642d2c1098841775fd74d5c33">Load</a>(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
+<a name="l00081"></a>00081 
+<a name="l00087"></a>00087         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#adc9d47b948d0e7c27a7c59a02e56ee3">Unload</a>();
+<a name="l00088"></a>00088 
+<a name="l00094"></a>00094         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#f7ddb74424ec68e054dbda9078765b00">Pause</a>();
+<a name="l00095"></a>00095 
+<a name="l00101"></a>00101         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#c901504e5f99b38d9e64d42da29f15ff">UnPause</a>();
+<a name="l00102"></a>00102 
+<a name="l00109"></a>00109         <span class="keyword">const</span> <span class="keywordtype">char</span> * <a class="code" href="classCSSMatch.html#163cfad1f2d96b8669c72398a6e1b51c">GetPluginDescription</a>();
+<a name="l00110"></a>00110 
+<a name="l00117"></a>00117         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#45dd33cf45093f2a5ce63716072b5bdb">LevelInit</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * pMapName);
+<a name="l00118"></a>00118 
+<a name="l00127"></a>00127         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#aca42e020feca57ded49f883edc0b7ac">ServerActivate</a>(edict_t * pEdictList, <span class="keywordtype">int</span> edictCount, <span class="keywordtype">int</span> clientMax);
+<a name="l00128"></a>00128 
+<a name="l00136"></a>00136         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#9e0605a3e51aa1c5d96a20c86374e825">GameFrame</a>(<span class="keywordtype">bool</span> simulating);
+<a name="l00137"></a>00137 
+<a name="l00144"></a>00144         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#c08c4ac680cd0ffedfdd9a0f6e3d02cc">LevelShutdown</a>();
+<a name="l00145"></a>00145 
+<a name="l00152"></a>00152         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#cde5df6b053757f09a566e2e6a304be0">ClientActive</a>(edict_t * pEntity);
+<a name="l00153"></a>00153 
+<a name="l00160"></a>00160         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#6d3a4d08c919afb0e044a1a5ea077094">ClientDisconnect</a>(edict_t * pEntity);
+<a name="l00161"></a>00161 
+<a name="l00169"></a>00169         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#532ac9419468adfab6d3751a24b18a64">ClientPutInServer</a>(edict_t * pEntity, <span class="keyword">const</span> <span class="keywordtype">char</span> * playername);
+<a name="l00170"></a>00170 
+<a name="l00177"></a>00177         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#58b51f9e2fb5f55e24c0523b734fc381">SetCommandClient</a>(<span class="keywordtype">int</span> index);
+<a name="l00178"></a>00178 
+<a name="l00186"></a>00186         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#455fcf3f3e2179ec71178fe3d5b8ccfa">ClientSettingsChanged</a>(edict_t * pEdict);
+<a name="l00187"></a>00187 
+<a name="l00188"></a>00188 
+<a name="l00202"></a>00202         PLUGIN_RESULT <a class="code" href="classCSSMatch.html#cb0283bfe81451e5715172d5b69f5e70">ClientConnect</a>(<span class="keywordtype">bool</span> * bAllowConnect,
+<a name="l00203"></a>00203                                                                 edict_t * pEntity,
+<a name="l00204"></a>00204                                                                 <span class="keyword">const</span> <span class="keywordtype">char</span> * pszName,
+<a name="l00205"></a>00205                                                                 <span class="keyword">const</span> <span class="keywordtype">char</span> * pszAddress,
+<a name="l00206"></a>00206                                                                 <span class="keywordtype">char</span> *reject,
+<a name="l00207"></a>00207                                                                 <span class="keywordtype">int</span> maxrejectlen);
+<a name="l00208"></a>00208 
+<a name="l00217"></a>00217         PLUGIN_RESULT <a class="code" href="classCSSMatch.html#dad8e13765ef0792549f271897554550">ClientCommand</a>(edict_t *pEntity);
+<a name="l00218"></a>00218 
+<a name="l00228"></a>00228         PLUGIN_RESULT <a class="code" href="classCSSMatch.html#e319e12dc921578274ccbb915ae2500b">NetworkIDValidated</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> * pszUserName, <span class="keyword">const</span> <span class="keywordtype">char</span> * pszNetworkID);
+<a name="l00229"></a>00229 
+<a name="l00235"></a>00235         <span class="keywordtype">int</span> <a class="code" href="classCSSMatch.html#ccf4f8ac0ce57212a788e1d1b8af82a9">GetCommandIndex</a>();
+<a name="l00236"></a>00236 
+<a name="l00242"></a>00242         <a class="code" href="classAuthentification.html">Authentification</a> * <a class="code" href="classCSSMatch.html#7d04eed6f1f4bc3c0b0a29dbef274835">getAdminList</a>();
+<a name="l00243"></a>00243 
+<a name="l00250"></a>00250         <a class="code" href="classMatch.html">Match</a> * <a class="code" href="classCSSMatch.html#16317de883b02194106d03ed4ce6f6b2">getMatch</a>();
+<a name="l00251"></a>00251 
+<a name="l00257"></a>00257         <a class="code" href="classGestionTimers.html">GestionTimers</a> * <a class="code" href="classCSSMatch.html#85c562126117af6e2098f4412f0c56c9">getTimers</a>();
+<a name="l00258"></a>00258 
+<a name="l00265"></a>00265         <span class="keywordtype">void</span> <a class="code" href="classCSSMatch.html#40db848b4c50ee394b6d62f9fa21a5bc">goTeam</a>(<a class="code" href="classTeam.html">Team</a> * team, edict_t * pEntity);
+<a name="l00266"></a>00266 };
+<a name="l00267"></a>00267 
+<a name="l00268"></a>00268 <span class="preprocessor">#endif // __CSSMATCH_H__</span>
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:19 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

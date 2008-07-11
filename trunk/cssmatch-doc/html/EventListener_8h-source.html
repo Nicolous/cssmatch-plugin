@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de EventListener/EventListener.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>EventListener/EventListener.h</h1><a href="EventListener_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include "../API/API.h"</span>
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025 <span class="preprocessor">#ifndef __EVENTLISTENER_H__</span>
+<a name="l00026"></a>00026 <span class="preprocessor"></span><span class="preprocessor">#define __EVENTLISTENER_H__</span>
+<a name="l00027"></a>00027 <span class="preprocessor"></span>
+<a name="l00029"></a><a class="code" href="classEventListener.html">00029</a> <span class="keyword">class </span><a class="code" href="classEventListener.html">EventListener</a> : <span class="keyword">public</span> <a class="code" href="classIGameEventListener2.html">IGameEventListener2</a>
+<a name="l00030"></a>00030 {
+<a name="l00031"></a>00031 <span class="keyword">private</span>:
+<a name="l00032"></a>00032         <span class="comment">/* Un joueur est blessé</span>
+<a name="l00033"></a>00033 <span class="comment">         *</span>
+<a name="l00034"></a>00034 <span class="comment">         * @param event L'instance de l'évènement</span>
+<a name="l00035"></a>00035 <span class="comment">         * @see IGameEventListener#FireGameEvent</span>
+<a name="l00036"></a>00036 <span class="comment">         */</span>
+<a name="l00037"></a>00037         <span class="comment">//void player_hurt(IGameEvent * event); // Remplacé par la modification de la prop m_lifeState</span>
+<a name="l00038"></a>00038 
+<a name="l00044"></a>00044         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#3e79fda4402b11046d850c957827d43f">item_pickup</a>(IGameEvent * event);
+<a name="l00045"></a>00045 
+<a name="l00051"></a>00051         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#9f9db852d8157994b4a2d6a6a24dfadc">player_spawn</a>(IGameEvent * event);
+<a name="l00052"></a>00052 
+<a name="l00058"></a>00058         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#ccd6269c67744ac553640720c9e11d96">player_say</a>(IGameEvent * event);
+<a name="l00059"></a>00059 
+<a name="l00065"></a>00065         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#27f408c035e1c9c2e2eed34cb6afe3b6">player_death</a>(IGameEvent * event);
+<a name="l00066"></a>00066 
+<a name="l00072"></a>00072         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#fb52ab413bbf4dd9a284ea8b8fa77b74">player_disconnect</a>(IGameEvent * event);
+<a name="l00073"></a>00073 
+<a name="l00079"></a>00079         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#d7e7a6861bfef4f0e508a85a05c9a866">round_start</a>(IGameEvent * event);
+<a name="l00080"></a>00080 
+<a name="l00086"></a>00086         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#ecc252ed08287c90a0beec2233878561">round_end</a>(IGameEvent * event);
+<a name="l00087"></a>00087 
+<a name="l00093"></a>00093         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#0b1797ca0711fe793be44facc8ec4428">player_team</a>(IGameEvent * event);
+<a name="l00094"></a>00094 
+<a name="l00100"></a>00100         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#887f478d64d37fd1377391a4b0b6d973">bomb_beginplant</a>(IGameEvent * event);
+<a name="l00101"></a>00101 
+<a name="l00107"></a>00107         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#1be3d2e78712505f8c80d3e6d5471303">player_changename</a>(IGameEvent * event);
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 <span class="keyword">public</span>:
+<a name="l00111"></a>00111         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#e6181ca9db0c994ae3e570bc940f51d3">initialise</a>();
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113         <span class="comment">/*      Appelé par le jeu lorsqu'un évènement a eu lieu dans la partie</span>
+<a name="l00114"></a>00114 <span class="comment">        *</span>
+<a name="l00115"></a>00115 <span class="comment">        * @param event L'instance de l'évènement</span>
+<a name="l00116"></a>00116 <span class="comment">        * @see IGameEventListener#FireGameEvent</span>
+<a name="l00117"></a>00117 <span class="comment">        */</span>
+<a name="l00118"></a>00118         <span class="keywordtype">void</span> <a class="code" href="classEventListener.html#2b300d3458a5d795b207824b17893d5f">FireGameEvent</a>(IGameEvent * event);
+<a name="l00119"></a>00119 };
+<a name="l00120"></a>00120 
+<a name="l00121"></a>00121 <span class="preprocessor">#endif // __EVENTLISTENER_H__</span>
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:19 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

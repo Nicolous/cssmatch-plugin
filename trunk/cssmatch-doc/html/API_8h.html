@@ -1,0 +1,462 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch: Référence du fichier API/API.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Référence du fichier API/API.h</h1><code>#include &lt;vector&gt;</code><br>
+<code>#include &lt;stdio.h&gt;</code><br>
+<code>#include &lt;ctime&gt;</code><br>
+<code>#include &lt;string&gt;</code><br>
+<code>#include &lt;sstream&gt;</code><br>
+<code>#include &lt;fstream&gt;</code><br>
+<code>#include &lt;iomanip&gt;</code><br>
+<code>#include &lt;stdexcept&gt;</code><br>
+<code>#include &lt;time.h&gt;</code><br>
+<code>#include &quot;interface.h&quot;</code><br>
+<code>#include &quot;filesystem.h&quot;</code><br>
+<code>#include &quot;engine/iserverplugin.h&quot;</code><br>
+<code>#include &quot;dlls/iplayerinfo.h&quot;</code><br>
+<code>#include &quot;eiface.h&quot;</code><br>
+<code>#include &quot;igameevents.h&quot;</code><br>
+<code>#include &quot;convar.h&quot;</code><br>
+<code>#include &quot;ICvar.h&quot;</code><br>
+<code>#include &quot;bitbuf.h&quot;</code><br>
+<code>#include &quot;<a class="el" href="MRecipientFilter_8h-source.html">../MRecipientFilter/MRecipientFilter.h</a>&quot;</code><br>
+<code>#include &quot;cbase.h&quot;</code><br>
+<code>#include &quot;engine/IStaticPropMgr.h&quot;</code><br>
+<code>#include &quot;entityapi.h&quot;</code><br>
+<code>#include &quot;entitylist.h&quot;</code><br>
+<code>#include &quot;baseentity.h&quot;</code><br>
+<code>#include &quot;tier0/memdbgon.h&quot;</code><br>
+
+<p>
+<a href="API_8h-source.html">Aller au code source de ce fichier.</a><table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Structures de données</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCSSMatchApiException.html">CSSMatchApiException</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classApi.html">Api</a></td></tr>
+
+<tr><td colspan="2"><br><h2>Macros</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#c0ad106314255a7c783450ad64a0fb59">GAME_DLL</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#402924c31a164df8be5907cb4a6761b0">CSSMATCH_NOM</a>&nbsp;&nbsp;&nbsp;&quot;CSSMatch&quot;</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#243eed4eff8b086ca5fa88586b930d4f">CSSMATCH_VERSION_LIGHT</a>&nbsp;&nbsp;&nbsp;&quot;1.2.9&quot;</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#7ded10b34d7248869bed237056ef8697">CSSMATCH_SITE</a>&nbsp;&nbsp;&nbsp;&quot;http://code.google.com/p/cssmatch-plugin/&quot;</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#76dd962e9d09e920802f2ce6a34ae4b9">CSSMATCH_VERSION</a>&nbsp;&nbsp;&nbsp;CSSMATCH_NOM &quot; v&quot; CSSMATCH_VERSION_LIGHT &quot;, by Nicolous, &quot; CSSMATCH_SITE</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#d027c44555c18c51ee3934b4adcd9f6c">USERID_INVALIDE</a>&nbsp;&nbsp;&nbsp;-1</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#d4bc4690f126fc9469035852fa498e01">INDEX_INVALIDE</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#3b4160b75b2fd05ab5afd9988c839ff6">FICHIER_ADMINLIST</a>&nbsp;&nbsp;&nbsp;&quot;cstrike/cfg/cssmatch/adminlist.txt&quot;</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#b07b401c30dceb09fa6fba6497ee2574">FICHIER_MAPLIST</a>&nbsp;&nbsp;&nbsp;&quot;cstrike/cfg/cssmatch/maplist.txt&quot;</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#fa1d1f5ba8a4b2a558b6377f5b42fa9b">DOSSIER_CONFIGURATIONS_MATCH</a>&nbsp;&nbsp;&nbsp;&quot;cfg/cssmatch/configurations&quot;</td></tr>
+
+<tr><td colspan="2"><br><h2>Énumérations</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> { <br>
+&nbsp;&nbsp;<a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a9f5ac8be569c25ef23290ce3b4894a3a">TEAM_INVALIDE</a> =  TEAM_INVALID, 
+<a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72af4b6a712d03e1760203e08000cb2d762">TEAM_UN</a> =  TEAM_UNASSIGNED, 
+<a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a80125a395498264fc233f38e8a943f3b">TEAM_SPEC</a> =  TEAM_SPECTATOR, 
+<a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a0a2527307e6dd07cdbebe40f256786d8">TEAM_T</a>, 
+<br>
+&nbsp;&nbsp;<a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72af37e026d79f2eaa1621382336125a8e7">TEAM_CT</a>, 
+<a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a13c8ffd921954e71a549ccab70afec8f">TEAM_ALL</a>
+<br>
+ }</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e">CodeWeaponSlot</a> { <br>
+&nbsp;&nbsp;<a class="el" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e34fde8c6ed2b64d3849eac7eeb65eb63">WEAPON_SLOT1</a> =  0, 
+<a class="el" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e289832eb55ca9a313dd9d72aa71cd8bc">WEAPON_SLOT2</a>, 
+<a class="el" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e46a06ae5c9075ca6dd2991205663b1bf">WEAPON_SLOT3</a>, 
+<a class="el" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72ed13c6a73b187b325b59cdb1d9e48d274">WEAPON_SLOT4</a>, 
+<br>
+&nbsp;&nbsp;<a class="el" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e75efe6a5f94039e844753133c4b31f31">WEAPON_SLOT5</a>
+<br>
+ }</td></tr>
+
+<tr><td colspan="2"><br><h2>Fonctions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#ee3a1a73ecf0106ef0d9a07c076385e5">timerCexecT</a> (const std::string &amp;commande)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#cccf15dd4c33a5a673254dd370d34c5a">timerCexecCT</a> (const std::string &amp;commande)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#d5b02db1ee90323caeb5a44046d9c6d3">timerSwapALL</a> (const std::string &amp;parametre)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="API_8h.html#ee7275733e5a6821929c75608a1db0d8">InitCVars</a> (CreateInterfaceFn cvarFactory)</td></tr>
+
+</table>
+<hr><h2>Documentation des macros</h2>
+<a class="anchor" name="402924c31a164df8be5907cb4a6761b0"></a><!-- doxytag: member="API.h::CSSMATCH_NOM" ref="402924c31a164df8be5907cb4a6761b0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CSSMATCH_NOM&nbsp;&nbsp;&nbsp;&quot;CSSMatch&quot;          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Définit le nom du plugin 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00099">99</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="7ded10b34d7248869bed237056ef8697"></a><!-- doxytag: member="API.h::CSSMATCH_SITE" ref="7ded10b34d7248869bed237056ef8697" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CSSMATCH_SITE&nbsp;&nbsp;&nbsp;&quot;http://code.google.com/p/cssmatch-plugin/&quot;          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Définit le site Web officiel du plugin. 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00105">105</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="76dd962e9d09e920802f2ce6a34ae4b9"></a><!-- doxytag: member="API.h::CSSMATCH_VERSION" ref="76dd962e9d09e920802f2ce6a34ae4b9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CSSMATCH_VERSION&nbsp;&nbsp;&nbsp;CSSMATCH_NOM &quot; v&quot; CSSMATCH_VERSION_LIGHT &quot;, by Nicolous, &quot; CSSMATCH_SITE          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Définit les informations sur le nom de version, l'auteur et le site associé au plugin 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00109">109</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="243eed4eff8b086ca5fa88586b930d4f"></a><!-- doxytag: member="API.h::CSSMATCH_VERSION_LIGHT" ref="243eed4eff8b086ca5fa88586b930d4f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CSSMATCH_VERSION_LIGHT&nbsp;&nbsp;&nbsp;&quot;1.2.9&quot;          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Définit le nom de la version du plugin. 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00102">102</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="fa1d1f5ba8a4b2a558b6377f5b42fa9b"></a><!-- doxytag: member="API.h::DOSSIER_CONFIGURATIONS_MATCH" ref="fa1d1f5ba8a4b2a558b6377f5b42fa9b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DOSSIER_CONFIGURATIONS_MATCH&nbsp;&nbsp;&nbsp;&quot;cfg/cssmatch/configurations&quot;          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Dossier dans lequel sont recherchés les configurations de match 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00592">592</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="3b4160b75b2fd05ab5afd9988c839ff6"></a><!-- doxytag: member="API.h::FICHIER_ADMINLIST" ref="3b4160b75b2fd05ab5afd9988c839ff6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FICHIER_ADMINLIST&nbsp;&nbsp;&nbsp;&quot;cstrike/cfg/cssmatch/adminlist.txt&quot;          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Nom du fichier contenant la liste des arbitres 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00586">586</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="b07b401c30dceb09fa6fba6497ee2574"></a><!-- doxytag: member="API.h::FICHIER_MAPLIST" ref="b07b401c30dceb09fa6fba6497ee2574" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FICHIER_MAPLIST&nbsp;&nbsp;&nbsp;&quot;cstrike/cfg/cssmatch/maplist.txt&quot;          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Nom du fichier contenant la liste des maps à lister dans le menu 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00589">589</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="c0ad106314255a7c783450ad64a0fb59"></a><!-- doxytag: member="API.h::GAME_DLL" ref="c0ad106314255a7c783450ad64a0fb59" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GAME_DLL&nbsp;&nbsp;&nbsp;1          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+<dl class="see" compact><dt><b>Voir également:</b></dt><dd><a href="http://developer.valvesoftware.com/wiki/KeyValues_class#Important_Notes">http://developer.valvesoftware.com/wiki/KeyValues_class#Important_Notes</a> Permet de manipuler les <a class="el" href="classConVars.html">ConVars</a> Permet de manipuler des listes de joueurs destinataires des messages du plugin</dd></dl>
+<dl class="author" compact><dt><b>Auteur:</b></dt><dd>La communauté de <a href="http://hl2coding.com">http://hl2coding.com</a> (morte) Permet l'inclusion de cbase.h </dd></dl>
+
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00065">65</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="d4bc4690f126fc9469035852fa498e01"></a><!-- doxytag: member="API.h::INDEX_INVALIDE" ref="d4bc4690f126fc9469035852fa498e01" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INDEX_INVALIDE&nbsp;&nbsp;&nbsp;0          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00115">115</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="d027c44555c18c51ee3934b4adcd9f6c"></a><!-- doxytag: member="API.h::USERID_INVALIDE" ref="d027c44555c18c51ee3934b4adcd9f6c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define USERID_INVALIDE&nbsp;&nbsp;&nbsp;-1          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Définit le nombre représentant un userid erroné 
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00112">112</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<hr><h2>Documentation du type de l'énumération</h2>
+<a class="anchor" name="c6996b4135dc8f14f6b2400edcf2a72a"></a><!-- doxytag: member="API.h::CodeTeam" ref="c6996b4135dc8f14f6b2400edcf2a72a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Associe à une constante les index des teams possibles sous CSS <dl compact><dt><b>Valeurs énumérées: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" name="c6996b4135dc8f14f6b2400edcf2a72a9f5ac8be569c25ef23290ce3b4894a3a"></a><!-- doxytag: member="TEAM_INVALIDE" ref="c6996b4135dc8f14f6b2400edcf2a72a9f5ac8be569c25ef23290ce3b4894a3a" args="" -->TEAM_INVALIDE</em>&nbsp;</td><td>
+<a class="el" href="classTeam.html">Team</a> inconnue </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="c6996b4135dc8f14f6b2400edcf2a72af4b6a712d03e1760203e08000cb2d762"></a><!-- doxytag: member="TEAM_UN" ref="c6996b4135dc8f14f6b2400edcf2a72af4b6a712d03e1760203e08000cb2d762" args="" -->TEAM_UN</em>&nbsp;</td><td>
+Les non-assignés </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="c6996b4135dc8f14f6b2400edcf2a72a80125a395498264fc233f38e8a943f3b"></a><!-- doxytag: member="TEAM_SPEC" ref="c6996b4135dc8f14f6b2400edcf2a72a80125a395498264fc233f38e8a943f3b" args="" -->TEAM_SPEC</em>&nbsp;</td><td>
+Les spectateurs </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="c6996b4135dc8f14f6b2400edcf2a72a0a2527307e6dd07cdbebe40f256786d8"></a><!-- doxytag: member="TEAM_T" ref="c6996b4135dc8f14f6b2400edcf2a72a0a2527307e6dd07cdbebe40f256786d8" args="" -->TEAM_T</em>&nbsp;</td><td>
+Les Terro </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="c6996b4135dc8f14f6b2400edcf2a72af37e026d79f2eaa1621382336125a8e7"></a><!-- doxytag: member="TEAM_CT" ref="c6996b4135dc8f14f6b2400edcf2a72af37e026d79f2eaa1621382336125a8e7" args="" -->TEAM_CT</em>&nbsp;</td><td>
+Les CT </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="c6996b4135dc8f14f6b2400edcf2a72a13c8ffd921954e71a549ccab70afec8f"></a><!-- doxytag: member="TEAM_ALL" ref="c6996b4135dc8f14f6b2400edcf2a72a13c8ffd921954e71a549ccab70afec8f" args="" -->TEAM_ALL</em>&nbsp;</td><td>
+Toutes les teams </td></tr>
+</table>
+</dl>
+
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00138">138</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="5d660aacfb7a4b591dea08bab1a9d72e"></a><!-- doxytag: member="API.h::CodeWeaponSlot" ref="5d660aacfb7a4b591dea08bab1a9d72e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="API_8h.html#5d660aacfb7a4b591dea08bab1a9d72e">CodeWeaponSlot</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Associe à une constante les index des slots possibles sous CSS <dl compact><dt><b>Valeurs énumérées: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" name="5d660aacfb7a4b591dea08bab1a9d72e34fde8c6ed2b64d3849eac7eeb65eb63"></a><!-- doxytag: member="WEAPON_SLOT1" ref="5d660aacfb7a4b591dea08bab1a9d72e34fde8c6ed2b64d3849eac7eeb65eb63" args="" -->WEAPON_SLOT1</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="5d660aacfb7a4b591dea08bab1a9d72e289832eb55ca9a313dd9d72aa71cd8bc"></a><!-- doxytag: member="WEAPON_SLOT2" ref="5d660aacfb7a4b591dea08bab1a9d72e289832eb55ca9a313dd9d72aa71cd8bc" args="" -->WEAPON_SLOT2</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="5d660aacfb7a4b591dea08bab1a9d72e46a06ae5c9075ca6dd2991205663b1bf"></a><!-- doxytag: member="WEAPON_SLOT3" ref="5d660aacfb7a4b591dea08bab1a9d72e46a06ae5c9075ca6dd2991205663b1bf" args="" -->WEAPON_SLOT3</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="5d660aacfb7a4b591dea08bab1a9d72ed13c6a73b187b325b59cdb1d9e48d274"></a><!-- doxytag: member="WEAPON_SLOT4" ref="5d660aacfb7a4b591dea08bab1a9d72ed13c6a73b187b325b59cdb1d9e48d274" args="" -->WEAPON_SLOT4</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" name="5d660aacfb7a4b591dea08bab1a9d72e75efe6a5f94039e844753133c4b31f31"></a><!-- doxytag: member="WEAPON_SLOT5" ref="5d660aacfb7a4b591dea08bab1a9d72e75efe6a5f94039e844753133c4b31f31" args="" -->WEAPON_SLOT5</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dl>
+
+<p>Définition à la ligne <a class="el" href="API_8h-source.html#l00160">160</a> du fichier <a class="el" href="API_8h-source.html">API.h</a>.</p>
+
+</div>
+</div><p>
+<hr><h2>Documentation des fonctions</h2>
+<a class="anchor" name="ee7275733e5a6821929c75608a1db0d8"></a><!-- doxytag: member="API.h::InitCVars" ref="ee7275733e5a6821929c75608a1db0d8" args="(CreateInterfaceFn cvarFactory)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void InitCVars           </td>
+          <td>(</td>
+          <td class="paramtype">CreateInterfaceFn&nbsp;</td>
+          <td class="paramname"> <em>cvarFactory</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Function to initialize any cvars/command in this plugin<p>
+<dl class="author" compact><dt><b>Auteur:</b></dt><dd>VALVE Corporation </dd></dl>
+
+<p>Définition à la ligne <a class="el" href="serverplugin__convar_8cpp-source.html#l00035">35</a> du fichier <a class="el" href="serverplugin__convar_8cpp-source.html">serverplugin_convar.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="cccf15dd4c33a5a673254dd370d34c5a"></a><!-- doxytag: member="API.h::timerCexecCT" ref="cccf15dd4c33a5a673254dd370d34c5a" args="(const std::string &amp;commande)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void timerCexecCT           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>commande</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Exécute une commande dans la console des joueurs anti-terroristes<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>commande</em>&nbsp;</td><td>La commande à exécuter </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="ee3a1a73ecf0106ef0d9a07c076385e5"></a><!-- doxytag: member="API.h::timerCexecT" ref="ee3a1a73ecf0106ef0d9a07c076385e5" args="(const std::string &amp;commande)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void timerCexecT           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>commande</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Exécute une commande dans la console des joueurs terroristes<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>commande</em>&nbsp;</td><td>La commande à exécuter </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="d5b02db1ee90323caeb5a44046d9c6d3"></a><!-- doxytag: member="API.h::timerSwapALL" ref="d5b02db1ee90323caeb5a44046d9c6d3" args="(const std::string &amp;parametre)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void timerSwapALL           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>parametre</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Swap tous les joueurs<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>parametre</em>&nbsp;</td><td>Une chaîne vide </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:19 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

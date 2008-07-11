@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch:  Fichier source de Match/Match.h</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li class="current"><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+<h1>Match/Match.h</h1><a href="Match_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/* </span>
+<a name="l00002"></a>00002 <span class="comment"> * Copyright 2007, 2008 Nicolas Maingot</span>
+<a name="l00003"></a>00003 <span class="comment"> * </span>
+<a name="l00004"></a>00004 <span class="comment"> * This file is part of CSSMatch.</span>
+<a name="l00005"></a>00005 <span class="comment"> * </span>
+<a name="l00006"></a>00006 <span class="comment"> * CSSMatch is free software; you can redistribute it and/or modify</span>
+<a name="l00007"></a>00007 <span class="comment"> * it under the terms of the GNU General Public License as published by</span>
+<a name="l00008"></a>00008 <span class="comment"> * the Free Software Foundation; either version 3 of the License, or</span>
+<a name="l00009"></a>00009 <span class="comment"> * (at your option) any later version.</span>
+<a name="l00010"></a>00010 <span class="comment"> * </span>
+<a name="l00011"></a>00011 <span class="comment"> * CSSMatch is distributed in the hope that it will be useful,</span>
+<a name="l00012"></a>00012 <span class="comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00013"></a>00013 <span class="comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00014"></a>00014 <span class="comment"> * GNU General Public License for more details.</span>
+<a name="l00015"></a>00015 <span class="comment"> * </span>
+<a name="l00016"></a>00016 <span class="comment"> * You should have received a copy of the GNU General Public License</span>
+<a name="l00017"></a>00017 <span class="comment"> * along with CSSMatch; if not, write to the Free Software</span>
+<a name="l00018"></a>00018 <span class="comment"> * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</span>
+<a name="l00019"></a>00019 <span class="comment"> *</span>
+<a name="l00020"></a>00020 <span class="comment"> * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved</span>
+<a name="l00021"></a>00021 <span class="comment"> */</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include "../API/API.h"</span>
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025 <span class="preprocessor">#include "../Configuration/Configuration.h"</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "../EnregistrementTV/EnregistrementTV.h"</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#include "../ConVars/ConVars.h"</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include "../Team/Team.h"</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include "../Messages/Messages.h"</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#include "../Decompte/Decompte.h"</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#include "../GestionTimers/GestionTimers.h"</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include "../GestionJoueurs/GestionJoueurs.h"</span>
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="preprocessor">#ifndef __MATCH_H__</span>
+<a name="l00035"></a>00035 <span class="preprocessor"></span><span class="preprocessor">#define __MATCH_H__</span>
+<a name="l00036"></a>00036 <span class="preprocessor"></span>
+<a name="l00038"></a><a class="code" href="classCSSMatchMatchException.html">00038</a> <span class="keyword">class </span><a class="code" href="classCSSMatchMatchException.html">CSSMatchMatchException</a> : <span class="keyword">public</span> std::exception
+<a name="l00039"></a>00039 {
+<a name="l00040"></a>00040 <span class="keyword">private</span>:
+<a name="l00041"></a><a class="code" href="classCSSMatchMatchException.html#56da5779f141bda10999f1f691e871ff">00041</a>     std::string <a class="code" href="classCSSMatchMatchException.html#56da5779f141bda10999f1f691e871ff">msg</a>;
+<a name="l00042"></a>00042 <span class="keyword">public</span>:
+<a name="l00043"></a><a class="code" href="classCSSMatchMatchException.html#46bbeb0988a1c55232370dd0afd2d791">00043</a>         <a class="code" href="classCSSMatchMatchException.html#46bbeb0988a1c55232370dd0afd2d791">CSSMatchMatchException</a>(<span class="keyword">const</span> std::string &amp; <a class="code" href="classCSSMatchMatchException.html#56da5779f141bda10999f1f691e871ff">msg</a>) : std::exception()
+<a name="l00044"></a>00044     {
+<a name="l00045"></a>00045         this-&gt;msg = msg;
+<a name="l00046"></a>00046     }
+<a name="l00047"></a>00047 
+<a name="l00048"></a><a class="code" href="classCSSMatchMatchException.html#90be68600378504903fa68f1d0155c49">00048</a>     <span class="keyword">virtual</span> <a class="code" href="classCSSMatchMatchException.html#90be68600378504903fa68f1d0155c49">~CSSMatchMatchException</a>() throw() {}
+<a name="l00049"></a>00049 
+<a name="l00050"></a><a class="code" href="classCSSMatchMatchException.html#a060e6e7e9d614ff4eb255447ea5828d">00050</a>     <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span> * <a class="code" href="classCSSMatchMatchException.html#a060e6e7e9d614ff4eb255447ea5828d">what</a>() <span class="keyword">const</span> throw()
+<a name="l00051"></a>00051     {
+<a name="l00052"></a>00052                 <span class="keywordflow">return</span> this-&gt;<a class="code" href="classCSSMatchMatchException.html#56da5779f141bda10999f1f691e871ff">msg</a>.c_str();
+<a name="l00053"></a>00053     }
+<a name="l00054"></a>00054 };
+<a name="l00055"></a>00055 
+<a name="l00057"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b">00057</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b">CodePhase</a>
+<a name="l00058"></a>00058 {
+<a name="l00060"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bd70ed97e9ef259ef024d4dca6e0670b4">00060</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bd70ed97e9ef259ef024d4dca6e0670b4">PHASE_OFF</a>,
+<a name="l00062"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bef12147e73fc31fdaf8bb72e8deb45bb">00062</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bef12147e73fc31fdaf8bb72e8deb45bb">PHASE_PASSAGE_CUTROUND</a>,
+<a name="l00064"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b3612799053809cdcc70211241d1490ab">00064</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b3612799053809cdcc70211241d1490ab">PHASE_CUTROUND</a>,
+<a name="l00066"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b9fce228724ee705530ded5589f79da8b">00066</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b9fce228724ee705530ded5589f79da8b">PHASE_PASSAGE_STRATS</a>,
+<a name="l00068"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b84810c622b3192e69b76693c52c366c5">00068</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b84810c622b3192e69b76693c52c366c5">PHASE_STRATS</a>,
+<a name="l00070"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b9447078ac979bd173f8b341b198b9bdd">00070</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b9447078ac979bd173f8b341b198b9bdd">PHASE_TRANSITION_MANCHE</a>,
+<a name="l00072"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b9762b7c9fce6d49f3c318ab66650087c">00072</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b9762b7c9fce6d49f3c318ab66650087c">PHASE_PASSAGE_MANCHE</a>,
+<a name="l00074"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bdf6bc9b225bc3bf524d824be51235368">00074</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bdf6bc9b225bc3bf524d824be51235368">PHASE_MANCHE</a>,
+<a name="l00075"></a>00075         <span class="comment">/* Placement des teams*/</span>
+<a name="l00076"></a>00076         <span class="comment">//PHASE_CHOOSETEAM,</span>
+<a name="l00078"></a><a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bb1f2eb15e1ecb852cde8d791176eb76e">00078</a> <span class="comment"></span>        <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6bb1f2eb15e1ecb852cde8d791176eb76e">PHASE_FIN</a>
+<a name="l00079"></a>00079 };
+<a name="l00080"></a>00080 
+<a name="l00082"></a><a class="code" href="classMatch.html">00082</a> <span class="keyword">class </span><a class="code" href="classMatch.html">Match</a>
+<a name="l00083"></a>00083 {
+<a name="l00084"></a>00084 <span class="keyword">private</span>:
+<a name="l00086"></a><a class="code" href="classMatch.html#e0a71757f7cd7b36391873f5e63dcbbc">00086</a>         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b">CodePhase</a> <a class="code" href="classMatch.html#e0a71757f7cd7b36391873f5e63dcbbc">phase</a>;
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088         <span class="comment">/* Enregistrement SourceTV de la manche 1 */</span>
+<a name="l00089"></a>00089         <span class="comment">//EnregistrementTV * tvManche1;</span>
+<a name="l00090"></a>00090         <span class="comment">/* Enregistrement SourceTV de la manche 2 */</span>
+<a name="l00091"></a>00091         <span class="comment">//EnregistrementTV * tvManche2;</span>
+<a name="l00093"></a><a class="code" href="classMatch.html#f96a8371f5c3badf492ce00b48a53ac5">00093</a> <span class="comment"></span>        std::vector&lt;EnregistrementTV&gt; <a class="code" href="classMatch.html#f96a8371f5c3badf492ce00b48a53ac5">enregistrements</a>;
+<a name="l00094"></a>00094         
+<a name="l00096"></a><a class="code" href="classMatch.html#8c3ad8079f9556a6130b731086ab5dca">00096</a>         <span class="keywordtype">int</span> <a class="code" href="classMatch.html#8c3ad8079f9556a6130b731086ab5dca">mancheCourante</a>;
+<a name="l00097"></a>00097 
+<a name="l00099"></a><a class="code" href="classMatch.html#75452b83ead3821121d86a777efdc964">00099</a>         <span class="keywordtype">int</span> <a class="code" href="classMatch.html#75452b83ead3821121d86a777efdc964">roundCourant</a>;
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101 
+<a name="l00103"></a><a class="code" href="classMatch.html#dc06d6fb7127055c20ef1d6c7bd9814d">00103</a>         std::string <a class="code" href="classMatch.html#dc06d6fb7127055c20ef1d6c7bd9814d">tagGagnantCutRound</a>;
+<a name="l00104"></a>00104 
+<a name="l00106"></a><a class="code" href="classMatch.html#93ab4d1d4f047c9dafe5df5f9a8c795a">00106</a>         <a class="code" href="classTeam.html">Team</a> <a class="code" href="classMatch.html#93ab4d1d4f047c9dafe5df5f9a8c795a">team1</a>;
+<a name="l00107"></a>00107 
+<a name="l00109"></a><a class="code" href="classMatch.html#9a387f96261afbdd5440ee9f9f2b18bf">00109</a>         <a class="code" href="classTeam.html">Team</a> <a class="code" href="classMatch.html#9a387f96261afbdd5440ee9f9f2b18bf">team2</a>;
+<a name="l00111"></a>00111         <span class="comment">// Team spec;</span>
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 
+<a name="l00115"></a><a class="code" href="classMatch.html#32bfa28ca8042910ab4515596fdd09ea">00115</a>         <span class="keywordtype">bool</span> <a class="code" href="classMatch.html#32bfa28ca8042910ab4515596fdd09ea">cutround</a>;
+<a name="l00116"></a>00116 
+<a name="l00118"></a><a class="code" href="classMatch.html#6012a272b8645ef3277bc2cdd20e54e1">00118</a>         <span class="keywordtype">bool</span> <a class="code" href="classMatch.html#6012a272b8645ef3277bc2cdd20e54e1">strats</a>;
+<a name="l00119"></a>00119 
+<a name="l00121"></a><a class="code" href="classMatch.html#dca5a12102b863e0ebe5fc720f102e31">00121</a>         std::string <a class="code" href="classMatch.html#dca5a12102b863e0ebe5fc720f102e31">horaire</a>;
+<a name="l00122"></a>00122 
+<a name="l00124"></a>00124         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#d0fb17054537d74a15dee89aa10fe89d">reset</a>();
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126 <span class="keyword">public</span>:
+<a name="l00127"></a>00127         <a class="code" href="classMatch.html#990b0300aeee204fd90d6d846b9aea0e">Match</a>();
+<a name="l00128"></a>00128         <a class="code" href="classMatch.html#4cbfcaff4f14e7411242423f19c28153">~Match</a>();
+<a name="l00129"></a>00129 
+<a name="l00136"></a>00136         <a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b">CodePhase</a> <a class="code" href="classMatch.html#15258505f7b0939003a5f781f28df9a6">getPhase</a>() <span class="keyword">const</span>;
+<a name="l00137"></a>00137 
+<a name="l00143"></a>00143         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#bdfd825eb68c29c7ce018b359441fbed">setPhase</a>(<a class="code" href="Match_8h.html#861628214934519d5981030685a8fb6b">CodePhase</a> codePhase);
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145 
+<a name="l00151"></a>00151         <span class="comment">//EnregistrementTV * getTvManche1() const;</span>
+<a name="l00152"></a>00152         
+<a name="l00153"></a>00153         <span class="comment">/* Accesseur sur l'enregistrement TV de la manche 2</span>
+<a name="l00154"></a>00154 <span class="comment">         *</span>
+<a name="l00155"></a>00155 <span class="comment">         * @return Un pointeur sur l'enregistrement (peut être NULL !)</span>
+<a name="l00156"></a>00156 <span class="comment">         *</span>
+<a name="l00157"></a>00157 <span class="comment">         */</span>
+<a name="l00158"></a>00158         <span class="comment">//EnregistrementTV * getTvManche2() const;</span>
+<a name="l00164"></a>00164 <span class="comment"></span>        <span class="keyword">const</span> std::vector&lt;EnregistrementTV&gt; * <a class="code" href="classMatch.html#66b009d905508ce66dc977195f910405">getEnregistrementsTV</a>() <span class="keyword">const</span>;
+<a name="l00165"></a>00165         
+<a name="l00166"></a>00166 
+<a name="l00172"></a>00172         <span class="keywordtype">int</span> <a class="code" href="classMatch.html#cf3f01d67d745184df6d277237eb09a1">getMancheCourante</a>() <span class="keyword">const</span>;
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174 
+<a name="l00180"></a>00180         <span class="keywordtype">int</span> <a class="code" href="classMatch.html#bf70fc8711ee4c379f4550da21e5cc64">getRoundCourant</a>() <span class="keyword">const</span>;
+<a name="l00181"></a>00181 
+<a name="l00187"></a>00187         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#361d6bf090e0457cb07eb0d8e4fde9f5">setRoundCourant</a>(<span class="keywordtype">int</span> numeroRound);
+<a name="l00188"></a>00188 
+<a name="l00194"></a>00194         <span class="keywordtype">int</span> <a class="code" href="classMatch.html#31736557e7a5ad92d889deb5505524a1">incRoundCourant</a>();
+<a name="l00195"></a>00195 
+<a name="l00196"></a>00196 
+<a name="l00202"></a>00202         <span class="keyword">const</span> std::string &amp; <a class="code" href="classMatch.html#ab83959f0223462110bf971b4b1337f4">getTagGagnantCutRound</a>() <span class="keyword">const</span>;
+<a name="l00203"></a>00203 
+<a name="l00209"></a>00209         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#09217ce46ff30d0fd0c87ba26f4528ca">setTagGagnantCutRound</a>(<span class="keyword">const</span> std::string &amp; tag);
+<a name="l00210"></a>00210 
+<a name="l00220"></a>00220         <a class="code" href="classTeam.html">Team</a> * <a class="code" href="classMatch.html#b99ded95f327a2af3b1441a3e3af0bb1">getTeam</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam) <span class="keywordflow">throw</span>(<a class="code" href="classCSSMatchMatchException.html">CSSMatchMatchException</a>);
+<a name="l00221"></a>00221 
+<a name="l00227"></a>00227         <a class="code" href="classTeam.html">Team</a> * <a class="code" href="classMatch.html#598432001595531048113edd04de72f2">getTeam1</a>();
+<a name="l00228"></a>00228 
+<a name="l00234"></a>00234         <a class="code" href="classTeam.html">Team</a> * <a class="code" href="classMatch.html#772f2578f2360046dc7a9d7b45c495ed">getTeam2</a>();
+<a name="l00235"></a>00235 
+<a name="l00242"></a>00242         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#be9c2a6978fc2a283b422e640656a1e1">modifieTag</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam, <span class="keyword">const</span> std::string &amp; nouvTag);
+<a name="l00243"></a>00243 
+<a name="l00244"></a>00244 
+<a name="l00250"></a>00250         <span class="keywordtype">bool</span> <a class="code" href="classMatch.html#c4fef643e0efc7950cb61cd46977e21b">getCutRound</a>() <span class="keyword">const</span>;
+<a name="l00251"></a>00251 
+<a name="l00257"></a>00257         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#352ca6f86a09216b6a4a16ce50774ff3">setCutRound</a>(<span class="keywordtype">bool</span> <a class="code" href="classMatch.html#32bfa28ca8042910ab4515596fdd09ea">cutround</a>);
+<a name="l00258"></a>00258 
+<a name="l00264"></a>00264         <span class="keywordtype">bool</span> <a class="code" href="classMatch.html#8a9bc9a6f730444ea27571edfbd04454">getStrats</a>() <span class="keyword">const</span>;
+<a name="l00265"></a>00265 
+<a name="l00271"></a>00271         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#8b126cbbda2e1383dbc28d3f8d0ce40e">setStrats</a>(<span class="keywordtype">bool</span> <a class="code" href="classMatch.html#6012a272b8645ef3277bc2cdd20e54e1">strats</a>);
+<a name="l00272"></a>00272 
+<a name="l00277"></a>00277         <span class="keyword">const</span> std::string &amp; <a class="code" href="classMatch.html#64f354f94aa5325256399e5e3787af01">getDate</a>() <span class="keyword">const</span>;
+<a name="l00278"></a>00278 
+<a name="l00286"></a>00286         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#c7dabc222ddfc4d13d44af3beca38d6c">lanceMatch</a>(<a class="code" href="classConfiguration.html">Configuration</a> * fichier, edict_t * pEntity = NULL);
+<a name="l00287"></a>00287 
+<a name="l00295"></a>00295         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#33700d3087045058b7ac634c901fc2f0">finMatch</a>(edict_t * pEntity = NULL);
+<a name="l00296"></a>00296 
+<a name="l00298"></a>00298         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#84810c1c6d47afde6fbd94324c6b7fc7">finTempsMortFinMatch</a>();
+<a name="l00299"></a>00299 
+<a name="l00301"></a>00301         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#2f327378ee1178c70f1d344f16f80dd7">lanceCutRound</a>();
+<a name="l00302"></a>00302 
+<a name="l00308"></a>00308         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#b55ed14466eed80254659248afc2a794">finCutRound</a>(<a class="code" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeamGagnante);
+<a name="l00309"></a>00309 
+<a name="l00311"></a>00311         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#e97df698552208a59e5062b2d65765b7">lanceStratsTime</a>();
+<a name="l00312"></a>00312 
+<a name="l00316"></a>00316         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#e655b9cb1223147f088ed369744d4263">finStratsTime</a>();
+<a name="l00317"></a>00317 
+<a name="l00319"></a>00319         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#b68a4b8ce56eddc6fcf102261c4ccf0f">lanceManche</a>();
+<a name="l00320"></a>00320 
+<a name="l00322"></a>00322         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#e7f970f0dff9053e87874c36f20c7f34">finManche</a>();
+<a name="l00323"></a>00323 
+<a name="l00330"></a>00330         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#d3608d5b80ea811c468834430c262ef2">detecteTags</a>(<span class="keywordtype">bool</span> affiche);
+<a name="l00331"></a>00331 
+<a name="l00335"></a>00335         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#e0b3d3ba56c88b289bbec2fb2d2c0cb9">formateHostname</a>();
+<a name="l00336"></a>00336 
+<a name="l00338"></a>00338         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#7450dcbf7e4ff787f5fbe128440c63c2">afficheScores</a>();
+<a name="l00339"></a>00339 
+<a name="l00345"></a>00345         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#52294025191b100d24a3343aa7b1e636">restartRound</a>(edict_t * pEntity = NULL);
+<a name="l00346"></a>00346 
+<a name="l00352"></a>00352         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#7bcc56c157a120a2ac7755cf160d10fb">restartManche</a>(edict_t * pEntity = NULL);
+<a name="l00353"></a>00353 
+<a name="l00359"></a>00359         <span class="keywordtype">void</span> <a class="code" href="classMatch.html#0a3e24355adaf5eac5333c31a5b5fb9b">forceGo</a>(edict_t * pEntity = NULL);
+<a name="l00360"></a>00360 };
+<a name="l00361"></a>00361 
+<a name="l00368"></a>00368 <span class="keywordtype">void</span> <a class="code" href="Match_8cpp.html#e436559e44e6c5ea88f6926626233e91">timerRetag</a>(<span class="keyword">const</span> std::string &amp; parametre);
+<a name="l00369"></a>00369 
+<a name="l00370"></a>00370 <span class="preprocessor">#endif // __MATCH_H__</span>
+</pre></div></div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:19 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>

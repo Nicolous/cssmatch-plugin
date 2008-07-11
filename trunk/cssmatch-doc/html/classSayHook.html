@@ -1,0 +1,344 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>CSSMatch: Référence de la classe SayHook</title>
+<link href="doxygen.css" rel="stylesheet" type="text/css">
+<link href="tabs.css" rel="stylesheet" type="text/css">
+</head><body>
+<!-- Généré par Doxygen 1.5.5 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Page&nbsp;principale</span></a></li>
+      <li><a href="namespaces.html"><span>Espaces de nommage</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li><a href="files.html"><span>Fichiers</span></a></li>
+    <li>
+      <form action="search.php" method="get">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td><label>&nbsp;Rechercher&nbsp;</label></td>
+            <td><input type="text" name="query" value="" size="20" accesskey="s"/></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Structures&nbsp;de&nbsp;données</span></a></li>
+      <li><a href="hierarchy.html"><span>Hiérarchie&nbsp;des&nbsp;classes</span></a></li>
+      <li><a href="functions.html"><span>Champs&nbsp;de&nbsp;donnée</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Référence de la classe SayHook</h1><!-- doxytag: class="SayHook" --><!-- doxytag: inherits="ConCommand" --><code>#include &lt;<a class="el" href="SayHook_8h-source.html">SayHook.h</a>&gt;</code>
+<p>
+<div class="dynheader">
+Graphe d'héritage de SayHook:</div>
+<div class="dynsection">
+
+<p><center><img src="classSayHook.png" usemap="#SayHook_map" border="0" alt=""></center>
+<map name="SayHook_map">
+<area href="classConCommand.html" alt="ConCommand" shape="rect" coords="0,0,90,24">
+</map>
+</div>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Fonctions membres publiques</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#d95639b18e7ec23a3bfded9f14d8c66b">SayHook</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#96da31e5c2977b442a4d0f79be4a49bc">Init</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#8084ae8ba28d2d3be9c9b678a68d6b73">Dispatch</a> ()</td></tr>
+
+<tr><td colspan="2"><br><h2>Fonctions membres publiques statiques</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#6e0fb1c06943538b90b1f9328e41e8a5">cmdCssmatch</a> (int indexJoueur, std::istringstream &amp;in)  throw (CSSMatchApiException)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#7f2f9f164ee82a9e3d9853f711237394">cmdTeamt</a> (int indexJoueur, std::istringstream &amp;in)  throw (CSSMatchApiException)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#2e80b87b2a0877d60921eedafc2a47fe">cmdTeamct</a> (int indexJoueur, std::istringstream &amp;in)  throw (CSSMatchApiException)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#5311d6ba7ff433d273ef90573adab908">cmdTeam</a> (int indexJoueur, std::istringstream &amp;in, <a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a> codeTeam)  throw (CSSMatchApiException)</td></tr>
+
+<tr><td colspan="2"><br><h2>Attributs privés</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#86af8faa5d22b7ec3356b2853d7fd2f0">succes</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classConCommand.html">ConCommand</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSayHook.html#953669b6b38da42ff845df9f8f663659">say</a></td></tr>
+
+</table>
+<hr><a name="_details"></a><h2>Description détaillée</h2>
+Intercepteur de la commande "say" 
+<p>Définition à la ligne <a class="el" href="SayHook_8h-source.html#l00029">29</a> du fichier <a class="el" href="SayHook_8h-source.html">SayHook.h</a>.</p>
+<hr><h2>Documentation des constructeurs et destructeur</h2>
+<a class="anchor" name="d95639b18e7ec23a3bfded9f14d8c66b"></a><!-- doxytag: member="SayHook::SayHook" ref="d95639b18e7ec23a3bfded9f14d8c66b" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SayHook::SayHook           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Constructeur initialisant une nouvelle commande nommée "say" 
+<p>Définition à la ligne <a class="el" href="SayHook_8cpp-source.html#l00030">30</a> du fichier <a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a>.</p>
+
+</div>
+</div><p>
+<hr><h2>Documentation des fonctions membres</h2>
+<a class="anchor" name="96da31e5c2977b442a4d0f79be4a49bc"></a><!-- doxytag: member="SayHook::Init" ref="96da31e5c2977b442a4d0f79be4a49bc" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SayHook::Init           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Surcharge de la méthode "Init" de la classe <a class="el" href="classConCommand.html">ConCommand</a><p>
+<dl class="see" compact><dt><b>Voir également:</b></dt><dd>ConCommand::Init </dd></dl>
+
+<p>Définition à la ligne <a class="el" href="SayHook_8cpp-source.html#l00036">36</a> du fichier <a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="8084ae8ba28d2d3be9c9b678a68d6b73"></a><!-- doxytag: member="SayHook::Dispatch" ref="8084ae8ba28d2d3be9c9b678a68d6b73" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SayHook::Dispatch           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Surcharge de la méthode "Dispatch" de la classe <a class="el" href="classConCommand.html">ConCommand</a><p>
+<dl class="see" compact><dt><b>Voir également:</b></dt><dd>ConCommand::Dispatch </dd></dl>
+
+<p>Définition à la ligne <a class="el" href="SayHook_8cpp-source.html#l00064">64</a> du fichier <a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="6e0fb1c06943538b90b1f9328e41e8a5"></a><!-- doxytag: member="SayHook::cmdCssmatch" ref="6e0fb1c06943538b90b1f9328e41e8a5" args="(int indexJoueur, std::istringstream &amp;in)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SayHook::cmdCssmatch           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>indexJoueur</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istringstream &amp;&nbsp;</td>
+          <td class="paramname"> <em>in</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%">  throw (<a class="el" href="classCSSMatchApiException.html">CSSMatchApiException</a>)<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Commande d'appel du menu d'arbitrage<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>indexJoueur</em>&nbsp;</td><td>L'index du joueur </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>in</em>&nbsp;</td><td>Le flux contenant les arguments de la commande </td></tr>
+  </table>
+</dl>
+
+<p>Définition à la ligne <a class="el" href="SayHook_8cpp-source.html#l00109">109</a> du fichier <a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="7f2f9f164ee82a9e3d9853f711237394"></a><!-- doxytag: member="SayHook::cmdTeamt" ref="7f2f9f164ee82a9e3d9853f711237394" args="(int indexJoueur, std::istringstream &amp;in)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SayHook::cmdTeamt           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>indexJoueur</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istringstream &amp;&nbsp;</td>
+          <td class="paramname"> <em>in</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%">  throw (<a class="el" href="classCSSMatchApiException.html">CSSMatchApiException</a>)<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Commande d'édition du tag de la team terroriste<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>indexJoueur</em>&nbsp;</td><td>L'index du joueur </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>in</em>&nbsp;</td><td>Le flux contenant les arguments de la commande </td></tr>
+  </table>
+</dl>
+
+<p>Définition à la ligne <a class="el" href="SayHook_8cpp-source.html#l00132">132</a> du fichier <a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="2e80b87b2a0877d60921eedafc2a47fe"></a><!-- doxytag: member="SayHook::cmdTeamct" ref="2e80b87b2a0877d60921eedafc2a47fe" args="(int indexJoueur, std::istringstream &amp;in)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SayHook::cmdTeamct           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>indexJoueur</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istringstream &amp;&nbsp;</td>
+          <td class="paramname"> <em>in</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%">  throw (<a class="el" href="classCSSMatchApiException.html">CSSMatchApiException</a>)<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Commande d'édition du tag de la team anti-terroriste<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>indexJoueur</em>&nbsp;</td><td>L'index du joueur </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>in</em>&nbsp;</td><td>Le flux contenant les arguments de la commande </td></tr>
+  </table>
+</dl>
+
+<p>Définition à la ligne <a class="el" href="SayHook_8cpp-source.html#l00173">173</a> du fichier <a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="5311d6ba7ff433d273ef90573adab908"></a><!-- doxytag: member="SayHook::cmdTeam" ref="5311d6ba7ff433d273ef90573adab908" args="(int indexJoueur, std::istringstream &amp;in, CodeTeam codeTeam)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SayHook::cmdTeam           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>indexJoueur</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::istringstream &amp;&nbsp;</td>
+          <td class="paramname"> <em>in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="API_8h.html#c6996b4135dc8f14f6b2400edcf2a72a">CodeTeam</a>&nbsp;</td>
+          <td class="paramname"> <em>codeTeam</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%">  throw (<a class="el" href="classCSSMatchApiException.html">CSSMatchApiException</a>)<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Commande d'édition du tag d'une team<p>
+<dl compact><dt><b>Paramètres:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>indexJoueur</em>&nbsp;</td><td>L'index du joueur </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>in</em>&nbsp;</td><td>Le flux contenant les arguments de la commande </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>codeTeam</em>&nbsp;</td><td>Le code de la team dont le tag est modifié </td></tr>
+  </table>
+</dl>
+
+<p>Définition à la ligne <a class="el" href="SayHook_8cpp-source.html#l00213">213</a> du fichier <a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a>.</p>
+
+</div>
+</div><p>
+<hr><h2>Documentation des champs</h2>
+<a class="anchor" name="86af8faa5d22b7ec3356b2853d7fd2f0"></a><!-- doxytag: member="SayHook::succes" ref="86af8faa5d22b7ec3356b2853d7fd2f0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSayHook.html#86af8faa5d22b7ec3356b2853d7fd2f0">SayHook::succes</a><code> [private]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Indicateur de succès du hook 
+<p>Définition à la ligne <a class="el" href="SayHook_8h-source.html#l00033">33</a> du fichier <a class="el" href="SayHook_8h-source.html">SayHook.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="953669b6b38da42ff845df9f8f663659"></a><!-- doxytag: member="SayHook::say" ref="953669b6b38da42ff845df9f8f663659" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classConCommand.html">ConCommand</a>* <a class="el" href="classSayHook.html#953669b6b38da42ff845df9f8f663659">SayHook::say</a><code> [private]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Pointeur sur la commande "say" originale ("de VALVE") 
+<p>Définition à la ligne <a class="el" href="SayHook_8h-source.html#l00036">36</a> du fichier <a class="el" href="SayHook_8h-source.html">SayHook.h</a>.</p>
+
+</div>
+</div><p>
+<hr>La documentation de cette classe a été générée à partir des fichiers suivants :<ul>
+<li>Hooks/SayHook/<a class="el" href="SayHook_8h-source.html">SayHook.h</a><li>Hooks/SayHook/<a class="el" href="SayHook_8cpp-source.html">SayHook.cpp</a></ul>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Généré le Fri Jul 11 16:03:20 2008 pour CSSMatch par&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.5 </small></address>
+</body>
+</html>
