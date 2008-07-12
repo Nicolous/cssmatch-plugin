@@ -1,0 +1,3 @@
+[*] Correction : les commandes TCHAT nécessitant des droits d'arbitrage ne renvoient plus de message d'erreur visibles de tout le monde
+[*] Correction : si les strats étaient désactivés, la team gagnante du round au couteau ne pouvait pas choisir sa team
+[*] Correction : la commande cssm_revoke faisait planter les serveurs Linux
