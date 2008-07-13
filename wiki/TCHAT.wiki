@@ -1,4 +1,4 @@
-#summary Commandes du TCHAT (nécessitant des droits ou non)
+#summary Commandes du TCHAT
 
 = Introduction =
 
