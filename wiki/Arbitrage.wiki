@@ -12,7 +12,7 @@
 === Vérifier que l'on est arbitre et utilisation du menu d'arbitrage : ===
   # Bindez la touche suivante dans votre config.cfg ou via votre console : `cssmatch`
     * Exemple de bind sur la touche "e" de votre clavier : `bind "e" "cssmatch"`
-    * Note : si vous ne voulez pas binder une touche, il est possible d'accéder au menu d'arbitrage en tapant "cssmatch" dans le TCHAT depuis la version 1.2
+    * Note : si vous ne voulez pas binder une touche, il est possible d'accéder au menu d'arbitrage en tapant `cssmatch` dans le TCHAT depuis la version 1.2
   # Connectez-vous à votre serveur, puis appuyez sur la touche que vous avez bindé
     * Si vous voyez le menu, vous êtes bien arbitre
     * Si un message apparaît comme quoi vous n'êtes pas arbitre, votre steamID n'est pas le bon, vous n'avez pas envoyé le fichier sur le serveur, ou vous n'avez ni changé de map ni rebootez votre serveur après édition de l'adminlist.txt
