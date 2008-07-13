@@ -1,4 +1,4 @@
-#summary server.cfg
+#summary Fichier server.cfg complet pour correctement rétablir la configuration de votre serveur après un match.
 
 Souvent, lorsque vous rencontrez des problèmes de configuration de serveur après un match, c'est que votre fichier "server.cfg" est incomplet.
 
