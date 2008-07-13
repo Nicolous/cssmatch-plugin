@@ -5,7 +5,7 @@
   *  *_Tu n'es pas arbitre !_* ou *_Tu n'es pas arbitre du match !_*
 *Signification :* le fichier adminlist.txt présents sur le FTP de votre serveur ne contient pas votre steamID, ou la ligne qui contient votre steamID n'est pas correcte.
 
-*Solution :* Suivez [http://code.google.com/p/cssmatch-plugin/wiki/Arbitrage le tutoriel d'arbitrage].
+*Solution :* Suivez [Arbitrage le tutoriel d'arbitrage].
   .
 
 
