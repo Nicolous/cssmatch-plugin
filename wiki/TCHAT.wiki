@@ -1,0 +1,78 @@
+#summary Commandes du TCHAT (nécessitant des droits ou non)
+
+= Introduction =
+
+Les commandes du TCHAT sont des commandes à taper dans la zone de dialogue. Ces commandes sont là pour vous simplifier la vie ou, dans de plus rare cas, pour vous donnez accès à de nouvelles fonctionnalités.
+
+= Présentation des commandes =
+
+----
+== cssmatch ==
+
+==== Description ====
+
+Disponible depuis la version 1.2 du plugin, cette commande permet aux arbitres d'accéder au menu d'administration. 
+Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
+
+==== Exemple ====
+
+`cssmatch`
+
+----
+== !teamt Le nouveau tag de la team actuellement terroriste ==
+
+==== Description ====
+
+Cette commande permet aux arbitres de personnaliser le tag de la team actuellement terroriste. Son utilité réside surtout dans le fait que la détection automatique des tags ne peut pas être parfaite dans tous les cas. 
+Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
+
+==== Exemple ====
+
+`!teamt ¤ Nirv@na ¤`
+
+----
+== !teamct Le nouveau tag de la team actuellement anti-terroriste ==
+
+==== Description ====
+
+Cette commande permet aux arbitres de personnaliser le tag de la team actuellement anti-terroriste. Son utilité réside surtout dans le fait que la détection automatique des tags ne peut pas être parfaite dans tous les cas. 
+Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
+
+==== Exemple ====
+
+`!teamct ¤ Nirv@na ¤`
+
+----
+== !scores ==
+
+==== Description ====
+
+Cette commande permet à n'importe quel joueur de connaitre les scores du match en cours, ou du dernier match joué depuis que le serveur a démarré.
+
+==== Exemples ===
+
+{{{
+!scores
+}}}
+ou
+{{{
+!score
+}}}
+
+----
+== !go ==
+
+==== Description ====
+Cette commande permet à n'importe quel joueur de déclarer sa team prête à commencer le match pendant le Strats Time. Cette commande ne peut être tapée qu'une fois par team. Lorsque toutes les teams sont déclarées prêtes, le Strats Time prend fin et le match commence.
+
+==== Exemple ====
+
+{{{
+!go
+}}}
+ou
+{{{
+ready
+}}}
+
+----
