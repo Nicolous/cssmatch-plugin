@@ -4,6 +4,9 @@
 
 Il se peut que vous soyez amené à administrer un match par RCON. Même si ça semble peut probable, certaines des commandes que je vais présenter dans cet article peuvent être utiles dans plusieurs cas (exemple : une page du menu est buguée :-P).
 
+=Pour les arbitres :=
+
+Depuis la version 1.2, l'authentification par RCON de l'arbitre n'est plus nécessaire pour utiliser ces commandes. N'importe quel arbitre peut directement utiliser l'une de ces commandes sans passer par la commande "rcon" : les commandes sont dites "clientes".
 
 =Présentation des commandes=
 
