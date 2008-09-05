@@ -2,7 +2,7 @@
 
 =Introduction=
 
-Il se peut que vous soyez amené à administrer un match par RCON. Même si ça semble peut probable, certaines des commandes que je vais présenter dans cet article peuvent être utiles dans plusieurs cas (exemple : une page du menu est buguée :-P).
+CSSMatch peut entièrement être administré via le [Arbitrage le menu d'arbitrage]. Toutefois, il se peut que vous soyez amené à administrer un match par RCON. Même si ça semble peut probable, certaines des commandes que je vais présenter dans cet article peuvent être utiles dans plusieurs cas (exemple : une page du menu est buguée :-P).
 
 =Pour les arbitres :=
 
