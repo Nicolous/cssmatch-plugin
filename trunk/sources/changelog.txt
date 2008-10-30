@@ -1,0 +1,5 @@
+[*] Correction d'un plantage en fin de match lors de l'écriture des rapports
+
+[*] Correction d'une légère fuite de mémoire lors des changements de map
+
+[*] Version Linux uniquement : correction d'un plantage lors du déchargement du plugin (effets non visibles par les utilisateurs)
