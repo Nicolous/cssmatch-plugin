@@ -1,0 +1,11 @@
+#summary Comment lancer un match ?
+
+Cette question est souvent posée. S'il y avait une FAQ, elle y figurerait !
+
+ # [Installation Installez CSSMatch] ;
+ # [Arbitrage Déclarez-vous arbitre] ;
+ # Ouvrez le menu d'arbitrage comme indiqué sur le tutoriel de l'étape 2.
+
+N'oubliez de jeter un coup d'œil au nom des autres tutoriels : http://code.google.com/p/cssmatch-plugin/w/list 
+
+Bons frags !
