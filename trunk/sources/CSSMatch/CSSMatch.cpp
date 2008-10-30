@@ -49,7 +49,7 @@ CSSMatch::CSSMatch()
 
 CSSMatch::~CSSMatch()
 {
-	Msg("CSSMatch : Destruction du singleton..\n");
+	//Msg("CSSMatch : Destruction du singleton..\n");
 }
 
 bool CSSMatch::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
@@ -296,7 +296,7 @@ PLUGIN_RESULT CSSMatch::ClientCommand(edict_t * pEntity)
 				// Si un match est en cours, on interdit les changements de camp
 				CodePhase phaseLimite = PHASE_MANCHE;
 				if (match.getMancheCourante() > 1)
-					phaseLimite = PHASE_OFF;
+					phaseLimite = PHASE_PASSAGE_CUTROUND; // PHASE_OFF + 1
 				try
 				{
 					if (phase >= phaseLimite)

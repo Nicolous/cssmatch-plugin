@@ -40,6 +40,7 @@ string RapportXml::valideXml(const string & chaine) const
 	while((debutRecherche = xml.find("&",debutRecherche)) != string::npos)
 	{
 		xml.replace(debutRecherche,1,"&amp;",0,5);
+		debutRecherche += 4;
 	}
 
 	debutRecherche = 0;

@@ -15865,6 +15865,7 @@ In file included from /home/Nicolas/cssmatch/src/dlls/basecombatweapon.h:16,
 /home/Nicolas/cssmatch/src/game_shared/basecombatweapon_shared.h: In static member function `static void CBaseCombatWeapon::NetworkVar_m_iClip2::NetworkStateChanged(void*)':
 /home/Nicolas/cssmatch/src/game_shared/basecombatweapon_shared.h:474: warning: invalid access to non-static data member `CBaseCombatWeapon::m_iClip2' of NULL object
 /home/Nicolas/cssmatch/src/game_shared/basecombatweapon_shared.h:474: warning: (perhaps the `offsetof' macro was used incorrectly)
+make[1]: Warning: File `CSSMatch/CSSMatch.cpp' has modification time 3e+03 s in the future
 In file included from /home/Nicolas/cssmatch/src/public/tier1/interface.h:50,
                  from CSSMatch/../API/API.h:41,
                  from CSSMatch/CSSMatch.h:23,
@@ -18023,3 +18024,4 @@ In file included from /home/Nicolas/cssmatch/src/dlls/basecombatweapon.h:16,
 /home/Nicolas/cssmatch/src/game_shared/basecombatweapon_shared.h: In static member function `static void CBaseCombatWeapon::NetworkVar_m_iClip2::NetworkStateChanged(void*)':
 /home/Nicolas/cssmatch/src/game_shared/basecombatweapon_shared.h:474: warning: invalid access to non-static data member `CBaseCombatWeapon::m_iClip2' of NULL object
 /home/Nicolas/cssmatch/src/game_shared/basecombatweapon_shared.h:474: warning: (perhaps the `offsetof' macro was used incorrectly)
+make[1]: warning:  Clock skew detected.  Your build may be incomplete.

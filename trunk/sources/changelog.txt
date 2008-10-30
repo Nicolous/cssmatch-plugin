@@ -1,3 +1,5 @@
-[*] Correction : les commandes TCHAT nécessitant des droits d'arbitrage ne renvoient plus de message d'erreur visibles de tout le monde
-[*] Correction : si les strats étaient désactivés, la team gagnante du round au couteau ne pouvait pas choisir sa team
-[*] Correction : la commande cssm_revoke faisait planter les serveurs Linux
+[*] Correction d'un plantage en fin de match lors de l'écriture des rapports
+
+[*] Correction d'une légère fuite de mémoire lors des changements de map
+
+[*] Version Linux uniquement : correction d'un plantage lors du déchargement du plugin (effets non visibles par les utilisateurs)

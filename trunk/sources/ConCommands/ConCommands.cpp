@@ -155,6 +155,13 @@ CON_COMMAND(cssm_restartround, "CSSMatch : Relance le round en cours")
 	match->restartRound();
 }
 
+CON_COMMAND(cssm_adminlist, "CSSMatch : Affiche la liste des steamids arbitre dans la console")
+{
+	CSSMatch * cssmatch = CSSMatch::getInstance();
+	Authentification * auth = cssmatch->getAdminList();
+	auth->logAdminlist();
+}
+
 CON_COMMAND(cssm_grant, "CSSMatch : Ajoute un arbitre le temps d'une map")
 {
 	// La différence de traitement des guillemets dans la console Windows et la console Linux nous oblige à 

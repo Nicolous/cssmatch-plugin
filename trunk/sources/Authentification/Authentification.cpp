@@ -101,6 +101,7 @@ bool Authentification::parseAdminlist(const string & pathFichier)
 	if (! fichier.fail())
 	{
 		succes = true;
+		adminlist.clear();
 
 		string ligne;
 		while(std::getline(fichier,ligne))

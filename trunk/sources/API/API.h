@@ -99,7 +99,7 @@ public:
 #define CSSMATCH_NOM "CSSMatch"
 
 /** Définit le nom de la version du plugin. */
-#define CSSMATCH_VERSION_LIGHT "1.2.91"
+#define CSSMATCH_VERSION_LIGHT "1.2.93"
 
 /** Définit le site Web officiel du plugin. */
 #define CSSMATCH_SITE "http://code.google.com/p/cssmatch-plugin/"
