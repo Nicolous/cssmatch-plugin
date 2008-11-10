@@ -1,4 +1,4 @@
-#summary Comment réactiver les scripts EventScripts désactivés pendant le match ?
+#summary Comment réactiver les scripts EventScripts désactivés pendant un match ?
 
 
 === Plusieurs catégories de scripts ===
