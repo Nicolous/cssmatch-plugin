@@ -8,7 +8,7 @@ La première chose qu'il faut savoir est qu'il y a deux catégories de scripts :
  # Ceux qui nécessitent un redémarrage du serveur pour être chargés et fonctionner correctement
 Ces différentes catégories sont le reflet des différentes façons dont les scripts ont été programmés. Le script idéal est celui qui prévoit que l'on puisse le désactiver puis le réactiver sans soucis, mais personnellement je n'en ai encore jamais vu :-)
 
-Si vous ne voulez pas vous prendre la tête avec tout ça, considérez vos scripts comme faisant partie de la première première catégorie. Vous utiliserez alors la méthode la plus simple et [je pense] la plus utilisée, même si parfois derrière des scripts en souffrent jusqu'à ce que toute la population du serveur soit complètement renouvelée. 
+Si vous ne voulez pas vous prendre la tête avec tout ça, considérez vos scripts comme faisant partie de la première première catégorie. Vous utiliserez alors la méthode la plus simple et (je pense) la plus utilisée, même si parfois derrière des scripts en souffrent jusqu'à ce que toute la population du serveur soit complètement renouvelée. 
 Malgré tout, si vous ne voulez vraiment pas vous prendre la tête la solution idéale reste de posséder un serveur dédié aux wars :-(
 
 `
