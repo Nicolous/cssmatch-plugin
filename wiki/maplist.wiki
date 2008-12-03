@@ -1,7 +1,5 @@
 #summary A quoi sert le fichier maplist.txt du dossier cssmatch ?
 
-== A quoi sert le fichier maplist.txt du dossier cssmatch ? ==
-
 Lorsque vous activer les options d'administration basiques (voir le tuto correspondant), vous pouvez changer de map via le menu d'arbitrage.
 
 _Le fichier *maplist.txt* contient les maps proposées dans le menu permettant de changer de map_. Il permet de restreindre le nombres de choix dans le menu pour un changement de map plus rapide et plus facile.
