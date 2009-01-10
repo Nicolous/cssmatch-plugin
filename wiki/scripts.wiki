@@ -2,7 +2,7 @@
 
 
 === Plusieurs catégories de scripts ===
-La première chose qu'il faut savoir est qu'il y a deux catégories de scripts : 
+La première chose qu'il faut savoir est qu'il y a trois catégories de scripts : 
  # Ceux qui peuvent être chargés, activés, déchargés et désactivés pendant le jeu
  # Ceux qui _ne peuvent pas être désactivés_, mais _uniquement déchargés_ (exemple typique de l'anti-camp)
  # Ceux qui nécessitent un redémarrage du serveur pour être chargés et fonctionner correctement
