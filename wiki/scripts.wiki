@@ -11,7 +11,7 @@ Ces différentes catégories sont le reflet des différentes façons dont les sc
 Si vous ne voulez pas vous prendre la tête avec tout ça, considérez vos scripts comme faisant partie de la première première catégorie. Vous utiliserez alors la méthode la plus simple et (je pense) la plus utilisée, même si parfois derrière des scripts en souffrent jusqu'à ce que toute la population du serveur soit complètement renouvelée. 
 Malgré tout, si vous ne voulez vraiment pas vous prendre la tête la solution idéale reste de posséder un serveur dédié aux wars :-(
 
-`
+<br>
 === Première catégorie ===
 
 Pour les scripts de la première catégorie, il sera inutile de charger et décharger les scripts un par un dans les fichiers de configuration. L'utilisation de la variable *mattie_eventscripts* suffit à ordonner à EventScripts désactiver ou activer les scripts sur demande.
@@ -26,7 +26,7 @@ mattie_eventscripts 1
 }}}
 
 
-`
+<br>
 === Deuxième catégorie ===
 
 Les scripts de la deuxième catégorie sont plutôt rares. Vous aurez beau les mettre en pause (les désactiver), ils continueront en partie à s'exécuter. L'exemple le plus répandu est celui de l'anti-camp qui continue à punir les joueurs malgré qu'ils aient été désactivés avec la commande _es_disable_ ou la variable _mattie_eventscripts_.
@@ -44,7 +44,7 @@ _*Note :* Pour éviter de copier/coller tous les es_load de votre fichier *autoe
 Attention toutefois, il se peut que le script en question fasse partie de la dernière catégorie de scripts que je vais présenter maintenant.
 
 
-`
+<br>
 === Troisième catégorie ===
 
 Les scripts de la troisième catégorie sont plus difficiles à identifier. Et pourtant ils sont nombreux, c'est peut-être même les plus répandus. Ces scripts doivent n'être chargés que lors du démarrage du serveur (ex : avec un reboot) car ils ont besoin de surveiller les connexions et les déconnexions des joueurs pour fonctionner correctement.
@@ -56,7 +56,7 @@ es_unload le_script
 Par contre comme je viens de le dire, vous ne pouvez pas recharger ces scripts en fin de match (à moins que tous les joueurs ne se déconnectent puis se reconnectent au serveur). Si vous utiliser ce style de script, vous devez rebooter votre serveur pour espérer les voir se rétablir correctement.
 
 
-`
+<br>
 === Déterminer la catégorie à laquelle appartient un script ===
 
 _"Tout ça est bien beau, mais comment savoir quel procéder utiliser pour quel script ?"_
