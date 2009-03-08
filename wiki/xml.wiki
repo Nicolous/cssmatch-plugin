@@ -5,7 +5,7 @@
 A la fin de chaque match, un rapport de match est généré dans le dossier *cfg/cssmatch/rapports*. Le fichier ainsi généré porte dans son nom la date, l'heure et la map du match.
 
 
- .
+<br>
 == Lire les rapports avec un navigateur Internet ==
 
 Trois fichiers sont indispensables pour lire un rapport :
@@ -15,7 +15,7 @@ Trois fichiers sont indispensables pour lire un rapport :
 Ces trois fichiers doivent absolument se trouver dans le même dossier. Si c'est le cas, vous pouvez maintenant ouvrir le rapport avec un navigateur Internet.
 
 
- .
+<br>
 == Lire les rapports depuis votre site Internet ==
 
 Pour rendre accessible les rapports sur votre site Internet, récupérer les trois fichiers suivants :
@@ -33,7 +33,7 @@ Le dossier principal de mon site _www.ma-team.fr_ se nomme *www*. J'envoie deux 
 Pour visualiser le premier rapport, je me rend à l'adresse _www.ma-team.fr/rapports/2008-06-29_22h24_de_dust.xml_. Pour visualiser le second, _je visite l'adresse www.ma-team.fr/rapports/2008-07-02_10h10_de_dust.xml_.
 
 
- .
+<br>
 == Donner au rapport le même style que votre site Internet ==
 
 Pour modifier l'apparence des rapports, vous devrez modifier le fichier _cssmatch.css_. Il s'agit d'une _[http://fr.wikipedia.org/wiki/Feuilles_de_style_en_cascade feuille de style en cascade]_. Ce fichier n'est pas compréhensible de tout le monde, mais une personne s'y connaissant un minimum en développement de sites Internet pourra facilement adapter le fichier pour vous.
@@ -43,10 +43,9 @@ _*Note :* Si vous modifiez le fichier cssmatch.css, venez proposez votre modific
 Si tout cela vous a donné envie d'apprendre à modifier vous-même le fichier _cssmatch.css_, ces tutoriels peuvent vous intéresser : [http://www.siteduzero.com/tuto-3-6-0-apprenez-a-creer-votre-site-web.html Apprenez à créer votre site web].
 
 
- .
+<br>
 == Automatiser la récupération des rapports ==
 
 Certains systèmes seront développés pour automatiser la récupération des rapports, ainsi que des enregistrements SourceTV (et plus !). Ces systèmes en sont encore au stade de développement, comme vous aurez pu le constater sur [http://cssmatch.frenchboard.com/forum-des-developpeurs-f8/ le forum des développeurs].
 
 Un tutoriel d'installation sera écrit pour chacun de ces systèmes.
-
