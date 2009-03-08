@@ -1,14 +1,12 @@
 #summary Comment devenir arbitre (admin) du match
 
 == Comment devenir arbitre (admin) du match ==
-
-  .
+<br>
 === Comment se mettre arbitre : ===
   # Ouvrez le fichier adminlist.txt situé dans le dossier _cfg/cssmatch_
   # Ajoutez votre [http://fr.wikipedia.org/wiki/SteamID steamID] à la fin de ce fichier
   # Changer de map ou rebootez votre serveur
-
-  .
+<br>
 === Vérifier que l'on est arbitre et utilisation du menu d'arbitrage : ===
   # Bindez la touche suivante dans votre config.cfg ou via votre console : `cssmatch`
     * Exemple de bind sur la touche "e" de votre clavier : `bind "e" "cssmatch"`
