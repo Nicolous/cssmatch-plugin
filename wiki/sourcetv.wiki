@@ -8,7 +8,7 @@ Par défaut, la seule présence de SourceTv sur le serveur suffit à ce que CSSM
 Si les enregistrements ne sont pas effectués, peut-être pourrez vous identifier le problème grâce à l'article suivant : [Erreurs#Messages_d%27erreur_color%C3%A9s_concernant_SourceTV Messages d'erreurs liés à SourceTv].<br>
 Si vous ne trouvez pas les enregistrements, lisez la suite de cet article.
 
-
+<br>
 == Configuration de l'enregistrement ==
 
 Si vous avez précédemment désactivé l'enregistrement du match via SourceTv dans la configuration de CSSMatch, voici comment configurer le plugin de manière à rétablir les enregistrements automatiques.
