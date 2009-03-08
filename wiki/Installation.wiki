@@ -8,13 +8,13 @@
   # Envoyez le contenu du dossier _cfg_ dans le dossier _cfg_ de votre serveur
   # Redémarrez le serveur
 
-  .
+<br>
 == Vérification de l'installation :==
   # Tapez la commande suivante dans la console de votre serveur (par RCON ou via le logiciel [http://fr.wikipedia.org/wiki/HLSW HLSW]) : `plugin_print` . Cette commande sert à afficher la liste des plugins installés sur votre serveur.
   # Vérifiez que cette liste contient bien le plugin CSSMatch
     * Si non, recommencez l'installation
     * Si oui l'installation est correcte
 
-  .
+<br>
 === Si vous avez des problèmes d'installation : ===
 Si vous êtes amené à poster sur le forum, merci de préciser ce que vous avez déjà fait pour installer le plugin (même si vous devez pour celà répéter ce tuto).
