@@ -2,7 +2,7 @@
 
 == Introduction ==
 
-A la fin de chaque match, un rapport de match est généré dans le dossier *cfg/cssmatch/rapports*. Le fichier ainsi généré porte dans son nom la date, l'heure et la map du match.
+A la fin de chaque match, un rapport de match est généré dans le dossier *cfg/cssmatch/reports*. Le fichier ainsi généré porte dans son nom la date, l'heure et la map du match.
 
 
 <br>
