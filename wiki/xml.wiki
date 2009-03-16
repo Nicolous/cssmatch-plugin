@@ -38,7 +38,7 @@ Pour visualiser le premier rapport, je me rend à l'adresse _www.ma-team.fr/rapp
 
 Pour modifier l'apparence des rapports, vous devrez modifier le fichier _cssmatch.css_. Il s'agit d'une _[http://fr.wikipedia.org/wiki/Feuilles_de_style_en_cascade feuille de style en cascade]_. Ce fichier n'est pas compréhensible de tout le monde, mais une personne s'y connaissant un minimum en développement de sites Internet pourra facilement adapter le fichier pour vous.
 
-_*Note :* Si vous modifiez le fichier cssmatch.css, venez proposez votre modification sur [http://www.cssmatch.com/forums/viewforum.php?f=35&sid=9438905195663487713e467b93ff4623 ce forum]_. Vous aurez contribué au projet et vous aurez aidé la communauté CSSMatch :-) !
+_*Note :* Si vous modifiez le fichier cssmatch.css, venez proposez votre modification sur [http://www.cssmatch.com/forums/viewforum.php?f=35 ce forum]_. Vous aurez contribué au projet et vous aurez aidé la communauté CSSMatch :-) !
 
 Si tout cela vous a donné envie d'apprendre à modifier vous-même le fichier _cssmatch.css_, ces tutoriels peuvent vous intéresser : [http://www.siteduzero.com/tuto-3-6-0-apprenez-a-creer-votre-site-web.html Apprenez à créer votre site web].
 
@@ -46,6 +46,6 @@ Si tout cela vous a donné envie d'apprendre à modifier vous-même le fichier _
 <br>
 == Automatiser la récupération des rapports ==
 
-Certains systèmes seront développés pour automatiser la récupération des rapports, ainsi que des enregistrements SourceTV (et plus !). Ces systèmes en sont encore au stade de développement, comme vous aurez pu le constater sur [http://cssmatch.frenchboard.com/forum-des-developpeurs-f8/ le forum des développeurs].
+Certains systèmes seront développés pour automatiser la récupération des rapports, ainsi que des enregistrements SourceTV (et plus !). Ces systèmes en sont encore au stade de développement, comme vous aurez pu le constater sur [http://www.cssmatch.com/forums/viewforum.php?f=35 le forum des outils].
 
 Un tutoriel d'installation sera écrit pour chacun de ces systèmes.
