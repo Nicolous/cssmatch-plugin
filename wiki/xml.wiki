@@ -8,7 +8,7 @@ A la fin de chaque match, un rapport de match est généré dans le dossier *cfg
 <br>
 == Lire les rapports avec un navigateur Internet ==
 
-Trois fichiers sont indispensables pour lire un rapport :
+Trois fichiers situés dans le dossier _cstrike/cfg/cssmatch/reports_ sont indispensables pour lire un rapport :
  * Le fichier _cssmatch.xsl_
  * Le fichier _cssmatch.css_
  * Le fichier du rapport
@@ -18,7 +18,7 @@ Ces trois fichiers doivent absolument se trouver dans le même dossier. Si c'est
 <br>
 == Lire les rapports depuis votre site Internet ==
 
-Pour rendre accessible les rapports sur votre site Internet, récupérer les trois fichiers suivants :
+Pour rendre accessible les rapports sur votre site Internet, récupérer les trois fichiers suivants du dossier _cstrike/cfg/cssmatch/reports_ :
  * Le fichier _cssmatch.xsl_
  * Le fichier _cssmatch.css_
  * Le fichier du rapport
