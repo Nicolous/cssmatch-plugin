@@ -11,7 +11,7 @@ Pour celà, lisez la suite de ce tutoriel.
 <br>
 == Comment configurer un match ? ==
   # Allez dans le dossier _cfg/cssmatch/configurations_. Ce dossier contient toutes les configurations différentes de match que vous pouvez exécuter (au choix) lors du lancement d'un match. Les fichiers .cfg présents dans ce dossier sont automatiquement listé dans le menu du plugin.
-  # Ouvrez le fichier _default.cfg_. Ce fichier est un exemple de configuration de match. Vous y trouverez les "variables" spécifiques au plugin (pour structurer le match à votre guise) toutes préfixées par "cssmatch_" ainsi que des exemples de variables modifiant la configuration du serveur pendant le match.
+  # Ouvrez le fichier _default.cfg_. Ce fichier est un exemple de configuration de match. (Vous pourrez trouver une traduction française de ce fichier [http://cssmatch.com/translations/french/configurations/default.cfg ici].) Vous y trouverez les "variables" spécifiques au plugin (pour structurer le match à votre guise) toutes préfixées par "cssmatch_" ainsi que des exemples de variables modifiant la configuration du serveur pendant le match.
     * Modifiez les variables du plugin comme vous le souhaitez (elles sont toutes documentées dans le fichier)
     * Ajoutez/Modifiez/Supprimez les variables du jeu comme vous le souhaitez
 
