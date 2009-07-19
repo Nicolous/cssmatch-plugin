@@ -29,7 +29,7 @@ mattie_eventscripts 1
 <br>
 === Deuxième catégorie ===
 
-Les scripts de la deuxième catégorie sont plutôt rares. Vous aurez beau les mettre en pause (les désactiver), ils continueront en partie à s'exécuter. L'exemple le plus répandu est celui de l'anti-camp qui continue à punir les joueurs malgré qu'ils aient été désactivés avec la commande _es_disable_ ou la variable _mattie_eventscripts_.
+Les scripts de la deuxième catégorie sont plutôt rares. Vous aurez beau les mettre en pause (les désactiver), ils continueront en partie à s'exécuter. L'exemple le plus répandu est celui de l'anti-camp qui continue à punir les joueurs malgré qu'il ait été désactivé avec la commande _es_disable_ ou la variable _mattie_eventscripts_.
 
 Comme on ne peut pas désactiver ces scripts, il va falloir les décharger complètement avec la commande _es_unload_. Dans le fichier *cfg/cssmatch/configurations/default.cfg* :
 {{{
@@ -47,19 +47,19 @@ Attention toutefois, il se peut que le script en question fasse partie de la der
 <br>
 === Troisième catégorie ===
 
-Les scripts de la troisième catégorie sont plus difficiles à identifier. Et pourtant ils sont nombreux, c'est peut-être même les plus répandus. Ces scripts doivent n'être chargés que lors du démarrage du serveur (ex : avec un reboot) car ils ont besoin de surveiller les connexions et les déconnexions des joueurs pour fonctionner correctement.
+Les scripts de la troisième catégorie sont plus difficiles à identifier. Et pourtant ils sont nombreux, c'est peut-être même les plus répandus. Ces scripts doivent n'être chargés que lors du démarrage du serveur (ex : avec un reboot) car ils ont besoin de surveiller en permanence les connexions et les déconnexions des joueurs pour fonctionner correctement.
 
 Pour décharger ces scripts, utilisez la commande _es_unload_. Dans le fichier *cfg/cssmatch/configurations/default.cfg* :
 {{{
 es_unload le_script
 }}}
-Par contre comme je viens de le dire, vous ne pouvez pas recharger ces scripts en fin de match (à moins que tous les joueurs ne se déconnectent puis se reconnectent au serveur). Si vous utiliser ce style de script, vous devez rebooter votre serveur pour espérer les voir se rétablir correctement.
+Par contre comme je viens de le dire, vous ne pouvez pas recharger ces scripts en fin de match (à moins que tous les joueurs ne se déconnectent puis se reconnectent au serveur). Si vous utiliser ce style de script, vous devez rebooter votre serveur pour espérer les voir se rétablir correctement, sans bug.
 
 
 <br>
 === Déterminer la catégorie à laquelle appartient un script ===
 
-_"Tout ça est bien beau, mais comment savoir quel procéder utiliser pour quel script ?"_
+_"Tout ça est bien beau, mais comment savoir quel procédé utiliser pour quel script ?"_
 
 Vous allez être déçu, mais il n'y a que deux "solutions" qui n'en sont pas vraiment :
  * Considérez vos scripts comme faisant partie de la première catégorie, puis adaptez la méthode de déchargement de vos scripts en fonction de vos observations (ex : si un script continue à fonctionner en war, il fait partie de la deuxième catégorie présentée, utilisez donc la méthode de chargement/déchargement correspondante pour tous vos scripts)
