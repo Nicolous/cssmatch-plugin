@@ -11,7 +11,7 @@ Si vous ne trouvez pas les enregistrements, lisez la suite de cet article.
 <br>
 == Configuration de l'enregistrement ==
 
-Si vous avez précédemment désactivé l'enregistrement du match via SourceTv dans la configuration de CSSMatch, voici comment configurer le plugin de manière à rétablir les enregistrements automatiques.
+Si vous avez désactivé l'enregistrement des matchs avec SourceTv dans la configuration de CSSMatch, voici comment rétablir les enregistrements automatiques.
 
  # Dossier _cstrike/cfg/cssmatch/configuration_ : ouvrez votre fichier de configuration de match (par exemple : default.cfg).
 _*Note :* une traduction de ce fichier peut être trouvée [http://cssmatch.com/translations/french/configurations/default.cfg ici (lien)]_ 
@@ -27,5 +27,5 @@ cssmatch_sourcetv "1"
 // - la valeur par défaut est cfg/cssmatch/sourcetv .
 cssmatch_sourcetv_path "cfg/cssmatch/sourcetv"
 }}}
-   * `cssmatch_sourcetv` doit être suivit du chiffre `1` pour que les enregistrements soient automatiquement lancés au début de chaque manche.
-   * `cssmatch_sourcetv_path` définit quel dossier stockera les enregistrements. Comme vous le voyez, par défaut, les enregistrements sont enregistrés dans le dossier _cstrike/cfg/cssmatch/sourcetv_
+   * `cssmatch_sourcetv` doit être suivi du chiffre `1` pour que les enregistrements soient automatiquement lancés au début de chaque manche.
+   * `cssmatch_sourcetv_path` définit quel dossier stockera les enregistrements. Comme vous le voyez, par défaut, les enregistrements sont effectués dans le dossier _cstrike/cfg/cssmatch/sourcetv_
