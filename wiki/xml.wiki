@@ -34,7 +34,7 @@ Pour visualiser le premier rapport, je me rend à l'adresse _www.ma-team.fr/rapp
 
 Voici un aperçu de ce que ça donne : [http://cssmatch.com/reports/2009-04-04_23h23_de_prodigy.xml 2009-04-04_23h23_de_prodigy.xml]
 
-*_Note :* Pour que sur votre site la page soit en français, télécharger la traduction française du fichier _cssmatch.xsl_ disponible ici : [http://cssmatch.com/translations/french/reports/cssmatch.xsl cssmatch.xsl] (clique-droit > enregistrer-sous)._
+*_Note :* Pour que sur votre site la page soit en français, télécharger la traduction française du fichier _cssmatch.xsl_ disponible ici : [http://cssmatch.com/translations/french/reports/cssmatch.xsl cssmatch.xsl] (clique-droit > enregistrer la cible du lien sous)._
 
 
 <br>
