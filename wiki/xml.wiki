@@ -28,11 +28,13 @@ Ces trois fichiers doivent absolument se trouver dans le même dossier. Envoyez 
 Le dossier principal de mon site _www.ma-team.fr_ se nomme *www*. J'envoie deux rapports dans le dossier *www/rapports*. Ce dernier contient donc les fichiers suivants :
  * Le fichier _cssmatch.xsl_
  * Le fichier _cssmatch.css_
- * Le premier rapport _2008-06-29_22h24_de_dust.xml_
- * Le second rapport _2008-07-02_10h10_de_dust_.xml
-Pour visualiser le premier rapport, je me rend à l'adresse _www.ma-team.fr/rapports/2008-06-29_22h24_de_dust.xml_. Pour visualiser le second, _je visite l'adresse www.ma-team.fr/rapports/2008-07-02_10h10_de_dust.xml_.
+ * Le premier rapport _2009-04-03_22h24_de_dust.xml_
+ * Le second rapport _2009-04-04_23h23_de_prodigy.xml_
+Pour visualiser le premier rapport, je me rend à l'adresse _www.ma-team.fr/rapports/2009-04-03_22h24_de_dust.xml_. Pour visualiser le second, _je visite l'adresse www.ma-team.fr/rapports/2009-04-04_23h23_de_prodigy.xml_.
 
 Voici un aperçu de ce que ça donne : [http://cssmatch.com/reports/2009-04-04_23h23_de_prodigy.xml 2009-04-04_23h23_de_prodigy.xml]
+
+*_Note :* Pour que sur votre site la page soit en français, télécharger la traduction française du fichier _cssmatch.xsl_ disponible ici : [http://cssmatch.com/translations/french/reports/cssmatch.xsl cssmatch.xsl] (clique-droit > enregistrer-sous)._
 
 
 <br>
