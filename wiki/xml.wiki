@@ -32,6 +32,8 @@ Le dossier principal de mon site _www.ma-team.fr_ se nomme *www*. J'envoie deux 
  * Le second rapport _2008-07-02_10h10_de_dust_.xml
 Pour visualiser le premier rapport, je me rend à l'adresse _www.ma-team.fr/rapports/2008-06-29_22h24_de_dust.xml_. Pour visualiser le second, _je visite l'adresse www.ma-team.fr/rapports/2008-07-02_10h10_de_dust.xml_.
 
+Voici un aperçu de ce que ça donne : [http://cssmatch.com/reports/2009-04-04_23h23_de_prodigy.xml 2009-04-04_23h23_de_prodigy.xml]
+
 
 <br>
 == Donner au rapport le même style que votre site Internet ==
