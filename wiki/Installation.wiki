@@ -20,3 +20,5 @@
 Si vous êtes amené à poster sur le forum, merci de préciser ce que vous avez déjà fait pour installer le plugin (même si vous devez pour cela répéter ce tuto).
 
 _*Note : Si votre serveur est hébergé sur une machine 64 bits et que vous n'arrivez pas à installer CSSMatch, une solution est présenté ici : [http://www.cssmatch.com/forums/viewtopic.php?p=355#p355 cssmatch 64 bits]*_
+
+_*Note :* Une traduction française de tous les fichiers de configuration peut être trouvée à l'adresse suivante : http://cssmatch.com/translations/french/_
