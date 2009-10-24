@@ -74,10 +74,12 @@ make clean DEBUG=true
   ** pour XP, Vista et probablement Seven : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en Plateform SDK]
   ** pour Windows 2000 : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en#filelist PSDK-x86.exe] + [http://www.01net.com/telecharger/windows/Programmation/creation/fiches/25232.html .NET Framework]
  * Placez-vous dans le dossier qui va contenir le projet
- * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc (Avec TortoiseSVN : clique-droit > "SVN Checkout")
+ * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc (Avec TortoiseSVN : clique-droit > "SVN Checkout" sur le lien [svn://alliedmods.net/svnroot/sourcemm/hl2sdk])
  _*Note :* Pour éviter d'avoir à modifier les options du projet Visual C++, arrangez-vous pour que le dossier contenant le SDK soit nommé "hl2sdk"._ 
+ * Récupérez la dernière version du code source de CSSMatch. (Avec TortoiseSVN : clique-droit > "SVN Checkout" sur le lien [http://cssmatch-plugin.googlecode.com/svn/trunk/])
 
 ==== Compilation : ==== 
+ * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : cssmatch-plugin-read-only)
  * Ouvrez le fichier projet CSSMatch en double-cliquant sur le fichier CSSMatch-2005.vcproj (ou CSSMatch-2005.sln)
  * Lancez une génération (menu "Générér" > "Générer en tâche de fond..." > cocher "Release")
  _*Note :* Le fichier "cssmatch.dll" est généré dans le sous-dossier "zip/addons"._
