@@ -67,7 +67,8 @@ make clean DEBUG=true
 ==== Les pré-requis : ==== 
  * Une version 32 bits récente de Windows (XP et Vista testés)
  * Un client SVN. (Je vous recommande [http://tortoisesvn.tigris.org/ TortoiseSVN].) Vous pouvez également installer le logiciel "svn" et l'utiliser en ligne de commande. Dans ce cas, reportez-vous aux lignes de commandes données dans la partie dédiée à Linux.
- * CSSMatch est un projet [http://developer.valvesoftware.com/wiki/Compiling_under_VS2005#Installing Visual C++ Express 2005] (logiciel gratuit). Cependant, vous avez aussi le choix entre [http://developer.valvesoftware.com/wiki/Category:Programming#Compiling Visual Studio 2005 ou 2008 (payant)] et [http://msdn.microsoft.com/fr-fr/express/aa975050.aspx Visual C++ Express 2008 (gratuit)]. Le projet (CSSMatch-2005.vcproj) sera alors automatiquement converti lors de sa première ouverture. Par ailleurs, vous pouvez très bien décider d'utiliser le compilateur de Visual Studio/C++ avec un IDE tel que [http://www.codeblocks.org/ Code::Blocks].
+ * CSSMatch est un projet [http://developer.valvesoftware.com/wiki/Compiling_under_VS2005#Installing Visual C++ Express 2005] (logiciel gratuit). Cependant, vous avez aussi le choix entre [http://developer.valvesoftware.com/wiki/Category:Programming#Compiling Visual Studio 2005 ou 2008 (payant)] et [http://msdn.microsoft.com/fr-fr/express/aa975050.aspx Visual C++ Express 2008 (gratuit)]. Le projet (CSSMatch-2005.vcproj) sera alors automatiquement converti lors de sa première ouverture. 
+ _*Note :* Par ailleurs, vous pouvez décider d'utiliser le compilateur de Visual Studio/C++ avec un IDE tel que [http://www.codeblocks.org/ Code::Blocks].
 
 ==== Préparation de la première compilation : ==== 
  * Si vous utiliser une version de Visual C++ Express, vous devez télécharger et installer le SDK de Windows approprié :
