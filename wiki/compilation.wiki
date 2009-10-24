@@ -1,0 +1,67 @@
+#summary Compiler CSSMatch (pour les développeurs)
+
+== Contribuer au projet CSSMatch ==
+
+CSSMatch est distribué sous [http://www.gnu.org/licenses/gpl.html licence GNU/GPLv3], ce qui en fait un plugin [http://fr.wikipedia.org/wiki/Logiciel_libre libre].
+
+Toute personne souhaitant aider au développement de CSSMatch est la bienvenue. Si vous êtes intéressé, [mailto:dani31m@hotmail.com contactez moi]. Je vous donnerai alors les droits nécessaires pour travailler sur [http://code.google.com/p/cssmatch-plugin/source/browse/ le même code source que moi]. La seule condition que j'exigerai de vous sera d'avoir une bonne expérience du langage C++.
+
+Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure toujours une compatibilité maximale avec votre machine. Voici un tutoriel vous expliquant comment compiler CSSMatch.
+
+<br>
+== Compilation sur Linux ==
+
+==== Les pré-requis : ==== 
+ * Une version 32 bits récente de votre distribution Linux favorite
+ * Le logiciel "svn"
+ * Le logiciel "make"
+ * La version 4.1 du compilateur "gcc/g++"
+
+==== Préparation de la première compilation : ==== 
+ * A l'aide d'un terminal, placez-vous dans le dossier qui va contenir le projet
+ * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc :
+{{{
+svn checkout svn://alliedmods.net/svnroot/sourcemm/hl2sdk hl2sdk
+}}}
+_*Note :* Le dossier contenant le SDK est nommé "hl2sdk"._ 
+ * Récupérez la dernière version du code source de CSSMatch :
+{{{
+svn checkout http://cssmatch-plugin.googlecode.com/svn/trunk/ cssmatch-plugin-read-only
+}}}
+ * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : cssmatch-plugin-read-only), et exécutez :
+{{{
+chmod +x compile.sh
+}}}
+
+==== Compilation : ==== 
+ * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : cssmatch-plugin-read-only)
+ * Lancez la compilation :
+{{{
+make
+}}} 
+ Vous constaterez que de nombreux avertissements sont affichés. Hélas, c'est normal, et vous ne pourrez rien y changer. Ils proviennent du SDK fourni par Valve, mais ils sont inoffensifs.
+ Pour évitez d'être noyé dans tous ces avertissements, vous pouvez utiliser le script "compile.sh" :
+ {{{
+./compile.sh
+}}}
+ Les messages d'erreurs résultants de la compilation seront alors redirigés vers un fichier "debug_make.txt". Si la compilation échoue, les messages d'erreurs (mais pas les avertissements) seront affichés dès que "make" a fini son travail.
+
+ _*Note :* La compilation peut prendre quelques minutes, surtout si vous n'utilisez pas le script "compile.sh"._
+
+ _*Note :* Le fichier "cssmatch_i486.so" est généré dans le sous-dossier "zip/addons". Notez également que le fichier "cssmatch.vdf" est un fichier texte qui n'est pas généré par le processus de compilation. (Ouvrez le ! Il indique au serveur quel fichier charger.)_
+ * Quelques cibles utiles du Makefile :
+{{{
+# Compiler en mode debug
+make debug
+
+# Nettoyer les objets issus du mode release :
+make clean
+
+# Nettoyer les objets issus du mode debug
+make clean DEBUG=true
+}}}
+
+<br>
+== Compilation sur Windows ==
+
+A venir...
