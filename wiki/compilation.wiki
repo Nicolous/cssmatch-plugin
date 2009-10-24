@@ -66,6 +66,7 @@ make clean DEBUG=true
 
 A venir...
 
+<br>
 == Notes communes à la compilation sur Linux et Windows : ==
  * Le fichier "cssmatch.vdf" est un fichier texte qui n'est pas généré par le processus de compilation. (Ouvrez le ! Il indique au serveur quel fichier charger.)
 
@@ -75,3 +76,4 @@ A venir...
 {{{
 svn update
 }}}
+ De même, vous pouvez mettre à jour votre version locale du code source de CSSMatch si une mise à jour est publiée.
