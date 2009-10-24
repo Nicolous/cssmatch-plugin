@@ -1,4 +1,4 @@
-#summary Compiler CSSMatch (pour les développeurs)
+#summary Compiler CSSMatch
 
 == Contribuer au projet CSSMatch ==
 
