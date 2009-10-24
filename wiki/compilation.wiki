@@ -64,7 +64,23 @@ make clean DEBUG=true
 <br>
 == Compilation sur Windows ==
 
-A venir...
+==== Les pré-requis : ==== 
+ * Une version 32 bits récente de Windows (XP et Vista testés)
+ * Un client SVN. (Je vous recommande [http://tortoisesvn.tigris.org/ TortoiseSVN].) Vous pouvez également installer le logiciel "svn" et l'utiliser en ligne de commande. Dans ce cas, reportez-vous aux lignes de commandes données dans la partie dédiée à Linux.
+ * CSSMatch est un projet [http://developer.valvesoftware.com/wiki/Compiling_under_VS2005#Installing Visual C++ Express 2005] (logiciel gratuit). Cependant, vous avez aussi le choix entre [http://developer.valvesoftware.com/wiki/Category:Programming#Compiling Visual Studio 2005 ou 2008 (payant)] et [http://msdn.microsoft.com/fr-fr/express/aa975050.aspx Visual C++ Express 2008 (gratuit)]. Le projet (CSSMatch-2005.vcproj) sera alors automatiquement converti lors de sa première ouverture. Par ailleurs, vous pouvez très bien décider d'utiliser le compilateur de Visual Studio/C++ avec un IDE tel que [http://www.codeblocks.org/ Code::Blocks].
+
+==== Préparation de la première compilation : ==== 
+ * Si vous utiliser une version de Visual C++ Express, vous devez télécharger et installer le SDK de Windows approprié :
+  ** pour XP, Vista et probablement Seven : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en Plateform SDK]
+  ** pour Windows 2000 : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en#filelist PSDK-x86.exe] + [http://www.01net.com/telecharger/windows/Programmation/creation/fiches/25232.html .NET Framework]
+ * Placez-vous dans le dossier qui va contenir le projet
+ * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc (Avec TortoiseSVN : clique-droit > "SVN Checkout")
+ _*Note :* Pour éviter d'avoir à modifier les options du projet Visual C++, arrangez-vous pour que le dossier contenant le SDK soit nommé "hl2sdk"._ 
+
+==== Compilation : ==== 
+ * Ouvrez le fichier projet CSSMatch en double-cliquant sur le fichier CSSMatch-2005.vcproj (ou CSSMatch-2005.sln)
+ * Lancez une génération (menu "Générér" > "Générer en tâche de fond..." > cocher "Release")
+ _*Note :* Le fichier "cssmatch.dll" est généré dans le sous-dossier "zip/addons"._
 
 <br>
 == Notes communes à la compilation sur Linux et Windows : ==
@@ -76,4 +92,5 @@ A venir...
 {{{
 svn update
 }}}
+ (Avec TortoiseSVN : clique-droit, "SVN Update".) <br>
  De même, vous pouvez mettre à jour votre version locale du code source de CSSMatch si une mise à jour est publiée.
