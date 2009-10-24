@@ -48,7 +48,7 @@ make
 
  _*Note :* La compilation peut prendre quelques minutes, surtout si vous n'utilisez pas le script "compile.sh"._
 
- _*Note :* Le fichier "cssmatch_i486.so" est généré dans le sous-dossier "zip/addons". Notez également que le fichier "cssmatch.vdf" est un fichier texte qui n'est pas généré par le processus de compilation. (Ouvrez le ! Il indique au serveur quel fichier charger.)_
+ _*Note :* Le fichier "cssmatch_i486.so" est généré dans le sous-dossier "zip/addons"._
  * Quelques cibles utiles du Makefile :
 {{{
 # Compiler en mode debug
@@ -65,3 +65,13 @@ make clean DEBUG=true
 == Compilation sur Windows ==
 
 A venir...
+
+== Notes communes à la compilation sur Linux et Windows : ==
+ * Le fichier "cssmatch.vdf" est un fichier texte qui n'est pas généré par le processus de compilation. (Ouvrez le ! Il indique au serveur quel fichier charger.)
+
+ * Si une mise à jour du jeu casse le plugin ou si Valve change quelque chose au SDK des jeux _Episode 1_, mettez à jour à jour votre version locale du SDK :
+  # Placez-vous dans le dossier "hl2sdk"
+  # Exécutez :
+{{{
+svn update
+}}}
