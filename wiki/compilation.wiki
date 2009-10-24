@@ -23,7 +23,7 @@ Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure tou
 {{{
 svn checkout svn://alliedmods.net/svnroot/sourcemm/hl2sdk hl2sdk
 }}}
-_*Note :* Le dossier contenant le SDK est nommé "hl2sdk"._ 
+ _*Note :* Le dossier contenant le SDK est nommé "hl2sdk"._ 
  * Récupérez la dernière version du code source de CSSMatch :
 {{{
 svn checkout http://cssmatch-plugin.googlecode.com/svn/trunk/ cssmatch-plugin-read-only
