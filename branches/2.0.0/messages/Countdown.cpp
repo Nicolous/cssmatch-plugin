@@ -22,7 +22,7 @@
 
 #include "Countdown.h"
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
@@ -66,7 +66,7 @@ void Countdown::CountdownTick::execute()
 			message << "0" << minutes << " : " << "0" << seconds;
 	}
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
@@ -99,7 +99,7 @@ void Countdown::fire(int seconds)
 {
 	left = seconds;
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	plugin->addTimer(new CountdownTick(interfaces->gpGlobals->curtime+1.0f,left));

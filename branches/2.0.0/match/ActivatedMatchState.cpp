@@ -24,7 +24,7 @@
 
 #include "MatchManager.h"
 #include "../messages/I18nManager.h"
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "../player/ClanMember.h"
 
 #include "igameevents.h" // IGameEventManager2, IGameEvent
@@ -44,7 +44,7 @@ using std::find_if;
 
 ActivatedMatchState::ActivatedMatchState()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	listener = new EventListener<ActivatedMatchState>(this,interfaces->gameeventmanager2);
@@ -72,7 +72,7 @@ void ActivatedMatchState::player_disconnect(IGameEvent * event)
 {
 	// Announce any disconnection 
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	I18nManager * i18n = plugin->get18nManager();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
@@ -93,7 +93,7 @@ void ActivatedMatchState::player_team(IGameEvent * event)
 	// Search for any change in the team which requires a new clan name detection
 	// i.e. n player to less than 2 players, 0 player to 1 player, 1 player to 2 players
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -137,7 +137,7 @@ void ActivatedMatchState::player_changename(IGameEvent * event)
 	// Retect the corresponfing clan name if needed
 	// i.e. if the player is alone is his team
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->get18nManager();
 

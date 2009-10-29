@@ -25,7 +25,7 @@
 #include "edict.h" // BaseEntity, edict_t
 #include "dt_send.h" // SendTable
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 
 #include <sstream>
 
@@ -78,7 +78,7 @@ void EntityProp::getOffset(SendTable * table,  istringstream & propPathLeft)
 void EntityProp::initialize()
 {
 	// Get all server classes
-	ServerClass * classes = SimplePlugin::getInstance()->getInterfaces()->serverGameDll->GetAllServerClasses();
+	ServerClass * classes = ServerPlugin::getInstance()->getInterfaces()->serverGameDll->GetAllServerClasses();
 
 	// Search the suitable class
 	while (classes != NULL)

@@ -39,7 +39,7 @@
 #include <sstream>
 #include <time.h>
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 
 using namespace cssmatch;
 
@@ -57,14 +57,14 @@ void cssmatch::print(const string & fileName, int line, const string & message)
 	ostringstream buffer;
 	buffer << PLUGIN_NAME << " (" << fileName << " l." << line << ") : " << message << "\n";
 	//Msg(buffer.str().c_str());
-	SimplePlugin::getInstance()->log(buffer.str());
+	ServerPlugin::getInstance()->log(buffer.str());
 }
 
 void cssmatch::printException(const BaseException & e, const string & fileName, int line)
 {
 	ostringstream buffer;
 	buffer << e.what() << " (" << fileName << ", l." << line << ")";
-	SimplePlugin::getInstance()->log(buffer.str());
+	ServerPlugin::getInstance()->log(buffer.str());
 }
 
 IServerEntity * cssmatch::getServerEntity(edict_t * entity)

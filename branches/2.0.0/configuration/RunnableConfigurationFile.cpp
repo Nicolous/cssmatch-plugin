@@ -22,7 +22,7 @@
 
 #include "RunnableConfigurationFile.h"
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 
 #include <sstream>
 #include <fstream>
@@ -76,7 +76,7 @@ pair<string, string> RunnableConfigurationFile::searchData(string & line)
 
 void RunnableConfigurationFile::getData()
 {	
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	ICvar * cvars = interfaces->convars->getConVarAccessor();
 
@@ -115,7 +115,7 @@ void RunnableConfigurationFile::execute() const
 
 void RunnableConfigurationFile::execute(const string & filePath)
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	ostringstream buffer;

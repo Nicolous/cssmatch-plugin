@@ -21,14 +21,14 @@
  */
 
 #include "Player.h"
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 
 using namespace cssmatch;
 
 Player::Player(int index) throw (PlayerException)
 	: cashHandler("CCSPlayer","m_iAccount"), lifeStateHandler("CBasePlayer","m_lifeState")
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	identity.index = index;
@@ -103,7 +103,7 @@ CBaseCombatCharacter * Player::getBaseCombatCharacter() const
 
 IPlayerInfo * Player::getPlayerInfo() const
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	IPlayerInfo * pInfo = interfaces->playerinfomanager->GetPlayerInfo(identity.pEntity);

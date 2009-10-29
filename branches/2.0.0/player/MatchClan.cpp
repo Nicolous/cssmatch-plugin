@@ -22,7 +22,7 @@
 
 #include "MatchClan.h"
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "ClanMember.h"
 
 #include <sstream>
@@ -59,7 +59,7 @@ void MatchClan::setTeamCode(TeamCode code)
 
 list<ClanMember *> MatchClan::getMembers()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 
 	// We have to construct a list of members who take part to this clan
 	list<ClanMember *> clanPlayerList;

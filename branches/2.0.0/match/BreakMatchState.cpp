@@ -25,7 +25,7 @@
 #include "MatchManager.h"
 #include "../messages/Countdown.h"
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 
 using namespace cssmatch;
 
@@ -39,7 +39,7 @@ void BreakMatchState::startState()
 {
 	ActivatedMatchState::startState();
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	plugin->addTimer(new BreakMatchTimer(interfaces->gpGlobals->curtime + (float)duration,nextState));
@@ -60,7 +60,7 @@ BreakMatchTimer::BreakMatchTimer(float date, BaseMatchState * state)
 
 void BreakMatchTimer::execute()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 
 	match->setMatchState(nextState);

@@ -24,7 +24,7 @@
 
 #include "../match/DisabledMatchState.h"
 #include "../match/MatchManager.h"
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "../configuration/RunnableConfigurationFile.h"
 #include "../messages/Countdown.h"
 
@@ -36,7 +36,7 @@ using std::list;
 // Syntax: cssm_help
 void cssmatch::cssm_help()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 
 	const list<ConCommand *> * pluginConCommands = plugin->getPluginConCommands();
 	list<ConCommand *>::const_iterator itConCommand = pluginConCommands->begin();
@@ -53,7 +53,7 @@ void cssmatch::cssm_help()
 // Syntax: cssm_start [configuration file from cstrike/cfg/cssmatch/configurations [-cutround] [-warmup]]
 void cssmatch::cssm_start()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 
@@ -96,7 +96,7 @@ void cssmatch::cssm_start()
 // Syntax: cssm_stop
 void cssmatch::cssm_stop()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	Countdown * countdown = Countdown::getInstance();
 

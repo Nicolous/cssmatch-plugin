@@ -23,7 +23,7 @@
 #ifndef __EVENT_LISTENER_H__
 #define __EVENT_LISTENER_H__
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 
 #include "igameevents.h"
 
@@ -78,7 +78,7 @@ namespace cssmatch
 							void (T::* callback)(IGameEvent * event),
 							bool serverSide = true)
 		{
-			SimplePlugin * plugin = SimplePlugin::getInstance();
+			ServerPlugin * plugin = ServerPlugin::getInstance();
 			ValveInterfaces * interfaces = plugin->getInterfaces();
 
 			bool success = false;
@@ -107,7 +107,7 @@ namespace cssmatch
 		 */
 		bool removeCallback(const std::string & eventName)
 		{
-			SimplePlugin * plugin = SimplePlugin::getInstance();
+			ServerPlugin * plugin = ServerPlugin::getInstance();
 			ValveInterfaces * interfaces = plugin->getInterfaces();
 
 			bool success = false;
@@ -129,7 +129,7 @@ namespace cssmatch
 		 */
 		void removeCallbacks()
 		{
-			SimplePlugin * plugin = SimplePlugin::getInstance();
+			ServerPlugin * plugin = ServerPlugin::getInstance();
 			ValveInterfaces * interfaces = plugin->getInterfaces();
 
 			interfaces->gameeventmanager2->RemoveListener(this);

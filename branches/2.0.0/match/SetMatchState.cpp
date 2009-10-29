@@ -23,7 +23,7 @@
 #include "SetMatchState.h"
 
 #include "../common/common.h"
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "MatchManager.h"
@@ -42,7 +42,7 @@ using std::find_if;
 
 SetMatchState::SetMatchState()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	listener = new EventListener<SetMatchState>(this,interfaces->gameeventmanager2);
@@ -57,7 +57,7 @@ void SetMatchState::startState()
 {
 	ActivatedMatchState::startState();
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	MatchInfo * infos = match->getInfos();
 	I18nManager * i18n = plugin->get18nManager();
@@ -99,7 +99,7 @@ void SetMatchState::endState()
 
 void SetMatchState::endSet()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 
 	plugin->queueCommand("plugin_print\n");
 
@@ -110,7 +110,7 @@ void SetMatchState::player_death(IGameEvent * event)
 {
 	// Update the score [history] of the involved players
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator itPlayer = playerlist->begin();
@@ -146,7 +146,7 @@ void SetMatchState::round_start(IGameEvent * event)
 {
 	// Update the score history of each player, do the restart and announce the begin of a new round
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -209,7 +209,7 @@ void SetMatchState::round_end(IGameEvent * event)
 {
 	// Update the score of each clan, then end the [round] set if scheduled number of rounds is reached
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	MatchInfo * infos = match->getInfos();
 

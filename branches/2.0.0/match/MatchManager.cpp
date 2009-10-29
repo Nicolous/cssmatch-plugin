@@ -29,7 +29,7 @@
 #include "SetMatchState.h"
 
 #include "../configuration/RunnableConfigurationFile.h"
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "../common/common.h"
 #include "../messages/Countdown.h"
 #include "../messages/I18nManager.h"
@@ -47,7 +47,7 @@ using std::map;
 
 MatchManager::MatchManager()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	// Set the initial state
@@ -97,7 +97,7 @@ MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
 
 void MatchManager::detectClanName(TeamCode code)
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	I18nManager * i18n = plugin->get18nManager();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
@@ -128,7 +128,7 @@ void MatchManager::detectClanName(TeamCode code)
 
 void MatchManager::updateHostname()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	try
 	{
 		ConVar * hostname = plugin->getConVar("cssmatch_hostname");
@@ -170,7 +170,7 @@ void MatchManager::setMatchState(BaseMatchState * newState)
 
 void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bool warmup, ClanMember * umpire)
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -260,7 +260,7 @@ ClanNameDetectionTimer::ClanNameDetectionTimer(float date, TeamCode teamCode)
 
 void ClanNameDetectionTimer::execute()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance(); 
+	ServerPlugin * plugin = ServerPlugin::getInstance(); 
 	MatchManager * manager = plugin->getMatch();
 	manager->detectClanName(team);
 }

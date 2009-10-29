@@ -28,7 +28,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="attrib -r zip\addons\cssmatch.dll"
+				CommandLine="attrib -r zip\addons\cssmatch.dll&#x0D;&#x0A;"
 				Outputs="zip\addons\cssmatch.dll"
 			/>
 			<Tool
@@ -131,7 +131,7 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				CommandLine="attrib -r zip\addons\cssmatch.dll"
+				CommandLine="attrib -r zip\addons\cssmatch.dll&#x0D;&#x0A;"
 				Outputs="zip\addons\cssmatch.dll"
 			/>
 			<Tool
@@ -240,11 +240,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\plugin\SimplePlugin.cpp"
+				RelativePath=".\plugin\ServerPlugin.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\plugin\SimplePlugin.h"
+				RelativePath=".\plugin\ServerPlugin.h"
 				>
 			</File>
 		</Filter>

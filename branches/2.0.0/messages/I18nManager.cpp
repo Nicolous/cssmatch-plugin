@@ -24,7 +24,7 @@
 
 #include "../configuration/TranslationFile.h"
 #include "../common/common.h"
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 
 #include "convar.h"
 #include "eiface.h"

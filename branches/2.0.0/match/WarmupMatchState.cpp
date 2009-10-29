@@ -23,7 +23,7 @@
 #include "WarmupMatchState.h"
 
 #include "MatchManager.h"
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "../player/ClanMember.h"
 #include "../messages/Countdown.h"
 #include "../messages/I18nManager.h"
@@ -43,7 +43,7 @@ using std::find_if;
 
 WarmupMatchState::WarmupMatchState()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	listener = new EventListener<WarmupMatchState>(this,interfaces->gameeventmanager2);
@@ -56,7 +56,7 @@ WarmupMatchState::~WarmupMatchState()
 
 void WarmupMatchState::endWarmup()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -97,7 +97,7 @@ void WarmupMatchState::startState()
 {
 	ActivatedMatchState::startState();
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 
 	MatchLignup * lignup = match->getLignup();
@@ -127,7 +127,7 @@ void WarmupMatchState::player_spawn(IGameEvent * event)
 {
 	// Make each player impervious to bullets
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
@@ -150,7 +150,7 @@ void WarmupMatchState::player_say(IGameEvent * event)
 
 	if ((text == "!go") || (text == "ready")) // ready to end the warmup time
 	{
-		SimplePlugin * plugin = SimplePlugin::getInstance();
+		ServerPlugin * plugin = ServerPlugin::getInstance();
 		ValveInterfaces * interfaces = plugin->getInterfaces();
 		MatchManager * match = plugin->getMatch();
 		I18nManager * i18n = plugin->get18nManager();
@@ -162,7 +162,7 @@ void WarmupMatchState::player_say(IGameEvent * event)
 		map<string, string> parameters;
 		for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
 
-		// TODO : a method to find a player in SimplePlugin ?
+		// TODO : a method to find a player in ServerPlugin ?
 		list<ClanMember *>::iterator itPlayer = 
 		find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
 		if (itPlayer != invalidPlayer)
@@ -207,7 +207,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 {
 	// Do the restarts and announce the begin of each warmup round
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -244,7 +244,7 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 {
 	// Prevent the bomb from being planted if needed
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->get18nManager();
 

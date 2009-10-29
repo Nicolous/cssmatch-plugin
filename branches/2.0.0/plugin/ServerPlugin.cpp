@@ -20,7 +20,7 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "SimplePlugin.h"
+#include "ServerPlugin.h"
 #include "../convars/I18nConVar.h"
 #include "../commands/I18nConCommand.h"
 #include "../commands/ConCommandCallbacks.h"
@@ -53,7 +53,7 @@ using std::ostringstream;
 
 /*CON_COMMAND(cssm_test, "CSSMatch : Internal")
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	int index = atoi(plugin->getInterfaces()->engine->Cmd_Argv(1));
 	Player player(plugin->getInterfaces()->engine,plugin->getInterfaces()->playerinfomanager,index);
 
@@ -68,11 +68,11 @@ using std::ostringstream;
 	}
 }*/
 
-SimplePlugin::SimplePlugin() : clientCommandIndex(0), i18n(NULL)
+ServerPlugin::ServerPlugin() : clientCommandIndex(0), i18n(NULL)
 {
 }
 
-SimplePlugin::~SimplePlugin()
+ServerPlugin::~ServerPlugin()
 {
 	if (interfaces.convars != NULL)
 		delete interfaces.convars;
@@ -102,7 +102,7 @@ SimplePlugin::~SimplePlugin()
 	}*/
 }
 
-bool SimplePlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
+bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
 {
 	bool success = true;
 
@@ -180,42 +180,42 @@ bool SimplePlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 	return success;
 }
 
-ValveInterfaces * SimplePlugin::getInterfaces()
+ValveInterfaces * ServerPlugin::getInterfaces()
 {
 	return &interfaces;
 }
 
-int SimplePlugin::GetCommandIndex() const
+int ServerPlugin::GetCommandIndex() const
 {
 	return clientCommandIndex; 
 }
 
-void SimplePlugin::SetCommandClient(int index)
+void ServerPlugin::SetCommandClient(int index)
 {
 	clientCommandIndex = index;
 }
 
-list<ClanMember *> * SimplePlugin::getPlayerlist()
+list<ClanMember *> * ServerPlugin::getPlayerlist()
 {
 	return &playerlist;
 }
 
-MatchManager * SimplePlugin::getMatch()
+MatchManager * ServerPlugin::getMatch()
 {
 	return &match;
 }
 
-void SimplePlugin::addPluginConVar(ConVar * variable)
+void ServerPlugin::addPluginConVar(ConVar * variable)
 {
 	pluginConVars.push_back(variable);
 }
 
-const list<ConVar *> * SimplePlugin::getPluginConVars() const
+const list<ConVar *> * ServerPlugin::getPluginConVars() const
 {
 	return &pluginConVars;
 }
 
-ConVar * SimplePlugin::getConVar(const std::string & name) throw(BaseConvarsAccessorException)
+ConVar * ServerPlugin::getConVar(const std::string & name) throw(BaseConvarsAccessorException)
 {
 	list<ConVar *>::iterator invalidConVar = pluginConVars.end();
 	list<ConVar *>::iterator itConVar = find_if(pluginConVars.begin(),invalidConVar,ConvarHavingName(name));
@@ -226,28 +226,28 @@ ConVar * SimplePlugin::getConVar(const std::string & name) throw(BaseConvarsAcce
 	return *itConVar;
 }
 
-void SimplePlugin::addPluginConCommand(ConCommand * command)
+void ServerPlugin::addPluginConCommand(ConCommand * command)
 {
 	pluginConCommands.push_back(command);
 }
 
-const list<ConCommand *> * SimplePlugin::getPluginConCommands() const
+const list<ConCommand *> * ServerPlugin::getPluginConCommands() const
 {
 	return &pluginConCommands;
 }
 
-I18nManager * SimplePlugin::get18nManager()
+I18nManager * ServerPlugin::get18nManager()
 {
 	return i18n;
 }
 
-void SimplePlugin::addTimer(BaseTimer * timer)
+void ServerPlugin::addTimer(BaseTimer * timer)
 {
 	timers.push_front(timer); 
 	// push front, to allow timer invoking others timers, which could have to be immediately executed
 }
 
-void SimplePlugin::removeTimers()
+void ServerPlugin::removeTimers()
 {
 	list<BaseTimer *>::iterator itTimer = timers.begin();
 	list<BaseTimer *>::iterator invalidTimer = timers.end();
@@ -259,7 +259,7 @@ void SimplePlugin::removeTimers()
 	timers.clear();
 }
 
-void SimplePlugin::setConvarsAccessor(BaseConvarsAccessor * convarsAccessor)
+void ServerPlugin::setConvarsAccessor(BaseConvarsAccessor * convarsAccessor)
 {
 	if (interfaces.convars != NULL)
 		delete interfaces.convars;
@@ -267,46 +267,46 @@ void SimplePlugin::setConvarsAccessor(BaseConvarsAccessor * convarsAccessor)
 	interfaces.convars = convarsAccessor;
 }
 
-void SimplePlugin::Unload()
+void ServerPlugin::Unload()
 {
 }
 
-void SimplePlugin::Pause()
+void ServerPlugin::Pause()
 {
 }
 
-void SimplePlugin::UnPause()
+void ServerPlugin::UnPause()
 {
 }
 
-const char * SimplePlugin::GetPluginDescription()
+const char * ServerPlugin::GetPluginDescription()
 {
 	return PLUGIN_VERSION;
 }
 
-void SimplePlugin::LevelInit(char const * pMapName)
+void ServerPlugin::LevelInit(char const * pMapName)
 {
 }
 
-void SimplePlugin::ServerActivate(edict_t * pEdictList, int edictCount, int clientMax)
+void ServerPlugin::ServerActivate(edict_t * pEdictList, int edictCount, int clientMax)
 {
 }
 
-void SimplePlugin::GameFrame(bool simulating)
+void ServerPlugin::GameFrame(bool simulating)
 {
 	// Execute and remove the timers out of date
 	timers.remove_if(TimerOutOfDate(interfaces.gpGlobals->curtime));
 }
 
-void SimplePlugin::LevelShutdown() // !!!!this can get called multiple times per map change
+void ServerPlugin::LevelShutdown() // !!!!this can get called multiple times per map change
 {
 }
 
-void SimplePlugin::ClientActive(edict_t * pEntity)
+void ServerPlugin::ClientActive(edict_t * pEntity)
 {
 }
 
-void SimplePlugin::ClientDisconnect(edict_t * pEntity)
+void ServerPlugin::ClientDisconnect(edict_t * pEntity)
 {
 	list<ClanMember *>::iterator endPlayer = playerlist.end();
 	list<ClanMember *>::iterator itPlayer = find_if(playerlist.begin(),endPlayer,PlayerHavingPEntity(pEntity));
@@ -319,7 +319,7 @@ void SimplePlugin::ClientDisconnect(edict_t * pEntity)
 	}
 }
 
-void SimplePlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
+void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
 {
 	int index = interfaces.engine->IndexOfEdict(pEntity);
     if (isValidPlayerIndex(index,interfaces.gpGlobals->maxClients))
@@ -335,11 +335,11 @@ void SimplePlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
     }
 }
 
-void SimplePlugin::ClientSettingsChanged(edict_t * pEdict)
+void ServerPlugin::ClientSettingsChanged(edict_t * pEdict)
 {
 }
 
-PLUGIN_RESULT SimplePlugin::ClientConnect(bool * bAllowConnect,
+PLUGIN_RESULT ServerPlugin::ClientConnect(bool * bAllowConnect,
 										edict_t * pEntity,
 										const char * pszName,
 										const char * pszAddress,
@@ -349,42 +349,42 @@ PLUGIN_RESULT SimplePlugin::ClientConnect(bool * bAllowConnect,
 	return PLUGIN_CONTINUE;
 }
 
-PLUGIN_RESULT SimplePlugin::ClientCommand(edict_t * pEntity)
+PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 {
 	return PLUGIN_CONTINUE;
 }
 
-PLUGIN_RESULT SimplePlugin::NetworkIDValidated(const char * pszUserName, const char * pszNetworkID)
+PLUGIN_RESULT ServerPlugin::NetworkIDValidated(const char * pszUserName, const char * pszNetworkID)
 {
 	return PLUGIN_CONTINUE;
 }
 
-void SimplePlugin::log(const std::string & message) const
+void ServerPlugin::log(const std::string & message) const
 {
 	ostringstream buffer;
 	buffer << PLUGIN_NAME << " : " << message << "\n";
 	interfaces.engine->LogPrint(buffer.str().c_str());
 }
 
-void SimplePlugin::queueCommand(const string & command) const
+void ServerPlugin::queueCommand(const string & command) const
 {
 	interfaces.engine->ServerCommand(command.c_str());
 }
 
-void SimplePlugin::kickid(int userid, const string & reason) const
+void ServerPlugin::kickid(int userid, const string & reason) const
 {
 	ostringstream command;
 	command << "kickid " << userid << " " << reason;
 	queueCommand(command.str());
 }
 
-bool SimplePlugin::hltvConnected() const
+bool ServerPlugin::hltvConnected() const
 {
 	list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
 	return find_if(playerlist.begin(),invalidPlayer,PlayerIsHltv()) != invalidPlayer;
 }
 
-int SimplePlugin::getPlayerCount(TeamCode team) const
+int ServerPlugin::getPlayerCount(TeamCode team) const
 {
 	int playerCount = 0;
 
@@ -395,7 +395,7 @@ int SimplePlugin::getPlayerCount(TeamCode team) const
 	return playerCount;
 }
 
-EXPOSE_SINGLE_INTERFACE_GLOBALVAR(	SimplePlugin, 
+EXPOSE_SINGLE_INTERFACE_GLOBALVAR(	ServerPlugin, 
 									IServerPluginCallbacks,
 									INTERFACEVERSION_ISERVERPLUGINCALLBACKS,
-									*cssmatch::SimplePlugin::getInstance());
+									*cssmatch::ServerPlugin::getInstance());

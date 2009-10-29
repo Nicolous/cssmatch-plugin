@@ -22,7 +22,7 @@
 
 #include "KnifeRoundMatchState.h"
 
-#include "../plugin/SimplePlugin.h"
+#include "../plugin/ServerPlugin.h"
 #include "../common/common.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
@@ -46,7 +46,7 @@ using std::for_each;
 
 KnifeRoundMatchState::KnifeRoundMatchState()
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	listener = new EventListener<KnifeRoundMatchState>(this,interfaces->gameeventmanager2);
@@ -59,7 +59,7 @@ KnifeRoundMatchState::~KnifeRoundMatchState()
 
 void KnifeRoundMatchState::endKniferound(TeamCode winner)
 {
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
@@ -158,7 +158,7 @@ void KnifeRoundMatchState::startState()
 {
 	ActivatedMatchState::startState();
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -193,7 +193,7 @@ void KnifeRoundMatchState::round_start(IGameEvent * event)
 {
 	// Do the needed restarts then announce the begin of the knife round
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -219,7 +219,7 @@ void KnifeRoundMatchState::item_pickup(IGameEvent * event)
 {
 	// Restrict all the weapons but knife
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	string item = event->GetString("item");
@@ -248,7 +248,7 @@ void KnifeRoundMatchState::player_spawn(IGameEvent * event)
 {
 	// Set the money for the knife round (determines if some equipments can be bought)
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
@@ -283,7 +283,7 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 {
 	// Prevent the bomb from being planted if needed
 
-	SimplePlugin * plugin = SimplePlugin::getInstance();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -316,4 +316,4 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 	}
 }
 
-// TODO : recipient list is often global, could we construct in parallel with the player list in SimplePlugin ?
+// TODO : recipient list is often global, could we construct in parallel with the player list in ServerPlugin ?

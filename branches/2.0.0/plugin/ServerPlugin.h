@@ -69,7 +69,7 @@ namespace cssmatch
 	};
 
 	/** Source plugin IServerPluginCallbacks implementation */
-	class SimplePlugin : public BaseSingleton<SimplePlugin>, public IServerPluginCallbacks
+	class ServerPlugin : public BaseSingleton<ServerPlugin>, public IServerPluginCallbacks
 	{
 	protected:
 		/** Valve's interfaces accessor */
@@ -96,9 +96,9 @@ namespace cssmatch
 		/** Internationalization tool */
 		I18nManager * i18n;
 
-		friend class BaseSingleton<SimplePlugin>;
-		SimplePlugin();
-		virtual ~SimplePlugin();
+		friend class BaseSingleton<ServerPlugin>;
+		ServerPlugin();
+		virtual ~ServerPlugin();
 
 		/** Get a named interface from an interface factory
 		 * @param factory The factory provided by the game when the plugin is loaded
@@ -221,7 +221,7 @@ namespace cssmatch
 
 /* Loop over all players excluding the 0 index 
 #define FOREACH_PLAYER(indexVar) \
-	int maxplayers = SimplePlugin::getInstance()->getInterfaces()->gpGlobals->maxClients; \
+	int maxplayers = ServerPlugin::getInstance()->getInterfaces()->gpGlobals->maxClients; \
 	for (int indexVar=1;indexVar<=maxplayers;indexVar++)*/
 
 #endif // __SIMPLE_PLUGIN_H__
