@@ -1,4 +1,5 @@
 #summary Configurer le plugin / Configurer un match
+#labels Featured
 
 = Configurer le plugin / Configurer un match =
 
