@@ -1,4 +1,5 @@
 #summary Comment lancer un match ?
+#labels Featured
 
 Cette question est souvent posée. S'il y avait une FAQ, elle y figurerait !
 
