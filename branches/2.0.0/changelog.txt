@@ -1,0 +1,10 @@
+* Erreur de config n'entraine pas de génération de rapport
+* retrait du "status" exécuté au début des rounds : ça ne servait à personne, et dans certains cas ça buguait : http://code.google.com/p/cssmatch-plugin/issues/detail?id=9
+* Commande cssm_start : 
+	- ajout d'une option -kniferound pour le cas où le round au couteau ne devrait pas être joué
+	- ajout d'une option -warmup pour le cas où le strats time ne devrait pas être joué
+* Les teamkills seront maintenant pris en compte dans les rapports
+
+
+* Lorsqu'aucun match n'est en cours, le plugin ne consomme plus rien (pas d'écoute d'évènements, mais recherche de timers)
+* Si aucune traduction n'est disponible, un message d'explication sera affiché (plutôt qu'un message vide)
