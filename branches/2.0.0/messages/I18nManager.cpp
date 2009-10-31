@@ -37,6 +37,8 @@ using std::string;
 using std::map;
 using std::vector;
 
+// TODO: Bots have no cl_language, which causes errors into the server console
+
 map<string, string> I18nManager::WITHOUT_PARAMETERS;
 
 I18nManager::I18nManager(IVEngineServer * engine, ConVar * defaultLang)

@@ -23,7 +23,7 @@
 #ifndef __MATCH_MANAGER_H__
 #define __MATCH_MANAGER_H__
 
-#include "../player/MatchClan.h" // MatchClan, ClanMember
+#include "../player/MatchClan.h" // MatchClan [, ClanMember]
 #include "../common/common.h"
 #include "../exceptions/BaseException.h"
 #include "../timer/BaseTimer.h"

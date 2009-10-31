@@ -29,11 +29,23 @@
 #pragma warning(disable :4101) /* unreferenced local variable */
 #endif // _MSC_VER
 
+// Do the STL include here, because the Valve's headers could cause conflict with gcc STL declarations (e.g. min/max macros)
+#ifdef _LINUX // Under Linux (or just gcc 4.1.3?), these headers are required to make <string> and <sstream> working (e.g. for std::min/max declarations)
+#include <vector>
+#include <fstream>
+#endif // _LINUX
+
+#include <string>
+#include <sstream>
+
+struct tm; // will be defined in <ctime>
+
+
 #define GAME_DLL 1 // required by cbase.h
 #include "cbase.h" // TEAM_INVALID, TEAM_UNASSIGNED, TEAM_SPECTATOR + some headers
 #undef GAME_DLL // however, we're not the game dll...
 
-#include "edict.h" // requited by iplayerinfo.h
+#include "edict.h" // required by iplayerinfo.h
 #include "dlls/iplayerinfo.h"
 
 // Some Valve's objects we use
@@ -45,12 +57,7 @@ class IServerUnknown;
 class CBasePlayer;
 class CBaseCombatCharacter;
 
-#include <string>
-#include <sstream>
-
-struct tm; // will be defined in time.h
-
-#include "../exceptions/BaseException.h" // here because I generally define the exception object inline
+#include "../exceptions/BaseException.h" // here because I generally define the exception object inline*/
 
 #define PLUGIN_NAME "CSSMatch"
 

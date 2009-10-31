@@ -27,4 +27,11 @@ using namespace cssmatch;
 using std::string;
 using std::exception;
 
-BaseException::BaseException(const string & message) : exception(message.c_str()){}
+BaseException::BaseException(const string & msg) : message(msg), exception(){}
+
+BaseException::~BaseException() throw(){}
+
+const char * BaseException::what() const throw()
+{
+    return message.c_str();
+}

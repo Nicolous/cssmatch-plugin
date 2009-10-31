@@ -75,11 +75,8 @@ void cssmatch::cssm_start()
 	case 1:
 		try
 		{
-			match->start(
-				RunnableConfigurationFile(
-					CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile),
-					kniferound,
-					warmup);
+    		RunnableConfigurationFile configuration(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile);
+			match->start(configuration,kniferound,warmup);
 		}
 		catch(const ConfigurationFileException & e)
 		{

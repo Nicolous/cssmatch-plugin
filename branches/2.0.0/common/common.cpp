@@ -37,7 +37,7 @@
 #include "baseentity.h"
 
 #include <sstream>
-#include <time.h>
+#include <ctime>
 
 #include "../plugin/ServerPlugin.h"
 

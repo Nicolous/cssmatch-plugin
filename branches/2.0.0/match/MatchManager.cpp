@@ -47,8 +47,7 @@ using std::map;
 
 MatchManager::MatchManager()
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
+    // /!\ Don't call ServerPlugin::getInstance() here, since MatchManager is a field of the ServerPlugin class
 
 	// Set the initial state
 	setMatchState(DisabledMatchState::getInstance());

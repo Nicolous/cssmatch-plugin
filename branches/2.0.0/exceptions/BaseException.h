@@ -27,13 +27,17 @@
 
 namespace cssmatch
 {
-	/** A base exception for CSSMatch */
+	/** A base exception for CSSMatch <br>
+	 * Note that VC++ implementation of std::exception differs from the gcc's one
+	 */
 	class BaseException : public std::exception
 	{
 	private:
 		std::string message;
 	public:
 		BaseException(const std::string & message);
+		virtual ~BaseException() throw();
+		virtual const char * what() const throw();
 	};
 }
 
