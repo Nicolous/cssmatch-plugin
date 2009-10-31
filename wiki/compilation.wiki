@@ -54,11 +54,8 @@ make
 # Compiler en mode debug
 make debug
 
-# Nettoyer les objets issus du mode release :
+# Nettoyer les dossiers de sortie (release et debug)
 make clean
-
-# Nettoyer les objets issus du mode debug
-make clean DEBUG=true
 }}}
 
 <br>
