@@ -1,5 +1,4 @@
 #summary Compiler CSSMatch
-#sidebar sidebar_compilation
 
 == Contribuer au projet CSSMatch ==
 
