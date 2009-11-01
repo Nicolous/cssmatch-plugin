@@ -68,7 +68,11 @@ namespace cssmatch
 		/** Kniferound winner */
 		MatchClan * kniferoundWinner;
 
-		MatchInfo() : setNumber(1), roundNumber(1), startTime(getLocalTime()), kniferoundWinner(NULL){}
+		/** Did a warmup was asked by the laucher ? */
+		bool warmup;
+
+		MatchInfo()
+			: setNumber(1), roundNumber(1), startTime(getLocalTime()), kniferoundWinner(NULL), warmup(false){}
 	};
 
 	/** A match manager <br>

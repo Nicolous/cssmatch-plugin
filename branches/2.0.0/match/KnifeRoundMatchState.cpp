@@ -110,7 +110,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	BaseMatchState * statePostBreak = NULL;
 	try
 	{
-		if (plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0)
+		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 		{
 			statePostBreak = WarmupMatchState::getInstance();
 		}

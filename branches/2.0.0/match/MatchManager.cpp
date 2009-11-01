@@ -199,9 +199,9 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 	lignup.clan2.detectClanName();
 	updateHostname();
 
-	// Set the new server password
 	try
 	{
+		// Set the new server password
 		string password = plugin->getConVar("cssmatch_password")->GetString();
 		plugin->getConVar("sv_password")->SetValue(password.c_str());
 
@@ -212,6 +212,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 				i18n,interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,OPTION_ALL,parameters));
 
 		// Set the suitable match state
+		infos.warmup = warmup;
 		if (plugin->getConVar("cssmatch_kniferound")->GetBool() && kniferound)
 			// default value for kniferound is true
 		{

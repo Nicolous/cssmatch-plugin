@@ -67,7 +67,6 @@ void cssmatch::cssm_start()
 	case 3:
 		kniferound = string(interfaces->engine->Cmd_Args()).find("-kniferound") == string::npos;
 		warmup = string(interfaces->engine->Cmd_Args()).find("-warmup") == string::npos;
-			// FIXME: if -kniferound is not used, a warmup is started even if -warmup was specified
 		// break;
 	case 2:
 		configurationFile = interfaces->engine->Cmd_Argv(1);
