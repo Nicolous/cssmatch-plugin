@@ -1,8 +1,0 @@
- * [compi Contribuer au projet CSSMatch]
-    * [ArticlesXSS Web security]
-    * [#Contribuer_au_projet_CSSMatch HOWTO articles]
-    * [ArticlesStyle CSS and style]
-    * [ArticlesTips Tips and tricks]
-  * [DOMReference DOM reference]
-  * [HTMLElements HTML reference]
-  * [CSSReference CSS reference]
