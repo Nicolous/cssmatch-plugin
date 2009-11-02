@@ -124,7 +124,9 @@ string I18nManager::getTranslation(	const string & lang,
 		{
 			message = (*translation)[keyword]; // copying it, because we will replace the parameters
 
-			// Relace the parameters // FIXME : unnecessarily call as many times as recipients
+			// Relace the parameters 
+			// FIXME : unnecessarily called as many times as recipients
+			//	Make a lang cache system in the I18nManager methods ?
 			map<string,string>::const_iterator itParameters = parameters.begin();
 			map<string,string>::const_iterator lastParameters = parameters.end();
 			while(itParameters != lastParameters)
