@@ -396,14 +396,6 @@
 			Name="match"
 			>
 			<File
-				RelativePath=".\match\ActivatedMatchState.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\match\ActivatedMatchState.h"
-				>
-			</File>
-			<File
 				RelativePath=".\match\BaseMatchState.cpp"
 				>
 			</File>

@@ -37,8 +37,6 @@ void BreakMatchState::setBreak(int breakDuration, BaseMatchState * state)
 
 void BreakMatchState::startState()
 {
-	ActivatedMatchState::startState();
-
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
@@ -48,8 +46,6 @@ void BreakMatchState::startState()
 
 void BreakMatchState::endState()
 {
-	ActivatedMatchState::endState();
-
 	//Countdown::getInstance()->stop(); // in case of interuption ?
 }
 

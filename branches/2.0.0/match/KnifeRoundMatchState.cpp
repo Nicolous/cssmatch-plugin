@@ -46,10 +46,7 @@ using std::for_each;
 
 KnifeRoundMatchState::KnifeRoundMatchState()
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
-
-	listener = new EventListener<KnifeRoundMatchState>(this,interfaces->gameeventmanager2);
+	listener = new EventListener<KnifeRoundMatchState>(this);
 }
 
 KnifeRoundMatchState::~KnifeRoundMatchState()
@@ -156,8 +153,6 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 
 void KnifeRoundMatchState::startState()
 {
-	ActivatedMatchState::startState();
-
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
@@ -184,8 +179,6 @@ void KnifeRoundMatchState::startState()
 
 void KnifeRoundMatchState::endState()
 {
-	ActivatedMatchState::endState();
-
 	listener->removeCallbacks();
 }
 

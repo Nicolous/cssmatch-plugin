@@ -20,11 +20,12 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "ActivatedMatchState.h"
-#include "../timer/BaseTimer.h"
-
 #ifndef __BREAK_MATCH_STATE_H__
 #define __BREAK_MATCH_STATE_H__
+
+#include "BaseMatchState.h"
+#include "../features/BaseSingleton.h"
+#include "../timer/BaseTimer.h"
 
 class IGameEventManager2;
 
@@ -35,7 +36,7 @@ namespace cssmatch
 	/** Break time, between two main match states 
 	 * Ends with a timeout
 	 */
-	class BreakMatchState : public ActivatedMatchState, public BaseSingleton<BreakMatchState>
+	class BreakMatchState : public BaseMatchState, public BaseSingleton<BreakMatchState>
 	{
 	private:
 		/** The break duration (in secs) before lauch the next match state */

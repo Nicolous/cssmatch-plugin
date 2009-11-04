@@ -23,7 +23,6 @@
 #include "MatchManager.h"
 
 #include "BaseMatchState.h"
-#include "DisabledMatchState.h"
 #include "KnifeRoundMatchState.h"
 #include "WarmupMatchState.h"
 #include "SetMatchState.h"
@@ -45,18 +44,17 @@ using std::list;
 using std::for_each;
 using std::map;
 
-MatchManager::MatchManager()
+MatchManager::MatchManager() : state(NULL)
 {
-    // /!\ Don't call ServerPlugin::getInstance() here, since MatchManager is a field of the ServerPlugin class
-
-	// Set the initial state
-	setMatchState(DisabledMatchState::getInstance());
+	listener = new EventListener<MatchManager>(this);
 }
 
 
 MatchManager::~MatchManager()
 {
 	Countdown::getInstance()->stop();
+
+	delete listener;
 }
 
 MatchLignup * MatchManager::getLignup()
@@ -92,6 +90,93 @@ MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
 	}
 
 	return clan;
+}
+
+void MatchManager::player_disconnect(IGameEvent * event)
+{
+	// Announce any disconnection 
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	I18nManager * i18n = plugin->get18nManager();
+
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
+	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();
+
+	RecipientFilter recipients;
+	for_each(itPlayer,invalidPlayer,PlayerToRecipient(&recipients));
+	map<string, string> parameters;
+	parameters["$username"] = event->GetString("name");
+	parameters["$reason"] = event->GetString("reason");
+
+	i18n->i18nChatSay(recipients,"player_leave_game",0,parameters);
+}
+
+void MatchManager::player_team(IGameEvent * event)
+{
+	// Search for any change in the team which requires a new clan name detection
+	// i.e. n player to less than 2 players, 0 player to 1 player, 1 player to 2 players
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->get18nManager();
+
+	TeamCode newSide = (TeamCode)event->GetInt("team");
+	TeamCode oldSide = (TeamCode)event->GetInt("oldteam");
+
+	int playercount = 0;
+	TeamCode toReDetect = INVALID_TEAM;
+	switch(newSide)
+	{
+	case T_TEAM:
+		toReDetect = T_TEAM;
+		playercount = plugin->getPlayerCount(T_TEAM) - 1;
+		break;
+	case CT_TEAM:
+		toReDetect = CT_TEAM;
+		playercount = plugin->getPlayerCount(CT_TEAM) - 1;
+		break;
+	}
+	if ((toReDetect != INVALID_TEAM) && (playercount < 2)) // TODO: oops, "< 2" need doc
+		plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,toReDetect));
+
+	toReDetect = INVALID_TEAM;
+	switch(oldSide)
+	{
+	case T_TEAM:
+		toReDetect = T_TEAM;
+		playercount = plugin->getPlayerCount(T_TEAM);
+		break;
+	case CT_TEAM:
+		toReDetect = CT_TEAM;
+		playercount = plugin->getPlayerCount(CT_TEAM);
+		break;
+	}
+	if ((toReDetect != INVALID_TEAM) && (playercount < 2))
+		plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,toReDetect));
+}
+
+void MatchManager::player_changename(IGameEvent * event)
+{
+	// Retect the corresponfing clan name if needed
+	// i.e. if the player is alone is his team
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->get18nManager();
+
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
+	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();
+
+	list<ClanMember *>::const_iterator thisPlayer = 
+		find_if(itPlayer,invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
+	if (thisPlayer != invalidPlayer)
+	{
+		TeamCode playerteam = (*thisPlayer)->getMyTeam();
+		if ((playerteam > SPEC_TEAM) && (plugin->getPlayerCount(playerteam) == 1))
+			plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,playerteam));
+	}
 }
 
 void MatchManager::detectClanName(TeamCode code)
@@ -164,7 +249,9 @@ void MatchManager::setMatchState(BaseMatchState * newState)
 		state->endState();
 
 	state = newState;
-	state->startState();
+
+	if (state != NULL) // Maybe there is no current state
+		state->startState();
 }
 
 void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bool warmup, ClanMember * umpire)
@@ -198,6 +285,11 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 	lignup.clan1.detectClanName();
 	lignup.clan2.detectClanName();
 	updateHostname();
+
+	// Start to listen some events
+	listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
+	listener->addCallback("player_team",&MatchManager::player_team);
+	listener->addCallback("player_changename",&MatchManager::player_changename);
 
 	try
 	{
@@ -250,6 +342,15 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 	}
 	else
 		i18n->i18nChatSay(recipients,"match_started");
+}
+
+void MatchManager::stop()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	// Stop all event listeners
+	listener->removeCallbacks();
 }
 
 

@@ -23,10 +23,13 @@
 #ifndef __MATCH_MANAGER_H__
 #define __MATCH_MANAGER_H__
 
+#include "igameevents.h"
+
 #include "../player/MatchClan.h" // MatchClan [, ClanMember]
 #include "../common/common.h"
 #include "../exceptions/BaseException.h"
 #include "../timer/BaseTimer.h"
+#include "../plugin/EventListener.h"
 
 #include <string>
 
@@ -84,6 +87,9 @@ namespace cssmatch
 	 */
 	class MatchManager
 	{
+	private:
+		/** Event listener */
+		EventListener<MatchManager> * listener;
 	protected:
 		/** Current match state (e.g. kniferound, warmup, etc.) */
 		BaseMatchState * state;
@@ -110,6 +116,11 @@ namespace cssmatch
 		 */
 		MatchClan * getClan(TeamCode code) throw(MatchManagerException);
 
+		// Game event callbacks
+		void player_disconnect(IGameEvent * event);
+		void player_team(IGameEvent * event);
+		void player_changename(IGameEvent * event);
+
 		/** Redetect a clan name then announce it
 		 * @param code The clan's team code
 		 */
@@ -131,6 +142,9 @@ namespace cssmatch
 		 * @param umpire The player who starts the match
 		 */
 		void start(RunnableConfigurationFile & config, bool kniferound, bool warmup, ClanMember * umpire = NULL);
+
+		/** Stop a running match (TODO: this is a stub) */
+		void stop();
 	};
 
 

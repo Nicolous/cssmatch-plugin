@@ -42,10 +42,7 @@ using std::find_if;
 
 SetMatchState::SetMatchState()
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
-
-	listener = new EventListener<SetMatchState>(this,interfaces->gameeventmanager2);
+	listener = new EventListener<SetMatchState>(this);
 }
 
 SetMatchState::~SetMatchState()
@@ -55,8 +52,6 @@ SetMatchState::~SetMatchState()
 
 void SetMatchState::startState()
 {
-	ActivatedMatchState::startState();
-
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	MatchInfo * infos = match->getInfos();
@@ -92,8 +87,6 @@ void SetMatchState::startState()
 
 void SetMatchState::endState()
 {
-	ActivatedMatchState::endState();
-
 	listener->removeCallbacks();
 }
 

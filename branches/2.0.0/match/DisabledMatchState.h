@@ -20,11 +20,11 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "BaseMatchState.h"
-#include "../features/BaseSingleton.h"
-
 #ifndef __DISABLE_MATCH_STATE_H__
 #define __DISABLE_MATCH_STATE_H__
+
+#include "BaseMatchState.h"
+#include "../features/BaseSingleton.h"
 
 namespace cssmatch
 {

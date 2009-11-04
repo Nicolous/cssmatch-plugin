@@ -20,13 +20,15 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "ActivatedMatchState.h"
-
 #ifndef __SET_MATCH_STATE_H__
 #define __SET_MATCH_STATE_H__
 
 class IGameEventManager2;
 class IGameEvent;
+
+#include "BaseMatchState.h"
+#include "../features/BaseSingleton.h"
+#include "../plugin/EventListener.h"
 
 namespace cssmatch
 {
@@ -35,7 +37,7 @@ namespace cssmatch
 	/** Match [round] Set in progress <br>
 	 * Ends when the number of scheduled rounds is reached
 	 */
-	class SetMatchState : public ActivatedMatchState, public BaseSingleton<SetMatchState>
+	class SetMatchState : public BaseMatchState, public BaseSingleton<SetMatchState>
 	{
 	private:
 		EventListener<SetMatchState> * listener;

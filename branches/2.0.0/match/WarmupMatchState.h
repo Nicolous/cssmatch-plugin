@@ -20,14 +20,16 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "ActivatedMatchState.h"
-#include "../timer/BaseTimer.h"
-
 #ifndef __WARMUP_MATCH_STATE_H__
 #define __WARMUP_MATCH_STATE_H__
 
 class IGameEventManager2;
 class IGameEvent;
+
+#include "BaseMatchState.h"
+#include "../features/BaseSingleton.h"
+#include "../timer/BaseTimer.h"
+#include "../plugin/EventListener.h"
 
 namespace cssmatch
 {
@@ -36,7 +38,7 @@ namespace cssmatch
 	/** Warmup time in progress <br>
 	 * Ends with a timeout, or if at least one player of each side types "ready"
 	 */
-	class WarmupMatchState : public ActivatedMatchState, public BaseSingleton<WarmupMatchState>
+	class WarmupMatchState : public BaseMatchState, public BaseSingleton<WarmupMatchState>
 	{
 	private:
 		EventListener<WarmupMatchState> * listener;

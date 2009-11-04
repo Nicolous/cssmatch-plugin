@@ -43,10 +43,7 @@ using std::find_if;
 
 WarmupMatchState::WarmupMatchState()
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
-
-	listener = new EventListener<WarmupMatchState>(this,interfaces->gameeventmanager2);
+	listener = new EventListener<WarmupMatchState>(this);
 }
 
 WarmupMatchState::~WarmupMatchState()
@@ -95,8 +92,6 @@ void WarmupMatchState::endWarmup()
 
 void WarmupMatchState::startState()
 {
-	ActivatedMatchState::startState();
-
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 
@@ -118,8 +113,6 @@ void WarmupMatchState::startState()
 
 void WarmupMatchState::endState()
 {
-	ActivatedMatchState::endState();
-
 	listener->removeCallbacks();
 }
 

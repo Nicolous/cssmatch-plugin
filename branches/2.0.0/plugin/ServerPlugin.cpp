@@ -68,7 +68,7 @@ using std::ostringstream;
 	}
 }*/
 
-ServerPlugin::ServerPlugin() : clientCommandIndex(0), i18n(NULL)
+ServerPlugin::ServerPlugin() : clientCommandIndex(0), match(NULL), i18n(NULL)
 {
 }
 
@@ -78,6 +78,9 @@ ServerPlugin::~ServerPlugin()
 		delete interfaces.convars;
 
 	for_each(playerlist.begin(),playerlist.end(),PlayerToRemove());
+
+	if (match != NULL)
+		delete match;
 
 	if (i18n != NULL)
 		delete i18n;
@@ -131,6 +134,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 		MathLib_Init(2.2f,2.2f,0.0f,2.0f);
 
+		match = new MatchManager();
 		
 		//	Initialize the translations tools
 		// FIXME: ConVar should be I18nConVar
@@ -202,7 +206,7 @@ list<ClanMember *> * ServerPlugin::getPlayerlist()
 
 MatchManager * ServerPlugin::getMatch()
 {
-	return &match;
+	return match;
 }
 
 void ServerPlugin::addPluginConVar(ConVar * variable)

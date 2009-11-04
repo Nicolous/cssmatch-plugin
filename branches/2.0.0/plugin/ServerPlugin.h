@@ -28,7 +28,6 @@
 #include "../features/BaseSingleton.h"
 #include "../convars/ConvarsAccessor.h" // BaseConvarsAccessorException
 #include "../player/Player.h"
-#include "../match/MatchManager.h"
 
 #include "engine/iserverplugin.h"
 
@@ -51,6 +50,7 @@ namespace cssmatch
 	class ClanMember;
 	class I18nManager;
 	class BaseTimer;
+	class MatchManager;
 
 	/** Valve's interface instances */
 	struct ValveInterfaces
@@ -82,7 +82,7 @@ namespace cssmatch
 		std::list<ClanMember *> playerlist;
 
 		/** Match manager */
-		MatchManager match;
+		MatchManager * match;
 
 		/** Timer list */
 		std::list<BaseTimer *> timers;

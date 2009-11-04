@@ -20,14 +20,14 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "ActivatedMatchState.h"
-
 #ifndef __KNIFEROUND_MATCH_STATE_H__
 #define __KNIFEROUND_MATCH_STATE_H__
 
 class IGameEventManager2;
 class IGameEvent;
 
+#include "BaseMatchState.h"
+#include "../features/BaseSingleton.h"
 #include "../plugin/EventListener.h"
 #include "../player/Player.h" // TeamCode
 
@@ -38,7 +38,7 @@ namespace cssmatch
 	/** Knife round in progress <br>
 	 * End with the end of the round (if there is a winner)
 	 */
-	class KnifeRoundMatchState : public ActivatedMatchState, public BaseSingleton<KnifeRoundMatchState>
+	class KnifeRoundMatchState : public BaseMatchState, public BaseSingleton<KnifeRoundMatchState>
 	{
 	private:
 		EventListener<KnifeRoundMatchState> * listener;

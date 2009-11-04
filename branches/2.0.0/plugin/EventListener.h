@@ -49,7 +49,7 @@ namespace cssmatch
 		 * IGameEventListener2 at the end of the program. So please use <br>
 		 * removeCallbacks or removeCallback to properly remove the listened events
 		 */
-		EventListener(T * callbackObject, IGameEventManager2 * eventManager) : object(callbackObject){}
+		EventListener(T * callbackObject) : object(callbackObject){}
 		/*~EventListener()
 		{
 			gameeventmanager2->RemoveListener(this);
