@@ -77,23 +77,26 @@ namespace cssmatch
 		 * @throws EntityPropException If the prop was not found
 		 */
 		template<typename T>
-		T & getProp(edict_t * entity) throw(EntityPropException)
-		{
-			T * prop = NULL;
-
-			if (offset > 0)
-			{
-				CBaseEntity * baseEntity = getBaseEntity(entity);
-				prop = reinterpret_cast<T *>(reinterpret_cast<char *>(baseEntity) + offset);
-				if (prop == NULL)
-					throw EntityPropException(std::string("CSSMatch was unable to retrieve prop ") + theClass + "." + path + " for an entity");
-			}
-			else
-				throw EntityPropException(std::string("CSSMatch was unable to find the offset of the prop ") + theClass + "." + path);
-
-			return *prop;
-		}
+		T & getProp(edict_t * entity) throw(EntityPropException);
 	};
+
+	template<typename T>
+	T & EntityProp::getProp(edict_t * entity) throw(EntityPropException)
+	{
+		T * prop = NULL;
+
+		if (offset > 0)
+		{
+			CBaseEntity * baseEntity = getBaseEntity(entity);
+			prop = reinterpret_cast<T *>(reinterpret_cast<char *>(baseEntity) + offset);
+			if (prop == NULL)
+				throw EntityPropException(std::string("CSSMatch was unable to retrieve prop ") + theClass + "." + path + " for an entity");
+		}
+		else
+			throw EntityPropException(std::string("CSSMatch was unable to find the offset of the prop ") + theClass + "." + path);
+
+		return *prop;
+	}
 }
 
 #endif // __ENTITY_PROP_H__

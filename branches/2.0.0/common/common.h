@@ -87,7 +87,7 @@ namespace cssmatch
 	 * @param toConvert Value to convert
 	 * @return The string convertion
 	 */
-	template<class T>
+	template<typename T>
 	std::string toString(const T & toConvert)
 	{
 		std::ostringstream convertion;

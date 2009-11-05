@@ -33,7 +33,7 @@
 namespace cssmatch
 {
 	/** Event listener template, which can be used as a class member */
-	template<typename T>
+	template<class T>
 	class EventListener : public IGameEventListener2
 	{
 	protected:
@@ -49,7 +49,7 @@ namespace cssmatch
 		 * IGameEventListener2 at the end of the program. So please use <br>
 		 * removeCallbacks or removeCallback to properly remove the listened events
 		 */
-		EventListener(T * callbackObject) : object(callbackObject){}
+		EventListener(T * callbackObject);
 		/*~EventListener()
 		{
 			gameeventmanager2->RemoveListener(this);
@@ -57,16 +57,7 @@ namespace cssmatch
 		see above */
 
 		// IGameEventListener2 method(s)
-		virtual void FireGameEvent(IGameEvent * event)
-		{
-			std::string eventName = event->GetName();
-
-			if (callbacks.find(eventName) != callbacks.end())
-			{
-				// Call all the callback corresponding to this event
-				((object)->*(callbacks[eventName]))(event);
-			}
-		}
+		void FireGameEvent(IGameEvent * event);
 
 		/** Add a callback to an event
 		 * @param eventName The event name to listen
@@ -76,66 +67,94 @@ namespace cssmatch
 		 */
 		bool addCallback(	const std::string & eventName,
 							void (T::* callback)(IGameEvent * event),
-							bool serverSide = true)
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			ValveInterfaces * interfaces = plugin->getInterfaces();
-
-			bool success = false;
-			const char * c_eventName = eventName.c_str();
-
-			if (callbacks.find(eventName) != callbacks.end())
-			{
-				callbacks[eventName] = callback;
-				success = true;
-			}
-			else
-			{
-				if (interfaces->gameeventmanager2->AddListener(this,c_eventName,serverSide))
-				{
-					callbacks[eventName] = callback;
-					success = true;				
-				}
-			}
-
-			return success;
-		}
+							bool serverSide = true);
 
 		/** Remove an event callback <br>
 		 * You have to invoke this method (or removeCallbacks) to unsubscribe to all the events listened
 		 * @param eventName The event name
 		 */
-		bool removeCallback(const std::string & eventName)
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			ValveInterfaces * interfaces = plugin->getInterfaces();
-
-			bool success = false;
-
-			if (callbacks.find(eventName) != callbacks.end())
-			{
-				success = true;
-				callbacks.erase(eventName);
-			}
-
-			if (callbacks.size() == 0)
-				interfaces->gameeventmanager2->RemoveListener(this);
-
-			return success;
-		}
+		bool removeCallback(const std::string & eventName);
 
 		/** Remove all callbacks listened <br>
 		 * You have to invoke this method (or removeCallback) to unsubscribe to all the events listened
 		 */
-		void removeCallbacks()
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			ValveInterfaces * interfaces = plugin->getInterfaces();
-
-			interfaces->gameeventmanager2->RemoveListener(this);
-			callbacks.clear();
-		}
+		void removeCallbacks();
 	};
+
+	template<class T>
+	EventListener<T>::EventListener(T * callbackObject) : object(callbackObject)
+	{
+	}
+
+	template<class T>
+	void EventListener<T>::FireGameEvent(IGameEvent * event)
+	{
+		std::string eventName = event->GetName();
+
+		if (callbacks.find(eventName) != callbacks.end())
+		{
+			// Call all the callback corresponding to this event
+			((object)->*(callbacks[eventName]))(event);
+		}
+	}
+
+	template<class T>
+	bool EventListener<T>::addCallback(	const std::string & eventName,
+						void (T::* callback)(IGameEvent * event),
+						bool serverSide = true)
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		ValveInterfaces * interfaces = plugin->getInterfaces();
+
+		bool success = false;
+		const char * c_eventName = eventName.c_str();
+
+		if (callbacks.find(eventName) != callbacks.end())
+		{
+			callbacks[eventName] = callback;
+			success = true;
+		}
+		else
+		{
+			if (interfaces->gameeventmanager2->AddListener(this,c_eventName,serverSide))
+			{
+				callbacks[eventName] = callback;
+				success = true;				
+			}
+		}
+
+		return success;
+	}
+
+	template<class T>
+	bool EventListener<T>::removeCallback(const std::string & eventName)
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		ValveInterfaces * interfaces = plugin->getInterfaces();
+
+		bool success = false;
+
+		if (callbacks.find(eventName) != callbacks.end())
+		{
+			success = true;
+			callbacks.erase(eventName);
+		}
+
+		if (callbacks.size() == 0)
+			interfaces->gameeventmanager2->RemoveListener(this);
+
+		return success;
+	}
+
+	template<class T>
+	void EventListener<T>::removeCallbacks()
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		ValveInterfaces * interfaces = plugin->getInterfaces();
+
+		interfaces->gameeventmanager2->RemoveListener(this);
+		callbacks.clear();
+	}
 }
 
 #endif // __EVENT_LISTENER_H__

@@ -104,7 +104,7 @@ namespace cssmatch
 		 * @param factory The factory provided by the game when the plugin is loaded
 		 * @param interfaceVersion The name of the interface to get
 		 */
-		template<class T>
+		template<typename T>
 		static bool getInterface(	CreateInterfaceFn factory,
 									T * & toInitialize,
 									const std::string & interfaceVersion)
