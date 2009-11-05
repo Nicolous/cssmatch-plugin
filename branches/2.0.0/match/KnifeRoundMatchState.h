@@ -54,8 +54,8 @@ namespace cssmatch
 		void endKniferound(TeamCode winner);
 
 		// BaseMatchState methods
-		virtual void startState();
-		virtual void endState();
+		void startState();
+		void endState();
 
 		// Game event callbacks
 		void round_start(IGameEvent * event);

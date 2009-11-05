@@ -104,16 +104,16 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	}
 
 	// Prepare a break time before lauch the next match state,
-	BaseMatchState * statePostBreak = NULL;
+	MatchStateId statePostBreak = DISABLED;
 	try
 	{
 		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 		{
-			statePostBreak = WarmupMatchState::getInstance();
+			statePostBreak = WARMUP;
 		}
 		else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 		{
-			statePostBreak = SetMatchState::getInstance();
+			statePostBreak = SET;
 		}
 		// TODO: else, end of the match
 
@@ -122,10 +122,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 			int breakDuration = plugin->getConVar("cssmatch_end_kniferound")->GetInt();
 			if (breakDuration > 0)
 			{
-				BreakMatchState * breakState = BreakMatchState::getInstance();
-				breakState->setBreak(breakDuration,statePostBreak);
-
-				match->setMatchState(breakState);
+				match->doTimeBreak(breakDuration,statePostBreak);
 
 				//parameters["$team"] = // already set above
 				parameters["$time"] = toString(breakDuration);
@@ -282,7 +279,7 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 
 	try
 	{
-		if (plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
+		if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
 		{
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();

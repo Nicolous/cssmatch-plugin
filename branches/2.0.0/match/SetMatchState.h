@@ -52,8 +52,8 @@ namespace cssmatch
 		void endSet();
 
 		// BaseMatchState methods
-		virtual void startState();
-		virtual void endState();
+		void startState();
+		void endState();
 
 		// Game event callbacks
 		void player_death(IGameEvent * event);

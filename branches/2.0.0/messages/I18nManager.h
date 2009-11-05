@@ -222,7 +222,7 @@ namespace cssmatch
 							std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS);
 
 		/** @see BaseTimer */
-		virtual void execute();
+		void execute();
 	};
 }
 

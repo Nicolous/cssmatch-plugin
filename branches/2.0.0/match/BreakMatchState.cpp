@@ -29,7 +29,7 @@
 
 using namespace cssmatch;
 
-void BreakMatchState::setBreak(int breakDuration, BaseMatchState * state)
+void BreakMatchState::setBreak(int breakDuration, MatchStateId state)
 {
 	duration = breakDuration;
 	nextState = state;
@@ -49,7 +49,7 @@ void BreakMatchState::endState()
 	//Countdown::getInstance()->stop(); // in case of interuption ?
 }
 
-BreakMatchTimer::BreakMatchTimer(float date, BaseMatchState * state)
+BreakMatchTimer::BreakMatchTimer(float date, MatchStateId state)
 	: BaseTimer(date), nextState(state)
 {
 }

@@ -27,7 +27,9 @@ namespace cssmatch
 {
 	class MatchManager;
 
-	/** Base match state (e.g. disabled, kniferound, warmup, set, etc.) */
+	/** Base match state (e.g. disabled, kniferound, warmup, set, etc.) <br>
+	 *	Match states should not be directly used, use them through enum MatchStateId instead
+	 */
 	class BaseMatchState
 	{
 	public:

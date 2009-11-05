@@ -53,8 +53,8 @@ namespace cssmatch
 		void endWarmup();
 
 		// BaseMatchState methods
-		virtual void startState();
-		virtual void endState();
+		void startState();
+		void endState();
 
 		// Game event callbacks
 		void player_spawn(IGameEvent * event);

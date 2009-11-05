@@ -73,7 +73,7 @@ void WarmupMatchState::endWarmup()
 	{
 		if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 		{
-			match->setMatchState(SetMatchState::getInstance());
+			match->setMatchState(SET);
 		}
 		/*else
 		{

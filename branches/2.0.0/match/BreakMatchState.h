@@ -24,6 +24,7 @@
 #define __BREAK_MATCH_STATE_H__
 
 #include "BaseMatchState.h"
+#include "MatchManager.h"
 #include "../features/BaseSingleton.h"
 #include "../timer/BaseTimer.h"
 
@@ -31,47 +32,48 @@ class IGameEventManager2;
 
 namespace cssmatch
 {
-	class MatchManager;
-
-	/** Break time, between two main match states 
+	/** Time break, between two main match states 
 	 * Ends with a timeout
 	 */
 	class BreakMatchState : public BaseMatchState, public BaseSingleton<BreakMatchState>
 	{
 	private:
-		/** The break duration (in secs) before lauch the next match state */
+		/** The time break duration (in secs) before lauch the next match state */
 		int duration;
 
 		/** The state to lauch once the break ended */
-		BaseMatchState * nextState;
+		MatchStateId nextState;
 	public:
 		/** Set the break informations
 		 * @param duration The break duration  (in secs)
 		 * @param nextState The state the lauch once the break ended
 		 */
-		void setBreak(int duration, BaseMatchState * nextState);
+		void setBreak(int duration, MatchStateId nextState);
 
 		// BaseMatchState methods
-		virtual void startState();
-		virtual void endState();
+		void startState();
+		void endState();
 	};
 
-	/** Break timer used for the timeout */
-	class BreakMatchTimer : public BaseTimer
+	namespace
 	{
-	private:
-		/** The state to lauch once the break is ended */
-		BaseMatchState * nextState;
-	public:
-		/** 
-		 * @param match The state manager required to lauch the new state
-		 * @param nextState The state the lauch once the break ended
-		 */
-		BreakMatchTimer(float date, BaseMatchState * nextState);
+		/** Break timer used for the timeout */
+		class BreakMatchTimer : public BaseTimer
+		{
+		private:
+			/** The state to lauch once the break is ended */
+			MatchStateId nextState;
+		public:
+			/** 
+			 * @param match The state manager required to lauch the new state
+			 * @param nextState The state the lauch once the break ended
+			 */
+			BreakMatchTimer(float date, MatchStateId nextState);
 
-		// BaseTimer method
-		void execute();
-	};
+			// BaseTimer method
+			void execute();
+		};
+	}
 }
 
 #endif // __BREAK_MATCH_STATE_H__

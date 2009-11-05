@@ -22,7 +22,6 @@
 
 #include "ConCommandCallbacks.h"
 
-#include "../match/DisabledMatchState.h"
 #include "../match/MatchManager.h"
 #include "../plugin/ServerPlugin.h"
 #include "../configuration/RunnableConfigurationFile.h"
@@ -98,5 +97,5 @@ void cssmatch::cssm_stop()
 
 	plugin->removeTimers();
 	countdown->stop();
-	match->setMatchState(DisabledMatchState::getInstance());
+	match->setMatchState(DISABLED);
 }

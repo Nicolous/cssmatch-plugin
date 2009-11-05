@@ -23,6 +23,8 @@
 #include "MatchManager.h"
 
 #include "BaseMatchState.h"
+#include "DisabledMatchState.h"
+#include "BreakMatchState.h"
 #include "KnifeRoundMatchState.h"
 #include "WarmupMatchState.h"
 #include "SetMatchState.h"
@@ -44,9 +46,19 @@ using std::list;
 using std::for_each;
 using std::map;
 
-MatchManager::MatchManager() : state(NULL)
+MatchManager::MatchManager()
 {
 	listener = new EventListener<MatchManager>(this);
+
+	// Initialize all the match states
+	states[DISABLED] = DisabledMatchState::getInstance();
+	states[KNIFEROUND] = KnifeRoundMatchState::getInstance();
+	states[WARMUP] = WarmupMatchState::getInstance();
+	states[SET] = SetMatchState::getInstance();
+	states[TIMEBREAK] = BreakMatchState::getInstance();
+
+	// Set the initial state
+	currentState = states.find(DISABLED);
 }
 
 
@@ -243,15 +255,34 @@ void MatchManager::updateHostname()
 
 }
 
-void MatchManager::setMatchState(BaseMatchState * newState)
+void MatchManager::setMatchState(MatchStateId newState)
 {
-	if (state != NULL) // Maybe there was no current state
-		state->endState();
+	if (currentState->second != NULL) // Maybe there was no current state
+		currentState->second->endState();
 
-	state = newState;
+	currentState = states.find(newState);
 
-	if (state != NULL) // Maybe there is no current state
-		state->startState();
+	if (currentState != states.end())
+	{
+		currentState->second->startState();
+	}
+	else
+	{
+		print(__FILE__,__LINE__,"Invalid match state");
+	}
+}
+
+MatchStateId MatchManager::getMatchState() const
+{
+	return currentState->first;
+}
+
+void MatchManager::doTimeBreak(int duration,MatchStateId nextState)
+{
+	BreakMatchState * breakState = BreakMatchState::getInstance();
+	breakState->setBreak(duration,nextState);
+
+	setMatchState(TIMEBREAK);
 }
 
 void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bool warmup, ClanMember * umpire)
@@ -308,16 +339,16 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 		if (plugin->getConVar("cssmatch_kniferound")->GetBool() && kniferound)
 			// default value for kniferound is true
 		{
-			setMatchState(KnifeRoundMatchState::getInstance());
+			setMatchState(KNIFEROUND);
 		}
 		else if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && warmup)
 			// default value for warmup is true
 		{
-			setMatchState(WarmupMatchState::getInstance());
+			setMatchState(WARMUP);
 		}
 		else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 		{
-			setMatchState(SetMatchState::getInstance());
+			setMatchState(SET);
 		}
 		else // Error case
 		{

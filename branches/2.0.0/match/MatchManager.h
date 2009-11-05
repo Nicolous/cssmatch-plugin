@@ -32,6 +32,7 @@
 #include "../plugin/EventListener.h"
 
 #include <string>
+#include <map>
 
 namespace cssmatch
 {
@@ -78,11 +79,21 @@ namespace cssmatch
 			: setNumber(1), roundNumber(1), startTime(getLocalTime()), kniferoundWinner(NULL), warmup(false){}
 	};
 
-	/** A match manager <br>
-	 * Each match can be decomposed in somes states : <br>
+	/** Each match can be decomposed in somes states : <br>
 	 * - a knife round <br>
 	 * - a warmup time <br>
 	 * - one or more sets of n rounds <br>
+	 */
+	typedef enum MatchStateId
+	{
+		DISABLED,
+		KNIFEROUND,
+		WARMUP,
+		SET,
+		TIMEBREAK
+	};
+
+	/** A match manager <br>
 	 * The states plus this class implement a state pattern (This class is the context)
 	 */
 	class MatchManager
@@ -91,8 +102,11 @@ namespace cssmatch
 		/** Event listener */
 		EventListener<MatchManager> * listener;
 	protected:
-		/** Current match state (e.g. kniferound, warmup, etc.) */
-		BaseMatchState * state;
+		/** Match states */
+		std::map<MatchStateId, BaseMatchState *> states;
+
+		/** Current match state (e.g. kniferound, warmup, etc.) info */
+		std::map<MatchStateId, BaseMatchState *>::iterator currentState;
 
 		/** Access to the clans */
 		MatchLignup lignup;
@@ -132,8 +146,18 @@ namespace cssmatch
 		/** Set a new match state <br>
 		 * Call the endState method of the previous state, then the startState of the new state
 		 * @param newState The new match state
+		 * @see enum MatchState
 		 */
-		void setMatchState(BaseMatchState * newState);
+		void setMatchState(MatchStateId newState);
+
+		/** Get the current match state */
+		MatchStateId getMatchState() const;
+
+		/** Lauch a time break before go to the next match state
+		 * @param duration Time break duration (in seconds)
+		 * @param nextState The next state to lauch once the time break finished
+		 */
+		void doTimeBreak(int duration,MatchStateId nextState);
 
 		/** Start a new math
 		 * @param config The configuration of the match

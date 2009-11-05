@@ -35,10 +35,8 @@ namespace cssmatch
 	{
 	public:
 		// BaseMatchState methods
-		virtual void startState();
-		virtual void endState();
-		//	Please call these methods in the derivated classes
-		//		They define a common behavior for all derivated states
+		void startState();
+		void endState();
 	};
 }
 
