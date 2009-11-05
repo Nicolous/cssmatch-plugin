@@ -41,8 +41,7 @@ using std::vector;
 
 map<string, string> I18nManager::WITHOUT_PARAMETERS;
 
-I18nManager::I18nManager(IVEngineServer * engine, ConVar * defaultLang)
-	: UserMessagesManager(engine), defaultLanguage(defaultLang)
+I18nManager::I18nManager(IVEngineServer * engine) : UserMessagesManager(engine)
 {
 }
 
@@ -56,6 +55,11 @@ I18nManager::~I18nManager()
 
 		itLanguages++;
 	}
+}
+
+void I18nManager::setDefaultLanguage(ConVar * language)
+{
+	defaultLanguage = language;
 }
 
 string I18nManager::getDefaultLanguage() const

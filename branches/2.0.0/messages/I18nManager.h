@@ -57,11 +57,13 @@ namespace cssmatch
 		static std::map<std::string, std::string> WITHOUT_PARAMETERS;
 
 		/**
-		 * @param defaultLanguage Because it will be used in a loop, the default language to use if no translation is found for a particular keyword
 		 * @see UserMessagesManager
 		 */
-		I18nManager(IVEngineServer * engine, ConVar * defaultLanguage);
+		I18nManager(IVEngineServer * engine);
 		~I18nManager();
+
+		/** Set the default language to use if no translation is found for a particular keyword */
+		void setDefaultLanguage(ConVar * language);
 
 		/** Get the current default language */
 		std::string getDefaultLanguage() const;
