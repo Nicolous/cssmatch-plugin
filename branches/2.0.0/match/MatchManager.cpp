@@ -149,7 +149,9 @@ void MatchManager::player_team(IGameEvent * event)
 		playercount = plugin->getPlayerCount(CT_TEAM) - 1;
 		break;
 	}
-	if ((toReDetect != INVALID_TEAM) && (playercount < 2)) // TODO: oops, "< 2" need doc
+	if ((toReDetect != INVALID_TEAM) && (playercount < 2))
+			// "< 2" because the game does not immediatly update the player's team got via IPlayerInfo
+			// And that's why we use a timer to redetect the clan's name
 		plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,toReDetect));
 
 	toReDetect = INVALID_TEAM;

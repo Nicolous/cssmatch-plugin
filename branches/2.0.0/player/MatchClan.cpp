@@ -74,7 +74,6 @@ list<ClanMember *> MatchClan::getMembers()
 		{
 			clanPlayerList.push_back((*itMembers));
 			//Msg("=>> added\n");
-			// FIXME: new player's team not immediatly updated by the game ? // Need more tests
 		}
 		itMembers++;
 	}
