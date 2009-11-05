@@ -86,7 +86,7 @@ ClanStats * MatchClan::getStats()
 	return &stats;
 }
 
-void MatchClan::detectClanName() // TODO: Need more tests
+void MatchClan::detectClanName()
 {
 	// 1. Get two members
 	// 2. Get their names

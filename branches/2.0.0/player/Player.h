@@ -231,7 +231,11 @@ namespace cssmatch
 
 		void operator ()(const Player * player)
 		{
-			recipientFilter->addRecipient(player->identity.index);
+			IPlayerInfo * infos = player->getPlayerInfo();
+			if ((infos != NULL) && (! infos->IsFakeClient())) // TODO: Test this under Linux
+			{
+				recipientFilter->addRecipient(player->identity.index);
+			}
 		}
 	};
 
