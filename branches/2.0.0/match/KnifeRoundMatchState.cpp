@@ -104,25 +104,24 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	}
 
 	// Prepare a break time before lauch the next match state,
-	MatchStateId statePostBreak = DISABLED;
+	MatchStateId nextState = DISABLED;
 	try
 	{
 		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 		{
-			statePostBreak = WARMUP;
+			nextState = WARMUP;
 		}
 		else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 		{
-			statePostBreak = SET;
+			nextState = SET;
 		}
-		// TODO: else, end of the match
 
-		if (statePostBreak != NULL)
+		if (nextState != NULL)
 		{
 			int breakDuration = plugin->getConVar("cssmatch_end_kniferound")->GetInt();
 			if (breakDuration > 0)
 			{
-				match->doTimeBreak(breakDuration,statePostBreak);
+				match->doTimeBreak(breakDuration,nextState);
 
 				//parameters["$team"] = // already set above
 				parameters["$time"] = toString(breakDuration);
@@ -130,21 +129,20 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 			}
 			else
 			{
-				match->setMatchState(statePostBreak);
+				match->setMatchState(nextState);
 			}
 		}
-		else // Error case
+		else
 		{
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			RecipientFilter recipients;
-			for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
-
-			i18n->i18nChatWarning(recipients,"match_config_error");
+			match->setMatchState(nextState);
+			match->stop();
 		}
 	}
 	catch(const BaseConvarsAccessorException & e)
 	{
 		printException(e,__FILE__,__LINE__);
+		match->setMatchState(DISABLED);
+		match->stop();
 	}
 }
 

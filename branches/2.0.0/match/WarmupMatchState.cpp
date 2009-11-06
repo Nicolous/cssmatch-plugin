@@ -72,18 +72,17 @@ void WarmupMatchState::endWarmup()
 		{
 			match->setMatchState(SET);
 		}
-		/*else
+		else
 		{
-			std::list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			RecipientFilter recipients;
-			std::for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
-
-			i18n->i18nChatWarning(recipients,"match_config_error");
-		}*/ // CSSMatch could only be used for the warmup feature
+			match->setMatchState(DISABLED);
+			match->stop();
+		}
 	}
 	catch(const BaseConvarsAccessorException & e)
 	{
 		printException(e,__FILE__,__LINE__);
+		match->setMatchState(DISABLED);
+		match->stop();
 	}
 }
 
