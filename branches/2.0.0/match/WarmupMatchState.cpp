@@ -86,6 +86,58 @@ void WarmupMatchState::endWarmup()
 	}
 }
 
+void WarmupMatchState::doGo(Player * player)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->get18nManager();
+
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+
+	RecipientFilter recipients;
+	map<string, string> parameters;
+	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+
+	try
+	{
+		TeamCode team = player->getMyTeam();
+		MatchClan * clan = match->getClan(team);
+
+		MatchLignup * lignup = match->getLignup();
+		MatchClan * otherClan = (&lignup->clan1 != clan) ? &lignup->clan1 : &lignup->clan2;
+
+		parameters["$team"] = *clan->getName();
+		string message;
+		if (clan->isReady())
+		{
+			// Clan already "ready"
+			message = "warmup_already_ready";
+		}
+		else
+		{
+			clan->setReady(true);
+			message = "warmup_ready";
+		}
+		i18n->i18nChatSay(recipients,message,player->getIdentity()->index,parameters);
+
+		// If both clan1 and clan2 are ready, end the warmup
+		if (clan->isReady() && otherClan->isReady())
+		{
+			Countdown::getInstance()->stop();
+			if (timer != NULL) // All the clans typed "!go" before the third restart ?
+			{
+				timer->cancel();
+			}
+			endWarmup();
+		}
+	}
+	catch(const MatchManagerException & e)
+	{
+		printException(e,__FILE__,__LINE__);
+	}
+}
+
 void WarmupMatchState::startState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -99,7 +151,6 @@ void WarmupMatchState::startState()
 
 	// Subscribe to the needed game events
 	listener->addCallback("player_spawn",&WarmupMatchState::player_spawn);
-	listener->addCallback("player_say",&WarmupMatchState::player_say);
 	listener->addCallback("round_start",&WarmupMatchState::round_start);
 	listener->addCallback("bomb_beginplant",&WarmupMatchState::bomb_beginplant);
 
@@ -125,74 +176,6 @@ void WarmupMatchState::player_spawn(IGameEvent * event)
 	if (itPlayer != invalidPlayer)
 	{
 		(*itPlayer)->setLifeState(0);
-	}
-}
-
-void WarmupMatchState::player_say(IGameEvent * event)
-{ // FIXME : these commands should work even in the other stats
-		// => ConCommand + kind of typeid ?
-
-	// Defines the chat commands used to end the warmup before its timeout
-
-	string text = event->GetString("text");
-
-	if ((text == "!go") || (text == "ready")) // ready to end the warmup time
-	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-		ValveInterfaces * interfaces = plugin->getInterfaces();
-		MatchManager * match = plugin->getMatch();
-		I18nManager * i18n = plugin->get18nManager();
-
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
-		RecipientFilter recipients;
-		map<string, string> parameters;
-		for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
-
-		// TODO : a method to find a player in ServerPlugin ?
-		list<ClanMember *>::iterator itPlayer = 
-		find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
-		if (itPlayer != invalidPlayer)
-		{
-			try
-			{
-				TeamCode team = (*itPlayer)->getMyTeam();
-				MatchLignup * lignup = match->getLignup();
-
-				MatchClan * clan = match->getClan(team);
-				MatchClan * otherClan = (&lignup->clan1 != clan) ? &lignup->clan1 : &lignup->clan2;
-
-				parameters["$team"] = *clan->getName();
-				string message;
-				if (clan->isReady())
-				{
-					// Clan already "ready"
-					message = "warmup_already_ready";
-				}
-				else
-				{
-					clan->setReady(true);
-					message = "warmup_ready";
-				}
-				i18n->i18nChatSay(recipients,message,(*itPlayer)->getIdentity()->index,parameters);
-
-				// If both clan1 and clan2 are ready, end the warmup
-				if (clan->isReady() && otherClan->isReady())
-				{
-					Countdown::getInstance()->stop();
-					if (timer != NULL) // All the clans typed "!go" before the third restart ?
-					{
-						timer->cancel();
-					}
-					endWarmup();
-				}
-			}
-			catch(const MatchManagerException & e)
-			{
-				printException(e,__FILE__,__LINE__);
-			}
-		}
 	}
 }
 
@@ -233,7 +216,6 @@ void WarmupMatchState::round_start(IGameEvent * event)
 	default:
 		for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
 		i18n->i18nChatSay(recipients,"warmup_announcement");
-		// TODO : detect clan names ?
 		break;
 	}
 }

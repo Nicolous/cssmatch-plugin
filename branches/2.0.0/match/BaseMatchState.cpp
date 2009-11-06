@@ -21,9 +21,3 @@
  */
 
 #include "BaseMatchState.h"
-/*#include <string>
-using namespace std;
-
-using namespace cssmatch;*/
-
-// TODO : player_say => ConCommand + typeid ?

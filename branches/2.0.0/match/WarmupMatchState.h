@@ -35,6 +35,7 @@ namespace cssmatch
 {
 	class MatchManager;
 	class TimerWarmup;
+	class Player;
 
 	/** Warmup time in progress <br>
 	 * Ends with a timeout, or if at least one player of each side types "ready"
@@ -56,13 +57,15 @@ namespace cssmatch
 		 */
 		void endWarmup();
 
+		/** A player typed !go */
+		void doGo(Player * player);
+
 		// BaseMatchState methods
 		void startState();
 		void endState();
 
 		// Game event callbacks
 		void player_spawn(IGameEvent * event);
-		void player_say(IGameEvent * event);
 		void round_start(IGameEvent * event);
 		void bomb_beginplant(IGameEvent * event);
 	};
