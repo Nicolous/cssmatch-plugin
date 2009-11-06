@@ -30,19 +30,19 @@
 using namespace cssmatch;
 
 using std::string;
-using std::list;
+using std::map;
 
 // Syntax: cssm_help
 void cssmatch::cssm_help()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 
-	const list<ConCommand *> * pluginConCommands = plugin->getPluginConCommands();
-	list<ConCommand *>::const_iterator itConCommand = pluginConCommands->begin();
-	list<ConCommand *>::const_iterator lastConCommand = pluginConCommands->end();
+	const map<string,ConCommand *> * pluginConCommands = plugin->getPluginConCommands();
+	map<string,ConCommand *>::const_iterator itConCommand = pluginConCommands->begin();
+	map<string,ConCommand *>::const_iterator lastConCommand = pluginConCommands->end();
 	while (itConCommand != lastConCommand)
 	{
-		ConCommand * command = *itConCommand;
+		ConCommand * command = itConCommand->second;
 		plugin->log(string(command->GetName()) + " : " + command->GetHelpText());
 
 		itConCommand++;

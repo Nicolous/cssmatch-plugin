@@ -80,7 +80,7 @@ namespace cssmatch
 		friend class ConvarHavingName;
 	};
 
-	class ConvarHavingName
+/*	class ConvarHavingName
 	{
 	private:
 		std::string name;
@@ -90,7 +90,7 @@ namespace cssmatch
 		{
 			return name == var->GetName();
 		}
-	};
+	};*/
 }
 
 #endif  // __I18N_CONVAR_H__

@@ -46,6 +46,7 @@ using namespace cssmatch;
 
 using std::string;
 using std::list;
+using std::map;
 using std::for_each;
 using std::count_if;
 using std::find_if;
@@ -211,31 +212,26 @@ MatchManager * ServerPlugin::getMatch()
 
 void ServerPlugin::addPluginConVar(ConVar * variable)
 {
-	pluginConVars.push_back(variable);
+	pluginConVars[variable->GetName()] = variable;
 }
 
-const list<ConVar *> * ServerPlugin::getPluginConVars() const
+ConVar * ServerPlugin::getConVar(const string & name) throw(BaseConvarsAccessorException)
 {
-	return &pluginConVars;
-}
-
-ConVar * ServerPlugin::getConVar(const std::string & name) throw(BaseConvarsAccessorException)
-{
-	list<ConVar *>::iterator invalidConVar = pluginConVars.end();
-	list<ConVar *>::iterator itConVar = find_if(pluginConVars.begin(),invalidConVar,ConvarHavingName(name));
+	map<string,ConVar *>::iterator invalidConVar = pluginConVars.end();
+	map<string,ConVar *>::iterator itConVar = pluginConVars.find(name);
 
 	if (itConVar == invalidConVar)
 		throw BaseConvarsAccessorException("CSSMatch attempts to access to an unknown variable name");
 
-	return *itConVar;
+	return itConVar->second;
 }
 
 void ServerPlugin::addPluginConCommand(ConCommand * command)
 {
-	pluginConCommands.push_back(command);
+	pluginConCommands[command->GetName()] = command;
 }
 
-const list<ConCommand *> * ServerPlugin::getPluginConCommands() const
+const map<string,ConCommand *> * ServerPlugin::getPluginConCommands() const
 {
 	return &pluginConCommands;
 }

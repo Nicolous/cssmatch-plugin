@@ -42,7 +42,9 @@ class ConVar;
 struct edict_t;
 class ConCommand;
 
+#include <string>
 #include <list>
+#include <map>
 
 namespace cssmatch
 {
@@ -88,10 +90,10 @@ namespace cssmatch
 		std::list<BaseTimer *> timers;
 
 		/** Plugin console variable list */
-		std::list<ConVar *> pluginConVars;
+		std::map<std::string,ConVar *> pluginConVars;
 
 		/** Plugin console command list */
-		std::list<ConCommand *> pluginConCommands;
+		std::map<std::string,ConCommand *> pluginConCommands;
 
 		/** Internationalization tool */
 		I18nManager * i18n;
@@ -139,9 +141,6 @@ namespace cssmatch
 		/** Add a plugin console variable */
 		void addPluginConVar(ConVar * variable);
 
-		/** Get the plugin convar list */
-		const std::list<ConVar *> * getPluginConVars() const;
-
 		/** Access to a known ConVar
 		 * @param name The name of the ConVar
 		 * @return A pointer on the ConVar if found
@@ -153,7 +152,7 @@ namespace cssmatch
 		void addPluginConCommand(ConCommand * command);
 
 		/** Get the plugin command list */
-		const std::list<ConCommand *> * getPluginConCommands() const;
+		const std::map<std::string,ConCommand *> * getPluginConCommands() const;
 
 		/** Get the internationalization tool */
 		I18nManager * get18nManager();
