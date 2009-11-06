@@ -195,18 +195,18 @@ void MatchManager::player_changename(IGameEvent * event)
 
 void MatchManager::detectClanName(TeamCode code)
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
+	/*ServerPlugin * plugin = ServerPlugin::getInstance();
 	I18nManager * i18n = plugin->get18nManager();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();
+	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();*/
 
 	try
 	{
 		getClan(code)->detectClanName();
 
-		RecipientFilter recipients;
+		/*RecipientFilter recipients;
 		for_each(itPlayer,invalidPlayer,PlayerToRecipient(&recipients));
 
 		i18n->i18nChatSay(recipients,"match_retag");
@@ -214,7 +214,7 @@ void MatchManager::detectClanName(TeamCode code)
 		map<string,string> parameters;
 		parameters["$team1"] = *(lignup.clan1.getName());
 		parameters["$team2"] = *(lignup.clan2.getName());
-		i18n->i18nChatSay(recipients,"match_name",0,parameters);
+		i18n->i18nChatSay(recipients,"match_name",0,parameters);*/
 
 		updateHostname();
 	}

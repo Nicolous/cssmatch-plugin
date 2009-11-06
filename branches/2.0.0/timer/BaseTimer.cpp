@@ -24,11 +24,11 @@
 
 using namespace cssmatch;
 
-BaseTimer::BaseTimer(float executionDate) : date(executionDate)
+BaseTimer::BaseTimer(float executionDate) : date(executionDate), cancelled(false)
 {
 }
 
-float BaseTimer::getExecutionDate() const
+void BaseTimer::cancel()
 {
-	return date;
+	cancelled = true;
 }

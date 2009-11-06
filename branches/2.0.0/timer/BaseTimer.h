@@ -36,14 +36,17 @@ namespace cssmatch
 
 		/** When (in server time seconds) the delayed function must be executed */
 		float date;
+
+		/** Is the timer cancelled ? */
+		bool cancelled;
 	public:
 		/** Prepare a timer
 		 * @param executionDate When (in server time seconds) the delayed function must be executed
 		 */
 		BaseTimer(float executionDate);
 
-		/** Get the execution date (in seconds) */
-		float getExecutionDate() const;
+		/** Cancel this timer */
+		void cancel();
 
 		/** Execute the delayed function */
 		virtual void execute() = 0;
@@ -64,17 +67,20 @@ namespace cssmatch
 
 		bool operator()(BaseTimer * timer)
 		{
-			bool executed = false;
+			bool outofdate = false;
 
 			if (timer->date <= date)
 			{
-				timer->execute();
-				executed = true;
+				if (! timer->cancelled)
+				{
+					timer->execute();
+				}
 
 				delete timer;
+				outofdate = true;
 			}
 
-			return executed;
+			return outofdate;
 		}	
 	};
 }

@@ -34,6 +34,7 @@ class IGameEvent;
 namespace cssmatch
 {
 	class MatchManager;
+	class TimerWarmup;
 
 	/** Warmup time in progress <br>
 	 * Ends with a timeout, or if at least one player of each side types "ready"
@@ -46,6 +47,9 @@ namespace cssmatch
 		friend class BaseSingleton<WarmupMatchState>;
 		WarmupMatchState();
 		~WarmupMatchState();
+	protected:
+		/** "end of warmup" timer */
+		TimerWarmup * timer;
 	public:
 		/** End the warmup time <br>
 		 * Here is the code which musn't be executed if the match is interupted

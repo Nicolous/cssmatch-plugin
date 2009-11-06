@@ -41,7 +41,7 @@ using std::list;
 using std::map;
 using std::find_if;
 
-WarmupMatchState::WarmupMatchState()
+WarmupMatchState::WarmupMatchState() : timer(NULL)
 {
 	listener = new EventListener<WarmupMatchState>(this);
 }
@@ -64,9 +64,6 @@ void WarmupMatchState::endWarmup()
 	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
 
 	i18n->i18nChatSay(recipients,"warmup_all_ready");
-	Countdown::getInstance()->stop(); // Do not place it in ::endState(), otherwise 00:00 arrives | TODO : hu ? correct this comment :-p
-	plugin->removeTimers(); // Prevent the timeout to happen
-
 	i18n->i18nChatSay(recipients,"warmup_end");
 
 	try
@@ -100,7 +97,6 @@ void WarmupMatchState::startState()
 	lignup->clan2.setReady(false);
 
 	plugin->queueCommand("mp_restartgame 2\n");
-	//plugin->addTimer(new TimerWarmupCountdown(interfaces->gpGlobals->curtime + 3.0f));
 
 	// Subscribe to the needed game events
 	listener->addCallback("player_spawn",&WarmupMatchState::player_spawn);
@@ -185,6 +181,11 @@ void WarmupMatchState::player_say(IGameEvent * event)
 				// If both clan1 and clan2 are ready, end the warmup
 				if (clan->isReady() && otherClan->isReady())
 				{
+					Countdown::getInstance()->stop();
+					if (timer != NULL) // All the clans typed "!go" before the third restart ?
+					{
+						timer->cancel();
+					}
 					endWarmup();
 				}
 			}
@@ -201,6 +202,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 	// Do the restarts and announce the begin of each warmup round
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
@@ -218,7 +220,11 @@ void WarmupMatchState::round_start(IGameEvent * event)
 	case 0:
 		try
 		{
-			Countdown::getInstance()->fire(plugin->getConVar("cssmatch_warmup_time")->GetInt());
+			int duration = plugin->getConVar("cssmatch_warmup_time")->GetInt()*60;
+
+			Countdown::getInstance()->fire(duration);
+			timer = new TimerWarmup(interfaces->gpGlobals->curtime + (float)duration + 1.0f,this);
+			plugin->addTimer(timer);
 		}
 		catch(const BaseConvarsAccessorException & e)
 		{

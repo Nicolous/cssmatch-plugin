@@ -39,7 +39,7 @@ using std::vector;
 
 map<string, string> I18nManager::WITHOUT_PARAMETERS;
 
-I18nManager::I18nManager(IVEngineServer * engine) : UserMessagesManager(engine)
+I18nManager::I18nManager(IVEngineServer * engine) : UserMessagesManager(engine), defaultLanguage(NULL)
 {
 }
 
@@ -62,7 +62,7 @@ void I18nManager::setDefaultLanguage(ConVar * language)
 
 string I18nManager::getDefaultLanguage() const
 {
-	return defaultLanguage->GetString();
+	return (defaultLanguage != NULL) ? defaultLanguage->GetString() : "";
 }
 
 TranslationFile * I18nManager::getTranslationFile(const string & language)
@@ -84,22 +84,29 @@ TranslationFile * I18nManager::getTranslationFile(const string & language)
 		catch(const ConfigurationFileException & e)
 		{
 			// The file was not found, we'll use the default language instead
-			std::string defaultLanguageName = defaultLanguage->GetString();
-			std::map<std::string,TranslationFile *>::iterator itDefault = languages.find(defaultLanguageName);
-			if (itDefault == lastLanguages)
+			if (defaultLanguage != NULL)
 			{
-				try
+				std::string defaultLanguageName = defaultLanguage->GetString();
+				std::map<std::string,TranslationFile *>::iterator itDefault = languages.find(defaultLanguageName);
+				if (itDefault == lastLanguages)
 				{
-					translationSet = new TranslationFile(TRANSLATIONS_FOLDER + defaultLanguageName + ".txt");
-					languages[defaultLanguageName] = translationSet;
+					try
+					{
+						translationSet = new TranslationFile(TRANSLATIONS_FOLDER + defaultLanguageName + ".txt");
+						languages[defaultLanguageName] = translationSet;
+					}
+					catch(const ConfigurationFileException & e)
+					{
+						print(__FILE__,__LINE__,"ERROR ! Default translation file not found !");
+					}
 				}
-				catch(const ConfigurationFileException & e)
-				{
-					print(__FILE__,__LINE__,"ERROR ! Default translation file not found !");
-				}
+				else
+					translationSet = itDefault->second;
 			}
 			else
-				translationSet = itDefault->second;
+			{
+				print(__FILE__,__LINE__,"Unable to get the default language");
+			}
 		}
 	}
 	else
