@@ -217,13 +217,13 @@ void ServerPlugin::addPluginConVar(ConVar * variable)
 	pluginConVars[variable->GetName()] = variable;
 }
 
-ConVar * ServerPlugin::getConVar(const string & name) throw(BaseConvarsAccessorException)
+ConVar * ServerPlugin::getConVar(const string & name) throw(ServerPluginException)
 {
 	map<string,ConVar *>::iterator invalidConVar = pluginConVars.end();
 	map<string,ConVar *>::iterator itConVar = pluginConVars.find(name);
 
 	if (itConVar == invalidConVar)
-		throw BaseConvarsAccessorException("CSSMatch attempts to access to an unknown variable name");
+		throw ServerPluginException("CSSMatch attempts to access to an unknown variable name");
 
 	return itConVar->second;
 }
@@ -251,9 +251,14 @@ void ServerPlugin::hookConCommand(const std::string & commandName, IHookCallback
 	hookConCommands[commandName].push_back(callback);
 }
 
-list<IHookCallback *> * ServerPlugin::getHookCallbacks(const std::string & commandName)
+list<IHookCallback *> * ServerPlugin::getHookCallbacks(const std::string & commandName) throw(ServerPluginException)
 {
-	// TODO: Check if the command exists ?
+	map<string,list<IHookCallback *>>::iterator invalidHook = hookConCommands.end();
+	map<string,list<IHookCallback *>>::iterator itHook = hookConCommands.find(commandName);
+
+	if (itHook == invalidHook)
+		throw ServerPluginException(commandName + " is not an existing hook");
+
 	return &hookConCommands[commandName];
 }
 

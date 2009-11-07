@@ -85,20 +85,27 @@ void ConCommandHook::Dispatch()
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 
-	list<IHookCallback *> * callbacks = plugin->getHookCallbacks(GetName());
-	list<IHookCallback *>::const_iterator itCallback = callbacks->begin();
-	list<IHookCallback *>::const_iterator invalidCallback = callbacks->end();
-
-	bool eat = false;
-	while(itCallback != invalidCallback)
+	try
 	{
-		eat |= (*itCallback)->hookDispatch();
+		list<IHookCallback *> * callbacks = plugin->getHookCallbacks(GetName());
+		list<IHookCallback *>::const_iterator itCallback = callbacks->begin();
+		list<IHookCallback *>::const_iterator invalidCallback = callbacks->end();
 
-		itCallback++;
+		bool eat = false;
+		while(itCallback != invalidCallback)
+		{
+			eat |= (*itCallback)->hookDispatch();
+
+			itCallback++;
+		}
+
+		if (! eat)
+		{
+			hooked->Dispatch();
+		}
 	}
-
-	if (! eat)
+	catch(const ServerPluginException & e)
 	{
-		hooked->Dispatch();
+		printException(e,__FILE__,__LINE__);
 	}
 }

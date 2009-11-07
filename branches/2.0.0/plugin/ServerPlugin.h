@@ -24,10 +24,10 @@
 #define __SIMPLE_PLUGIN_H__
 
 #include "../messages/RecipientFilter.h"
-
 #include "../features/BaseSingleton.h"
 #include "../convars/ConvarsAccessor.h" // BaseConvarsAccessorException
 #include "../player/Player.h"
+#include "../exceptions/BaseException.h"
 
 #include "engine/iserverplugin.h"
 
@@ -69,6 +69,12 @@ namespace cssmatch
 
 		ValveInterfaces()
 			: engine(NULL),filesystem(NULL),gameeventmanager2(NULL),helpers(NULL),gpGlobals(NULL),convars(NULL){}
+	};
+
+	class ServerPluginException : public BaseException
+	{
+	public:
+		ServerPluginException(const std::string & message) : BaseException(message){}
 	};
 
 	/** Source plugin IServerPluginCallbacks implementation */
@@ -148,9 +154,9 @@ namespace cssmatch
 		/** Access to a known ConVar
 		 * @param name The name of the ConVar
 		 * @return A pointer on the ConVar if found
-		 * @throws BaseConvarsAccessorException if the ConVar was not found
+		 * @throws ServerPluginException if the ConVar was not found
 		 */
-		ConVar * getConVar(const std::string & name) throw(BaseConvarsAccessorException);
+		ConVar * getConVar(const std::string & name) throw(ServerPluginException);
 
 		/** Add a plugin console command */
 		void addPluginConCommand(ConCommand * command);
@@ -167,8 +173,9 @@ namespace cssmatch
 
 		/** Get the callback list of a particular hook command
 		 * @param commandName The name of the hook command
+		 * @throws ServerPluginException if the hook does not exist
 		 */
-		std::list<IHookCallback *> * getHookCallbacks(const std::string & commandName);
+		std::list<IHookCallback *> * getHookCallbacks(const std::string & commandName) throw(ServerPluginException);
 
 		/** Get the internationalization tool */
 		I18nManager * get18nManager();
