@@ -53,6 +53,7 @@ namespace cssmatch
 	class I18nManager;
 	class BaseTimer;
 	class MatchManager;
+	class IHookCallback;
 
 	/** Valve's interface instances */
 	struct ValveInterfaces
@@ -94,6 +95,9 @@ namespace cssmatch
 
 		/** Plugin console command list */
 		std::map<std::string,ConCommand *> pluginConCommands;
+
+		/** Hook console command list */
+		std::map<std::string,std::list<IHookCallback *>> hookConCommands;
 
 		/** Internationalization tool */
 		I18nManager * i18n;
@@ -153,6 +157,18 @@ namespace cssmatch
 
 		/** Get the plugin command list */
 		const std::map<std::string,ConCommand *> * getPluginConCommands() const;
+
+		/** Hook a ConCommand (add the additionnal callback if the hook already exists)
+		 * @param commandName The name of the ConCommand to hook
+		 * @param callback Callback object to invoke when the hooked command is used
+		 * @see IHookCallback
+		 */
+		void hookConCommand(const std::string & commandName, IHookCallback * callback);
+
+		/** Get the callback list of a particular hook command
+		 * @param commandName The name of the hook command
+		 */
+		std::list<IHookCallback *> * getHookCallbacks(const std::string & commandName);
 
 		/** Get the internationalization tool */
 		I18nManager * get18nManager();

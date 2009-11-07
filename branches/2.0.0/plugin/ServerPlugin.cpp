@@ -24,6 +24,8 @@
 #include "../convars/I18nConVar.h"
 #include "../commands/I18nConCommand.h"
 #include "../commands/ConCommandCallbacks.h"
+#include "../commands/ConCommandHook.h"
+#include "../commands/IHookCallback.h"
 #include "../convars/ConVarCallbacks.h"
 #include "../entity/EntityProp.h"
 #include "../player/ClanMember.h"
@@ -234,6 +236,25 @@ void ServerPlugin::addPluginConCommand(ConCommand * command)
 const map<string,ConCommand *> * ServerPlugin::getPluginConCommands() const
 {
 	return &pluginConCommands;
+}
+
+void ServerPlugin::hookConCommand(const std::string & commandName, IHookCallback * callback)
+{
+	map<string,list<IHookCallback *>>::iterator invalidHook = hookConCommands.end();
+	map<string,list<IHookCallback *>>::iterator itHook = hookConCommands.find(commandName);
+
+	if (itHook == invalidHook)
+	{
+		addPluginConCommand(new ConCommandHook(strdup(commandName.c_str())));
+		hookConCommands[commandName] = list<IHookCallback *>();
+	}
+	hookConCommands[commandName].push_back(callback);
+}
+
+list<IHookCallback *> * ServerPlugin::getHookCallbacks(const std::string & commandName)
+{
+	// TODO: Check if the command exists ?
+	return &hookConCommands[commandName];
 }
 
 I18nManager * ServerPlugin::get18nManager()

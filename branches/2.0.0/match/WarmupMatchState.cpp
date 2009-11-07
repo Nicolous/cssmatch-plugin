@@ -43,6 +43,9 @@ using std::find_if;
 
 WarmupMatchState::WarmupMatchState() : timer(NULL)
 {
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	plugin->hookConCommand("say",this); // TODO: Hook say_team
+
 	listener = new EventListener<WarmupMatchState>(this);
 }
 
@@ -160,6 +163,13 @@ void WarmupMatchState::startState()
 void WarmupMatchState::endState()
 {
 	listener->removeCallbacks();
+}
+
+bool WarmupMatchState::hookDispatch()
+{
+	// TODO: ready, !go...
+
+	return false;
 }
 
 void WarmupMatchState::player_spawn(IGameEvent * event)

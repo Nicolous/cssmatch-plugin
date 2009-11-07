@@ -556,11 +556,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\commands\ConCommandHook.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\commands\ConCommandHook.h"
+				>
+			</File>
+			<File
 				RelativePath=".\commands\I18nConCommand.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\commands\I18nConCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\commands\IHookCallback.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\commands\IHookCallback.h"
 				>
 			</File>
 		</Filter>
