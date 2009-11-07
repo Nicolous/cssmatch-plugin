@@ -28,3 +28,6 @@ BaseConvarsAccessor::BaseConvarsAccessor() : cvars(NULL)
 {
 }
 
+BaseConvarsAccessor::~BaseConvarsAccessor()
+{
+}

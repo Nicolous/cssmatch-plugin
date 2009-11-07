@@ -35,7 +35,7 @@ namespace cssmatch
 	protected:
 		// Allowing the instanciation of the children
 		CannotBeCopied();
-		~CannotBeCopied();
+		virtual ~CannotBeCopied();
 	};
 }
 

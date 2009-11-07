@@ -109,6 +109,8 @@ namespace cssmatch
 		 */
 		Player(int index) throw(PlayerException);
 
+		virtual ~Player();
+
 		/** Get the identity informations about this player 
 		 * @return A PlayerIdentity structure pointer
 		 * @see struct PlayerIdentity

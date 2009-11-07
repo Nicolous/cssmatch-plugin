@@ -46,6 +46,7 @@ namespace cssmatch
 		ICvar * cvars;
 	public:
 		BaseConvarsAccessor();
+		virtual ~BaseConvarsAccessor();
 
 		/** Initialize the interface
 		 * @param cvarFactory The factory used to retrieve the accessor

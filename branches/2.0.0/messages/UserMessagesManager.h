@@ -135,6 +135,8 @@ namespace cssmatch
 		 */
 		UserMessagesManager(IVEngineServer * engine);
 
+		virtual ~UserMessagesManager();
+
 		/** Send a chat message <br>
 		 * \001, \003 and \004 will color the message
 		 * @param recipients Recipient list

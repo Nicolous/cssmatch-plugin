@@ -21,3 +21,9 @@
  */
 
 #include "BaseMatchState.h"
+
+using namespace cssmatch;
+
+BaseMatchState::~BaseMatchState()
+{
+}

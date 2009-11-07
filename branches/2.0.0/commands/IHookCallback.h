@@ -31,6 +31,8 @@ namespace cssmatch
 	class IHookCallback
 	{
 	public:
+		virtual ~IHookCallback();
+
 		/** Similar to the ConCommand::Dispatch method but allow the class to the "eat" the command <br>
 		 * in order to hook its effect
 		 * @return <code>true</code> if the command has to be "eaten", <code>false</code> otherwise

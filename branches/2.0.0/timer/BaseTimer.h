@@ -45,6 +45,8 @@ namespace cssmatch
 		 */
 		BaseTimer(float executionDate);
 
+		virtual ~BaseTimer();
+
 		/** Cancel this timer */
 		void cancel();
 

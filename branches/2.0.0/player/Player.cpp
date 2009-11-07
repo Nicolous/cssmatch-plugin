@@ -48,6 +48,10 @@ Player::Player(int index) throw (PlayerException)
 		identity.steamid = tempSteamid;
 }
 
+Player::~Player()
+{
+}
+
 PlayerIdentity * Player::getIdentity()
 {
 	return &identity;

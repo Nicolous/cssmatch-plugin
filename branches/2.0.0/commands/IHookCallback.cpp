@@ -21,3 +21,9 @@
  */
 
 #include "IHookCallback.h"
+
+using namespace cssmatch;
+
+IHookCallback::~IHookCallback()
+{
+}

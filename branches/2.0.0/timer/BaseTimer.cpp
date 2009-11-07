@@ -28,6 +28,10 @@ BaseTimer::BaseTimer(float executionDate) : date(executionDate), cancelled(false
 {
 }
 
+BaseTimer::~BaseTimer()
+{
+}
+
 void BaseTimer::cancel()
 {
 	cancelled = true;

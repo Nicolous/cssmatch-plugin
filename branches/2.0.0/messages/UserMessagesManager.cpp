@@ -38,6 +38,10 @@ UserMessagesManager::UserMessagesManager(IVEngineServer * eng) : engine(eng)
 {
 }
 
+UserMessagesManager::~UserMessagesManager()
+{
+}
+
 void UserMessagesManager::chatSay(RecipientFilter & recipients, const string & message, int playerIndex)
 {
 	ostringstream output;

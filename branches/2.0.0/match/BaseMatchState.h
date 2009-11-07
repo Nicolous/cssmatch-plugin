@@ -33,6 +33,8 @@ namespace cssmatch
 	class BaseMatchState
 	{
 	public:
+		virtual ~BaseMatchState();
+
 		/** Apply this match state */
 		virtual void startState() = 0;
 
