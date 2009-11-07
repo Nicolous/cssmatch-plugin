@@ -42,7 +42,7 @@ using namespace cssmatch;
 using std::string;
 using std::list;
 using std::map;
-using std::for_each;
+using std::find_if;
 
 KnifeRoundMatchState::KnifeRoundMatchState()
 {
@@ -67,9 +67,8 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 		// don't care about the exception, winner is validated above
 
 	// Global recipient list
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	RecipientFilter recipients;
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+	recipients.addAllPlayers();
 	
 	// Announce the winner
 	map<string,string> parameters;
@@ -79,6 +78,8 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	// Invite the winners to choice a side
 	TeamCode teamWinner = infos->kniferoundWinner->getTeamCode();
 	TeamCode teamLoser = (teamWinner == T_TEAM) ? CT_TEAM : T_TEAM;
+
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator itPlayer = playerlist->begin();
 	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 	while(itPlayer != invalidPlayer)
@@ -153,9 +154,8 @@ void KnifeRoundMatchState::startState()
 	I18nManager * i18n = plugin->get18nManager();
 
 	// Global recipient list
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	RecipientFilter recipients;
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+	recipients.addAllPlayers();
 
 	// Register to the needed events
 	listener->addCallback("round_start",&KnifeRoundMatchState::round_start);
@@ -195,9 +195,8 @@ void KnifeRoundMatchState::round_start(IGameEvent * event)
 		break;
 	default:
 		// Global recipient list
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
 		RecipientFilter recipients;
-		for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+		recipients.addAllPlayers();
 		
 		i18n->i18nChatSay(recipients,"kniferound_announcement");
 	}
@@ -303,5 +302,3 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 		printException(e,__FILE__,__LINE__);
 	}
 }
-
-// TODO : recipient list is often global, could we construct in parallel with the player list in ServerPlugin ?

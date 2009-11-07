@@ -110,7 +110,7 @@ namespace cssmatch
 
 		friend class BaseSingleton<ServerPlugin>;
 		ServerPlugin();
-		~ServerPlugin();
+		virtual ~ServerPlugin();
 
 		/** Get a named interface from an interface factory
 		 * @param factory The factory provided by the game when the plugin is loaded
@@ -193,22 +193,22 @@ namespace cssmatch
 		void setConvarsAccessor(BaseConvarsAccessor * convarsAccessor);
 
 		// IServerPluginCallbacks methods
-		bool Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
-		void Unload();
-		void Pause();
-		void UnPause();
-		const char * GetPluginDescription();
-		void LevelInit(char const * pMapName);
-		void ServerActivate(edict_t * pEdictList, int edictCount, int clientMax);
-		void GameFrame(bool simulating);
-		void LevelShutdown();
-		void ClientActive(edict_t * pEntity);
-		void ClientDisconnect(edict_t * pEntity);
-		void ClientPutInServer(edict_t * pEntity, char const * playername);
-		void ClientSettingsChanged(edict_t * pEdict);
-		PLUGIN_RESULT ClientConnect(bool * bAllowConnect, edict_t * pEntity, const char *pszName, const char * pszAddress, char * reject, int maxrejectlen);
-		PLUGIN_RESULT ClientCommand(edict_t * pEntity);
-		PLUGIN_RESULT NetworkIDValidated(const char * pszUserName, const char * pszNetworkID);
+		virtual bool Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
+		virtual void Unload();
+		virtual void Pause();
+		virtual void UnPause();
+		virtual const char * GetPluginDescription();
+		virtual void LevelInit(char const * pMapName);
+		virtual void ServerActivate(edict_t * pEdictList, int edictCount, int clientMax);
+		virtual void GameFrame(bool simulating);
+		virtual void LevelShutdown();
+		virtual void ClientActive(edict_t * pEntity);
+		virtual void ClientDisconnect(edict_t * pEntity);
+		virtual void ClientPutInServer(edict_t * pEntity, char const * playername);
+		virtual void ClientSettingsChanged(edict_t * pEdict);
+		virtual PLUGIN_RESULT ClientConnect(bool * bAllowConnect, edict_t * pEntity, const char *pszName, const char * pszAddress, char * reject, int maxrejectlen);
+		virtual PLUGIN_RESULT ClientCommand(edict_t * pEntity);
+		virtual PLUGIN_RESULT NetworkIDValidated(const char * pszUserName, const char * pszNetworkID);
 
 		// Tools
 

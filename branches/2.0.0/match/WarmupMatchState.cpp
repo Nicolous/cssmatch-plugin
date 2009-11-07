@@ -60,11 +60,8 @@ void WarmupMatchState::endWarmup()
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
 	RecipientFilter recipients;
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+	recipients.addAllPlayers();
 
 	i18n->i18nChatSay(recipients,"warmup_all_ready");
 	i18n->i18nChatSay(recipients,"warmup_end");
@@ -95,12 +92,9 @@ void WarmupMatchState::doGo(Player * player)
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
 	RecipientFilter recipients;
+	recipients.addAllPlayers();
 	map<string, string> parameters;
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
 
 	try
 	{
@@ -198,7 +192,6 @@ void WarmupMatchState::round_start(IGameEvent * event)
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->get18nManager();
 
-	std::list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	RecipientFilter recipients;
 
 	switch(match->getInfos()->roundNumber++)
@@ -224,7 +217,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 		}
 	//	break;
 	default:
-		for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+		recipients.addAllPlayers();
 		i18n->i18nChatSay(recipients,"warmup_announcement");
 		break;
 	}

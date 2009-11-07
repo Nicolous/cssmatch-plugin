@@ -23,11 +23,18 @@
 #include "RecipientFilter.h"
 
 #include "../common/common.h"
+#include "../plugin/ServerPlugin.h"
+#include "../player/ClanMember.h"
+
+#include <list>
+#include <algorithm>
 
 using namespace cssmatch;
 
 using std::vector;
 using std::out_of_range;
+using std::list;
+using std::for_each;
 
 bool RecipientFilter::IsInitMessage() const
 {
@@ -47,6 +54,14 @@ int RecipientFilter::GetRecipientCount() const
 void RecipientFilter::addRecipient(int index)
 {
 	recipients.push_back(index);
+}
+
+void RecipientFilter::addAllPlayers()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(this));
 }
 
 int RecipientFilter::GetRecipientIndex(int slot) const

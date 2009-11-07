@@ -64,9 +64,8 @@ void SetMatchState::startState()
 
 	infos->roundNumber = -2; // a negative round number causes a game restart (see round_start)
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	RecipientFilter recipients;
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+	recipients.addAllPlayers();
 
 	try
 	{
@@ -149,12 +148,11 @@ void SetMatchState::round_start(IGameEvent * event)
 	ClanStats * statsClan1 = lignup->clan1.getStats();
 	ClanStats * statsClan2 = lignup->clan2.getStats();
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	RecipientFilter recipients;
+	recipients.addAllPlayers();
 	map<string,string> parameters;
 
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
-
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator itPlayer = playerlist->begin();
 	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 	while(itPlayer != invalidPlayer)

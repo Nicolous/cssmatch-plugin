@@ -28,13 +28,11 @@
 #include "../messages/I18nManager.h"
 
 #include <sstream>
-#include <algorithm>
 
 using namespace cssmatch;
 
 using std::ostringstream;
 using std::list;
-using std::for_each;
 
 Countdown::CountdownTick::CountdownTick(float dateExecution, int nextCount)
 	: BaseTimer(dateExecution), left(nextCount)
@@ -68,13 +66,12 @@ void Countdown::CountdownTick::execute()
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	I18nManager * i18n = plugin->get18nManager();
 
 	RecipientFilter recipients;
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+	recipients.addAllPlayers();
 
-	plugin->get18nManager()->hintSay(recipients,message.str());
+	i18n->hintSay(recipients,message.str());
 
 	if (Countdown::getInstance()->decTimeLeft() >= 0)
 	{

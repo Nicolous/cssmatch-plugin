@@ -48,17 +48,20 @@ namespace cssmatch
 		virtual bool IsInitMessage() const;
 
 		/** Get the number of recipients in this list */
-		int GetRecipientCount() const;
+		virtual int GetRecipientCount() const;
 
 		/** Get the player index at a given recipient slot
 		 * @param slot Player's position in the list
 		 */
-		int GetRecipientIndex(int slot) const;
+		virtual int GetRecipientIndex(int slot) const;
 
 		/** Add a player to the recipient list
 		 * @param index Player's index
 		 */
 		void addRecipient(int index);
+
+		/** Add a the player to the recipient list */
+		void addAllPlayers();
 
 		/** Get a vector of the recipient list */
 		const std::vector<int> * getVector() const;

@@ -43,7 +43,7 @@ using namespace cssmatch;
 
 using std::string;
 using std::list;
-using std::for_each;
+using std::find_if;
 using std::map;
 
 MatchManager::MatchManager()
@@ -111,12 +111,8 @@ void MatchManager::player_disconnect(IGameEvent * event)
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	I18nManager * i18n = plugin->get18nManager();
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();
-
 	RecipientFilter recipients;
-	for_each(itPlayer,invalidPlayer,PlayerToRecipient(&recipients));
+	recipients.addAllPlayers();
 	map<string, string> parameters;
 	parameters["$username"] = event->GetString("name");
 	parameters["$reason"] = event->GetString("reason");
@@ -196,18 +192,14 @@ void MatchManager::player_changename(IGameEvent * event)
 void MatchManager::detectClanName(TeamCode code)
 {
 	/*ServerPlugin * plugin = ServerPlugin::getInstance();
-	I18nManager * i18n = plugin->get18nManager();
-
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();*/
+	I18nManager * i18n = plugin->get18nManager();*/
 
 	try
 	{
 		getClan(code)->detectClanName();
 
 		/*RecipientFilter recipients;
-		for_each(itPlayer,invalidPlayer,PlayerToRecipient(&recipients));
+		recipients.addAllPlayers();
 
 		i18n->i18nChatSay(recipients,"match_retag");
 
@@ -294,9 +286,8 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 	I18nManager * i18n = plugin->get18nManager();
 
 	// Global recipient list
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	RecipientFilter recipients;
-	for_each(playerlist->begin(),playerlist->end(),PlayerToRecipient(&recipients));
+	recipients.addAllPlayers();
 
 	// Update match infos
 	infos.setNumber = 1;
