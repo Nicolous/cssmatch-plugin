@@ -139,7 +139,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 			match->stop();
 		}
 	}
-	catch(const BaseConvarsAccessorException & e)
+	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
 		match->setMatchState(DISABLED);
@@ -248,7 +248,7 @@ void KnifeRoundMatchState::player_spawn(IGameEvent * event)
 		{
 			(*itPlayer)->setCash(plugin->getConVar("cssmatch_kniferound_money")->GetInt());
 		}
-		catch(const BaseConvarsAccessorException & e)
+		catch(const ServerPluginException & e)
 		{
 			printException(e,__FILE__,__LINE__);
 		}
@@ -297,7 +297,7 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 				print(__FILE__,__LINE__,"Unable to find the player who plants the bomb");
 		}
 	}
-	catch(const BaseConvarsAccessorException & e)
+	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
 	}

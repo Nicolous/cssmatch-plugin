@@ -75,7 +75,7 @@ void WarmupMatchState::endWarmup()
 			match->stop();
 		}
 	}
-	catch(const BaseConvarsAccessorException & e)
+	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
 		match->setMatchState(DISABLED);
@@ -234,7 +234,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 			timer = new TimerWarmup(interfaces->gpGlobals->curtime + (float)duration + 1.0f,this);
 			plugin->addTimer(timer);
 		}
-		catch(const BaseConvarsAccessorException & e)
+		catch(const ServerPluginException & e)
 		{
 			printException(e,__FILE__,__LINE__);
 		}

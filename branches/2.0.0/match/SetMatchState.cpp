@@ -74,7 +74,7 @@ void SetMatchState::startState()
 		parameters["$total"] = plugin->getConVar("cssmatch_sets")->GetString();
 		i18n->i18nChatSay(recipients,"match_start_manche",0,parameters);
 	}
-	catch(const BaseConvarsAccessorException & e)
+	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
 	}
@@ -183,7 +183,7 @@ void SetMatchState::round_start(IGameEvent * event)
 		{
 			parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();
 		}
-		catch(const BaseConvarsAccessorException & e)
+		catch(const ServerPluginException & e)
 		{
 			printException(e,__FILE__,__LINE__);
 		}

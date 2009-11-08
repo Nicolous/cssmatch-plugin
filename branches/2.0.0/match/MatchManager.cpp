@@ -242,7 +242,7 @@ void MatchManager::updateHostname()
 		// Set the new hostname
 		hostname->SetValue(newHostname.c_str());
 	}
-	catch(const BaseConvarsAccessorException & e)
+	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
 	}
@@ -348,7 +348,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 			i18n->i18nChatWarning(recipients,"match_config_error");
 		}
 	}
-	catch(const BaseConvarsAccessorException & e)
+	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
 	}
