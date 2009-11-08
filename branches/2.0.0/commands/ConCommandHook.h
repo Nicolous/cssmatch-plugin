@@ -26,7 +26,10 @@
 
 namespace cssmatch
 {
-	/** Hooked ConCommand */
+	/** Hook a command at runtime 
+	 * Note that this object calls ConCommand::Init(), <br>
+	 * don't construct it before invoking ConCommandBaseMgr::OneTimeInit
+	 */
 	class ConCommandHook : public ConCommand
 	{
 	protected:

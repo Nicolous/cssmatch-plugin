@@ -43,9 +43,6 @@ using std::find_if;
 
 WarmupMatchState::WarmupMatchState() : timer(NULL)
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	plugin->hookConCommand("say",this); // TODO: Hook say_team
-
 	listener = new EventListener<WarmupMatchState>(this);
 }
 
@@ -151,17 +148,43 @@ void WarmupMatchState::startState()
 	listener->addCallback("round_start",&WarmupMatchState::round_start);
 	listener->addCallback("bomb_beginplant",&WarmupMatchState::bomb_beginplant);
 
+	// Hook needed commands
+	plugin->hookConCommand("say",this);
+	plugin->hookConCommand("say_team",this);
+
 	match->getInfos()->roundNumber = -2; // negative round number causes a game restart (see round_start)
 }
 
 void WarmupMatchState::endState()
 {
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
 	listener->removeCallbacks();
+
+	plugin->unHookConCommand("say",this);
+	plugin->unHookConCommand("say_team",this);
 }
 
-bool WarmupMatchState::hookDispatch()
+bool WarmupMatchState::hookDispatch(int userIndex, IVEngineServer * engine)
 {
-	// TODO: ready, !go...
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
+	//string hook = engine->Cmd_Argv(0); // Only say et say_team are hooked
+	//if ((hook == "say") || (hook == "say_team"))
+	//{
+		string chatCommand = engine->Cmd_Argv(1);
+		if ((chatCommand == "!go") || (chatCommand == "ready"))
+		{
+			list<ClanMember *> * playerlist = plugin->getPlayerlist();
+			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+			list<ClanMember *>::iterator itPlayer = find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
+
+			if (itPlayer != invalidPlayer)
+				doGo(*itPlayer);
+			else
+				print(__FILE__,__LINE__,"Unable to find the player who typed !go/ready");		
+		}
+	//}
 
 	return false;
 }

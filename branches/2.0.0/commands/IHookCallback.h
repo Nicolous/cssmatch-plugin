@@ -23,10 +23,10 @@
 #ifndef __IHOOKCALLBACK_H__
 #define __IHOOKCALLBACK_H__
 
+class IVEngineServer;
+
 namespace cssmatch
 {
-	// TODO: Same knid of interface for the event listeners instead of use a template
-
 	/** A class which wants to hook a ConCommand has to implement this interface */
 	class IHookCallback
 	{
@@ -35,9 +35,11 @@ namespace cssmatch
 
 		/** Similar to the ConCommand::Dispatch method but allow the class to the "eat" the command <br>
 		 * in order to hook its effect
+		 * @param userIndex The user index which uses the hooked command
+		 * @param engine The IVEngineServer instance to access the arguments
 		 * @return <code>true</code> if the command has to be "eaten", <code>false</code> otherwise
 		 */
-		virtual bool hookDispatch() = 0;
+		virtual bool hookDispatch(int userIndex, IVEngineServer * engine) = 0;
 	};
 }
 

@@ -192,7 +192,7 @@ ValveInterfaces * ServerPlugin::getInterfaces()
 	return &interfaces;
 }
 
-int ServerPlugin::GetCommandIndex() const
+int ServerPlugin::GetCommandClient() const
 {
 	return clientCommandIndex; 
 }
@@ -223,7 +223,7 @@ ConVar * ServerPlugin::getConVar(const string & name) throw(ServerPluginExceptio
 	map<string,ConVar *>::iterator itConVar = pluginConVars.find(name);
 
 	if (itConVar == invalidConVar)
-		throw ServerPluginException("CSSMatch attempts to access to an unknown variable name");
+		throw ServerPluginException("Attempts to access to an unknown variable name");
 
 	return itConVar->second;
 }
@@ -245,10 +245,21 @@ void ServerPlugin::hookConCommand(const std::string & commandName, IHookCallback
 
 	if (itHook == invalidHook)
 	{
-		addPluginConCommand(new ConCommandHook(strdup(commandName.c_str())));
+		addPluginConCommand(new ConCommandHook(commandName));
 		hookConCommands[commandName] = list<IHookCallback *>();
 	}
 	hookConCommands[commandName].push_back(callback);
+}
+
+void ServerPlugin::unHookConCommand(const std::string & commandName, IHookCallback * callback)
+{
+	map<string,list<IHookCallback *>>::iterator invalidHook = hookConCommands.end();
+	map<string,list<IHookCallback *>>::iterator itHook = hookConCommands.find(commandName);
+
+	if (itHook != invalidHook)
+		itHook->second.remove(callback);
+	else
+		print(__FILE__,__LINE__,"\"" + commandName + "\" is not a valid hook");
 }
 
 list<IHookCallback *> * ServerPlugin::getHookCallbacks(const std::string & commandName) throw(ServerPluginException)
@@ -257,7 +268,7 @@ list<IHookCallback *> * ServerPlugin::getHookCallbacks(const std::string & comma
 	map<string,list<IHookCallback *>>::iterator itHook = hookConCommands.find(commandName);
 
 	if (itHook == invalidHook)
-		throw ServerPluginException(commandName + " is not an existing hook");
+		throw ServerPluginException("\"" + commandName + "\" is not an existing hook");
 
 	return &hookConCommands[commandName];
 }

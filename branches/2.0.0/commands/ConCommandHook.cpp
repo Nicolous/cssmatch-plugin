@@ -33,8 +33,9 @@ using std::string;
 using std::list;
 
 ConCommandHook::ConCommandHook(const string & name, const string & helpString)
-	: ConCommand(strdup(name.c_str()),NULL,helpString.c_str(),FCVAR_GAMEDLL)
+	: ConCommand(strdup(name.c_str()),NULL,strdup(helpString.c_str()),FCVAR_GAMEDLL), hooked(NULL)
 {
+	Init();
 }
 
 void ConCommandHook::Init()
@@ -84,17 +85,19 @@ void ConCommandHook::Dispatch()
 	// Call the corresponding callback, and eat the command call if asked
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	try
 	{
-		list<IHookCallback *> * callbacks = plugin->getHookCallbacks(GetName());
-		list<IHookCallback *>::const_iterator itCallback = callbacks->begin();
-		list<IHookCallback *>::const_iterator invalidCallback = callbacks->end();
+		list<IHookCallback *> callbacks(*plugin->getHookCallbacks(GetName()));
+			 // Make a copy because a callback could modify the callback list, therefore invalid the iterators
+		list<IHookCallback *>::const_iterator itCallback = callbacks.begin();
+		list<IHookCallback *>::const_iterator invalidCallback = callbacks.end();
 
 		bool eat = false;
 		while(itCallback != invalidCallback)
 		{
-			eat |= (*itCallback)->hookDispatch();
+			eat |= (*itCallback)->hookDispatch(plugin->GetCommandClient()+1,interfaces->engine);
 
 			itCallback++;
 		}

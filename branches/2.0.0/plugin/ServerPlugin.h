@@ -137,10 +137,10 @@ namespace cssmatch
 		ValveInterfaces * getInterfaces();
 
 		/** Get the last player index wich used a rcon command */
-		int GetCommandIndex() const;
+		int GetCommandClient() const;
 
 		/** Set the last player index wich used a rcon command */
-		void SetCommandClient(int index);
+		virtual void SetCommandClient(int index);
 
 		/** Get the global playerlist */
 		std::list<ClanMember *> * getPlayerlist();
@@ -167,9 +167,14 @@ namespace cssmatch
 		/** Hook a ConCommand (add the additionnal callback if the hook already exists)
 		 * @param commandName The name of the ConCommand to hook
 		 * @param callback Callback object to invoke when the hooked command is used
-		 * @see IHookCallback
 		 */
 		void hookConCommand(const std::string & commandName, IHookCallback * callback);
+
+		/** Remove a callback from a particular hook 
+		 * @param commandName The name of the ConCommand hooked
+		 * @param callback Callback object to remove
+		 */
+		void unHookConCommand(const std::string & commandName, IHookCallback * callback);
 
 		/** Get the callback list of a particular hook command
 		 * @param commandName The name of the hook command

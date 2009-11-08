@@ -32,6 +32,8 @@ class IGameEvent;
 #include "../plugin/EventListener.h"
 #include "../commands/IHookCallback.h"
 
+class IVEngineServer;
+
 namespace cssmatch
 {
 	class MatchManager;
@@ -66,7 +68,7 @@ namespace cssmatch
 		void endState();
 
 		// IHookCallback method
-		bool hookDispatch();
+		bool hookDispatch(int userIndex, IVEngineServer * engine);
 
 		// Game event callbacks
 		void player_spawn(IGameEvent * event);
