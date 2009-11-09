@@ -25,7 +25,6 @@
 #include "../commands/I18nConCommand.h"
 #include "../commands/ConCommandCallbacks.h"
 #include "../commands/ConCommandHook.h"
-#include "../commands/IHookCallback.h"
 #include "../convars/ConVarCallbacks.h"
 #include "../entity/EntityProp.h"
 #include "../player/ClanMember.h"
@@ -182,6 +181,10 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_help",cssm_help,"cssm_help"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_start",cssm_start,"cssm_start"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_stop",cssm_stop,"cssm_stop"));
+
+		// Hook needed commands
+		hookConCommand("say",say_hook);
+		hookConCommand("say_team",say_hook);
 	}
 
 	return success;
@@ -238,39 +241,31 @@ const map<string,ConCommand *> * ServerPlugin::getPluginConCommands() const
 	return &pluginConCommands;
 }
 
-void ServerPlugin::hookConCommand(const std::string & commandName, IHookCallback * callback)
+void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback callback)
 {
-	map<string,list<IHookCallback *>>::iterator invalidHook = hookConCommands.end();
-	map<string,list<IHookCallback *>>::iterator itHook = hookConCommands.find(commandName);
+	map<string,HookCallback>::iterator invalidHook = hookConCommands.end();
+	map<string,HookCallback>::iterator itHook = hookConCommands.find(commandName);
 
 	if (itHook == invalidHook)
 	{
 		addPluginConCommand(new ConCommandHook(commandName));
-		hookConCommands[commandName] = list<IHookCallback *>();
+		hookConCommands[commandName] = callback;
 	}
-	hookConCommands[commandName].push_back(callback);
-}
-
-void ServerPlugin::unHookConCommand(const std::string & commandName, IHookCallback * callback)
-{
-	map<string,list<IHookCallback *>>::iterator invalidHook = hookConCommands.end();
-	map<string,list<IHookCallback *>>::iterator itHook = hookConCommands.find(commandName);
-
-	if (itHook != invalidHook)
-		itHook->second.remove(callback);
 	else
-		print(__FILE__,__LINE__,"\"" + commandName + "\" is not a valid hook");
+	{
+		print(__FILE__,__LINE__,commandName + " is already hooked");
+	}
 }
 
-list<IHookCallback *> * ServerPlugin::getHookCallbacks(const std::string & commandName) throw(ServerPluginException)
+HookCallback ServerPlugin::getHookCallback(const std::string & commandName) throw(ServerPluginException)
 {
-	map<string,list<IHookCallback *>>::iterator invalidHook = hookConCommands.end();
-	map<string,list<IHookCallback *>>::iterator itHook = hookConCommands.find(commandName);
+	map<string,HookCallback>::iterator invalidHook = hookConCommands.end();
+	map<string,HookCallback>::iterator itHook = hookConCommands.find(commandName);
 
 	if (itHook == invalidHook)
 		throw ServerPluginException("\"" + commandName + "\" is not an existing hook");
 
-	return &hookConCommands[commandName];
+	return hookConCommands[commandName];
 }
 
 I18nManager * ServerPlugin::get18nManager()

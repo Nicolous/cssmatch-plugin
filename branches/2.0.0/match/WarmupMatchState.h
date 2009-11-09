@@ -30,7 +30,6 @@ class IGameEvent;
 #include "../features/BaseSingleton.h"
 #include "../timer/BaseTimer.h"
 #include "../plugin/EventListener.h"
-#include "../commands/IHookCallback.h"
 
 class IVEngineServer;
 
@@ -43,7 +42,7 @@ namespace cssmatch
 	/** Warmup time in progress <br>
 	 * Ends with a timeout, or if at least one player of each side types "ready"
 	 */
-	class WarmupMatchState : public BaseMatchState, public BaseSingleton<WarmupMatchState>, public IHookCallback
+	class WarmupMatchState : public BaseMatchState, public BaseSingleton<WarmupMatchState>
 	{
 	private:
 		EventListener<WarmupMatchState> * listener;
@@ -66,9 +65,6 @@ namespace cssmatch
 		// BaseMatchState methods
 		void startState();
 		void endState();
-
-		// IHookCallback method
-		bool hookDispatch(int userIndex, IVEngineServer * engine);
 
 		// Game event callbacks
 		void player_spawn(IGameEvent * event);

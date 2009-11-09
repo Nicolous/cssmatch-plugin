@@ -571,14 +571,6 @@
 				RelativePath=".\commands\I18nConCommand.h"
 				>
 			</File>
-			<File
-				RelativePath=".\commands\IHookCallback.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\commands\IHookCallback.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="entity"

@@ -28,6 +28,7 @@
 #include "../convars/ConvarsAccessor.h" // BaseConvarsAccessorException
 #include "../player/Player.h"
 #include "../exceptions/BaseException.h"
+#include "../commands/ConCommandCallbacks.h"
 
 #include "engine/iserverplugin.h"
 
@@ -53,7 +54,6 @@ namespace cssmatch
 	class I18nManager;
 	class BaseTimer;
 	class MatchManager;
-	class IHookCallback;
 
 	/** Valve's interface instances */
 	struct ValveInterfaces
@@ -76,6 +76,12 @@ namespace cssmatch
 	public:
 		ServerPluginException(const std::string & message) : BaseException(message){}
 	};
+
+	/** Callback for a hook ConCommand <br>
+	 * The first parameter is the user who used the hooked command <br>
+	 * The secod is the IVEngineServer instance used to access the command arguments
+	 */
+	typedef bool (* HookCallback)(int,IVEngineServer *);
 
 	/** Source plugin IServerPluginCallbacks implementation */
 	class ServerPlugin : public BaseSingleton<ServerPlugin>, public IServerPluginCallbacks
@@ -103,7 +109,7 @@ namespace cssmatch
 		std::map<std::string,ConCommand *> pluginConCommands;
 
 		/** Hook console command list */
-		std::map<std::string,std::list<IHookCallback *>> hookConCommands;
+		std::map<std::string,HookCallback> hookConCommands;
 
 		/** Internationalization tool */
 		I18nManager * i18n;
@@ -164,23 +170,17 @@ namespace cssmatch
 		/** Get the plugin command list */
 		const std::map<std::string,ConCommand *> * getPluginConCommands() const;
 
-		/** Hook a ConCommand (add the additionnal callback if the hook already exists)
+		/** Hook a ConCommand (one hook = one callback)
 		 * @param commandName The name of the ConCommand to hook
-		 * @param callback Callback object to invoke when the hooked command is used
+		 * @param callback Callback to invoke when the hooked command is used
 		 */
-		void hookConCommand(const std::string & commandName, IHookCallback * callback);
+		void hookConCommand(const std::string & commandName, HookCallback);
 
-		/** Remove a callback from a particular hook 
-		 * @param commandName The name of the ConCommand hooked
-		 * @param callback Callback object to remove
-		 */
-		void unHookConCommand(const std::string & commandName, IHookCallback * callback);
-
-		/** Get the callback list of a particular hook command
+		/** Get the callback of a particular hook command
 		 * @param commandName The name of the hook command
 		 * @throws ServerPluginException if the hook does not exist
 		 */
-		std::list<IHookCallback *> * getHookCallbacks(const std::string & commandName) throw(ServerPluginException);
+		HookCallback getHookCallback(const std::string & commandName) throw(ServerPluginException);
 
 		/** Get the internationalization tool */
 		I18nManager * get18nManager();

@@ -23,6 +23,8 @@
 #ifndef __CON_COMMAND_CALLBACKS_H__
 #define __CON_COMMAND_CALLBACKS_H__
 
+class IVEngineServer;
+
 namespace cssmatch
 {
 	/** Help for commands use */
@@ -33,6 +35,9 @@ namespace cssmatch
 
 	/** Stop a match */
 	void cssm_stop();
+
+	/** !go, !score, !teamt, etc. */
+	bool say_hook(int userIndex, IVEngineServer * engine);
 }
 
 #endif // __CON_COMMAND_CALLBACKS_H__

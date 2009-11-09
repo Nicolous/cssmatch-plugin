@@ -22,7 +22,6 @@
 
 #include "ConCommandHook.h"
 #include "../plugin/ServerPlugin.h"
-#include "IHookCallback.h"
 
 #include <string>
 #include <list>
@@ -89,20 +88,7 @@ void ConCommandHook::Dispatch()
 
 	try
 	{
-		list<IHookCallback *> callbacks(*plugin->getHookCallbacks(GetName()));
-			 // Make a copy because a callback could modify the callback list, therefore invalid the iterators
-		list<IHookCallback *>::const_iterator itCallback = callbacks.begin();
-		list<IHookCallback *>::const_iterator invalidCallback = callbacks.end();
-
-		bool eat = false;
-		while(itCallback != invalidCallback)
-		{
-			eat |= (*itCallback)->hookDispatch(plugin->GetCommandClient()+1,interfaces->engine);
-
-			itCallback++;
-		}
-
-		if (! eat)
+		if (! plugin->getHookCallback(GetName())(plugin->GetCommandClient()+1,interfaces->engine))
 		{
 			hooked->Dispatch();
 		}

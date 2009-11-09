@@ -23,11 +23,19 @@
 #include "ConCommandCallbacks.h"
 
 #include "../match/MatchManager.h"
+#include "../messages/I18nManager.h"
 #include "../plugin/ServerPlugin.h"
 #include "../configuration/RunnableConfigurationFile.h"
 #include "../messages/Countdown.h"
 
 using namespace cssmatch;
+
+#include "../match/WarmupMatchState.h"
+#include "../player/ClanMember.h"
+#include <list>
+#include <algorithm>
+using std::list;
+using std::find_if;
 
 using std::string;
 using std::map;
@@ -98,4 +106,44 @@ void cssmatch::cssm_stop()
 	plugin->removeTimers();
 	countdown->stop();
 	match->setMatchState(DISABLED);
+}
+
+
+// ***************************
+// Hook callbacks and tools
+// ***************************
+
+bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
+{
+	bool eat = false;
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->get18nManager();
+
+	string chatCommand = engine->Cmd_Argv(1);
+
+	// !go, ready: a clan is ready to end the warmup
+	if ((chatCommand == "!go") || (chatCommand == "ready"))
+	{
+		if (match->getMatchState() == WARMUP)
+		{
+			list<ClanMember *> * playerlist = plugin->getPlayerlist();
+			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+			list<ClanMember *>::iterator itPlayer = find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
+
+			if (itPlayer != invalidPlayer)
+				WarmupMatchState::getInstance()->doGo(*itPlayer); // FIXME: Should not access WarmupMatchState directly ?
+			else
+				print(__FILE__,__LINE__,"Unable to find the player who typed !go/ready");		
+		}
+		else
+		{
+			RecipientFilter recipients;
+			recipients.addAllPlayers();
+			i18n->i18nChatSay(recipients,"warmup_disable");
+		}
+	}
+
+	return eat;
 }
