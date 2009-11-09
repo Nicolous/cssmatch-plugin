@@ -77,21 +77,11 @@ namespace cssmatch
 			: setNumber(1), roundNumber(1), startTime(getLocalTime()), kniferoundWinner(NULL), warmup(false){}
 	};
 
-	/** Each match can be decomposed in somes states : <br>
+	/** A match manager <br>
+	 * Each match can be decomposed in somes states : <br>
 	 * - a knife round <br>
 	 * - a warmup time <br>
 	 * - one or more sets of n rounds <br>
-	 */
-	typedef enum MatchStateId
-	{
-		DISABLED,
-		KNIFEROUND,
-		WARMUP,
-		SET,
-		TIMEBREAK
-	};
-
-	/** A match manager <br>
 	 * The states plus this class implement a state pattern (This class is the context)
 	 */
 	class MatchManager
@@ -103,11 +93,11 @@ namespace cssmatch
 		/** Update "hostname" according to the clan names */
 		void updateHostname();
 	protected:
-		/** Match states */
-		std::map<MatchStateId, BaseMatchState *> states;
+		/** Initial state */
+		BaseMatchState * initialState;
 
 		/** Current match state (e.g. kniferound, warmup, etc.) info */
-		std::map<MatchStateId, BaseMatchState *>::iterator currentState;
+		BaseMatchState * currentState;
 
 		/** Access to the clans */
 		MatchLignup lignup;
@@ -115,7 +105,10 @@ namespace cssmatch
 		/** Access to some information about the match */
 		MatchInfo infos;
 	public:
-		MatchManager();
+		/** 
+		 * @param initialState Initial state of the match (e.g. "no match")
+		 */
+		MatchManager(BaseMatchState * initialState);
 
 		/** Note : stop any current countdown here */
 		~MatchManager();
@@ -146,26 +139,20 @@ namespace cssmatch
 		 * @param newState The new match state
 		 * @see enum MatchState
 		 */
-		void setMatchState(MatchStateId newState);
+		void setMatchState(BaseMatchState * newState);
 
 		/** Get the current match state */
-		MatchStateId getMatchState() const;
+		BaseMatchState * getMatchState() const;
 
-		/** Lauch a time break before go to the next match state
-		 * @param duration Time break duration (in seconds)
-		 * @param nextState The next state to lauch once the time break finished
-		 */
-		void doTimeBreak(int duration,MatchStateId nextState);
-
-		/** Start a new math
+		/** Start a new match in a given state
 		 * @param config The configuration of the match
-		 * @param kniferound If a kniferound must be done
 		 * @param warmup If a warmup must be done
+		 * @param state The first state of the match
 		 * @param umpire The player who starts the match
 		 */
-		void start(RunnableConfigurationFile & config, bool kniferound, bool warmup, ClanMember * umpire = NULL);
+		void start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state, ClanMember * umpire = NULL);
 
-		/** Stop a running match (TODO: this is a stub) */
+		/** Stop a running match and return to the initial state (TODO: this is a stub) */
 		void stop();
 	};
 

@@ -23,12 +23,6 @@
 #include "MatchManager.h"
 
 #include "BaseMatchState.h"
-#include "DisabledMatchState.h"
-#include "BreakMatchState.h"
-#include "KnifeRoundMatchState.h"
-#include "WarmupMatchState.h"
-#include "SetMatchState.h"
-
 #include "../configuration/RunnableConfigurationFile.h"
 #include "../plugin/ServerPlugin.h"
 #include "../common/common.h"
@@ -46,19 +40,11 @@ using std::list;
 using std::find_if;
 using std::map;
 
-MatchManager::MatchManager()
+MatchManager::MatchManager(BaseMatchState * iniState) : initialState(iniState), currentState(NULL)
 {
 	listener = new EventListener<MatchManager>(this);
 
-	// Initialize all the match states
-	states[DISABLED] = DisabledMatchState::getInstance();
-	states[KNIFEROUND] = KnifeRoundMatchState::getInstance();
-	states[WARMUP] = WarmupMatchState::getInstance();
-	states[SET] = SetMatchState::getInstance();
-	states[TIMEBREAK] = BreakMatchState::getInstance();
-
-	// Set the initial state
-	currentState = states.find(DISABLED);
+	setMatchState(iniState);
 }
 
 
@@ -249,37 +235,23 @@ void MatchManager::updateHostname()
 
 }
 
-void MatchManager::setMatchState(MatchStateId newState)
+void MatchManager::setMatchState(BaseMatchState * newState)
 {
-	if (currentState->second != NULL) // Maybe there was no current state
-		currentState->second->endState();
+	if (currentState != NULL) // Maybe there was no current state
+		currentState->endState();
 
-	currentState = states.find(newState);
+	currentState = newState;
 
-	if (currentState != states.end())
-	{
-		currentState->second->startState();
-	}
-	else
-	{
-		print(__FILE__,__LINE__,"Invalid match state");
-	}
+	if (currentState != NULL) // Maybe there is no real new state
+		currentState->startState();
 }
 
-MatchStateId MatchManager::getMatchState() const
+BaseMatchState * MatchManager::getMatchState() const
 {
-	return currentState->first;
+	return currentState;
 }
 
-void MatchManager::doTimeBreak(int duration,MatchStateId nextState)
-{
-	BreakMatchState * breakState = BreakMatchState::getInstance();
-	breakState->setBreak(duration,nextState);
-
-	setMatchState(TIMEBREAK);
-}
-
-void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bool warmup, ClanMember * umpire)
+void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state, ClanMember * umpire)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -326,26 +298,10 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 			new TimerI18nPopupSay(
 				i18n,interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,OPTION_ALL,parameters));
 
-		// Set the suitable match state
+		// Maybe no warmup is needed
 		infos.warmup = warmup;
-		if (plugin->getConVar("cssmatch_kniferound")->GetBool() && kniferound)
-			// default value for kniferound is true
-		{
-			setMatchState(KNIFEROUND);
-		}
-		else if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && warmup)
-			// default value for warmup is true
-		{
-			setMatchState(WARMUP);
-		}
-		else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
-		{
-			setMatchState(SET);
-		}
-		else // Error case
-		{
-			i18n->i18nChatWarning(recipients,"match_config_error");
-		}
+
+		setMatchState(state);
 	}
 	catch(const ServerPluginException & e)
 	{
@@ -369,7 +325,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 
 void MatchManager::stop()
 {
-	setMatchState(DISABLED);
+	setMatchState(initialState);
 
 	// Stop all event listeners
 	listener->removeCallbacks();

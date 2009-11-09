@@ -31,6 +31,7 @@
 #include "../messages/I18nManager.h"
 #include "../timer/BaseTimer.h"
 #include "../match/MatchManager.h"
+#include "../match/DisabledMatchState.h"
 
 #include "filesystem.h"
 #include "edict.h"
@@ -136,7 +137,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 		MathLib_Init(2.2f,2.2f,0.0f,2.0f);
 
-		match = new MatchManager();
+		match = new MatchManager(DisabledMatchState::getInstance());
 		
 		//	Initialize the translations tools
 		i18n = new I18nManager(interfaces.engine);

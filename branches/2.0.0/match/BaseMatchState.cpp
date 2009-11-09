@@ -24,6 +24,18 @@
 
 using namespace cssmatch;
 
+int BaseMatchState::nextId = 0;
+
+BaseMatchState::BaseMatchState()
+{
+	id = nextId++;
+}
+
 BaseMatchState::~BaseMatchState()
 {
+}
+
+MatchStateId BaseMatchState::getId() const
+{
+	return id;
 }

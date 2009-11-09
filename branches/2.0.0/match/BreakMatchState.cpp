@@ -24,15 +24,24 @@
 
 #include "MatchManager.h"
 #include "../messages/Countdown.h"
-
 #include "../plugin/ServerPlugin.h"
 
 using namespace cssmatch;
 
-void BreakMatchState::setBreak(int breakDuration, MatchStateId state)
+BreakMatchState::BreakMatchState() : duration(0), nextState(NULL)
 {
-	duration = breakDuration;
-	nextState = state;
+}
+
+void BreakMatchState::doBreak(int breakDuration, BaseMatchState * state)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	BreakMatchState * breakState = BreakMatchState::getInstance();
+
+	breakState->duration = breakDuration;
+	breakState->nextState = state;
+
+	match->setMatchState(breakState);
 }
 
 void BreakMatchState::startState()
@@ -49,7 +58,7 @@ void BreakMatchState::endState()
 	//Countdown::getInstance()->stop(); // in case of interuption ?
 }
 
-BreakMatchTimer::BreakMatchTimer(float date, MatchStateId state)
+BreakMatchTimer::BreakMatchTimer(float date, BaseMatchState * state)
 	: BaseTimer(date), nextState(state)
 {
 }

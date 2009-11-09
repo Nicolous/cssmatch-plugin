@@ -35,20 +35,23 @@ namespace cssmatch
 	/** Time break, between two main match states 
 	 * Ends with a timeout
 	 */
-	class BreakMatchState : public BaseMatchState, public BaseSingleton<BreakMatchState>
+	class BreakMatchState : public BaseMatchState, private BaseSingleton<BreakMatchState>
 	{
 	private:
 		/** The time break duration (in secs) before lauch the next match state */
 		int duration;
 
 		/** The state to lauch once the break ended */
-		MatchStateId nextState;
+		BaseMatchState * nextState;
+
+		friend class BaseSingleton<BreakMatchState>;
+		BreakMatchState();
 	public:
-		/** Set the break informations
-		 * @param duration The break duration  (in secs)
-		 * @param nextState The state the lauch once the break ended
+		/** Do a time break
+		 * @param duration The break duration (in secs)
+		 * @param nextState The state the lauch once the break ends
 		 */
-		void setBreak(int duration, MatchStateId nextState);
+		static void doBreak(int duration, BaseMatchState * nextState);
 
 		// BaseMatchState methods
 		void startState();
@@ -62,13 +65,13 @@ namespace cssmatch
 		{
 		private:
 			/** The state to lauch once the break is ended */
-			MatchStateId nextState;
+			BaseMatchState * nextState;
 		public:
 			/** 
 			 * @param match The state manager required to lauch the new state
 			 * @param nextState The state the lauch once the break ended
 			 */
-			BreakMatchTimer(float date, MatchStateId nextState);
+			BreakMatchTimer(float date, BaseMatchState * nextState);
 
 			// BaseTimer method
 			void execute();

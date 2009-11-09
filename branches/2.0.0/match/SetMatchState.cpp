@@ -26,8 +26,11 @@
 #include "../plugin/ServerPlugin.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
-#include "MatchManager.h"
 #include "../messages/I18nManager.h"
+#include "MatchManager.h"
+#include "DisabledMatchState.h"
+#include "BreakMatchState.h"
+#include "WarmupMatchState.h"
 
 #include "igameevents.h"
 
@@ -124,16 +127,16 @@ void SetMatchState::endSet()
 			i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
 
 			// Do a time break (if any) before starting the next state
-			MatchStateId nextState = SET;
+			BaseMatchState * nextState = this;
 			if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 			{
-				nextState = WARMUP;
+				nextState = WarmupMatchState::getInstance();
 			}
 
 			int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
 			if (breakDuration > 0)
 			{
-				match->doTimeBreak(breakDuration,nextState);
+				BreakMatchState::doBreak(breakDuration,nextState);
 			}
 			else
 			{
@@ -155,7 +158,6 @@ void SetMatchState::endSet()
 	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
-		match->setMatchState(DISABLED);
 		match->stop();
 	}
 }

@@ -23,6 +23,11 @@
 #include "ConCommandCallbacks.h"
 
 #include "../match/MatchManager.h"
+#include "../match/DisabledMatchState.h"
+#include "../match/BaseMatchState.h"
+#include "../match/KnifeRoundMatchState.h"
+#include "../match/WarmupMatchState.h"
+#include "../match/SetMatchState.h"
 #include "../messages/I18nManager.h"
 #include "../plugin/ServerPlugin.h"
 #include "../configuration/RunnableConfigurationFile.h"
@@ -62,6 +67,7 @@ void cssmatch::cssm_start()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->get18nManager();
 	MatchManager * match = plugin->getMatch();
 
 	bool kniferound = true;
@@ -82,9 +88,35 @@ void cssmatch::cssm_start()
 		try
 		{
     		RunnableConfigurationFile configuration(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile);
-			match->start(configuration,kniferound,warmup);
+
+			// Determine the initial match state
+			BaseMatchState * initialState = NULL;
+			if (plugin->getConVar("cssmatch_kniferound")->GetBool() && kniferound)
+			{
+				initialState = KnifeRoundMatchState::getInstance();
+			}
+			else if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && warmup)
+			{
+				initialState = WarmupMatchState::getInstance();
+			}
+			else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
+			{
+				initialState = SetMatchState::getInstance();
+			}
+			else // Error case
+			{
+				RecipientFilter recipients;
+				recipients.addAllPlayers();
+				i18n->i18nChatWarning(recipients,"match_config_error");
+			}
+
+			match->start(configuration,warmup,initialState);
 		}
 		catch(const ConfigurationFileException & e)
+		{
+			plugin->log(e.what());
+		}
+		catch(const ServerPluginException & e)
 		{
 			plugin->log(e.what());
 		}
@@ -105,7 +137,7 @@ void cssmatch::cssm_stop()
 
 	plugin->removeTimers();
 	countdown->stop();
-	match->setMatchState(DISABLED);
+	match->stop();
 }
 
 
@@ -126,7 +158,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	// !go, ready: a clan is ready to end the warmup
 	if ((chatCommand == "!go") || (chatCommand == "ready"))
 	{
-		if (match->getMatchState() == WARMUP)
+		if (match->getMatchState()->getId() == WarmupMatchState::getInstance()->getId())
 		{
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();

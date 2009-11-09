@@ -22,12 +22,12 @@
 
 #include "WarmupMatchState.h"
 
-#include "MatchManager.h"
 #include "../plugin/ServerPlugin.h"
 #include "../player/ClanMember.h"
 #include "../messages/Countdown.h"
 #include "../messages/I18nManager.h"
-
+#include "MatchManager.h"
+#include "DisabledMatchState.h"
 #include "SetMatchState.h"
 
 #include "igameevents.h"
@@ -67,18 +67,16 @@ void WarmupMatchState::endWarmup()
 	{
 		if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 		{
-			match->setMatchState(SET);
+			match->setMatchState(SetMatchState::getInstance());
 		}
 		else
 		{
-			match->setMatchState(DISABLED);
 			match->stop();
 		}
 	}
 	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
-		match->setMatchState(DISABLED);
 		match->stop();
 	}
 }

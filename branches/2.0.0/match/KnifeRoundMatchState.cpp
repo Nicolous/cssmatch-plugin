@@ -27,11 +27,11 @@
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
+#include "DisabledMatchState.h"
+#include "BreakMatchState.h"
 #include "WarmupMatchState.h"
 #include "SetMatchState.h"
 #include "MatchManager.h"
-
-#include "BreakMatchState.h"
 
 #include "igameevents.h"
 
@@ -104,16 +104,16 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	}
 
 	// Prepare a break time before lauching the next match state,
-	MatchStateId nextState = DISABLED;
+	BaseMatchState * nextState = NULL;
 	try
 	{
 		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 		{
-			nextState = WARMUP;
+			nextState = WarmupMatchState::getInstance();
 		}
 		else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 		{
-			nextState = SET;
+			nextState = SetMatchState::getInstance();
 		}
 
 		if (nextState != NULL)
@@ -121,7 +121,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 			int breakDuration = plugin->getConVar("cssmatch_end_kniferound")->GetInt();
 			if (breakDuration > 0)
 			{
-				match->doTimeBreak(breakDuration,nextState);
+				BreakMatchState::doBreak(breakDuration,nextState);
 
 				//parameters["$team"] = // already set above
 				parameters["$time"] = toString(breakDuration);
@@ -134,14 +134,12 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 		}
 		else
 		{
-			match->setMatchState(nextState);
 			match->stop();
 		}
 	}
 	catch(const ServerPluginException & e)
 	{
 		printException(e,__FILE__,__LINE__);
-		match->setMatchState(DISABLED);
 		match->stop();
 	}
 }
