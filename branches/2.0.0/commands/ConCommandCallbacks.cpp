@@ -165,7 +165,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			list<ClanMember *>::iterator itPlayer = find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
 
 			if (itPlayer != invalidPlayer)
-				WarmupMatchState::getInstance()->doGo(*itPlayer); // FIXME: Should not access WarmupMatchState directly ?
+				WarmupMatchState::getInstance()->doGo(*itPlayer);
 			else
 				print(__FILE__,__LINE__,"Unable to find the player who typed !go/ready");		
 		}
