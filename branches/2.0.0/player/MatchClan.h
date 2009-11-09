@@ -48,9 +48,6 @@ namespace cssmatch
 	class MatchClan
 	{
 	protected:
-		/** Team where the clan is playing */
-		TeamCode team;
-
 		/** Clan's name */
 		std::string name;
 
@@ -66,22 +63,13 @@ namespace cssmatch
 			return newName.size() >= 3;
 		}
 	public:
-		/**
-		 * @param team Current team of the clan
-		 */
-		MatchClan(TeamCode team);
+		MatchClan();
 
 		/** Get the clan name */
 		const std::string * getName() const;
 
 		/** Set the clan name */
 		void setName(const std::string & newName);
-
-		/** Get the team where the clan is playing */
-		TeamCode getTeamCode() const;
-
-		/** Set where the clan is playing currently */
-		void setTeamCode(TeamCode code);
 
 		/** Get the clan members */
 		std::list<ClanMember *> getMembers();

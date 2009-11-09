@@ -144,6 +144,14 @@ namespace cssmatch
 		 */
 		CBaseCombatWeapon * getWeaponFromWeaponSlot(WeaponSlotCode slot) const;
 
+		/** Kick this player
+		 * @param reason Reason for the kick
+		 */
+		void kick(const std::string & reason) const;
+
+		/** Swap this player */
+		void swap();
+
 		/** Remove a weapon at a specified slot 
 		 * @param slot The slot code where is weapon can be found
 		 * @see enum WeaponSlotCode

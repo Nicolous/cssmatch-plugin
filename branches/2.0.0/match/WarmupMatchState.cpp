@@ -231,7 +231,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 			int duration = plugin->getConVar("cssmatch_warmup_time")->GetInt()*60;
 
 			Countdown::getInstance()->fire(duration);
-			timer = new TimerWarmup(interfaces->gpGlobals->curtime + (float)duration + 1.0f,this);
+			timer = new WarmupTimer(interfaces->gpGlobals->curtime + (float)duration + 1.0f,this);
 			plugin->addTimer(timer);
 		}
 		catch(const ServerPluginException & e)
@@ -274,11 +274,11 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 
 }
 
-TimerWarmup::TimerWarmup(float date, WarmupMatchState * state) : BaseTimer(date), warmupState(state)
+WarmupTimer::WarmupTimer(float date, WarmupMatchState * state) : BaseTimer(date), warmupState(state)
 {
 }
 
-void TimerWarmup::execute()
+void WarmupTimer::execute()
 {
 	warmupState->endWarmup();
 }

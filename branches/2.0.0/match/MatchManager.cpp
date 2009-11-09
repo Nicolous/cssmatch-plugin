@@ -306,9 +306,8 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 	infos.startTime = getLocalTime();
 
 	// Try to find the clan names
-	lignup.clan1.detectClanName();
-	lignup.clan2.detectClanName();
-	updateHostname();
+	detectClanName(T_TEAM);
+	detectClanName(CT_TEAM);
 
 	// Start to listen some events
 	listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
@@ -370,8 +369,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool kniferound, bo
 
 void MatchManager::stop()
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
+	setMatchState(DISABLED);
 
 	// Stop all event listeners
 	listener->removeCallbacks();

@@ -227,12 +227,6 @@ namespace cssmatch
 		 */
 		void queueCommand(const std::string & command) const;
 
-		/** Issue a kickid command into the server console
-		 * @param userid Player's userid to kick
-		 * @param reason Reason for the kick
-		 */
-		void kickid(int userid, const std::string & reason) const;
-
 		/** Check if SourceTV is connected to the server (tv_enable is not checked)
 		 * @return <code>true</code> if SourceTV was found, <code>false</code> otherwise
 		 */

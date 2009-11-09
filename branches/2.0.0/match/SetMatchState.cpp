@@ -92,10 +92,72 @@ void SetMatchState::endState()
 void SetMatchState::endSet()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	MatchManager * match = plugin->getMatch();
+	MatchInfo * infos = match->getInfos();
+	I18nManager * i18n = plugin->get18nManager();
 
 	plugin->queueCommand("plugin_print\n");
 
-	// TODO: ...
+	try
+	{
+		if (infos->setNumber < plugin->getConVar("cssmatch_sets")->GetInt())
+		{
+			// There is at least one other set to play
+			MatchLignup * lignup = match->getLignup();
+
+			RecipientFilter recipients;
+			recipients.addAllPlayers();
+			map<string,string> parameters;
+
+			parameters["$current"] = toString(infos->setNumber);
+
+			ClanStats * statsClan1 = lignup->clan1.getStats();
+			parameters["$team1"] = *lignup->clan1.getName();
+			parameters["$score1"] = toString(statsClan1->scoreCT + statsClan1->scoreT);
+
+			ClanStats * statsClan2 = lignup->clan2.getStats();
+			parameters["$team2"] = *lignup->clan2.getName();
+			parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
+
+			i18n->i18nPopupSay(recipients,"match_end_manche_popup",6,OPTION_ALL,parameters);
+			i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
+
+			// Do a time break (if any) before starting the next state
+			MatchStateId nextState = SET;
+			if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
+			{
+				nextState = WARMUP;
+			}
+
+			int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
+			if (breakDuration > 0)
+			{
+				match->doTimeBreak(breakDuration,nextState);
+			}
+			else
+			{
+				match->setMatchState(nextState);
+			}
+			
+			// One more set prepared
+			infos->setNumber++;
+
+			// Swap every players
+			plugin->addTimer(new SwapTimer(interfaces->gpGlobals->curtime + (float)breakDuration));
+		}
+		else
+		{
+			// End of the match
+			match->stop();
+		}
+	}
+	catch(const ServerPluginException & e)
+	{
+		printException(e,__FILE__,__LINE__);
+		match->setMatchState(DISABLED);
+		match->stop();
+	}
 }
 
 void SetMatchState::player_death(IGameEvent * event)
@@ -224,6 +286,26 @@ void SetMatchState::round_end(IGameEvent * event)
 	catch(const MatchManagerException & e)
 	{
 		// printException(e,__FILE__,__LINE__); // round draw
+	}
+}
+
+SwapTimer::SwapTimer(float date) : BaseTimer(date)
+{
+}
+
+void SwapTimer::execute()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	list<ClanMember *>::iterator itPlayer = playerlist->begin();
+	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+
+	while(itPlayer != invalidPlayer)
+	{
+		(*itPlayer)->swap();
+		itPlayer++;
 	}
 }
 

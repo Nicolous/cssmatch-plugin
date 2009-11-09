@@ -408,13 +408,6 @@ void ServerPlugin::queueCommand(const string & command) const
 	interfaces.engine->ServerCommand(command.c_str());
 }
 
-void ServerPlugin::kickid(int userid, const string & reason) const
-{
-	ostringstream command;
-	command << "kickid " << userid << " " << reason << "\n";
-	queueCommand(command.str());
-}
-
 bool ServerPlugin::hltvConnected() const
 {
 	list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();

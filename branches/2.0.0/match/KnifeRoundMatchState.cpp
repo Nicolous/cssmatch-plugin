@@ -76,8 +76,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	i18n->i18nChatSay(recipients,"kniferound_winner",INVALID_ENTITY_INDEX,parameters);
 
 	// Invite the winners to choice a side
-	TeamCode teamWinner = infos->kniferoundWinner->getTeamCode();
-	TeamCode teamLoser = (teamWinner == T_TEAM) ? CT_TEAM : T_TEAM;
+	TeamCode teamLoser = (winner == T_TEAM) ? CT_TEAM : T_TEAM;
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator itPlayer = playerlist->begin();
@@ -87,7 +86,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 		PlayerIdentity * identity = (*itPlayer)->getIdentity();
 		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
 		TeamCode playerTeam = (*itPlayer)->getMyTeam();
-		if (playerTeam == teamWinner)
+		if (playerTeam == winner)
 		{
 			interfaces->engine->ClientCommand(identity->pEntity,"chooseteam");
 		}
@@ -96,7 +95,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 			if (pInfo != NULL)
 			{
 				if (pInfo->IsFakeClient())
-					plugin->kickid(identity->userid,"CSSMatch: Spec Bot");
+					(*itPlayer)->kick("CSSMatch: Spec Bot");
 				else
 					pInfo->ChangeTeam(SPEC_TEAM);
 			}
@@ -104,7 +103,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 		itPlayer++;
 	}
 
-	// Prepare a break time before lauch the next match state,
+	// Prepare a break time before lauching the next match state,
 	MatchStateId nextState = DISABLED;
 	try
 	{

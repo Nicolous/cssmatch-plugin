@@ -23,6 +23,7 @@
 #include "MatchClan.h"
 
 #include "../plugin/ServerPlugin.h"
+#include "../match/MatchManager.h"
 #include "ClanMember.h"
 
 #include <sstream>
@@ -33,7 +34,7 @@ using std::string;
 using std::list;
 using std::ostringstream;
 
-MatchClan::MatchClan(TeamCode t) : name("Nobody"), team(t), ready(false)
+MatchClan::MatchClan() : name("Nobody"), ready(false)
 {
 }
 
@@ -47,22 +48,14 @@ void MatchClan::setName(const string & newName)
 	name = newName;
 }
 
-TeamCode MatchClan::getTeamCode() const
-{
-	return team;
-}
-
-void MatchClan::setTeamCode(TeamCode code)
-{
-	team = code;
-}
-
 list<ClanMember *> MatchClan::getMembers()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
 
 	// We have to construct a list of members who take part to this clan
 	list<ClanMember *> clanPlayerList;
+	TeamCode team = (match->getClan(CT_TEAM) == this) ? CT_TEAM : T_TEAM;
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator itMembers = playerlist->begin();
@@ -168,7 +161,7 @@ void MatchClan::detectClanName()
 				if (! foundNewName)
 				{
 					ostringstream buffer;
-					buffer << "Clan " << team-1; // -1, so Terro will be 1 and CT2 (see TeamCode enum)
+					buffer << memberName1 << "'s clan";
 					setName(buffer.str());
 				}
 			}

@@ -37,7 +37,7 @@ class IVEngineServer;
 namespace cssmatch
 {
 	class MatchManager;
-	class TimerWarmup;
+	class WarmupTimer;
 	class Player;
 
 	/** Warmup time in progress <br>
@@ -53,7 +53,7 @@ namespace cssmatch
 		~WarmupMatchState();
 	protected:
 		/** "end of warmup" timer */
-		TimerWarmup * timer;
+		WarmupTimer * timer;
 	public:
 		/** End the warmup time <br>
 		 * Here is the code which musn't be executed if the match is interupted
@@ -77,7 +77,7 @@ namespace cssmatch
 	};
 
 	/** "End of warmup" timer */
-	class TimerWarmup : public BaseTimer
+	class WarmupTimer : public BaseTimer
 	{
 	private:
 		/** Warmup state instance */
@@ -86,7 +86,7 @@ namespace cssmatch
 		/** 
 		 * @param warmupState The instance of the warmup state
 		 */
-		TimerWarmup(float date, WarmupMatchState * warmupState);
+		WarmupTimer(float date, WarmupMatchState * warmupState);
 		
 		// BaseTimer method
 		void execute();

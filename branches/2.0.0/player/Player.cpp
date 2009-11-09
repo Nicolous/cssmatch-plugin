@@ -23,7 +23,12 @@
 #include "Player.h"
 #include "../plugin/ServerPlugin.h"
 
+#include <sstream>
+
 using namespace cssmatch;
+
+using std::string;
+using std::ostringstream;
 
 Player::Player(int index) throw (PlayerException)
 	: cashHandler("CCSPlayer","m_iAccount"), lifeStateHandler("CBasePlayer","m_lifeState")
@@ -134,6 +139,37 @@ CBaseCombatWeapon * Player::getWeaponFromWeaponSlot(WeaponSlotCode slot) const
 	// NULL is not abnormal here
 
 	return bCombatWeapon;
+}
+
+void Player::kick(const string & reason) const
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
+	ostringstream command;
+	command << "kickid " << identity.userid << " " << reason << "\n";
+	plugin->queueCommand(command.str());
+}
+
+void Player::swap()
+{
+	IPlayerInfo * pInfo = getPlayerInfo();
+	if (isValidPlayer(pInfo))
+	{
+		if (pInfo->IsFakeClient())
+			kick("Swap Bot");
+		else
+		{
+			switch(pInfo->GetTeamIndex())
+			{
+			case T_TEAM:
+				pInfo->ChangeTeam((int)CT_TEAM);
+				break;
+			case CT_TEAM:
+				pInfo->ChangeTeam((int)T_TEAM);
+				break;
+			}
+		}
+	}
 }
 
 void Player::removeWeapon(WeaponSlotCode slot)

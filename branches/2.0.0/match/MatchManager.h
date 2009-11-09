@@ -53,8 +53,6 @@ namespace cssmatch
 
 		/** Second clan */
 		MatchClan clan2;
-
-		MatchLignup() : clan1(T_TEAM), clan2(CT_TEAM){}
 	};
 
 	/** Information related to a match */
@@ -101,6 +99,9 @@ namespace cssmatch
 	private:
 		/** Event listener */
 		EventListener<MatchManager> * listener;
+
+		/** Update "hostname" according to the clan names */
+		void updateHostname();
 	protected:
 		/** Match states */
 		std::map<MatchStateId, BaseMatchState *> states;
@@ -139,9 +140,6 @@ namespace cssmatch
 		 * @param code The clan's team code
 		 */
 		void detectClanName(TeamCode code);
-
-		/** Update "hostname" according to the clan names */
-		void updateHostname();
 
 		/** Set a new match state <br>
 		 * Call the endState method of the previous state, then the startState of the new state

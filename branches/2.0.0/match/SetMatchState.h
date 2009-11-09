@@ -28,6 +28,7 @@ class IGameEvent;
 
 #include "BaseMatchState.h"
 #include "../features/BaseSingleton.h"
+#include "../timer/BaseTimer.h"
 #include "../plugin/EventListener.h"
 
 namespace cssmatch
@@ -59,7 +60,16 @@ namespace cssmatch
 		void player_death(IGameEvent * event);
 		void round_start(IGameEvent * event);
 		void round_end(IGameEvent * event);
+	};
 
+	/** Delayed swap */
+	class SwapTimer : public BaseTimer
+	{
+	public:
+		SwapTimer(float date);
+
+		// BaseTimer method
+		void execute();
 	};
 }
 
