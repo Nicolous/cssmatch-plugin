@@ -325,10 +325,74 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 
 void MatchManager::stop()
 {
-	setMatchState(initialState);
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->get18nManager();
 
 	// Stop all event listeners
 	listener->removeCallbacks();
+
+	// Send all the announcements
+	RecipientFilter recipients;
+	recipients.addAllPlayers();
+
+	i18n->i18nChatSay(recipients,"match_end");
+
+	const string * tagClan1 = lignup.clan1.getName();
+	ClanStats * clan1Stats = lignup.clan1.getStats();
+	int clan1Score = clan1Stats->scoreCT + clan1Stats->scoreT;
+	const string * tagClan2 = lignup.clan2.getName();
+	ClanStats * clan2Stats = lignup.clan2.getStats();
+	int clan2Score = clan2Stats->scoreCT + clan2Stats->scoreT;
+
+	map<string,string> parameters;
+	parameters["$team1"] = *tagClan1;
+	parameters["$score1"] = toString(clan1Score);
+	parameters["$team2"] = *tagClan2;
+	parameters["$score2"] = toString(clan2Score);
+	i18n->i18nPopupSay(recipients,"match_end_popup",6,OPTION_ALL,parameters);
+	i18n->i18nConsoleSay(recipients,"match_end_popup",parameters);
+
+	map<string,string> parametersWinner;
+	if (clan1Score > clan2Score)
+	{
+		parametersWinner["$team"] = *tagClan1;
+		i18n->i18nChatSay(recipients,"match_winner",INVALID_ENTITY_INDEX,parametersWinner);
+	}
+	else if (clan1Score < clan2Score)
+	{
+		parametersWinner["$team"] = *tagClan2;
+		i18n->i18nChatSay(recipients,"match_winner",INVALID_ENTITY_INDEX,parametersWinner);
+	}
+	else
+	{
+		i18n->i18nChatSay(recipients,"match_no_winner");
+	}
+
+	// Do a time break before returning to the initial state
+	try
+	{
+		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
+		if (breakDuration > 0)
+		{
+			map<string,string> parametersBreak;
+			parametersBreak["$time"] = toString(breakDuration);
+			Countdown::getInstance()->fire(breakDuration);
+			plugin->addTimer(
+				new TimerI18nChatSay(	i18n,
+										interfaces->gpGlobals->curtime + 2.0f,
+										recipients,
+										"match_dead_time",
+										INVALID_ENTITY_INDEX,
+										parametersBreak));
+			plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + breakDuration + 2.0f));
+			// FIXME: No match could be started before the end of theses timers
+		}
+	}
+	catch(const ServerPluginException & e)
+	{
+		printException(e,__FILE__,__LINE__);
+	}
 }
 
 
@@ -344,3 +408,35 @@ void ClanNameDetectionTimer::execute()
 	manager->detectClanName(team);
 }
 
+RestoreConfigTimer::RestoreConfigTimer(float date) : BaseTimer(date)
+{
+}
+
+void RestoreConfigTimer::execute()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance(); 
+	string configPatch = DEFAULT_CONFIGURATION_FILE;
+	try
+	{
+		configPatch = plugin->getConVar("cssmatch_default_config")->GetString();
+
+		RunnableConfigurationFile config(configPatch);
+		config.execute();
+	}
+	catch(const ServerPluginException & e)
+	{
+		printException(e,__FILE__,__LINE__);
+	}
+	catch(const ConfigurationFileException & e)
+	{
+		I18nManager * i18n = plugin->get18nManager();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+
+		map<string,string> parameters;
+		parameters["$file"] = configPatch;
+		i18n->i18nChatWarning(recipients,"error_file_not_found",parameters);
+		i18n->i18nChatWarning(recipients,"match_please_changelevel");
+	}
+}

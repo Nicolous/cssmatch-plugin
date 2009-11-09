@@ -152,7 +152,7 @@ namespace cssmatch
 		 */
 		void start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state, ClanMember * umpire = NULL);
 
-		/** Stop a running match and return to the initial state (TODO: this is a stub) */
+		/** Stop a running match and return to the initial state */
 		void stop();
 	};
 
@@ -165,6 +165,16 @@ namespace cssmatch
 		TeamCode team;
 	public:
 		ClanNameDetectionTimer(float date, TeamCode teamCode);
+
+		/** @see BaseTimer */
+		void execute();
+	};
+
+	/** Timer used at the end of the match to execute the default config file */
+	class RestoreConfigTimer : public BaseTimer
+	{
+	public:
+		RestoreConfigTimer(float date);
 
 		/** @see BaseTimer */
 		void execute();
