@@ -59,7 +59,7 @@ void UserMessagesManager::chatSay(RecipientFilter & recipients, const string & m
 void UserMessagesManager::chatWarning(RecipientFilter & recipients, const string & message)
 {
 	ostringstream output;
-	output << "\003[" << PLUGIN_NAME << "]\001 " << message << "\n";
+	output << "\004[" << PLUGIN_NAME << "]\003 " << message << "\n";
 
 	bf_write * pBitBuf = engine->UserMessageBegin(&recipients,MESSAGE_SAYTEXT);
 
@@ -143,5 +143,5 @@ void UserMessagesManager::consoleTell(int index, const string & message)
 	edict_t * pEntity = engine->PEntityOfEntIndex(index);
 
 	if (isValidEntity(pEntity))
-		engine->ClientPrintf(pEntity,message.c_str());
+		engine->ClientPrintf(pEntity,(message + "\n").c_str());
 }

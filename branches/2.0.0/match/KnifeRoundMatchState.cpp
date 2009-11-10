@@ -59,7 +59,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	MatchInfo * infos = match->getInfos();
 	// Save the winner of this round, it will be used into the match report
@@ -73,7 +73,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	// Announce the winner
 	map<string,string> parameters;
 	parameters["$team"] = *infos->kniferoundWinner->getName();
-	i18n->i18nChatSay(recipients,"kniferound_winner",INVALID_ENTITY_INDEX,parameters);
+	i18n->i18nChatSay(recipients,"kniferound_winner",parameters);
 
 	// Invite the winners to choice a side
 	TeamCode teamLoser = (winner == T_TEAM) ? CT_TEAM : T_TEAM;
@@ -125,7 +125,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 
 				//parameters["$team"] = // already set above
 				parameters["$time"] = toString(breakDuration);
-				i18n->i18nChatSay(recipients,"kniferound_dead_time",INVALID_ENTITY_INDEX,parameters);
+				i18n->i18nChatSay(recipients,"kniferound_dead_time",parameters);
 			}
 			else
 			{
@@ -148,7 +148,7 @@ void KnifeRoundMatchState::startState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	// Global recipient list
 	RecipientFilter recipients;
@@ -180,7 +180,7 @@ void KnifeRoundMatchState::round_start(IGameEvent * event)
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	switch(match->getInfos()->roundNumber++)
 	{
@@ -269,7 +269,7 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	try
 	{

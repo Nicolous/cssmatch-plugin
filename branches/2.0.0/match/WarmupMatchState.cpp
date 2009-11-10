@@ -55,7 +55,7 @@ void WarmupMatchState::endWarmup()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
@@ -85,7 +85,7 @@ void WarmupMatchState::doGo(Player * player)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
@@ -111,7 +111,7 @@ void WarmupMatchState::doGo(Player * player)
 			clan->setReady(true);
 			message = "warmup_ready";
 		}
-		i18n->i18nChatSay(recipients,message,player->getIdentity()->index,parameters);
+		i18n->i18nChatSay(recipients,message,parameters,player->getIdentity()->index);
 
 		// If both clan1 and clan2 are ready, end the warmup
 		if (clan->isReady() && otherClan->isReady())
@@ -180,7 +180,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
 
@@ -219,7 +219,7 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::iterator invalidPlayer = playerlist->end();

@@ -183,7 +183,7 @@ namespace cssmatch
 		HookCallback getHookCallback(const std::string & commandName) throw(ServerPluginException);
 
 		/** Get the internationalization tool */
-		I18nManager * get18nManager();
+		I18nManager * getI18nManager();
 
 		/** Add a timer */
 		void addTimer(BaseTimer * timer);

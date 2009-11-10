@@ -95,7 +95,7 @@ void MatchManager::player_disconnect(IGameEvent * event)
 	// Announce any disconnection 
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
@@ -103,7 +103,7 @@ void MatchManager::player_disconnect(IGameEvent * event)
 	parameters["$username"] = event->GetString("name");
 	parameters["$reason"] = event->GetString("reason");
 
-	i18n->i18nChatSay(recipients,"player_leave_game",0,parameters);
+	i18n->i18nChatSay(recipients,"player_leave_game",parameters);
 }
 
 void MatchManager::player_team(IGameEvent * event)
@@ -113,7 +113,7 @@ void MatchManager::player_team(IGameEvent * event)
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	TeamCode newSide = (TeamCode)event->GetInt("team");
 	TeamCode oldSide = (TeamCode)event->GetInt("oldteam");
@@ -159,7 +159,7 @@ void MatchManager::player_changename(IGameEvent * event)
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
 	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
@@ -178,7 +178,7 @@ void MatchManager::player_changename(IGameEvent * event)
 void MatchManager::detectClanName(TeamCode code)
 {
 	/*ServerPlugin * plugin = ServerPlugin::getInstance();
-	I18nManager * i18n = plugin->get18nManager();*/
+	I18nManager * i18n = plugin->getI18nManager();*/
 
 	try
 	{
@@ -255,7 +255,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	// Global recipient list
 	RecipientFilter recipients;
@@ -296,7 +296,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		parameters["$password"] = password;
 		plugin->addTimer(
 			new TimerI18nPopupSay(
-				i18n,interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,OPTION_ALL,parameters));
+				interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,parameters));
 
 		// Maybe no warmup is needed
 		infos.warmup = warmup;
@@ -316,7 +316,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		{
 			map<string,string> parameters;
 			parameters["$admin"] = playerInfo->GetName();
-			i18n->i18nChatSay(recipients,"match_started_by",umpire->getIdentity()->index,parameters);
+			i18n->i18nChatSay(recipients,"match_started_by",parameters,umpire->getIdentity()->index);
 		}
 	}
 	else
@@ -327,7 +327,7 @@ void MatchManager::stop()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	// Stop all event listeners
 	listener->removeCallbacks();
@@ -350,19 +350,19 @@ void MatchManager::stop()
 	parameters["$score1"] = toString(clan1Score);
 	parameters["$team2"] = *tagClan2;
 	parameters["$score2"] = toString(clan2Score);
-	i18n->i18nPopupSay(recipients,"match_end_popup",6,OPTION_ALL,parameters);
+	i18n->i18nPopupSay(recipients,"match_end_popup",6,parameters);
 	i18n->i18nConsoleSay(recipients,"match_end_popup",parameters);
 
 	map<string,string> parametersWinner;
 	if (clan1Score > clan2Score)
 	{
 		parametersWinner["$team"] = *tagClan1;
-		i18n->i18nChatSay(recipients,"match_winner",INVALID_ENTITY_INDEX,parametersWinner);
+		i18n->i18nChatSay(recipients,"match_winner",parametersWinner);
 	}
 	else if (clan1Score < clan2Score)
 	{
 		parametersWinner["$team"] = *tagClan2;
-		i18n->i18nChatSay(recipients,"match_winner",INVALID_ENTITY_INDEX,parametersWinner);
+		i18n->i18nChatSay(recipients,"match_winner",parametersWinner);
 	}
 	else
 	{
@@ -379,11 +379,9 @@ void MatchManager::stop()
 			parametersBreak["$time"] = toString(breakDuration);
 			Countdown::getInstance()->fire(breakDuration);
 			plugin->addTimer(
-				new TimerI18nChatSay(	i18n,
-										interfaces->gpGlobals->curtime + 2.0f,
+				new TimerI18nChatSay(	interfaces->gpGlobals->curtime + 2.0f,
 										recipients,
 										"match_dead_time",
-										INVALID_ENTITY_INDEX,
 										parametersBreak));
 			plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + breakDuration + 2.0f));
 			// FIXME: No match could be started before the end of theses timers
@@ -420,8 +418,9 @@ void RestoreConfigTimer::execute()
 	{
 		configPatch = plugin->getConVar("cssmatch_default_config")->GetString();
 
-		RunnableConfigurationFile config(configPatch);
-		config.execute();
+		RunnableConfigurationFile config(string(CFG_FOLDER_PATH) + configPatch);
+		//config.execute();
+		RunnableConfigurationFile::execute(configPatch);
 	}
 	catch(const ServerPluginException & e)
 	{
@@ -429,7 +428,7 @@ void RestoreConfigTimer::execute()
 	}
 	catch(const ConfigurationFileException & e)
 	{
-		I18nManager * i18n = plugin->get18nManager();
+		I18nManager * i18n = plugin->getI18nManager();
 
 		RecipientFilter recipients;
 		recipients.addAllPlayers();

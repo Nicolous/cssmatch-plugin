@@ -67,7 +67,7 @@ void cssmatch::cssm_start()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 	MatchManager * match = plugin->getMatch();
 
 	bool kniferound = true;
@@ -151,7 +151,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	string chatCommand = engine->Cmd_Argv(1);
 

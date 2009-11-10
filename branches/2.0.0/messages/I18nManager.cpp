@@ -171,8 +171,8 @@ string I18nManager::getTranslation(	const string & lang,
 
 void I18nManager::i18nChatSay(	RecipientFilter & recipients,
 								const string & keyword,
-								int playerIndex,
-								map<string,string> & parameters)
+								map<string,string> & parameters,
+								int playerIndex)
 {
 	const vector<int> * recipientVector = recipients.getVector();
 	vector<int>::const_iterator itIndex = recipientVector->begin();
@@ -215,8 +215,8 @@ void I18nManager::i18nChatWarning(	RecipientFilter & recipients,
 void I18nManager::i18nPopupSay(	RecipientFilter & recipients,
 								const std::string & keyword,
 								int lifeTime,
-								PopupSensitivityFlags flags,
-								map<string,string> & parameters)
+								map<string,string> & parameters,
+								PopupSensitivityFlags flags)
 {
 	const vector<int> * recipientVector = recipients.getVector();
 	vector<int>::const_iterator itIndex = recipientVector->begin();
@@ -298,34 +298,31 @@ void I18nManager::i18nConsoleSay(	RecipientFilter & recipients,
 	}
 }
 
-TimerI18nChatSay::TimerI18nChatSay(	I18nManager * manager,
-									float date,
+TimerI18nChatSay::TimerI18nChatSay(	float date,
 									RecipientFilter & recip,
 									const string & key,
-									int pIndex,
-									map<string,string> & param)
-	: BaseTimer(date), i18n(manager), recipients(recip), keyword(key), playerIndex(pIndex), parameters(param)
+									map<string,string> & param,
+									int pIndex)
+	: BaseTimer(date), recipients(recip), keyword(key), parameters(param), playerIndex(pIndex)
 {
 }
 
 void TimerI18nChatSay::execute()
 {
-	i18n->i18nChatSay(recipients,keyword,playerIndex,parameters);
+	ServerPlugin::getInstance()->getI18nManager()->i18nChatSay(recipients,keyword,parameters,playerIndex);
 }
 
-TimerI18nPopupSay::TimerI18nPopupSay(	I18nManager * manager,
-										float date,
+TimerI18nPopupSay::TimerI18nPopupSay(	float date,
 										RecipientFilter & recip,
 										const string & key,
 										int life,
-										PopupSensitivityFlags fl,
-										map<string,string> & param)
-	:	BaseTimer(date), i18n(manager), recipients(recip), keyword(key), lifeTime(life), flags(fl),
-		parameters(param)
+										map<string,string> & param,
+										PopupSensitivityFlags fl)
+	:	BaseTimer(date), recipients(recip), keyword(key), lifeTime(life), parameters(param), flags(fl)
 {
 }
 
 void TimerI18nPopupSay::execute()
 {
-	i18n->i18nPopupSay(recipients,keyword,lifeTime,flags,parameters);
+	ServerPlugin::getInstance()->getI18nManager()->i18nPopupSay(recipients,keyword,lifeTime,parameters,flags);
 }

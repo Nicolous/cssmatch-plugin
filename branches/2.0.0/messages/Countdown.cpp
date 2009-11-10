@@ -66,7 +66,7 @@ void Countdown::CountdownTick::execute()
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();

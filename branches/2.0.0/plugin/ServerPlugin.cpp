@@ -269,7 +269,7 @@ HookCallback ServerPlugin::getHookCallback(const std::string & commandName) thro
 	return hookConCommands[commandName];
 }
 
-I18nManager * ServerPlugin::get18nManager()
+I18nManager * ServerPlugin::getI18nManager()
 {
 	return i18n;
 }

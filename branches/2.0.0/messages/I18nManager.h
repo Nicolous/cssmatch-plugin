@@ -95,8 +95,8 @@ namespace cssmatch
 		 */
 		void i18nChatSay(	RecipientFilter & recipients,
 							const std::string & keyword,
-							int playerIndex = INVALID_ENTITY_INDEX,
-							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS,
+							int playerIndex = INVALID_ENTITY_INDEX);
 
 
 		/** Send a colorful chat message
@@ -118,8 +118,8 @@ namespace cssmatch
 		void i18nPopupSay(	RecipientFilter & recipients,
 							const std::string & keyword,
 							int lifeTime,
-							PopupSensitivityFlags flags = OPTION_ALL,
-							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS,
+							PopupSensitivityFlags flags = OPTION_ALL);
 
 		/** Send a centered (windowed) popup message
 		 * @param recipients Recipient list
@@ -175,12 +175,11 @@ namespace cssmatch
 		 * @param executionDate When this timer will be executed
 		 * @see I18nManager::I18nChatSay
 		 */
-		TimerI18nChatSay(	I18nManager * i18n,
-							float executionDate,
+		TimerI18nChatSay(	float executionDate,
 							RecipientFilter & recipients,
 							const std::string & keyword,
-							int playerIndex = INVALID_ENTITY_INDEX,
-							std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS);
+							std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
+							int playerIndex = INVALID_ENTITY_INDEX);
 
 		/** @see BaseTimer */
 		void execute();
@@ -215,13 +214,12 @@ namespace cssmatch
 		 * @param executionDate When this timer will be executed
 		 * @see I18nManager::I18nChatSay
 		 */
-		TimerI18nPopupSay(	I18nManager * i18n,
-							float executionDate,
+		TimerI18nPopupSay(	float executionDate,
 							RecipientFilter & recipients,
 							const std::string & keyword,
 							int lifeTime,
-							PopupSensitivityFlags flags = OPTION_ALL,
-							std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS);
+							std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
+							PopupSensitivityFlags flags = OPTION_ALL);
 
 		/** @see BaseTimer */
 		void execute();

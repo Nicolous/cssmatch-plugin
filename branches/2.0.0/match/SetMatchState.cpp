@@ -58,7 +58,7 @@ void SetMatchState::startState()
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	MatchInfo * infos = match->getInfos();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	// Subscribe to the needed game events
 	listener->addCallback("player_death",&SetMatchState::player_death);
@@ -75,7 +75,7 @@ void SetMatchState::startState()
 		map<string,string> parameters;
 		parameters["$current"] = toString(infos->setNumber);
 		parameters["$total"] = plugin->getConVar("cssmatch_sets")->GetString();
-		i18n->i18nChatSay(recipients,"match_start_manche",0,parameters);
+		i18n->i18nChatSay(recipients,"match_start_manche",parameters);
 	}
 	catch(const ServerPluginException & e)
 	{
@@ -98,7 +98,7 @@ void SetMatchState::endSet()
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 	MatchInfo * infos = match->getInfos();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	plugin->queueCommand("plugin_print\n");
 
@@ -123,7 +123,7 @@ void SetMatchState::endSet()
 			parameters["$team2"] = *lignup->clan2.getName();
 			parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
 
-			i18n->i18nPopupSay(recipients,"match_end_manche_popup",6,OPTION_ALL,parameters);
+			i18n->i18nPopupSay(recipients,"match_end_manche_popup",6,parameters);
 			i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
 
 			// Do a time break (if any) before starting the next state
@@ -204,7 +204,7 @@ void SetMatchState::round_start(IGameEvent * event)
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->get18nManager();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	MatchInfo * infos = match->getInfos();
 
@@ -256,7 +256,7 @@ void SetMatchState::round_start(IGameEvent * event)
 		parameters["$team2"] = *lignup->clan2.getName();
 		parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
 		plugin->addTimer(
-			new TimerI18nPopupSay(i18n,0.5f,recipients,"match_round_popup",5,OPTION_ALL,parameters));
+			new TimerI18nPopupSay(0.5f,recipients,"match_round_popup",5,parameters));
 	}
 }
 
