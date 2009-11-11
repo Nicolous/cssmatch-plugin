@@ -7,12 +7,12 @@
   * Utilisation
     * [Arbitrage Devenir arbitre (admin)]
     * [lancer_un_match Lancer un match]
-    * [SourceTv Enregistrer avec SourceTv]
+    * [sourceTv Enregistrer avec SourceTv]
     * [TCHAT Commandes tchat]
     * [xml Lire les rapports de match]
     * [server Exemple de server.cfg complet]
   * Utilisation avancée
-    * [Adminitration Options d'administration]
+    * [Administration Options d'administration]
     * [Console Déclarer un arbitre par RCON]
     * [RCON Commandes RCON]
     * [maplist Le fichier maplist.txt]
@@ -20,5 +20,5 @@
   * Divers
     * [Erreurs Quid des message d'erreurs]
     * [Statistiques Serveurs utilisant CSSMatch]
-    * [Compilation Compiler le code source]
+    * [compilation Compiler le code source]
      
