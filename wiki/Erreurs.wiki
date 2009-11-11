@@ -1,6 +1,9 @@
 #summary Signification de divers messages d'erreur
 
-== Message d'erreur en rapport avec l'arbitrage ==
+<wiki:toc max_depth="2" />
+<br>
+
+= Message d'erreur en rapport avec l'arbitrage =
 
   *  *_Tu n'es pas arbitre !_* ou *_Tu n'es pas arbitre du match !_*
 *Signification :* le fichier adminlist.txt présents sur le FTP de votre serveur ne contient pas votre steamID, ou la ligne qui contient votre steamID n'est pas correcte.
@@ -8,7 +11,7 @@
 *Solution :* Suivez [Arbitrage le tutoriel d'arbitrage].
 
 <br>
-== Messages d'erreur colorés concernant SourceTV ==
+= Messages d'erreur colorés concernant SourceTV =
 
 Voici les erreurs possibles et leur signification :
 
