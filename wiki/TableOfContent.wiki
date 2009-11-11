@@ -7,7 +7,7 @@
   * Utilisation
     * [Arbitrage Devenir arbitre (admin)]
     * [lancer_un_match Lancer un match]
-    * [sourceTv Enregistrer avec Sourcetv]
+    * [sourcetv Enregistrer avec SourceTv]
     * [TCHAT Commandes tchat]
     * [xml Lire les rapports de match]
     * [server Exemple de server.cfg complet]
