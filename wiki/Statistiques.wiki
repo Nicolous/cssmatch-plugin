@@ -1,6 +1,4 @@
 #summary Liste des serveurs qui utilisent le plugin
 
-== Liste des serveurs qui utilisent le plugin ==
-
 La liste des serveurs qui utilisent le plugin CSSMatch est visible ici : 
 http://www.game-monitor.com/search.php?search=cssmatch_version&type=variable
