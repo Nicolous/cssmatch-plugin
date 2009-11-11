@@ -4,7 +4,7 @@
 
 CSSMatch est distribué sous [http://www.gnu.org/licenses/gpl.html licence GNU/GPLv3], ce qui en fait un plugin [http://fr.wikipedia.org/wiki/Logiciel_libre libre].
 
-Toute personne souhaitant aider au développement de CSSMatch est la bienvenue. Vous êtes d'ailleurs libres de proposer vos patchs sur [http://code.google.com/p/cssmatch-plugin/issues/list le "bug tracker"]. Si vous souhaitez vous investir d'avantage, [mailto:dani31m@hotmail.com contactez moi], je vous donnerais alors les droits nécessaires pour travailler sur [http://code.google.com/p/cssmatch-plugin/source/browse/ le même code source que moi]. La seule condition que j'exigerais de vous sera d'avoir une expérience acceptable du langage C++.
+Toute personne souhaitant aider au développement de CSSMatch est la bienvenue. Vous êtes d'ailleurs libres de proposer vos patchs sur [http://code.google.com/p/cssmatch-plugin/issues/list le bug tracker]. Si vous souhaitez vous investir d'avantage, [mailto:dani31m@hotmail.com contactez moi], je vous donnerais alors les droits nécessaires pour gérer le bug tracker ou plus. La seule condition que j'exigerais de vous sera d'avoir une expérience acceptable du langage C++.
 
 Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure toujours une compatibilité maximale avec votre machine. Voici un tutoriel vous expliquant comment compiler CSSMatch.
 
