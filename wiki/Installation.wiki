@@ -1,7 +1,10 @@
 #summary Comment installer le plugin ?
 #labels Featured
 
-== Comment installer le plugin ? ==
+<wiki:toc max_depth="2" />
+<br>
+
+= Comment installer le plugin ? =
 
   # [http://code.google.com/p/cssmatch-plugin/downloads/list Téléchargez le plugin]
   # Décompressez le fichier sur votre ordinateur (avec [http://www.7-zip.org/fr/ 7Zip] par exemple)
@@ -10,14 +13,14 @@
   # Redémarrez le serveur
 
 <br>
-== Vérification de l'installation :==
+= Vérification de l'installation=
   # Tapez la commande suivante dans la console de votre serveur (par RCON ou via le logiciel [http://fr.wikipedia.org/wiki/HLSW HLSW]) : `plugin_print` . Cette commande sert à afficher la liste des plugins installés sur votre serveur.
   # Vérifiez que cette liste contient bien le plugin CSSMatch
     * Si non, recommencez l'installation
     * Si oui l'installation est correcte
 
 <br>
-=== Si vous avez des problèmes d'installation : ===
+= En cas de problème d'installation =
 Si vous êtes amené à poster sur le forum, merci de préciser ce que vous avez déjà fait pour installer le plugin (même si vous devez pour cela répéter ce tuto).
 
 _*Note : Si votre serveur est hébergé sur une machine 64 bits et que vous n'arrivez pas à installer CSSMatch, une solution est présenté ici : [http://www.cssmatch.com/forums/viewtopic.php?p=355#p355 cssmatch 64 bits]*_
