@@ -257,70 +257,88 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	// Global recipient list
-	RecipientFilter recipients;
-	recipients.addAllPlayers();
-
-	// Update match infos
-	infos.setNumber = 1;
-	infos.roundNumber = 1;
-
-	// Cancel any timers in progress
-	plugin->removeTimers();
-
-	// Execute the configuration file
-	config.execute();
-
-	// Print the plugin list to the server log
-	plugin->queueCommand("plugin_print\n");
-
-	// Save the current date
-	infos.startTime = getLocalTime();
-
-	// Try to find the clan names
-	detectClanName(T_TEAM);
-	detectClanName(CT_TEAM);
-
-	// Start to listen some events
-	listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
-	listener->addCallback("player_team",&MatchManager::player_team);
-	listener->addCallback("player_changename",&MatchManager::player_changename);
-
-	try
+	// Make sure there is not already a match in progress
+	if (currentState == initialState)
 	{
-		// Set the new server password
-		string password = plugin->getConVar("cssmatch_password")->GetString();
-		plugin->getConVar("sv_password")->SetValue(password.c_str());
+		// Global recipient list
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
 
-		map<string, string> parameters;
-		parameters["$password"] = password;
-		plugin->addTimer(
-			new TimerI18nPopupSay(
-				interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,parameters));
+		// Update match infos
+		infos.setNumber = 1;
+		infos.roundNumber = 1;
 
-		// Maybe no warmup is needed
-		infos.warmup = warmup;
+		// Cancel any timers in progress
+		plugin->removeTimers();
 
-		setMatchState(state);
-	}
-	catch(const ServerPluginException & e)
-	{
-		printException(e,__FILE__,__LINE__);
-	}
+		// Execute the configuration file
+		config.execute();
 
-	// Announcement
-	if (umpire != NULL)
-	{
-		IPlayerInfo * playerInfo = umpire->getPlayerInfo();
-		if (isValidPlayer(playerInfo))
+		// Print the plugin list to the server log
+		plugin->queueCommand("plugin_print\n");
+
+		// Save the current date
+		infos.startTime = getLocalTime();
+
+		// Try to find the clan names
+		detectClanName(T_TEAM);
+		detectClanName(CT_TEAM);
+
+		// Start to listen some events
+		listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
+		listener->addCallback("player_team",&MatchManager::player_team);
+		listener->addCallback("player_changename",&MatchManager::player_changename);
+
+		try
 		{
-			map<string,string> parameters;
-			parameters["$admin"] = playerInfo->GetName();
-			i18n->i18nChatSay(recipients,"match_started_by",parameters,umpire->getIdentity()->index);
+			// Set the new server password
+			string password = plugin->getConVar("cssmatch_password")->GetString();
+			plugin->getConVar("sv_password")->SetValue(password.c_str());
+
+			map<string, string> parameters;
+			parameters["$password"] = password;
+			plugin->addTimer(
+				new TimerI18nPopupSay(
+					interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,parameters));
+
+			// Maybe no warmup is needed
+			infos.warmup = warmup;
+
+			setMatchState(state);
 		}
+		catch(const ServerPluginException & e)
+		{
+			printException(e,__FILE__,__LINE__);
+		}
+
+		// Announcement
+		if (umpire != NULL)
+		{
+			IPlayerInfo * playerInfo = umpire->getPlayerInfo();
+			if (isValidPlayer(playerInfo))
+			{
+				map<string,string> parameters;
+				parameters["$admin"] = playerInfo->GetName();
+				i18n->i18nChatSay(recipients,"match_started_by",parameters,umpire->getIdentity()->index);
+			}
+		}
+		else
+			i18n->i18nChatSay(recipients,"match_started");
 	}
 	else
-		i18n->i18nChatSay(recipients,"match_started");
+	{
+		if (umpire != NULL)
+		{
+			RecipientFilter recipientUmpire;
+			recipientUmpire.addRecipient(umpire->getIdentity()->index);
+
+			i18n->i18nChatSay(recipientUmpire,"match_in_progress");
+		}
+		else
+		{
+			i18n->i18nMsg("match_in_progress");
+		}
+	}
 }
 
 void MatchManager::stop()
@@ -328,6 +346,9 @@ void MatchManager::stop()
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->getI18nManager();
+
+	// Return to the initial state
+	setMatchState(initialState);
 
 	// Stop all event listeners
 	listener->removeCallbacks();
@@ -369,7 +390,7 @@ void MatchManager::stop()
 		i18n->i18nChatSay(recipients,"match_no_winner");
 	}
 
-	// Do a time break before returning to the initial state
+	// Do a time break before returning to the initial configuration
 	try
 	{
 		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
@@ -384,7 +405,6 @@ void MatchManager::stop()
 										"match_dead_time",
 										parametersBreak));
 			plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + breakDuration + 2.0f));
-			// FIXME: No match could be started before the end of theses timers
 		}
 	}
 	catch(const ServerPluginException & e)
