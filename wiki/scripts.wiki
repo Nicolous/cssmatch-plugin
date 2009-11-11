@@ -1,7 +1,9 @@
 #summary Comment réactiver les scripts EventScripts désactivés pendant un match ?
 
+<wiki:toc max_depth="2" />
+<br>
 
-=== Plusieurs catégories de scripts ===
+= Plusieurs catégories de scripts =
 La première chose qu'il faut savoir est qu'il y a trois catégories de scripts : 
  # Ceux qui peuvent être chargés, activés, déchargés et désactivés pendant le jeu
  # Ceux qui _ne peuvent pas être désactivés_, mais _uniquement déchargés_ (exemple typique de l'anti-camp)
@@ -12,7 +14,7 @@ Si vous ne voulez pas vous prendre la tête avec tout ça, considérez vos scrip
 Malgré tout, si vous ne voulez vraiment pas vous prendre la tête la solution idéale reste de posséder un serveur dédié aux wars :-(
 
 <br>
-=== Première catégorie ===
+= Première catégorie =
 
 Pour les scripts de la première catégorie, il sera inutile de charger et décharger les scripts un par un dans les fichiers de configuration. L'utilisation de la variable *mattie_eventscripts* suffit à ordonner à EventScripts désactiver ou activer les scripts sur demande.
 
@@ -27,7 +29,7 @@ mattie_eventscripts 1
 
 
 <br>
-=== Deuxième catégorie ===
+= Deuxième catégorie =
 
 Les scripts de la deuxième catégorie sont plutôt rares. Vous aurez beau les mettre en pause (les désactiver), ils continueront en partie à s'exécuter. L'exemple le plus répandu est celui de l'anti-camp qui continue à punir les joueurs malgré qu'il ait été désactivé avec la commande _es_disable_ ou la variable _mattie_eventscripts_.
 
@@ -45,7 +47,7 @@ Attention toutefois, il se peut que le script en question fasse partie de la der
 
 
 <br>
-=== Troisième catégorie ===
+= Troisième catégorie =
 
 Les scripts de la troisième catégorie sont plus difficiles à identifier. Et pourtant ils sont nombreux, c'est peut-être même les plus répandus. Ces scripts doivent n'être chargés que lors du démarrage du serveur (ex : avec un reboot) car ils ont besoin de surveiller en permanence les connexions et les déconnexions des joueurs pour fonctionner correctement.
 
