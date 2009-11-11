@@ -1,6 +1,5 @@
 #summary Table des matières
 
- * Wiki
   * [http://code.google.com/p/cssmatch-plugin/wiki/Accueil?tm=6 Accueil]
   * Installation et Configuration
     * [Installation Installer CSSMatch]
