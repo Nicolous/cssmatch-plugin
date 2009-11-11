@@ -319,6 +319,12 @@ const char * ServerPlugin::GetPluginDescription()
 
 void ServerPlugin::LevelInit(char const * pMapName)
 {
+	// End any match in progress
+	if (match->getMatchState()->getId() != DisabledMatchState::getInstance()->getId())
+		match->stop();
+
+	// Delete all pending timers
+	removeTimers();
 }
 
 void ServerPlugin::ServerActivate(edict_t * pEdictList, int edictCount, int clientMax)
