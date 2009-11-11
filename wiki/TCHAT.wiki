@@ -1,5 +1,8 @@
 #summary Commandes du TCHAT
 
+<wiki:toc max_depth="2" />
+<br>
+
 = Introduction =
 
 Les commandes du TCHAT sont des commandes à taper dans la zone de dialogue. Ces commandes sont là pour vous simplifier la vie ou, dans de plus rare cas, pour vous donnez accès à de nouvelles fonctionnalités.
