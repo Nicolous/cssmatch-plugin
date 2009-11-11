@@ -1,16 +1,16 @@
 #summary Configurer le plugin / Configurer un match
 #labels Featured
 
-= Configurer le plugin / Configurer un match =
-
+<wiki:toc max_depth="2" />
 <br>
-== Comment configurer le plugin ? ==
+
+= Comment configurer le plugin ? =
 
 Le plugin ne se configure que par l'intermédiaire de vos fichiers de configuration de match. 
 Pour celà, lisez la suite de ce tutoriel.
 
 <br>
-== Comment configurer un match ? ==
+= Comment configurer un match ? =
   # Allez dans le dossier _cfg/cssmatch/configurations_. Ce dossier contient toutes les configurations différentes de match que vous pouvez exécuter (au choix) lors du lancement d'un match. Les fichiers .cfg présents dans ce dossier sont automatiquement listé dans le menu du plugin.
   # Ouvrez le fichier _default.cfg_. Ce fichier est un exemple de configuration de match. ([http://cssmatch.com/translations/french/configurations/default.cfg Vous pourrez trouver une traduction française de ce fichier ici].) Vous y trouverez les "variables" spécifiques au plugin (pour structurer le match à votre guise) toutes préfixées par "cssmatch_" ainsi que des exemples de variables modifiant la configuration du serveur pendant le match.
     * Modifiez les variables du plugin comme vous le souhaitez (elles sont toutes documentées dans le fichier)
@@ -18,7 +18,7 @@ Pour celà, lisez la suite de ce tutoriel.
 
 
 <br>
-=== Ajouter des fichiers de configuration : ===
+== Ajouter des fichiers de configuration ==
 
 *Utilité :* Si vous jouez pour une ligue, celle-ci vous imposera probablement une configuration. Il est utile de pouvoir choisir entre cette configuration et votre configuration habituelle dans le menu.
 
@@ -42,7 +42,7 @@ Dans le principe ce n'est pas différent, sauf que ce n'est pas à vous de crée
 
 
 <br>
-=== "Mon fichier n'apparaît pas dans la liste des fichiers au moment de lancer le match :" ===
+== "Mon fichier n'apparaît pas dans la liste des fichiers au moment de lancer le match" ==
   * Vérifiez que le fichier est bien dans le dossier _cfg/cssmatch/configurations_ de votre serveur
   * Vérifier que l'extension du fichier est bien ".cfg", s'il faut "enregistrez-le à nouveau sous" en ajoutant ".cfg" au bout du nom du fichier.
   * Assurez-vous d'avoir bien changé de map ou rebooté le serveur depuis l'envoie du fichier (s'il faut refaite le)
