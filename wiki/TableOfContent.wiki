@@ -1,6 +1,6 @@
 #summary Table des matières
 
-  * [Accueil Accueil]
+  * [Accueil?tm=6 Accueil]
   * Installation et Configuration
     * [Installation Installer CSSMatch]
     * [Configuration Configurer les matchs]
