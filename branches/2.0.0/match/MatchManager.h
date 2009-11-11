@@ -152,8 +152,10 @@ namespace cssmatch
 		 */
 		void start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state, ClanMember * umpire = NULL);
 
-		/** Stop a running match and return to the initial state */
-		void stop();
+		/** Stop a running match and return to the initial state 
+		 * @param umpire The player who stops the match
+		 */
+		void stop(ClanMember * umpire = NULL);
 	};
 
 
