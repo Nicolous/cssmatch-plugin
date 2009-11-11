@@ -298,6 +298,12 @@ void I18nManager::i18nConsoleSay(	RecipientFilter & recipients,
 	}
 }
 
+void I18nManager::i18nMsg(const string & keyword, map<string,string> & parameters)
+{
+	string message = getTranslation("",keyword,parameters);
+	Msg("%s\n",message.c_str());
+}
+
 TimerI18nChatSay::TimerI18nChatSay(	float date,
 									RecipientFilter & recip,
 									const string & key,

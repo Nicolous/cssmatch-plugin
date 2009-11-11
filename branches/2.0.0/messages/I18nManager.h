@@ -147,6 +147,13 @@ namespace cssmatch
 		void i18nConsoleSay(RecipientFilter & recipients,
 							const std::string & keyword,
 							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+
+		/** Send a message to the user of the RCON command (or the server console)
+		 * @param keyword The identifier of the translation to use
+		 * @param parameters If specified, the message's parameters and their value
+		 */
+		void i18nMsg(	const std::string & keyword,
+						std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
 	};
 
 	/** Send a delayed message in the chat area 
