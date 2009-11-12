@@ -19,6 +19,7 @@
     * [scripts Réactiver ses scripts EventScripts]
   * Divers
     * [Erreurs Quid des message d'erreurs]
+    * [Motivations Motivations]
     * [Statistiques Serveurs utilisant CSSMatch]
     * [compilation Compiler le code source]
      
