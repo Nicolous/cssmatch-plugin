@@ -96,6 +96,9 @@ namespace cssmatch
 		/** Global playerlist */
 		std::list<ClanMember *> playerlist;
 
+		/** Referee steamid list */
+		std::list<std::string> adminlist;
+
 		/** Match manager */
 		MatchManager * match;
 

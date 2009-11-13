@@ -21,6 +21,7 @@
  */
 
 #include "ServerPlugin.h"
+#include "../configuration/ConfigurationFile.h"
 #include "../convars/I18nConVar.h"
 #include "../commands/I18nConCommand.h"
 #include "../commands/ConCommandCallbacks.h"
@@ -51,6 +52,7 @@ using std::list;
 using std::map;
 using std::for_each;
 using std::count_if;
+using std::find;
 using std::find_if;
 using std::ostringstream;
 
@@ -323,6 +325,11 @@ void ServerPlugin::LevelInit(char const * pMapName)
 	if (match->getMatchState()->getId() != DisabledMatchState::getInstance()->getId())
 		match->stop();
 
+	// Update the referee steamid list
+	adminlist.clear();
+	ConfigurationFile adminlistFile(CFG_FOLDER_PATH "cssmatch/adminlist.txt");
+	adminlistFile.getLines(adminlist);
+
 	// Delete all pending timers
 	removeTimers();
 }
@@ -365,7 +372,11 @@ void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
     {
             try
             {
-				playerlist.push_back(new ClanMember(index));
+				list<string>::iterator itSteamid = adminlist.begin();
+				list<string>::iterator invalidSteamid = adminlist.end();
+
+				bool isReferee = find(itSteamid,invalidSteamid,interfaces.engine->GetPlayerNetworkIDString(pEntity)) != invalidSteamid;
+				playerlist.push_back(new ClanMember(index,isReferee));
             }
             catch(const PlayerException & e)
             {
