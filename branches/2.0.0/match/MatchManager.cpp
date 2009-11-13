@@ -457,8 +457,7 @@ void RestoreConfigTimer::execute()
 		configPatch = plugin->getConVar("cssmatch_default_config")->GetString();
 
 		RunnableConfigurationFile config(string(CFG_FOLDER_PATH) + configPatch);
-		//config.execute();
-		RunnableConfigurationFile::execute(configPatch);
+		config.execute();
 	}
 	catch(const ServerPluginException & e)
 	{

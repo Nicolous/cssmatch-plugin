@@ -75,6 +75,9 @@ namespace cssmatch
 		/** Get the file's name */
 		std::string getFileName() const;
 
+		/** Get the file's path from -not including- the cfg/ folder */
+		std::string getPatchFromCfg() const;
+
 		/** Get a list of all the file data lines (stripped, without comments)
 		 * @param out The list to receive the lines
 		 */

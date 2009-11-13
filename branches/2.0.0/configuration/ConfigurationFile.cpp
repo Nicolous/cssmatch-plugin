@@ -112,6 +112,19 @@ string ConfigurationFile::getFileName() const
 	return fileName;
 }
 
+string ConfigurationFile::getPatchFromCfg() const
+{
+	string path;
+
+	size_t iCfg = filePath.find_first_of(CFG_FOLDER_PATH);
+	if (iCfg != string::npos)
+		path = filePath.substr(iCfg+strlen(CFG_FOLDER_PATH));
+	else
+		print(__FILE__,__LINE__,filePath + " isn't localized in the cstrike directory");
+
+	return path;
+}
+
 void ConfigurationFile::getLines(list<string> & out)
 {
 	ifstream file(filePath.c_str());

@@ -110,7 +110,7 @@ RunnableConfigurationFile::RunnableConfigurationFile(const string & filePath)
 
 void RunnableConfigurationFile::execute() const
 {
-	execute(MATCH_CONFIGURATIONS_PATH + getFileName());
+	execute(getPatchFromCfg());
 }
 
 void RunnableConfigurationFile::execute(const string & filePath)
