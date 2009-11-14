@@ -114,11 +114,23 @@ Suspend temporairement les droits d'un arbitre. Ses droits sont rétablis dès l
 
 ====Description====
 
-Permet d'éditer le tag de la team qui est actuellement en terroriste.
+Permet d'éditer le tag de la team terroriste.
+
+====Exemple====
+
+`cssm_teamt *Fragueurs*`
+
+----
+==cssm_teamct tag de la team anti-terroriste==
+
+====Description====
+
+Permet d'éditer le tag de la team anti-terroriste.
 
 ====Exemple====
 
 `cssm_teamct *Fragueurs*`
+
 
 ----
 ==cssm_swap UserID==
@@ -141,3 +153,14 @@ Permet d'envoyer un joueur en spectateur. L'UserID du joueur peut être trouvé 
 ====Exemple====
 
 `cssm_spec 15`
+
+----
+==cssm_adminlist==
+
+====Description====
+
+Liste les steamids de tous les arbitres.
+
+====Exemple====
+
+`cssm_adminlist`
