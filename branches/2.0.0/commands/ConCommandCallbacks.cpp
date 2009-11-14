@@ -23,7 +23,6 @@
 #include "ConCommandCallbacks.h"
 
 #include "../match/MatchManager.h"
-#include "../match/DisabledMatchState.h"
 #include "../match/BaseMatchState.h"
 #include "../match/KnifeRoundMatchState.h"
 #include "../match/WarmupMatchState.h"
@@ -122,16 +121,26 @@ void cssmatch::cssm_start()
 				recipients.addAllPlayers();
 				i18n->i18nChatWarning(recipients,"match_config_error");
 			}
-
 			match->start(configuration,warmup,initialState);
+
+			RecipientFilter recipients;
+			recipients.addAllPlayers();
+			i18n->i18nChatSay(recipients,"match_started");
 		}
 		catch(const ConfigurationFileException & e)
 		{
-			plugin->log(e.what());
+			map<string,string> parameters;
+			parameters["$file"] = configurationFile;
+
+			i18n->i18nMsg("error_file_not_found",parameters);
 		}
 		catch(const ServerPluginException & e)
 		{
 			plugin->log(e.what());
+		}
+		catch(const MatchManagerException & e)
+		{
+			i18n->i18nMsg("match_in_progress");
 		}
 		break;
 	default:
@@ -147,10 +156,23 @@ void cssmatch::cssm_stop()
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	Countdown * countdown = Countdown::getInstance();
+	I18nManager * i18n = plugin->getI18nManager();
 
 	plugin->removeTimers();
 	countdown->stop();
-	match->stop();
+
+	try
+	{
+		match->stop();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+		i18n->i18nChatSay(recipients,"match_started");
+	}
+	catch(const MatchManagerException & e)
+	{
+		i18n->i18nMsg("match_not_in_progress");
+	}
 }
 
 // Syntax: cssm_retag
@@ -160,12 +182,12 @@ void cssmatch::cssm_retag()
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	if (match->getMatchState()->getId() != DisabledMatchState::getInstance()->getId())
+	try
 	{
 		match->detectClanName(T_TEAM);
 		match->detectClanName(CT_TEAM);
 	}
-	else
+	catch(const MatchManagerException & e)
 	{
 		i18n->i18nMsg("match_not_in_progress");
 	}
@@ -179,8 +201,8 @@ void cssmatch::cssm_go()
 	I18nManager * i18n = plugin->getI18nManager();
 
 	WarmupMatchState * warmupState = WarmupMatchState::getInstance();
-	BaseMatchState * currentState = match->getMatchState();
-	if (currentState->getId() == warmupState->getId())
+	MatchStateId currentState = match->getMatchState();
+	if (currentState == warmupState->getId())
 	{
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
@@ -188,7 +210,7 @@ void cssmatch::cssm_go()
 		i18n->i18nChatSay(recipients,"admin_all_teams_say_ready");
 		warmupState->endWarmup();
 	}
-	else if (currentState->getId() != DisabledMatchState::getInstance()->getId())
+	else if (currentState != match->getInitialState())
 	{
 		i18n->i18nMsg("warmup_disable");
 	}
@@ -204,7 +226,7 @@ void cssmatch::cssm_go()
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	if (match->getMatchState()->getId() != DisabledMatchState::getInstance()->getId())
+	if (match->getMatchState() != match->getInitialState())
 	{
 		
 	}
@@ -232,8 +254,8 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	// !go, ready: a clan is ready to end the warmup
 	if ((chatCommand == "!go") || (chatCommand == "ready"))
 	{
-		BaseMatchState * currentState = match->getMatchState();
-		if (currentState->getId() == WarmupMatchState::getInstance()->getId())
+		MatchStateId currentState = match->getMatchState();
+		if (currentState == WarmupMatchState::getInstance()->getId())
 		{
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
@@ -248,7 +270,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 		{
 			RecipientFilter recipients;
 			recipients.addAllPlayers();	
-			if (currentState->getId() != DisabledMatchState::getInstance()->getId())
+			if (currentState != match->getInitialState())
 			{
 				i18n->i18nChatSay(recipients,"warmup_disable");
 			}

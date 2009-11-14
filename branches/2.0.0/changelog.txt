@@ -9,3 +9,4 @@
 * Lorsqu'aucun match n'est en cours, le plugin ne consomme plus rien (pas d'écoute d'évènements, mais recherche de timers)
 * Si aucune traduction n'est disponible, un message d'explication sera affiché (plutôt qu'un message vide)
 * Retrait des messages annonçant la redétection des tags (match_retag et match_name obselète dans les fichiers de langage)
+* Message error_default.cfg obselète

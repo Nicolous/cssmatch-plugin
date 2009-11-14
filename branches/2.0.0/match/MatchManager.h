@@ -30,13 +30,13 @@
 #include "../exceptions/BaseException.h"
 #include "../timer/BaseTimer.h"
 #include "../plugin/EventListener.h"
+#include "BaseMatchState.h" // MatchStateId
 
 #include <string>
 #include <map>
 
 namespace cssmatch
 {
-	class BaseMatchState;
 	class RunnableConfigurationFile;
 
 	class MatchManagerException : public BaseException
@@ -107,8 +107,9 @@ namespace cssmatch
 	public:
 		/** 
 		 * @param initialState Initial state of the match (e.g. "no match")
+		 * @throws MatchManagerException if initialState is NULL
 		 */
-		MatchManager(BaseMatchState * initialState);
+		MatchManager(BaseMatchState * initialState) throw(MatchManagerException);
 
 		/** Note : stop any current countdown here */
 		~MatchManager();
@@ -118,6 +119,9 @@ namespace cssmatch
 
 		/** Get some informations about the match */
 		MatchInfo * getInfos();
+
+		/** Get the initial/default match state (chan no match is running) */
+		MatchStateId getInitialState() const;
 
 		/** Get a clan by team, depending to the current set 
 		 * @param code The clan's team code 
@@ -131,33 +135,35 @@ namespace cssmatch
 
 		/** Redetect a clan name then announce it
 		 * @param code The clan's team code
+		 * @throws MatchManagerException if no match is running
 		 */
-		void detectClanName(TeamCode code);
+		void detectClanName(TeamCode code) throw(MatchManagerException);
 
 		/** Set a new match state <br>
 		 * Call the endState method of the previous state, then the startState of the new state
 		 * @param newState The new match state
-		 * @see enum MatchState
+		 * @throws MatchManagerException if initialState is NULL
 		 */
-		void setMatchState(BaseMatchState * newState);
+		void setMatchState(BaseMatchState * newState) throw(MatchManagerException);
 
 		/** Get the current match state */
-		BaseMatchState * getMatchState() const;
+		MatchStateId getMatchState() const;
 
 		/** Start a new match in a given state <br>
 		 * Do nothing if a match is already running
 		 * @param config The configuration of the match
 		 * @param warmup If a warmup must be done
 		 * @param state The first state of the match
-		 * @param umpire The player who starts the match
+		 * @throws MatchManagerException if no match is running	
 		 */
-		void start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state, ClanMember * umpire = NULL);
+		void start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state)
+			 throw(MatchManagerException);
 
 		/** Stop a running match and return to the initial state  <br>
 		 * Do nothing if no match is running
-		 * @param umpire The player who stops the match
+		 * @throws MatchManagerException if no match is running	
 		 */
-		void stop(ClanMember * umpire = NULL);
+		void stop() throw(MatchManagerException);
 	};
 
 

@@ -139,7 +139,14 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 		MathLib_Init(2.2f,2.2f,0.0f,2.0f);
 
-		match = new MatchManager(DisabledMatchState::getInstance());
+		try
+		{
+			match = new MatchManager(DisabledMatchState::getInstance());
+		}
+		catch(const MatchManagerException & e)
+		{
+			printException(e,__FILE__,__LINE__);
+		}
 		
 		//	Initialize the translations tools
 		i18n = new I18nManager(interfaces.engine);
@@ -326,7 +333,7 @@ const char * ServerPlugin::GetPluginDescription()
 void ServerPlugin::LevelInit(char const * pMapName)
 {
 	// End any match in progress
-	if (match->getMatchState()->getId() != DisabledMatchState::getInstance()->getId())
+	if (match->getMatchState() != match->getInitialState())
 		match->stop();
 
 	// Update the referee steamid list

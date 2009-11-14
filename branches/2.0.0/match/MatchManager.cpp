@@ -42,6 +42,9 @@ using std::map;
 
 MatchManager::MatchManager(BaseMatchState * iniState) : initialState(iniState), currentState(NULL)
 {
+	if (iniState == NULL)
+		throw MatchManagerException("Initial match state can't be NULL");
+
 	listener = new EventListener<MatchManager>(this);
 
 	setMatchState(iniState);
@@ -63,6 +66,11 @@ MatchLignup * MatchManager::getLignup()
 MatchInfo * MatchManager::getInfos()
 {
 	return &infos;
+}
+
+MatchStateId MatchManager::getInitialState() const
+{
+	return initialState->getId();
 }
 
 MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
@@ -175,34 +183,37 @@ void MatchManager::player_changename(IGameEvent * event)
 	}
 }
 
-void MatchManager::detectClanName(TeamCode code)
+void MatchManager::detectClanName(TeamCode code) throw(MatchManagerException)
 {
 	/*ServerPlugin * plugin = ServerPlugin::getInstance();
 	I18nManager * i18n = plugin->getI18nManager();*/
 
-	try
+	if (currentState != initialState) // no match = no hostname change
 	{
-		getClan(code)->detectClanName();
-
-		/*RecipientFilter recipients;
-		recipients.addAllPlayers();
-
-		i18n->i18nChatSay(recipients,"match_retag");
-
-		map<string,string> parameters;
-		parameters["$team1"] = *(lignup.clan1.getName());
-		parameters["$team2"] = *(lignup.clan2.getName());
-		i18n->i18nChatSay(recipients,"match_name",0,parameters);*/
-
-		if (currentState != initialState) // no match = no hostname change
+		try
 		{
+			getClan(code)->detectClanName();
+
+			/*RecipientFilter recipients;
+			recipients.addAllPlayers();
+
+			i18n->i18nChatSay(recipients,"match_retag");
+
+			map<string,string> parameters;
+			parameters["$team1"] = *(lignup.clan1.getName());
+			parameters["$team2"] = *(lignup.clan2.getName());
+			i18n->i18nChatSay(recipients,"match_name",0,parameters);*/
+
+
 			updateHostname();
 		}
+		catch(const MatchManagerException & e)
+		{
+			printException(e,__FILE__,__LINE__);
+		}
 	}
-	catch(const MatchManagerException & e)
-	{
-		printException(e,__FILE__,__LINE__);
-	}
+	else
+		throw MatchManagerException("No match in progress");
 }
 
 void MatchManager::updateHostname()
@@ -238,31 +249,33 @@ void MatchManager::updateHostname()
 
 }
 
-void MatchManager::setMatchState(BaseMatchState * newState)
+void MatchManager::setMatchState(BaseMatchState * newState) throw(MatchManagerException)
 {
-	if (currentState != NULL) // Maybe there was no current state
+	if (newState == NULL)
+		throw MatchManagerException("The news state can't be NULL");
+
+	if (currentState != NULL) // currentState is initialized to NULL
 		currentState->endState();
 
 	currentState = newState;
-
-	if (currentState != NULL) // Maybe there is no real new state
-		currentState->startState();
+	currentState->startState();
 }
 
-BaseMatchState * MatchManager::getMatchState() const
+MatchStateId MatchManager::getMatchState() const
 {
-	return currentState;
+	return currentState->getId();
 }
 
-void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state, ClanMember * umpire)
+void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state)
+	 throw(MatchManagerException)
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->getI18nManager();
-
 	// Make sure there is not already a match in progress
 	if (currentState == initialState)
 	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		ValveInterfaces * interfaces = plugin->getInterfaces();
+		I18nManager * i18n = plugin->getI18nManager();
+
 		// Global recipient list
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
@@ -282,10 +295,6 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 
 		// Save the current date
 		infos.startTime = getLocalTime();
-
-		// Try to find the clan names
-		detectClanName(T_TEAM);
-		detectClanName(CT_TEAM);
 
 		// Start to listen some events
 		listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
@@ -307,52 +316,31 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 			// Maybe no warmup is needed
 			infos.warmup = warmup;
 
+			// Start the first state
 			setMatchState(state);
+
+			// Try to find the clan names
+			detectClanName(T_TEAM);
+			detectClanName(CT_TEAM);
 		}
 		catch(const ServerPluginException & e)
 		{
 			printException(e,__FILE__,__LINE__);
 		}
-
-		// Announcement
-		if (umpire != NULL)
-		{
-			IPlayerInfo * playerInfo = umpire->getPlayerInfo();
-			if (isValidPlayer(playerInfo))
-			{
-				map<string,string> parameters;
-				parameters["$admin"] = playerInfo->GetName();
-				i18n->i18nChatSay(recipients,"match_started_by",parameters,umpire->getIdentity()->index);
-			}
-		}
-		else
-			i18n->i18nChatSay(recipients,"match_started");
 	}
 	else
-	{
-		if (umpire != NULL)
-		{
-			RecipientFilter recipientUmpire;
-			recipientUmpire.addRecipient(umpire->getIdentity()->index);
-
-			i18n->i18nChatSay(recipientUmpire,"match_in_progress");
-		}
-		else
-		{
-			i18n->i18nMsg("match_in_progress");
-		}
-	}
+		throw MatchManagerException("There is already a match in progress");
 }
 
-void MatchManager::stop(ClanMember * umpire)
+void MatchManager::stop() throw (MatchManagerException)
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
-	I18nManager * i18n = plugin->getI18nManager();
-
 	// Make sure there is a match in progress
 	if (currentState != initialState)
 	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		ValveInterfaces * interfaces = plugin->getInterfaces();
+		I18nManager * i18n = plugin->getI18nManager();
+
 		// Return to the initial state
 		setMatchState(initialState);
 
@@ -419,19 +407,7 @@ void MatchManager::stop(ClanMember * umpire)
 		}
 	}
 	else
-	{
-		if (umpire != NULL)
-		{
-			RecipientFilter recipientUmpire;
-			recipientUmpire.addRecipient(umpire->getIdentity()->index);
-
-			i18n->i18nChatSay(recipientUmpire,"match_not_in_progress");
-		}
-		else
-		{
-			i18n->i18nMsg("match_not_in_progress");
-		}
-	}
+		throw MatchManagerException("No match in progress");
 }
 
 
