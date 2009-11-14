@@ -144,7 +144,8 @@ namespace cssmatch
 		/** Get the current match state */
 		BaseMatchState * getMatchState() const;
 
-		/** Start a new match in a given state
+		/** Start a new match in a given state <br>
+		 * Do nothing if a match is already running
 		 * @param config The configuration of the match
 		 * @param warmup If a warmup must be done
 		 * @param state The first state of the match
@@ -152,7 +153,8 @@ namespace cssmatch
 		 */
 		void start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state, ClanMember * umpire = NULL);
 
-		/** Stop a running match and return to the initial state 
+		/** Stop a running match and return to the initial state  <br>
+		 * Do nothing if no match is running
 		 * @param umpire The player who stops the match
 		 */
 		void stop(ClanMember * umpire = NULL);

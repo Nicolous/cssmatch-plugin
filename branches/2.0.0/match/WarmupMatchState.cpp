@@ -60,8 +60,13 @@ void WarmupMatchState::endWarmup()
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
 
-	i18n->i18nChatSay(recipients,"warmup_all_ready");
 	i18n->i18nChatSay(recipients,"warmup_end");
+
+	Countdown::getInstance()->stop();
+	if (timer != NULL) // All the clans typed "!go" before the third restart ?
+	{
+		timer->cancel();
+	}
 
 	try
 	{
@@ -116,11 +121,7 @@ void WarmupMatchState::doGo(Player * player)
 		// If both clan1 and clan2 are ready, end the warmup
 		if (clan->isReady() && otherClan->isReady())
 		{
-			Countdown::getInstance()->stop();
-			if (timer != NULL) // All the clans typed "!go" before the third restart ?
-			{
-				timer->cancel();
-			}
+			i18n->i18nChatSay(recipients,"warmup_all_ready");
 			endWarmup();
 		}
 	}

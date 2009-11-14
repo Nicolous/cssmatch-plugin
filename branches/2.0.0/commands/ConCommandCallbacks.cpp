@@ -45,20 +45,33 @@ using std::find_if;
 using std::string;
 using std::map;
 
-// Syntax: cssm_help
+// Syntax: cssm_help [command name]
 void cssmatch::cssm_help()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	const map<string,ConCommand *> * pluginConCommands = plugin->getPluginConCommands();
-	map<string,ConCommand *>::const_iterator itConCommand = pluginConCommands->begin();
 	map<string,ConCommand *>::const_iterator lastConCommand = pluginConCommands->end();
-	while (itConCommand != lastConCommand)
-	{
-		ConCommand * command = itConCommand->second;
-		plugin->log(string(command->GetName()) + " : " + command->GetHelpText());
 
-		itConCommand++;
+	if (interfaces->engine->Cmd_Argc() == 1)
+	{
+		map<string,ConCommand *>::const_iterator itConCommand = pluginConCommands->begin();
+		while (itConCommand != lastConCommand)
+		{
+			ConCommand * command = itConCommand->second;
+			plugin->log(string(command->GetName()) + ": " + command->GetHelpText());
+
+			itConCommand++;
+		}
+	}
+	else
+	{
+		map<string,ConCommand *>::const_iterator itConCommand = pluginConCommands->find(interfaces->engine->Cmd_Argv(1));
+		if (itConCommand != lastConCommand)
+		{
+			plugin->log(itConCommand->first + ": " + itConCommand->second->GetHelpText());
+		}
 	}
 }
 
@@ -140,6 +153,67 @@ void cssmatch::cssm_stop()
 	match->stop();
 }
 
+// Syntax: cssm_retag
+void cssmatch::cssm_retag()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	if (match->getMatchState()->getId() != DisabledMatchState::getInstance()->getId())
+	{
+		match->detectClanName(T_TEAM);
+		match->detectClanName(CT_TEAM);
+	}
+	else
+	{
+		i18n->i18nMsg("match_not_in_progress");
+	}
+}
+
+// Syntax: cssm_go
+void cssmatch::cssm_go()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	WarmupMatchState * warmupState = WarmupMatchState::getInstance();
+	BaseMatchState * currentState = match->getMatchState();
+	if (currentState->getId() == warmupState->getId())
+	{
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+
+		i18n->i18nChatSay(recipients,"admin_all_teams_say_ready");
+		warmupState->endWarmup();
+	}
+	else if (currentState->getId() != DisabledMatchState::getInstance()->getId())
+	{
+		i18n->i18nMsg("warmup_disable");
+	}
+	else
+	{
+		i18n->i18nMsg("match_not_in_progress");
+	}
+}
+
+/*void cssmatch::cssm_restartset()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	if (match->getMatchState()->getId() != DisabledMatchState::getInstance()->getId())
+	{
+		
+	}
+	else
+	{
+		i18n->i18nMsg("match_not_in_progress");
+	}
+}*/
+
 
 // ***************************
 // Hook callbacks and tools
@@ -158,7 +232,8 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	// !go, ready: a clan is ready to end the warmup
 	if ((chatCommand == "!go") || (chatCommand == "ready"))
 	{
-		if (match->getMatchState()->getId() == WarmupMatchState::getInstance()->getId())
+		BaseMatchState * currentState = match->getMatchState();
+		if (currentState->getId() == WarmupMatchState::getInstance()->getId())
 		{
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
@@ -172,8 +247,15 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 		else
 		{
 			RecipientFilter recipients;
-			recipients.addAllPlayers();
-			i18n->i18nChatSay(recipients,"warmup_disable");
+			recipients.addAllPlayers();	
+			if (currentState->getId() != DisabledMatchState::getInstance()->getId())
+			{
+				i18n->i18nChatSay(recipients,"warmup_disable");
+			}
+			else
+			{
+				i18n->i18nChatSay(recipients,"match_not_in_progress");
+			}
 		}
 	}
 

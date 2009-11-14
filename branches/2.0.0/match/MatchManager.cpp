@@ -194,7 +194,10 @@ void MatchManager::detectClanName(TeamCode code)
 		parameters["$team2"] = *(lignup.clan2.getName());
 		i18n->i18nChatSay(recipients,"match_name",0,parameters);*/
 
-		updateHostname();
+		if (currentState != initialState) // no match = no hostname change
+		{
+			updateHostname();
+		}
 	}
 	catch(const MatchManagerException & e)
 	{

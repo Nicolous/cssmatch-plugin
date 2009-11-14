@@ -30,11 +30,20 @@ namespace cssmatch
 	/** Help for commands use */
 	void cssm_help();
 
-	/** Start a match */
+	/** Starts a match */
 	void cssm_start();
 
-	/** Stop a match */
+	/** Stops a match */
 	void cssm_stop();
+
+	/** Redetects the clan names */
+	void cssm_retag();
+
+	/** Declares a clan ready to end the warmup */
+	void cssm_go();
+
+	/* Restart the current round set */
+	//void cssm_restartset();
 
 	/** !go, !score, !teamt, etc. */
 	bool say_hook(int userIndex, IVEngineServer * engine);

@@ -184,6 +184,10 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_help",cssm_help,"cssm_help"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_start",cssm_start,"cssm_start"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_stop",cssm_stop,"cssm_stop"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_retag",cssm_retag,"cssm_retag"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_go",cssm_go,"cssm_go"));
+		//addPluginConCommand(new I18nConCommand(i18n,"cssm_restartset",cssm_restartset,"cssm_restartset"));
+		//addPluginConCommand(new I18nConCommand(i18n,"cssm_restartmanche",cssm_restartset,"cssm_restartmanche")); // backward compatibility
 
 		// Hook needed commands
 		hookConCommand("say",say_hook);
