@@ -42,8 +42,20 @@ namespace cssmatch
 	/** Declares a clan ready to end the warmup */
 	void cssm_go();
 
-	/* Restart the current round set */
-	//void cssm_restartset();
+	/** Restart the current round set */
+	void cssm_restartmanche();
+
+	/** Restart the current round */
+	void cssm_restart();
+
+	/** Print the referee steamid list */
+	void cssm_adminlist();
+
+	/** Make a player a referee by steamid (until the next map change) */
+	void cssm_grant();
+
+	/** Remove a referee by steamid (until the next map change) */
+	void cssm_revoke();
 
 	/** !go, !score, !teamt, etc. */
 	bool say_hook(int userIndex, IVEngineServer * engine);

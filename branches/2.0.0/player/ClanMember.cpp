@@ -33,14 +33,19 @@ ClanMember::ClanMember(int index, bool ref) : Player(index), referee(ref)
 {
 }
 
-list<StatsRound> * ClanMember::getStatsRound()
+PlayerStats * ClanMember::getLastRoundStats()
 {
-	return &roundStats;
+	return &lastRoundStats;
 }
 
-list<StatsSet> * ClanMember::getStatsSet()
+PlayerStats * ClanMember::getLastSetStats()
 {
-	return &setStats;
+	return &lastSetStats;
+}
+
+PlayerStats * ClanMember::getCurrentStats()
+{
+	return &currentStats;
 }
 
 bool ClanMember::isReferee() const

@@ -154,6 +154,9 @@ namespace cssmatch
 		/** Get the global playerlist */
 		std::list<ClanMember *> * getPlayerlist();
 
+		/** Get the referee steamid list (read and write) */
+		std::list<std::string> * getAdminlist();
+
 		/** Get the match manager */
 		MatchManager * getMatch();
 

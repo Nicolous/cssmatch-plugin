@@ -39,7 +39,9 @@ using namespace cssmatch;
 #include <list>
 #include <algorithm>
 using std::list;
+using std::find;
 using std::find_if;
+using std::for_each;
 
 using std::string;
 using std::map;
@@ -220,22 +222,150 @@ void cssmatch::cssm_go()
 	}
 }
 
-/*void cssmatch::cssm_restartset()
+void cssmatch::cssm_restartmanche()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	if (match->getMatchState() != match->getInitialState())
+	try
 	{
-		
+		match->restartSet();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+		i18n->i18nChatSay(recipients,"admin_manche_restarted");
 	}
-	else
+	catch(const MatchManagerException & e)
 	{
 		i18n->i18nMsg("match_not_in_progress");
 	}
-}*/
+}
 
+void cssmatch::cssm_restart()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	try
+	{
+		match->restartRound();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+		i18n->i18nChatSay(recipients,"admin_round_restarted");
+	}
+	catch(const MatchManagerException & e)
+	{
+		i18n->i18nMsg("match_not_in_progress");
+	}
+}
+
+// Syntax: cssm_adminlist
+void cssmatch::cssm_adminlist()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
+	list<string> * adminlist = plugin->getAdminlist();
+
+	Msg("Admin list :\n");
+	list<string>::const_iterator itSteamid = adminlist->begin();
+	list<string>::const_iterator invalidSteamid = adminlist->end();
+	while(itSteamid != invalidSteamid)
+	{
+		Msg("%s\n",itSteamid->c_str());
+
+		itSteamid++;
+	}
+}
+
+// Syntax: cssm_grant steamid
+void cssmatch::cssm_grant()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	if (interfaces->engine->Cmd_Argc() > 1)
+	{
+		I18nManager * i18n = plugin->getI18nManager();
+		list<string> * adminlist = plugin->getAdminlist();
+
+		string steamid = interfaces->engine->Cmd_Args();
+
+		// Remove the spaces added between each ":" by the console
+		size_t iRemove;
+		while((iRemove = steamid.find(' ')) != string::npos)
+			steamid.replace(iRemove,1,"",0,0);
+
+		// Remove the quotes
+		while((iRemove = steamid.find('"')) != string::npos)
+			steamid.replace(iRemove,1,"",0,0);
+
+		// Remove the tab
+		while((iRemove = steamid.find('\t')) != string::npos)
+			steamid.replace(iRemove,1,"",0,0);
+
+		// Notify the user
+		map<string,string> parameters;
+		parameters["$steamid"] = steamid;
+
+		list<string>::iterator invalidSteamid = adminlist->end();
+		if (find(adminlist->begin(),invalidSteamid,steamid) == invalidSteamid)
+		{
+			adminlist->push_back(steamid);
+			i18n->i18nMsg("admin_new_admin",parameters);
+		}
+		else
+			i18n->i18nMsg("admin_is_already_admin",parameters);
+	}
+	else
+		Msg("cssm_grant steamid\n");
+}
+
+// Syntax: cssm_revoke steamid
+void cssmatch::cssm_revoke()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	if (interfaces->engine->Cmd_Argc() > 1)
+	{
+		I18nManager * i18n = plugin->getI18nManager();
+		list<string> * adminlist = plugin->getAdminlist();
+
+		string steamid = interfaces->engine->Cmd_Args();
+
+		// Remove the spaces added between each ":" by the console
+		size_t iRemove;
+		while((iRemove = steamid.find(' ')) != string::npos)
+			steamid.replace(iRemove,1,"",0,0);
+
+		// Remove the quotes
+		while((iRemove = steamid.find('"')) != string::npos)
+			steamid.replace(iRemove,1,"",0,0);
+
+		// Remove the tab
+		while((iRemove = steamid.find('\t')) != string::npos)
+			steamid.replace(iRemove,1,"",0,0);
+
+		// Notify the user
+		map<string,string> parameters;
+		parameters["$steamid"] = steamid;
+
+		list<string>::iterator invalidSteamid = adminlist->end();
+		list<string>::iterator itSteamid = find(adminlist->begin(),invalidSteamid,steamid);
+		if (itSteamid != invalidSteamid)
+		{
+			adminlist->erase(itSteamid);
+			i18n->i18nMsg("admin_old_admin",parameters);
+		}
+		else
+			i18n->i18nMsg("admin_is_not_admin",parameters);
+	}
+	else
+		Msg("cssm_revoke steamid\n");
+}
 
 // ***************************
 // Hook callbacks and tools

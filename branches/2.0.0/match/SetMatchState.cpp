@@ -102,6 +102,32 @@ void SetMatchState::endSet()
 
 	plugin->queueCommand("plugin_print\n");
 
+	// Update the score history of each player
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	list<ClanMember *>::iterator itPlayer = playerlist->begin();
+	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+	while(itPlayer != invalidPlayer)
+	{
+		PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
+		PlayerStats * lastSetStats = (*itPlayer)->getLastSetStats();
+
+		lastSetStats->deaths = currentStats->deaths;
+		lastSetStats->kills = currentStats->kills;
+
+		itPlayer++;
+	}
+
+	// Update the score history of each clan
+	MatchClan * clanT = match->getClan(T_TEAM);
+	ClanStats * currentStatsClanT = clanT->getStats();
+	ClanStats * lastSetStatsClanT = clanT->getLastSetStats();
+	lastSetStatsClanT->scoreT = currentStatsClanT->scoreT;
+
+	MatchClan * clanCT = match->getClan(CT_TEAM);
+	ClanStats * currentStatsClanCT = clanCT->getStats();
+	ClanStats * lastSetStatsClanCT = clanCT->getLastSetStats();
+	lastSetStatsClanCT->scoreCT = currentStatsClanCT->scoreCT;
+
 	try
 	{
 		if (infos->setNumber < plugin->getConVar("cssmatch_sets")->GetInt())
@@ -172,28 +198,27 @@ void SetMatchState::player_death(IGameEvent * event)
 	list<ClanMember *>::iterator itPlayer = playerlist->begin();
 	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 
+	int userid = event->GetInt("userid");
 	list<ClanMember *>::iterator itVictim = 
-		find_if(itPlayer,invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
+		find_if(itPlayer,invalidPlayer,PlayerHavingUserid(userid));
 	if (itVictim != invalidPlayer)
 	{
-		list<StatsRound> * roundStats = (*itVictim)->getStatsRound();
-		if (roundStats->begin() != roundStats->end())
-		{
-			roundStats->back().getPlayerStats()->deaths++;
-		}
+		PlayerStats * currentStats = (*itVictim)->getCurrentStats();
+		currentStats->deaths++;
 	}
 
-	list<ClanMember *>::iterator itAttacker = 
-		find_if(itPlayer,invalidPlayer,PlayerHavingUserid(event->GetInt("attacker")));
-	if (itAttacker != invalidPlayer)
+	int attacker = event->GetInt("attacker");
+	if (attacker != userid)
 	{
-		list<StatsRound> * roundStats = (*itAttacker)->getStatsRound();
-		if (roundStats->begin() != roundStats->end())
+		list<ClanMember *>::iterator itAttacker = 
+			find_if(itPlayer,invalidPlayer,PlayerHavingUserid(attacker));
+		if (itAttacker != invalidPlayer)
 		{
+			PlayerStats * currentStats = (*itAttacker)->getCurrentStats();
 			if ((*itVictim)->getMyTeam() != (*itAttacker)->getMyTeam())
-				roundStats->back().getPlayerStats()->kills++;
+				currentStats->kills++;
 			else
-				roundStats->back().getPlayerStats()->kills--;
+				currentStats->kills--;
 		}
 	}
 }
@@ -221,14 +246,11 @@ void SetMatchState::round_start(IGameEvent * event)
 	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 	while(itPlayer != invalidPlayer)
 	{
-		list<StatsRound> * plStatsRound = (*itPlayer)->getStatsRound();
+		PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
+		PlayerStats * lastRoundStats = (*itPlayer)->getLastRoundStats();
 
-		PlayerStats plStats;
-		if (plStatsRound->size() > 0)
-			plStats = *plStatsRound->back().getPlayerStats();
-
-		StatsRound stats(infos->roundNumber,plStats);
-		plStatsRound->push_back(stats);
+		lastRoundStats->deaths = currentStats->deaths;
+		lastRoundStats->kills = currentStats->kills;
 
 		itPlayer++;
 	}

@@ -193,8 +193,11 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_stop",cssm_stop,"cssm_stop"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_retag",cssm_retag,"cssm_retag"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_go",cssm_go,"cssm_go"));
-		//addPluginConCommand(new I18nConCommand(i18n,"cssm_restartset",cssm_restartset,"cssm_restartset"));
-		//addPluginConCommand(new I18nConCommand(i18n,"cssm_restartmanche",cssm_restartset,"cssm_restartmanche")); // backward compatibility
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_restartmanche",cssm_restartmanche,"cssm_restartmanche")); // backward compatibility
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_restart",cssm_restart,"cssm_restart"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_adminlist",cssm_adminlist,"cssm_adminlist"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_grant",cssm_grant,"cssm_grant"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_revoke",cssm_revoke,"cssm_revoke"));
 
 		// Hook needed commands
 		hookConCommand("say",say_hook);
@@ -222,6 +225,11 @@ void ServerPlugin::SetCommandClient(int index)
 list<ClanMember *> * ServerPlugin::getPlayerlist()
 {
 	return &playerlist;
+}
+
+list<string> * ServerPlugin::getAdminlist()
+{
+	return &adminlist;
 }
 
 MatchManager * ServerPlugin::getMatch()

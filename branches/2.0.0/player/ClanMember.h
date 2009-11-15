@@ -24,8 +24,6 @@
 #define __TEAM_MEMBER_H__
 
 #include "Player.h"
-#include "StatsRound.h"
-#include "StatsSet.h"
 
 class IVEngineServer;
 class IPlayerInfoManager;
@@ -34,28 +32,40 @@ class IPlayerInfoManager;
 
 namespace cssmatch
 {
+	/** Player's stats info */
+	struct PlayerStats
+	{
+		/** Player's score */
+		int kills;
+
+		/** Player's deaths */
+		int deaths;
+
+		PlayerStats() : kills(0), deaths(0){}
+
+	};
+
 	/** CSSMatch player */
 	class ClanMember : public Player
 	{
 	protected:
-		/** Round stats list of this player <br>
-		 * TO CONFIRM: According to an user suggestion, 
-		 *	the plugin could be able to return one (or more?) rounds backward
-		 */
-		std::list<StatsRound> roundStats;
+		/** Stats of this player at the previous round (used in case of restart) */
+		PlayerStats lastRoundStats;
 
-		/** Set stats list of this player 
-		 * TO CONFIRM: The plugin could be able to replay a round set
-		 */
-		std::list<StatsSet> setStats;
+		/** Stats of this player at the previous round set (used in case of restart) */
+		PlayerStats lastSetStats;
+
+		/** Current stats of this player */
+		PlayerStats currentStats;
 
 		/** Is this player a referee ? */
 		bool referee;
 	public:
 		ClanMember(int index, bool referee = false);
 
-		std::list<StatsRound> * getStatsRound();
-		std::list<StatsSet> * getStatsSet();
+		PlayerStats * getLastRoundStats();
+		PlayerStats * getLastSetStats();
+		PlayerStats * getCurrentStats();
 
 		bool isReferee() const;
 	};

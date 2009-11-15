@@ -181,11 +181,12 @@ void WarmupMatchState::round_start(IGameEvent * event)
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
+	MatchInfo * infos = match->getInfos();
 	I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
 
-	switch(match->getInfos()->roundNumber++)
+	switch(infos->roundNumber++)
 	{
 	case -2:
 		plugin->queueCommand("mp_restartgame 1\n");
@@ -201,6 +202,9 @@ void WarmupMatchState::round_start(IGameEvent * event)
 			Countdown::getInstance()->fire(duration);
 			timer = new WarmupTimer(interfaces->gpGlobals->curtime + (float)duration + 1.0f,this);
 			plugin->addTimer(timer);
+
+			// Trick: Increment the round number so a restart will not re-lauch the countdown
+			infos->roundNumber++;
 		}
 		catch(const ServerPluginException & e)
 		{

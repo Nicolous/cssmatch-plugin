@@ -4,6 +4,8 @@
 	- ajout d'une option -kniferound pour le cas où le round au couteau ne devrait pas être joué
 	- ajout d'une option -warmup pour le cas où le strats time ne devrait pas être joué
 * Les teamkills seront maintenant pris en compte dans les rapports
+* La description des commandes est maintenant directement accessible sans avoir à recourir à cssm_help
+* cssm_help prend maintenant un argument optionnel, le nom d'une commande dont on veut une description
 
 
 * Lorsqu'aucun match n'est en cours, le plugin ne consomme plus rien (pas d'écoute d'évènements, mais recherche de timers)

@@ -479,30 +479,6 @@
 				RelativePath=".\player\Player.h"
 				>
 			</File>
-			<File
-				RelativePath=".\player\StatsRound.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\player\StatsRound.h"
-				>
-			</File>
-			<File
-				RelativePath=".\player\StatsSet.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\player\StatsSet.h"
-				>
-			</File>
-			<File
-				RelativePath=".\player\StatsSnapshot.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\player\StatsSnapshot.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="timer"

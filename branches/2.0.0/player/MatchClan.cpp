@@ -74,6 +74,11 @@ list<ClanMember *> MatchClan::getMembers()
 	return clanPlayerList;
 }
 
+ClanStats * MatchClan::getLastSetStats()
+{
+	return &lastSetStats;
+}
+
 ClanStats * MatchClan::getStats()
 {
 	return &stats;

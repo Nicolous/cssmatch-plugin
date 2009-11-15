@@ -164,6 +164,16 @@ namespace cssmatch
 		 * @throws MatchManagerException if no match is running	
 		 */
 		void stop() throw(MatchManagerException);
+
+		/** Restart the current round 
+		 * @throws MatchManagerException if no match is running	
+		 */
+		void restartRound() throw (MatchManagerException);
+
+		/** Restart the current round set
+		 * @throws MatchManagerException if no match is running	
+		 */
+		void restartSet() throw (MatchManagerException);
 	};
 
 

@@ -51,6 +51,9 @@ namespace cssmatch
 		/** Clan's name */
 		std::string name;
 
+		/** Clan's stats in the previous half */
+		ClanStats lastSetStats;
+
 		/** Clan's stats */
 		ClanStats stats;
 
@@ -73,6 +76,9 @@ namespace cssmatch
 
 		/** Get the clan members */
 		std::list<ClanMember *> getMembers();
+
+		/** Get the clan's stats of the previous half */
+		ClanStats * getLastSetStats();
 
 		/** Get clan's stats */
 		ClanStats * getStats();
