@@ -38,6 +38,7 @@
 namespace cssmatch
 {
 	class RunnableConfigurationFile;
+	class ConVarMonitorTimer;
 
 	class MatchManagerException : public BaseException
 	{
@@ -104,6 +105,11 @@ namespace cssmatch
 
 		/** Access to some information about the match */
 		MatchInfo infos;
+
+		// Monitored ConVars
+		ConVarMonitorTimer * alltalkWatch;
+		ConVarMonitorTimer * cheatsWatch;
+		
 	public:
 		/** 
 		 * @param initialState Initial state of the match (e.g. "no match")
@@ -196,6 +202,36 @@ namespace cssmatch
 	{
 	public:
 		RestoreConfigTimer(float date);
+
+		/** @see BaseTimer */
+		void execute();
+	};
+
+	/** Timer used watch a ConVar value <br>
+	 * Installing a callback for the value changes isn't satisfying because it's easy to get around
+	 */
+	class ConVarMonitorTimer : public BaseTimer
+	{
+	private:
+		/** The ConVar to watch */
+		ConVar * toWatch;
+
+		/** The expected value of this variable */
+		std::string value;
+
+		/** Message to send if the ConVar value is != the expected value */
+		std::string message;
+	public:
+		/**
+		 * @param varToWatch The ConVar to watch
+		 * @param expectedValue The expected value of this variable
+		 * @param warningMessage Message (designed by its keyword) to send if the ConVar is not equalto to the expected value
+		 * @see BaseTimer
+		 */
+		ConVarMonitorTimer(	float date,
+							ConVar * varToWatch, 
+							const std::string & expectedValue,
+							const std::string & warningMessage);
 
 		/** @see BaseTimer */
 		void execute();

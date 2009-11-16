@@ -40,7 +40,8 @@ using std::list;
 using std::find_if;
 using std::map;
 
-MatchManager::MatchManager(BaseMatchState * iniState) : initialState(iniState), currentState(NULL)
+MatchManager::MatchManager(BaseMatchState * iniState)
+: initialState(iniState), currentState(NULL), alltalkWatch(NULL), cheatsWatch(NULL)
 {
 	if (iniState == NULL)
 		throw MatchManagerException("Initial match state can't be NULL");
@@ -54,6 +55,12 @@ MatchManager::MatchManager(BaseMatchState * iniState) : initialState(iniState), 
 MatchManager::~MatchManager()
 {
 	Countdown::getInstance()->stop();
+
+	if (alltalkWatch != NULL)
+		delete alltalkWatch;
+
+	if (cheatsWatch != NULL)
+		delete cheatsWatch;
 
 	delete listener;
 }
@@ -306,6 +313,14 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		listener->addCallback("player_team",&MatchManager::player_team);
 		listener->addCallback("player_changename",&MatchManager::player_changename);
 
+		// Monitor some variable
+		alltalkWatch = new ConVarMonitorTimer(
+			interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk");
+		plugin->addTimer(alltalkWatch);
+		cheatsWatch = new ConVarMonitorTimer(
+			interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats");
+		plugin->addTimer(cheatsWatch);
+
 		try
 		{
 			// Set the new server password
@@ -351,6 +366,12 @@ void MatchManager::stop() throw (MatchManagerException)
 
 		// Stop all event listeners
 		listener->removeCallbacks();
+
+		// Stop to monitor the ConVars monitored
+		alltalkWatch->cancel();
+		alltalkWatch = NULL;
+		cheatsWatch->cancel();
+		cheatsWatch = NULL;
 
 		// Send all the announcements
 		RecipientFilter recipients;
@@ -534,4 +555,30 @@ void RestoreConfigTimer::execute()
 		i18n->i18nChatWarning(recipients,"error_file_not_found",parameters);
 		i18n->i18nChatWarning(recipients,"match_please_changelevel");
 	}
+}
+
+ConVarMonitorTimer::ConVarMonitorTimer(	float date,
+										ConVar * varToWatch,
+										const string & expectedValue,
+										const string & warningMessage)
+	: BaseTimer(date), toWatch(varToWatch), value(expectedValue), message(warningMessage) 
+{
+}
+
+void ConVarMonitorTimer::execute()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	if (toWatch->GetString() != value)
+	{
+		I18nManager * i18n = plugin->getI18nManager();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+
+		i18n->i18nCenterSay(recipients,message);
+	}
+
+	plugin->addTimer(new ConVarMonitorTimer(interfaces->gpGlobals->curtime + 1.0f,toWatch,value,message));
 }
