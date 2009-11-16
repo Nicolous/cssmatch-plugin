@@ -149,8 +149,15 @@ namespace cssmatch
 		 */
 		void kick(const std::string & reason) const;
 
-		/** Swap this player */
-		void swap();
+		/** Swap this player 
+		 * @return <code>false</code> if the player is spectator
+		 */
+		bool swap();
+
+		/** Put this player in the spectator team 
+		 * @return <code>false</code> if the player is already spectator
+		 */
+		bool spec();
 
 		/** Remove a weapon at a specified slot 
 		 * @param slot The slot code where is weapon can be found

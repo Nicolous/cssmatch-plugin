@@ -125,6 +125,7 @@ namespace cssmatch
 
 		/** Get a clan by team, depending to the current set 
 		 * @param code The clan's team code 
+		 * @throws MatchManagerException if no match is running or if the team code corresponds to a spectator team
 		 */
 		MatchClan * getClan(TeamCode code) throw(MatchManagerException);
 

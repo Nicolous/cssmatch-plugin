@@ -150,8 +150,10 @@ void Player::kick(const string & reason) const
 	plugin->queueCommand(command.str());
 }
 
-void Player::swap()
+bool Player::swap()
 {
+	bool success = true;
+
 	IPlayerInfo * pInfo = getPlayerInfo();
 	if (isValidPlayer(pInfo))
 	{
@@ -167,9 +169,29 @@ void Player::swap()
 			case CT_TEAM:
 				pInfo->ChangeTeam((int)T_TEAM);
 				break;
+			default:
+				success = false;
 			}
 		}
 	}
+
+	return success;
+}
+
+bool Player::spec()
+{
+	bool success = true;
+
+	IPlayerInfo * pInfo = getPlayerInfo();
+	if (isValidPlayer(pInfo))
+	{
+		if (pInfo->GetTeamIndex() != SPEC_TEAM)
+			pInfo->ChangeTeam((int)SPEC_TEAM);
+		else
+			success = false;
+	}
+
+	return success;
 }
 
 void Player::removeWeapon(WeaponSlotCode slot)

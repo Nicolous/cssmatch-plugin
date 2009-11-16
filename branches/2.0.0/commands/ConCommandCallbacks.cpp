@@ -367,6 +367,116 @@ void cssmatch::cssm_revoke()
 		Msg("cssm_revoke steamid\n");
 }
 
+void cssmatch::cssm_teamt()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	if (interfaces->engine->Cmd_Argc() > 1)
+	{
+		MatchManager * match = plugin->getMatch();
+		I18nManager * i18n = plugin->getI18nManager();
+		try
+		{
+			MatchClan * clan = match->getClan(T_TEAM);
+			string name = interfaces->engine->Cmd_Args();
+
+			clan->setName(name);
+		
+			map<string,string> parameters;
+			parameters["$team"] = name;
+			i18n->i18nMsg("admin_new_t_team_name",parameters);
+
+		}
+		catch(const MatchManagerException & e)
+		{
+			i18n->i18nMsg("match_not_in_progress");
+		}
+	}
+	else
+		Msg("cssm_teamt name\n");
+}
+
+void cssmatch::cssm_teamct()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	if (interfaces->engine->Cmd_Argc() > 1)
+	{
+		MatchManager * match = plugin->getMatch();
+		I18nManager * i18n = plugin->getI18nManager();
+		try
+		{
+			MatchClan * clan = match->getClan(CT_TEAM);
+			string name = interfaces->engine->Cmd_Args();
+
+			clan->setName(name);
+		
+			map<string,string> parameters;
+			parameters["$team"] = name;
+			i18n->i18nMsg("admin_new_ct_team_name",parameters);
+
+		}
+		catch(const MatchManagerException & e)
+		{
+			i18n->i18nMsg("match_not_in_progress");
+		}	
+	}
+	else
+		Msg("cssm_teamct name\n");
+}
+
+void cssmatch::cssm_swap()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	if (interfaces->engine->Cmd_Argc() > 1)
+	{
+		I18nManager * i18n = plugin->getI18nManager();
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+
+		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+		list<ClanMember *>::iterator itPlayer = 
+			find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(atoi(interfaces->engine->Cmd_Argv(1))));
+		if (itPlayer != invalidPlayer)
+		{
+			if (! (*itPlayer)->swap())
+				i18n->i18nMsg("admin_spectator_player");
+		}
+		else
+			i18n->i18nMsg("error_invalid_player");
+	}
+	else
+		Msg("cssm_swap userid\n");
+}
+
+void cssmatch::cssm_spec()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	if (interfaces->engine->Cmd_Argc() > 1)
+	{
+		I18nManager * i18n = plugin->getI18nManager();
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+
+		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+		list<ClanMember *>::iterator itPlayer = 
+			find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(atoi(interfaces->engine->Cmd_Argv(1))));
+		if (itPlayer != invalidPlayer)
+		{
+			if (! (*itPlayer)->spec())
+				i18n->i18nMsg("admin_spectator_player");
+		}
+		else
+			i18n->i18nMsg("error_invalid_player");
+	}
+	else
+		Msg("cssm_spec userid\n");
+}
+
 // ***************************
 // Hook callbacks and tools
 // ***************************

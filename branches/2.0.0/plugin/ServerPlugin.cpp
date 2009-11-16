@@ -198,6 +198,10 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_adminlist",cssm_adminlist,"cssm_adminlist"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_grant",cssm_grant,"cssm_grant"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_revoke",cssm_revoke,"cssm_revoke"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_teamt",cssm_teamt,"cssm_teamt"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_teamct",cssm_teamct,"cssm_teamct"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_swap",cssm_swap,"cssm_swap"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_spec",cssm_spec,"cssm_spec"));
 
 		// Hook needed commands
 		hookConCommand("say",say_hook);

@@ -75,27 +75,32 @@ MatchStateId MatchManager::getInitialState() const
 
 MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
 {
-	MatchClan * clan = NULL;
-
-	switch(code)
+	if (currentState != initialState)
 	{
-	case T_TEAM:
-		if (infos.setNumber & 1)
-			clan = &lignup.clan1;
-		else
-			clan = &lignup.clan2;
-		break;
-	case CT_TEAM:
-		if (infos.setNumber & 1)
-			clan = &lignup.clan2;
-		else
-			clan = &lignup.clan1;	
-		break;
-	default:
-		throw MatchManagerException("The plugin tried to grab a clan from an invalid team index");
-	}
+		MatchClan * clan = NULL;
 
-	return clan;
+		switch(code)
+		{
+		case T_TEAM:
+			if (infos.setNumber & 1)
+				clan = &lignup.clan1;
+			else
+				clan = &lignup.clan2;
+			break;
+		case CT_TEAM:
+			if (infos.setNumber & 1)
+				clan = &lignup.clan2;
+			else
+				clan = &lignup.clan1;	
+			break;
+		default:
+			throw MatchManagerException("The plugin tried to grab a clan from an invalid team index");
+		}
+
+		return clan;
+	}
+	else
+		throw MatchManagerException("No match in progress");
 }
 
 void MatchManager::player_disconnect(IGameEvent * event)
@@ -188,7 +193,7 @@ void MatchManager::detectClanName(TeamCode code) throw(MatchManagerException)
 	/*ServerPlugin * plugin = ServerPlugin::getInstance();
 	I18nManager * i18n = plugin->getI18nManager();*/
 
-	if (currentState != initialState) // no match = no hostname change
+	if (currentState != initialState)
 	{
 		try
 		{
