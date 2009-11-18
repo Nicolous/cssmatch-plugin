@@ -90,6 +90,7 @@ namespace cssmatch
 		friend struct PlayerHavingPEntity;
 		friend struct PlayerHavingIndex;
 		friend struct PlayerHavingUserid;
+		friend struct PlayerHavingSteamid;
 		friend struct PlayerHavingTeam;
 		friend struct PlayerIsHltv;
 		friend struct PlayerToRecipient;
@@ -212,6 +213,19 @@ namespace cssmatch
 		bool operator ()(const Player * player)
 		{
 			return player->identity.userid == userid;
+		}
+	};
+
+	/** Functor to quickly find a Player instance by his steamid */
+	struct PlayerHavingSteamid
+	{
+		std::string steamid;
+
+		PlayerHavingSteamid(const std::string & id) : steamid(id){}
+
+		bool operator ()(const Player * player)
+		{
+			return player->identity.steamid == steamid;
 		}
 	};
 

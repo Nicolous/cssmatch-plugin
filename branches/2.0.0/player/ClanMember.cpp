@@ -52,3 +52,8 @@ bool ClanMember::isReferee() const
 {
 	return referee;
 }
+
+void ClanMember::setReferee(bool isReferee)
+{
+	referee = isReferee;
+}

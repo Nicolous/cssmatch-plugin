@@ -315,6 +315,16 @@ void cssmatch::cssm_grant()
 		{
 			adminlist->push_back(steamid);
 			i18n->i18nMsg("admin_new_admin",parameters);
+
+			// Update the player rights if he's connected
+			list<ClanMember *> * playerlist = plugin->getPlayerlist();
+			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+			list<ClanMember *>::iterator itPlayer =
+				find_if(playerlist->begin(),invalidPlayer,PlayerHavingSteamid(steamid));
+			if (itPlayer != invalidPlayer)
+			{
+				(*itPlayer)->setReferee(true);
+			}
 		}
 		else
 			i18n->i18nMsg("admin_is_already_admin",parameters);
@@ -359,6 +369,16 @@ void cssmatch::cssm_revoke()
 		{
 			adminlist->erase(itSteamid);
 			i18n->i18nMsg("admin_old_admin",parameters);
+
+			// Update the player rights if he's connected
+			list<ClanMember *> * playerlist = plugin->getPlayerlist();
+			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+			list<ClanMember *>::iterator itPlayer =
+				find_if(playerlist->begin(),invalidPlayer,PlayerHavingSteamid(steamid));
+			if (itPlayer != invalidPlayer)
+			{
+				(*itPlayer)->setReferee(false);
+			}
 		}
 		else
 			i18n->i18nMsg("admin_is_not_admin",parameters);

@@ -68,6 +68,7 @@ namespace cssmatch
 		PlayerStats * getCurrentStats();
 
 		bool isReferee() const;
+		void setReferee(bool isReferee);
 	};
 }
 
