@@ -38,11 +38,13 @@ using namespace cssmatch;
 #include "../player/ClanMember.h"
 #include <list>
 #include <algorithm>
+
 using std::list;
 using std::find;
 using std::find_if;
 using std::for_each;
-
+using std::istringstream;
+using std::getline;
 using std::string;
 using std::map;
 
@@ -509,17 +511,52 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	string chatCommand = engine->Cmd_Argv(1);
+	istringstream commandString(engine->Cmd_Argv(1));
+	string chatCommand;
+	commandString >> chatCommand;
 
+	// cssmatch: open the referee menu
+	if (chatCommand == "cssmatch")
+	{
+		eat = true;
+
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+		list<ClanMember *>::iterator itPlayer =
+			find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
+
+		if (itPlayer != invalidPlayer)
+		{
+			list<string> * adminlist = plugin->getAdminlist();
+			list<string>::iterator invalidSteamid = adminlist->end();
+			list<string>::iterator itSteamid = 
+				find(adminlist->begin(),invalidSteamid,(*itPlayer)->getIdentity()->steamid);
+
+			if (itSteamid != invalidSteamid)
+			{
+				// TODO: Display the menu
+			}
+			else
+			{
+				RecipientFilter recipients;
+				recipients.addRecipient(userIndex);
+				i18n->i18nChatSay(recipients,"player_you_not_admin");
+				plugin->queueCommand("cssm_adminlist\n");
+			}
+		}
+		else
+			print(__FILE__,__LINE__,"Unable to find the player who typed cssmatch");
+	}
 	// !go, ready: a clan is ready to end the warmup
-	if ((chatCommand == "!go") || (chatCommand == "ready"))
+	else if ((chatCommand == "!go") || (chatCommand == "ready"))
 	{
 		MatchStateId currentState = match->getMatchState();
 		if (currentState == WarmupMatchState::getInstance()->getId())
 		{
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer = find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
+			list<ClanMember *>::iterator itPlayer =
+				find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
 
 			if (itPlayer != invalidPlayer)
 				WarmupMatchState::getInstance()->doGo(*itPlayer);
@@ -539,6 +576,158 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 				i18n->i18nChatSay(recipients,"match_not_in_progress");
 			}
 		}
+	}
+	// !scores: Display the current/last scores by clan
+	else if ((chatCommand == "!score") || (chatCommand == "!scores"))
+	{
+		MatchLignup * lignup = match->getLignup();
+		ClanStats * stats1 = lignup->clan1.getStats();
+		ClanStats * stats2 = lignup->clan2.getStats();
+
+		map<string,string> parameters1;
+		parameters1["$team"] = *lignup->clan1.getName();
+		parameters1["$score"] = toString(stats1->scoreT + stats1->scoreCT);
+
+		map<string,string> parameters2;
+		parameters2["$team"] = *lignup->clan2.getName();
+		parameters2["$score"] = toString(stats2->scoreT + stats2->scoreCT);
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+
+		i18n->i18nChatSay(recipients,"match_scores");
+		i18n->i18nChatSay(recipients,"match_scores_team",parameters1);
+		i18n->i18nChatSay(recipients,"match_scores_team",parameters2);
+	}
+	// !teamt: cf cssm_teamt
+	else if (chatCommand == "!teamt")
+	{
+		eat = true;
+
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+		list<ClanMember *>::iterator itPlayer =
+			find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
+
+		if (itPlayer != invalidPlayer)
+		{
+			list<string> * adminlist = plugin->getAdminlist();
+			list<string>::iterator invalidSteamid = adminlist->end();
+			list<string>::iterator itSteamid = 
+				find(adminlist->begin(),invalidSteamid,(*itPlayer)->getIdentity()->steamid);
+
+			if (itSteamid != invalidSteamid)
+			{
+				RecipientFilter recipients;
+
+				// Get the new clan name
+				string newName;
+				getline(commandString,newName);
+
+				if (! newName.empty())
+				{
+					// Remove the space at the begin of the clan name
+					string::iterator itSpace = newName.begin();
+					newName.erase(itSpace,itSpace+1);
+
+					try
+					{
+						MatchClan * clan = match->getClan(T_TEAM);
+						clan->setName(newName);
+
+						recipients.addAllPlayers();
+
+						map<string,string> parameters;
+						parameters["$team"] = newName;
+						i18n->i18nChatSay(recipients,"admin_new_t_team_name",parameters);
+					}
+					catch(const MatchManagerException & e)
+					{
+						recipients.addRecipient(userIndex);
+						i18n->i18nChatSay(recipients,"match_not_in_progress");
+					}
+				}
+				else
+				{
+					recipients.addRecipient(userIndex);
+					i18n->i18nChatSay(recipients,"admin_new_tag");
+				}
+			}
+			else
+			{
+				RecipientFilter recipients;
+				recipients.addRecipient(userIndex);
+				i18n->i18nChatSay(recipients,"player_you_not_admin");
+				plugin->queueCommand("cssm_adminlist\n");
+			}
+		}
+		else
+			print(__FILE__,__LINE__,"Unable to find the player who typed !teamt");
+	}
+	// !teamct: cf cssm_teamct
+	else if (chatCommand == "!teamct")
+	{
+		eat = true;
+
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+		list<ClanMember *>::iterator itPlayer =
+			find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
+
+		if (itPlayer != invalidPlayer)
+		{
+			list<string> * adminlist = plugin->getAdminlist();
+			list<string>::iterator invalidSteamid = adminlist->end();
+			list<string>::iterator itSteamid = 
+				find(adminlist->begin(),invalidSteamid,(*itPlayer)->getIdentity()->steamid);
+
+			if (itSteamid != invalidSteamid)
+			{
+				RecipientFilter recipients;
+
+				// Get the new clan name
+				string newName;
+				getline(commandString,newName);
+
+				if (! newName.empty())
+				{
+					// Remove the space at the begin of the clan name
+					string::iterator itSpace = newName.begin();
+					newName.erase(itSpace,itSpace+1);
+
+					try
+					{
+						MatchClan * clan = match->getClan(CT_TEAM);
+						clan->setName(newName);
+
+						recipients.addAllPlayers();
+
+						map<string,string> parameters;
+						parameters["$team"] = newName;
+						i18n->i18nChatSay(recipients,"admin_new_ct_team_name",parameters);
+					}
+					catch(const MatchManagerException & e)
+					{
+						recipients.addRecipient(userIndex);
+						i18n->i18nChatSay(recipients,"match_not_in_progress");
+					}
+				}
+				else
+				{
+					recipients.addRecipient(userIndex);
+					i18n->i18nChatSay(recipients,"admin_new_tag");
+				}
+			}
+			else
+			{
+				RecipientFilter recipients;
+				recipients.addRecipient(userIndex);
+				i18n->i18nChatSay(recipients,"player_you_not_admin");
+				plugin->queueCommand("cssm_adminlist\n");
+			}
+		}
+		else
+			print(__FILE__,__LINE__,"Unable to find the player who typed !teamct");
 	}
 
 	return eat;
