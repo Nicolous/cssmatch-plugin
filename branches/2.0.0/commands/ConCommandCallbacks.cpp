@@ -527,12 +527,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 
 		if (itPlayer != invalidPlayer)
 		{
-			list<string> * adminlist = plugin->getAdminlist();
-			list<string>::iterator invalidSteamid = adminlist->end();
-			list<string>::iterator itSteamid = 
-				find(adminlist->begin(),invalidSteamid,(*itPlayer)->getIdentity()->steamid);
-
-			if (itSteamid != invalidSteamid)
+			if ((*itPlayer)->isReferee())
 			{
 				// TODO: Display the menu
 			}
@@ -611,12 +606,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 
 		if (itPlayer != invalidPlayer)
 		{
-			list<string> * adminlist = plugin->getAdminlist();
-			list<string>::iterator invalidSteamid = adminlist->end();
-			list<string>::iterator itSteamid = 
-				find(adminlist->begin(),invalidSteamid,(*itPlayer)->getIdentity()->steamid);
-
-			if (itSteamid != invalidSteamid)
+			if ((*itPlayer)->isReferee())
 			{
 				RecipientFilter recipients;
 
@@ -676,12 +666,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 
 		if (itPlayer != invalidPlayer)
 		{
-			list<string> * adminlist = plugin->getAdminlist();
-			list<string>::iterator invalidSteamid = adminlist->end();
-			list<string>::iterator itSteamid = 
-				find(adminlist->begin(),invalidSteamid,(*itPlayer)->getIdentity()->steamid);
-
-			if (itSteamid != invalidSteamid)
+			if ((*itPlayer)->isReferee())
 			{
 				RecipientFilter recipients;
 
