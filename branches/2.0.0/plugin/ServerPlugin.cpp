@@ -393,18 +393,28 @@ void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
 	int index = interfaces.engine->IndexOfEdict(pEntity);
     if (isValidPlayerIndex(index,interfaces.gpGlobals->maxClients))
     {
-            try
-            {
-				list<string>::iterator itSteamid = adminlist.begin();
-				list<string>::iterator invalidSteamid = adminlist.end();
+		// Firstly remove the player if he's already listed
+		list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+		list<ClanMember *>::iterator itPlayer =
+			find_if(playerlist.begin(),invalidPlayer,PlayerHavingIndex(index));
+		if (itPlayer != invalidPlayer)
+		{
+			delete (*itPlayer);
+			playerlist.erase(itPlayer);
+		}
 
-				bool isReferee = find(itSteamid,invalidSteamid,interfaces.engine->GetPlayerNetworkIDString(pEntity)) != invalidSteamid;
-				playerlist.push_back(new ClanMember(index,isReferee));
-            }
-            catch(const PlayerException & e)
-            {
-                printException(e,__FILE__,__LINE__);
-            }
+        try
+        {
+			list<string>::iterator itSteamid = adminlist.begin();
+			list<string>::iterator invalidSteamid = adminlist.end();
+
+			bool isReferee = find(itSteamid,invalidSteamid,interfaces.engine->GetPlayerNetworkIDString(pEntity)) != invalidSteamid;
+			playerlist.push_back(new ClanMember(index,isReferee));
+        }
+        catch(const PlayerException & e)
+        {
+            printException(e,__FILE__,__LINE__);
+        }
     }
 }
 
