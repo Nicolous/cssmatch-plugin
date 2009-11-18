@@ -60,6 +60,9 @@ namespace cssmatch
 
 		/** Is this player a referee ? */
 		bool referee;
+
+		// Functors
+		friend struct ResetStats;
 	public:
 		ClanMember(int index, bool referee = false);
 
@@ -69,6 +72,17 @@ namespace cssmatch
 
 		bool isReferee() const;
 		void setReferee(bool isReferee);
+	};
+
+	/** Functor to quickly reset the stats of a player */
+	struct ResetStats
+	{
+		void operator()(ClanMember * member)
+		{
+			member->lastRoundStats = PlayerStats();
+			member->lastSetStats = PlayerStats();
+			member->currentStats = PlayerStats();
+		}
 	};
 }
 

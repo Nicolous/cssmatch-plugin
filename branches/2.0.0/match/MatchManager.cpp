@@ -38,6 +38,7 @@ using namespace cssmatch;
 using std::string;
 using std::list;
 using std::find_if;
+using std::for_each;
 using std::map;
 
 MatchManager::MatchManager(BaseMatchState * iniState)
@@ -295,6 +296,10 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		// Update match infos
 		infos.setNumber = 1;
 		infos.roundNumber = 1;
+
+		// Reset the stats of all players
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+		for_each(playerlist->begin(),playerlist->end(),ResetStats());
 
 		// Cancel any timers in progress
 		plugin->removeTimers();
