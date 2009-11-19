@@ -33,6 +33,7 @@
 #include "../timer/BaseTimer.h"
 #include "../match/MatchManager.h"
 #include "../match/DisabledMatchState.h"
+#include "../match/KnifeRoundMatchState.h"
 
 #include "filesystem.h"
 #include "edict.h"
@@ -434,7 +435,59 @@ PLUGIN_RESULT ServerPlugin::ClientConnect(bool * bAllowConnect,
 
 PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 {
-	return PLUGIN_CONTINUE;
+	PLUGIN_RESULT result = PLUGIN_CONTINUE;
+
+	if (isValidEntity(pEntity))
+	{
+		string command = interfaces.engine->Cmd_Argv(0);
+		
+		// Stop a player from joining another team during the match 
+		// (Excepted during the kniferound, or if the player wants to join the spectators or come from the spectators)
+		if (command == "jointeam")
+		{
+			MatchStateId matchState = match->getMatchState();
+			if (matchState != DisabledMatchState::getInstance()->getId() &&
+				matchState != KnifeRoundMatchState::getInstance()->getId())
+			{
+				// Check for command sanity (jointeam without argument causes a error message but swap the player)
+				if (interfaces.engine->Cmd_Argc() > 1)
+				{
+					string arg1 = interfaces.engine->Cmd_Argv(1);
+
+					// If the team the player wants to join is a non-spectator team
+					if ((arg1 == "2") || (arg1 == "3"))
+					{
+						list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+						list<ClanMember *>::iterator itPlayer =
+							find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+						if (itPlayer != invalidPlayer)
+						{
+							// If the team is not a spectator team
+							if ((*itPlayer)->getMyTeam() > SPEC_TEAM)
+							{
+								RecipientFilter recipients;
+								recipients.addRecipient((*itPlayer)->getIdentity()->index);
+
+								i18n->i18nChatSay(recipients,"player_no_swap_in_match");
+								result = PLUGIN_STOP;
+							}
+						}
+					}
+					// Now test if the command is not invalid ("jointeam bla" will swap the player)
+					else if (atoi(arg1.c_str()) == 0)
+					{
+						//Msg("Never trust the user input\n");
+						result = PLUGIN_STOP;
+					}
+					// arg1 < 0 and arg1 > 3 is refused by the game
+				}
+				else
+					result = PLUGIN_STOP;
+			}
+		}
+	}
+
+	return result;
 }
 
 PLUGIN_RESULT ServerPlugin::NetworkIDValidated(const char * pszUserName, const char * pszNetworkID)
