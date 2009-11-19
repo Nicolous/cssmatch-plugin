@@ -29,13 +29,11 @@ using namespace cssmatch;
 I18nConVar::I18nConVar(I18nManager * i18nManager, char const * pName, char const * pDefaultValue, int flags)
 	: ConVar(pName,pDefaultValue,flags), i18n(i18nManager)
 {
-	AddFlags(FCVAR_PLUGIN);
 }
 
 I18nConVar::I18nConVar(I18nManager * i18nManager, char const * pName, char const * pDefaultValue, int flags, char const * pHelpString)
 	: ConVar(pName,pDefaultValue,flags,pHelpString), i18n(i18nManager)
 {
-	AddFlags(FCVAR_PLUGIN);
 }
 
 I18nConVar::I18nConVar(	I18nManager * i18nManager, 
@@ -49,7 +47,6 @@ I18nConVar::I18nConVar(	I18nManager * i18nManager,
 						float fMax)
 	: ConVar(pName,pDefaultValue,flags,pHelpString,bMin,fMin,bMax,fMax), i18n(i18nManager)
 {
-	AddFlags(FCVAR_PLUGIN);
 }
 
 I18nConVar::I18nConVar(	I18nManager * i18nManager,
@@ -60,7 +57,6 @@ I18nConVar::I18nConVar(	I18nManager * i18nManager,
 						FnChangeCallback callback)
 	: ConVar(pName,pDefaultValue,flags,pHelpString,callback), i18n(i18nManager)
 {
-	AddFlags(FCVAR_PLUGIN);
 }
 
 I18nConVar::I18nConVar(	I18nManager * i18nManager, 
@@ -75,7 +71,6 @@ I18nConVar::I18nConVar(	I18nManager * i18nManager,
 						FnChangeCallback callback)
 	: ConVar(pName,pDefaultValue,flags,pHelpString,bMin,fMin,bMax,fMax,callback), i18n(i18nManager)
 {
-	AddFlags(FCVAR_PLUGIN);
 }
 
 // FIXME : detect the client language who uses "rcon the_con_var"

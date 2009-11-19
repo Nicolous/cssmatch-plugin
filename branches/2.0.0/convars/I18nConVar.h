@@ -32,8 +32,7 @@ namespace cssmatch
 	class I18nManager;
 
 	/** Abstraction of the Valve's ConVar to allow dynamic translations for ConVar's description
-	 * (Glad that GetHelpText is virtual) <br>
-	 * FCVAR_PLUGIN flag is automatically added to the ConVar's flags
+	 * (Glad that GetHelpText is virtual)
 	 */
 	class I18nConVar : public ConVar
 	{

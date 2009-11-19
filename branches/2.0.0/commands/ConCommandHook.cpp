@@ -31,8 +31,8 @@ using namespace cssmatch;
 using std::string;
 using std::list;
 
-ConCommandHook::ConCommandHook(const string & name, const string & helpString)
-	: ConCommand(strdup(name.c_str()),NULL,strdup(helpString.c_str()),FCVAR_GAMEDLL), hooked(NULL)
+ConCommandHook::ConCommandHook(const char * name)
+: ConCommand(name,NULL,PLUGIN_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL)
 {
 	Init();
 }

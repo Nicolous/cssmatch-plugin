@@ -38,11 +38,11 @@ namespace cssmatch
 		BaseConvarsAccessorException(const std::string & message) : BaseException(message){}
 	};
 
-	/** An implementation of a console variables accessor */
+	/** An implementation of a console variables/commands accessor */
 	class BaseConvarsAccessor : public IConCommandBaseAccessor
 	{
 	protected:
-		/** Valve's console variables accessor */
+		/** Valve's console variables/commands accessor */
 		ICvar * cvars;
 	public:
 		BaseConvarsAccessor();
@@ -50,7 +50,7 @@ namespace cssmatch
 
 		/** Initialize the interface
 		 * @param cvarFactory The factory used to retrieve the accessor
-		 * @throws If the console variable accessor cannot be initialized
+		 * @throws If the console variable/command accessor cannot be initialized
 		 */
 		virtual void initializeInterface(CreateInterfaceFn cvarFactory) throw (BaseConvarsAccessorException) = 0;
 

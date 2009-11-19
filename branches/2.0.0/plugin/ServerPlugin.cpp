@@ -171,7 +171,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_end_set","10",FCVAR_NONE,"cssmatch_end_set",true,5.0f,false,0.0f));
 
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_sourcetv","1",FCVAR_NONE,"cssmatch_sourcetv",true,0.0f,true,1.0f));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_sourcetv_path","cfg/cssmatch/sourcetv",FCVAR_PLUGIN,"cssmatch_sourcetv_path"));
+		addPluginConVar(new I18nConVar(i18n,"cssmatch_sourcetv_path","cfg/cssmatch/sourcetv",FCVAR_NONE,"cssmatch_sourcetv_path"));
 
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_warmup_time","5",FCVAR_NONE,"cssmatch_warmup_time",true,0.0f,false,0.0f));
 
@@ -275,7 +275,10 @@ void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback 
 
 	if (itHook == invalidHook)
 	{
-		addPluginConCommand(new ConCommandHook(commandName));
+		char * cName = new char [commandName.size()];
+		V_strcpy(cName,commandName.c_str());
+
+		addPluginConCommand(new ConCommandHook(cName));
 		hookConCommands[commandName] = callback;
 	}
 	else

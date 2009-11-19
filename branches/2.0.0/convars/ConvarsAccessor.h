@@ -33,7 +33,7 @@ class ICvar;
 
 namespace cssmatch
 {
-	/** A simple implementation of a console variables accessor */
+	/** A simple implementation of a console variables/commands accessor */
 	class ConvarsAccessor : public BaseConvarsAccessor
 	{
 	public:
@@ -42,12 +42,14 @@ namespace cssmatch
 		 */
 		virtual void initializeInterface(CreateInterfaceFn cvarFactory) throw (BaseConvarsAccessorException);
 
-		/** Retrieve the plugin's console variables accessor
+		/** Retrieve the plugin's console variables/commands accessor
 		 * @see cssmatch::BaseConvarsAccessor::getConVarAccessor
 		 */
 		virtual ICvar * getConVarAccessor();
 
-		// IConCommandBaseAccessor method
+		/** IConCommandBaseAccessor method <br>
+		 * Automatically add the FCVAR_PLUGIN flag to all the ConVar/ConCommand by the plugin
+		 */
 		virtual bool RegisterConCommandBase(ConCommandBase * variable);
 	};
 }

@@ -34,7 +34,6 @@ I18nConCommand::I18nConCommand(	I18nManager * i18nManager,
 								FnCommandCompletionCallback completionFunc)
 	: ConCommand(pName,callback,pHelpString,flags,completionFunc), i18n(i18nManager)
 {
-	AddFlags(FCVAR_PLUGIN);
 }
 
 // FIXME : detect the language of the client using "rcon the_con_var"

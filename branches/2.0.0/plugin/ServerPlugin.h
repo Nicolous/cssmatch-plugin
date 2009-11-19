@@ -68,7 +68,14 @@ namespace cssmatch
 		IServerGameDLL * serverGameDll; // Access to some DLL infos
 
 		ValveInterfaces()
-			: engine(NULL),filesystem(NULL),gameeventmanager2(NULL),helpers(NULL),gpGlobals(NULL),convars(NULL){}
+			:	engine(NULL),
+				filesystem(NULL),
+				gameeventmanager2(NULL),
+				playerinfomanager(NULL),
+				helpers(NULL),
+				gpGlobals(NULL),
+				convars(NULL),
+				serverGameDll(NULL){}
 	};
 
 	class ServerPluginException : public BaseException

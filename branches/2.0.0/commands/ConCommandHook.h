@@ -37,10 +37,9 @@ namespace cssmatch
 		ConCommand * hooked;
 	public:
 		/** Similar to the ConCommand's constructor
-		 * @param name The name of the command to hook
-		 * @param helpString Help string for the hook command
+		 * @param name The name must be dynamically allocated with new !
 		 */
-		ConCommandHook(const std::string & name, const std::string & helpString = "[CSSMatch] : Hook");
+		ConCommandHook(const char * name);
 
 		/**
 		 * @see ConCommand
