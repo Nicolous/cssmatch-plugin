@@ -63,7 +63,10 @@ void cssmatch::cssm_help()
 		while (itConCommand != lastConCommand)
 		{
 			ConCommand * command = itConCommand->second;
-			plugin->log(string(command->GetName()) + ": " + command->GetHelpText());
+
+			const char * helpText = command->GetHelpText();
+			plugin->log(string(command->GetName()) + ": " + helpText);
+			delete helpText;
 
 			itConCommand++;
 		}
@@ -73,7 +76,9 @@ void cssmatch::cssm_help()
 		map<string,ConCommand *>::const_iterator itConCommand = pluginConCommands->find(interfaces->engine->Cmd_Argv(1));
 		if (itConCommand != lastConCommand)
 		{
-			plugin->log(itConCommand->first + ": " + itConCommand->second->GetHelpText());
+			const char * helpText = itConCommand->second->GetHelpText();
+			plugin->log(itConCommand->first + ": " + helpText);
+			delete helpText;
 		}
 	}
 }

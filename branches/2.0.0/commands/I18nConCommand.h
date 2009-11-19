@@ -44,7 +44,7 @@ namespace cssmatch
 						int flags = 0,
 						FnCommandCompletionCallback completionFunc = 0);
 
-		// ConCommand methods override
+		// ConCommand methods override : dynamically allocates the memory ! 
 		virtual char const * GetHelpText() const;
 	};
 }

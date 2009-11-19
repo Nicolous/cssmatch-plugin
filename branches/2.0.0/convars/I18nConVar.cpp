@@ -26,6 +26,8 @@
 
 using namespace cssmatch;
 
+using std::string;
+
 I18nConVar::I18nConVar(I18nManager * i18nManager, char const * pName, char const * pDefaultValue, int flags)
 	: ConVar(pName,pDefaultValue,flags), i18n(i18nManager)
 {
@@ -77,5 +79,10 @@ I18nConVar::I18nConVar(	I18nManager * i18nManager,
 char const * I18nConVar::GetHelpText() const
 {
 	// Return the translation
-	return strdup(i18n->getTranslation(i18n->getDefaultLanguage(),ConVar::GetHelpText()).c_str());
+	string translation = i18n->getTranslation(i18n->getDefaultLanguage(),ConVar::GetHelpText());
+
+	char * text = new char [translation.size()];
+	V_strcpy(text,translation.c_str());
+
+	return text;
 }

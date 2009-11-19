@@ -24,7 +24,10 @@
 
 #include "../messages/I18nManager.h"
 
+#include <string>
+
 using namespace cssmatch;
+using std::string;
 
 I18nConCommand::I18nConCommand(	I18nManager * i18nManager,
 								char const * pName,
@@ -40,5 +43,10 @@ I18nConCommand::I18nConCommand(	I18nManager * i18nManager,
 char const * I18nConCommand::GetHelpText() const
 {
 	// Return the translation
-	return strdup(i18n->getTranslation(i18n->getDefaultLanguage(),ConCommand::GetHelpText()).c_str());
+	string translation = i18n->getTranslation(i18n->getDefaultLanguage(),ConCommand::GetHelpText());
+
+	char * text = new char [translation.size()];
+	V_strcpy(text,translation.c_str());
+
+	return text;
 }

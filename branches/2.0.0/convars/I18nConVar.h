@@ -72,7 +72,7 @@ namespace cssmatch
 					float fMax,
 					FnChangeCallback callback);
 
-		// ConVar methods override
+		/** ConVar methods override : dynamically allocates the memory ! */
 		virtual char const * GetHelpText() const;
 
 		/** Functor to quickly find a ConVar instance by his name */
