@@ -65,7 +65,7 @@ void cssmatch::cssm_help()
 			ConCommand * command = itConCommand->second;
 
 			const char * helpText = command->GetHelpText();
-			plugin->log(string(command->GetName()) + ": " + helpText);
+			Msg("%s\n",(string(command->GetName()) + ": " + helpText).c_str());
 			delete helpText;
 
 			itConCommand++;
@@ -77,7 +77,7 @@ void cssmatch::cssm_help()
 		if (itConCommand != lastConCommand)
 		{
 			const char * helpText = itConCommand->second->GetHelpText();
-			plugin->log(itConCommand->first + ": " + helpText);
+			Msg("%s\n",(itConCommand->first + ": " + helpText).c_str());
 			delete helpText;
 		}
 	}

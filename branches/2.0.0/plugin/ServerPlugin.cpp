@@ -475,6 +475,8 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 								result = PLUGIN_STOP;
 							}
 						}
+						else
+							print(__FILE__,__LINE__,"Unable to find the player who typed jointeam");
 					}
 					// Now test if the command is not invalid ("jointeam bla" will swap the player)
 					else if (atoi(arg1.c_str()) == 0)
@@ -487,6 +489,39 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 				else
 					result = PLUGIN_STOP;
 			}
+		}
+		else if (command == "cssm_rates")
+		{
+			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+			list<ClanMember *>::iterator itPlayer =
+				find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+			if (itPlayer != invalidPlayer)
+			{
+				RecipientFilter recipients;
+				recipients.addRecipient((*itPlayer)->getIdentity()->index);
+
+				list<ClanMember *>::const_iterator currentPlayer = playerlist.begin();
+				while(currentPlayer != invalidPlayer)
+				{
+					int playerIndex = (*currentPlayer)->getIdentity()->index;
+
+					ostringstream message;
+					message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << " : " << std::endl
+							<< "\t" << "cl_updaterate  : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << std::endl
+							<< "\t" << "cl_cmdrate     : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << std::endl
+							<< "\t" << "cl_interpolate : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << std::endl
+							<< "\t" << "rate           : " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << std::endl
+							<< std::endl;
+
+					i18n->consoleSay(recipients,message.str());
+						
+					currentPlayer++;
+				}
+			}
+			else
+				print(__FILE__,__LINE__,"Unable to find the player who typed jointeam");
+
+			result = PLUGIN_STOP;
 		}
 	}
 
