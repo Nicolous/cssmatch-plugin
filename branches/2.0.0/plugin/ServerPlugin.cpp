@@ -207,6 +207,8 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		// Hook needed commands
 		hookConCommand("say",say_hook);
 		hookConCommand("say_team",say_hook);
+		hookConCommand("tv_stoprecord",tv_stoprecord_hook);
+		hookConCommand("tv_stop",tv_stoprecord_hook);
 	}
 
 	return success;
@@ -543,6 +545,13 @@ void ServerPlugin::log(const std::string & message) const
 void ServerPlugin::queueCommand(const string & command) const
 {
 	interfaces.engine->ServerCommand(command.c_str());
+}
+
+void ServerPlugin::executeCommand(const std::string & command) const
+{
+	//interfaces.engine->InsertServerCommand(command.c_str()); // Causes crash
+	queueCommand(command);
+	interfaces.engine->ServerExecute();
 }
 
 bool ServerPlugin::hltvConnected() const

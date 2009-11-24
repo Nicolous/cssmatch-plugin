@@ -560,6 +560,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="sourcetv"
+			>
+			<File
+				RelativePath=".\sourcetv\TvRecord.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\sourcetv\TvRecord.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\changelog.txt"
 			>

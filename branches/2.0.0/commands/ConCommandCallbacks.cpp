@@ -23,6 +23,7 @@
 #include "ConCommandCallbacks.h"
 
 #include "../match/MatchManager.h"
+#include "../sourcetv/TvRecord.h"
 #include "../match/BaseMatchState.h"
 #include "../match/KnifeRoundMatchState.h"
 #include "../match/WarmupMatchState.h"
@@ -721,4 +722,20 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	}
 
 	return eat;
+}
+
+bool cssmatch::tv_stoprecord_hook(int userIndex, IVEngineServer * engine)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+
+	list<TvRecord *> * recordlist = match->getRecords();
+	if (! recordlist->empty())
+	{
+		list<TvRecord *>::reference refLastRecord = recordlist->back();
+		if (refLastRecord->isRecording())
+			refLastRecord->stop();
+	}
+
+	return false;
 }

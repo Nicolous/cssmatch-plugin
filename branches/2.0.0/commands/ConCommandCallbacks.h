@@ -71,6 +71,9 @@ namespace cssmatch
 
 	/** !go, !score, !teamt, etc. */
 	bool say_hook(int userIndex, IVEngineServer * engine);
+
+	/** Want to stop the cssmatch's record ? */
+	bool tv_stoprecord_hook(int userIndex, IVEngineServer * engine);
 }
 
 #endif // __CON_COMMAND_CALLBACKS_H__

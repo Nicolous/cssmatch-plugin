@@ -70,7 +70,7 @@ TeamCode Player::getMyTeam() const
 	if (isValidPlayer(pInfo))
 		team = (TeamCode)pInfo->GetTeamIndex();
 
-	if (team == INVALID_TEAM)
+	if ((! pInfo->IsHLTV()) && (team == INVALID_TEAM))
 		print(__FILE__,__LINE__,"The plugin was unable to find the team of a Player");
 
 	return team;
@@ -117,10 +117,12 @@ IPlayerInfo * Player::getPlayerInfo() const
 
 	IPlayerInfo * pInfo = interfaces->playerinfomanager->GetPlayerInfo(identity.pEntity);
 
-	if (! isValidPlayer(pInfo))
+	//if (! isValidPlayer(pInfo))
+	// Don't use isValidPlayer here because it excludes SourceTv
+	// For now SourceTV is added to the playerlist, because it should be able to recieve the message from CSSMatch
+	if (pInfo == NULL)
 	{
 		print(__FILE__,__LINE__,"The plugin was unable to find the player's infos of a Player");
-		pInfo = NULL;
 	}
 
 	return pInfo;

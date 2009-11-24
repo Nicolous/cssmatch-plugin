@@ -240,6 +240,11 @@ namespace cssmatch
 		 */
 		void queueCommand(const std::string & command) const;
 
+		/** Immedialty execute a command into the server console
+		 * @param command The command to execute
+		 */
+		void executeCommand(const std::string & command) const;
+
 		/** Check if SourceTV is connected to the server (tv_enable is not checked)
 		 * @return <code>true</code> if SourceTV was found, <code>false</code> otherwise
 		 */

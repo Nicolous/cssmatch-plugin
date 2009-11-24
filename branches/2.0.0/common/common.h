@@ -96,7 +96,10 @@ namespace cssmatch
 		return convertion.str();
 	}
 
-	//TODO : validNameFile (strip console's escape characters + forbidden characters in windows file names)
+	/** Remove all console escape chars and the forbidden characters (os specific) from the file name
+	 * @param fileName The file name to parse
+	 */
+	void normalizeFileName(std::string & fileName);
 
 	/** Print a debug message into the console
 	 * @param fileName The source file where the debug message come from (typically __FILE__)

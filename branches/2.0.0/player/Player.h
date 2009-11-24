@@ -124,7 +124,8 @@ namespace cssmatch
 		 */
 		TeamCode getMyTeam() const;
 
-		/** Get an IPlayerInfo instance corresponding to this entity
+		/** Get an IPlayerInfo instance corresponding to this entity <br>
+		 * Does not check the result with isValidPlayer !
 		 * @return The IPlayerInfo instance corresponding to this entity, or NULL if something was invalid
 		 */
 		IPlayerInfo * getPlayerInfo() const;
@@ -262,11 +263,7 @@ namespace cssmatch
 
 		void operator ()(const Player * player)
 		{
-			IPlayerInfo * infos = player->getPlayerInfo();
-			if ((infos != NULL) && (! infos->IsFakeClient())) // TODO: Test this under Linux
-			{
-				recipientFilter->addRecipient(player->identity.index);
-			}
+			recipientFilter->addRecipient(player->identity.index);
 		}
 	};
 

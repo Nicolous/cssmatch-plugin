@@ -143,5 +143,8 @@ void UserMessagesManager::consoleTell(int index, const string & message)
 	edict_t * pEntity = engine->PEntityOfEntIndex(index);
 
 	if (isValidEntity(pEntity))
-		engine->ClientPrintf(pEntity,(message + "\n").c_str());
+	{
+		//engine->ClientPrintf(pEntity,); // Crash if pEntity is a fake client or SourceTv
+		engine->ClientCommand(pEntity,("echo " + message + "\n").c_str());
+	}
 }

@@ -52,6 +52,38 @@ tm * cssmatch::getLocalTime()
 	return gmtime(&date);
 }
 
+void cssmatch::normalizeFileName(std::string & fileName)
+{
+	string::iterator itChar = fileName.begin();
+	string::iterator invalidChar = fileName.end();
+	while(itChar != invalidChar)
+	{
+		char currentChar = *itChar;
+		if (currentChar == '/' ||
+			currentChar == '\\' ||
+			currentChar == ':' ||
+			currentChar == '*' ||
+			currentChar == '?' ||
+			currentChar == '"' ||
+			currentChar == '<' ||
+			currentChar == '>' ||
+			currentChar == '|' ||
+			currentChar == ' ' ||
+			currentChar == '\t' ||
+			currentChar == ';' ||
+			currentChar == '{' ||
+			currentChar == '}' ||
+			currentChar == '(' ||
+			currentChar == ')' ||
+			currentChar == '\'')
+		{
+			*itChar = '-';
+		}
+
+		itChar++;
+	}
+}
+
 void cssmatch::print(const string & fileName, int line, const string & message)
 {
 	ostringstream buffer;

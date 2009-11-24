@@ -39,6 +39,7 @@ namespace cssmatch
 {
 	class RunnableConfigurationFile;
 	class ConVarMonitorTimer;
+	class TvRecord;
 
 	class MatchManagerException : public BaseException
 	{
@@ -109,6 +110,9 @@ namespace cssmatch
 		// Monitored ConVars
 		ConVarMonitorTimer * alltalkWatch;
 		ConVarMonitorTimer * cheatsWatch;
+
+		/** SourceTv record list */
+		std::list<TvRecord *> records;
 		
 	public:
 		/** 
@@ -125,6 +129,9 @@ namespace cssmatch
 
 		/** Get some informations about the match */
 		MatchInfo * getInfos();
+
+		/** Get the SourceTv record list */
+		std::list<TvRecord *> * getRecords();
 
 		/** Get the initial/default match state (chan no match is running) */
 		MatchStateId getInitialState() const;

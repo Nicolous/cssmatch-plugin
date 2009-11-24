@@ -31,9 +31,11 @@
 #include "DisabledMatchState.h"
 #include "BreakMatchState.h"
 #include "WarmupMatchState.h"
+#include "../sourcetv/TvRecord.h"
 
 #include "igameevents.h"
 
+#include <ctime>
 #include <algorithm>
 
 using namespace cssmatch;
@@ -42,6 +44,7 @@ using std::string;
 using std::list;
 using std::map;
 using std::find_if;
+using std::ostringstream;
 
 SetMatchState::SetMatchState()
 {
@@ -56,6 +59,7 @@ SetMatchState::~SetMatchState()
 void SetMatchState::startState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 	MatchInfo * infos = match->getInfos();
 	I18nManager * i18n = plugin->getI18nManager();
@@ -72,6 +76,30 @@ void SetMatchState::startState()
 
 	try
 	{
+		if (plugin->getConVar("cssmatch_sourcetv")->GetBool())
+		{
+			// Start a new record
+			tm * date = getLocalTime();
+			char dateBuffer[20];
+			strftime(dateBuffer,sizeof(dateBuffer),"%Y-%m-%d_%Hh%M",date);
+
+			ostringstream recordName;
+			recordName << dateBuffer << '_' << interfaces->gpGlobals->mapname.ToCStr() << "_set" << infos->setNumber;
+
+			TvRecord * record = NULL;
+			try
+			{
+				record = new TvRecord(recordName.str());
+				match->getRecords()->push_back(record);
+				record->start();
+			}
+			catch(const TvRecordException & e)
+			{
+				i18n->i18nChatWarning(recipients,"error_tv_not_connected");
+			}
+		}
+
+		// Announce
 		map<string,string> parameters;
 		parameters["$current"] = toString(infos->setNumber);
 		parameters["$total"] = plugin->getConVar("cssmatch_sets")->GetString();
@@ -89,7 +117,19 @@ void SetMatchState::startState()
 
 void SetMatchState::endState()
 {
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+
 	listener->removeCallbacks();
+
+	// Stop the last record lauched (if any)
+	list<TvRecord *> * recordlist = match->getRecords();
+	if (! recordlist->empty())
+	{
+		list<TvRecord *>::reference refLastRecord = recordlist->back();
+		if (refLastRecord->isRecording())
+			refLastRecord->stop();
+	}
 }
 
 void SetMatchState::endSet()
@@ -150,7 +190,7 @@ void SetMatchState::endSet()
 			parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
 
 			i18n->i18nPopupSay(recipients,"match_end_manche_popup",6,parameters);
-			i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
+			//i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
 
 			// Do a time break (if any) before starting the next state
 			BaseMatchState * nextState = this;

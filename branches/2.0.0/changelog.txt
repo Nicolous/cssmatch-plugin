@@ -6,7 +6,7 @@
 * Les teamkills seront maintenant pris en compte dans les rapports
 * La description des commandes est maintenant directement accessible sans avoir à recourir à cssm_help
 * cssm_help prend maintenant un argument optionnel, le nom d'une commande dont on veut une description
-
+* SourceTv reçoit maintenant les messages de CSSMatch
 
 * Lorsqu'aucun match n'est en cours, le plugin ne consomme plus rien (pas d'écoute d'évènements, mais recherche de timers)
 * Si aucune traduction n'est disponible, un message d'explication sera affiché (plutôt qu'un message vide)

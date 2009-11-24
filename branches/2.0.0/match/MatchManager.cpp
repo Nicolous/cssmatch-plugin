@@ -30,6 +30,7 @@
 #include "../messages/I18nManager.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
+#include "../sourcetv/TvRecord.h"
 
 #include <algorithm>
 
@@ -74,6 +75,11 @@ MatchLignup * MatchManager::getLignup()
 MatchInfo * MatchManager::getInfos()
 {
 	return &infos;
+}
+
+std::list<TvRecord *> * MatchManager::getRecords()
+{
+	return &records;
 }
 
 MatchStateId MatchManager::getInitialState() const
@@ -397,7 +403,7 @@ void MatchManager::stop() throw (MatchManagerException)
 		parameters["$team2"] = *tagClan2;
 		parameters["$score2"] = toString(clan2Score);
 		i18n->i18nPopupSay(recipients,"match_end_popup",6,parameters);
-		i18n->i18nConsoleSay(recipients,"match_end_popup",parameters);
+		//i18n->i18nConsoleSay(recipients,"match_end_popup",parameters);
 
 		map<string,string> parametersWinner;
 		if (clan1Score > clan2Score)
