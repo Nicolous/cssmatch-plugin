@@ -325,16 +325,16 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		listener->addCallback("player_team",&MatchManager::player_team);
 		listener->addCallback("player_changename",&MatchManager::player_changename);
 
-		// Monitor some variable
-		alltalkWatch = new ConVarMonitorTimer(
-			interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk");
-		plugin->addTimer(alltalkWatch);
-		cheatsWatch = new ConVarMonitorTimer(
-			interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats");
-		plugin->addTimer(cheatsWatch);
-
 		try
 		{
+			// Monitor some variable
+			alltalkWatch = new ConVarMonitorTimer(
+				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk");
+			plugin->addTimer(alltalkWatch);
+			cheatsWatch = new ConVarMonitorTimer(
+				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats");
+			plugin->addTimer(cheatsWatch);
+
 			// Set the new server password
 			string password = plugin->getConVar("cssmatch_password")->GetString();
 			plugin->getConVar("sv_password")->SetValue(password.c_str());

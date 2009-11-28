@@ -175,9 +175,9 @@ void cssmatch::cssm_stop()
 	{
 		match->stop();
 
-		RecipientFilter recipients;
+		/*RecipientFilter recipients;
 		recipients.addAllPlayers();
-		i18n->i18nChatSay(recipients,"match_started");
+		i18n->i18nChatSay(recipients,"match_started");*/
 	}
 	catch(const MatchManagerException & e)
 	{
