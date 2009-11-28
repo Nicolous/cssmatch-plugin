@@ -74,8 +74,8 @@ namespace cssmatch
 		/** Set the clan name */
 		void setName(const std::string & newName);
 
-		/** Get the clan members */
-		std::list<ClanMember *> getMembers();
+		/** Fills the list with the players of this clan */
+		void getMembers(std::list<ClanMember *> * members);
 
 		/** Get the clan's stats of the previous half */
 		ClanStats * getLastSetStats();

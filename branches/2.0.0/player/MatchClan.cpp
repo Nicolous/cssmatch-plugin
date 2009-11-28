@@ -48,30 +48,34 @@ void MatchClan::setName(const string & newName)
 	name = newName;
 }
 
-list<ClanMember *> MatchClan::getMembers()
+void MatchClan::getMembers(list<ClanMember *> * members)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 
 	// We have to construct a list of members who take part to this clan
-	list<ClanMember *> clanPlayerList;
-	TeamCode team = (match->getClan(CT_TEAM) == this) ? CT_TEAM : T_TEAM;
-
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator itMembers = playerlist->begin();
-	list<ClanMember *>::iterator endMembers = playerlist->end();
-	while(itMembers != endMembers)
+	try
 	{
-		//Msg("%i team%i\n",(*itMembers)->getIdentity()->userid,(*itMembers)->getMyTeam());
-		if ((*itMembers)->getMyTeam() == team)
-		{
-			clanPlayerList.push_back((*itMembers));
-			//Msg("=>> added\n");
-		}
-		itMembers++;
-	}
+		TeamCode team = (match->getClan(CT_TEAM) == this) ? CT_TEAM : T_TEAM;
 
-	return clanPlayerList;
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+		list<ClanMember *>::iterator itMembers = playerlist->begin();
+		list<ClanMember *>::iterator endMembers = playerlist->end();
+		while(itMembers != endMembers)
+		{
+			//Msg("%i team%i\n",(*itMembers)->getIdentity()->userid,(*itMembers)->getMyTeam());
+			if ((*itMembers)->getMyTeam() == team)
+			{
+				members->push_back((*itMembers));
+				//Msg("=>> added\n");
+			}
+			itMembers++;
+		}
+	}
+	catch(const MatchManagerException & e)
+	{
+		printException(e,__FILE__,__LINE__);
+	}
 }
 
 ClanStats * MatchClan::getLastSetStats()
@@ -90,7 +94,9 @@ void MatchClan::detectClanName()
 	// 2. Get their names
 	// 3. Accumulate consecutive/common characters until we find a clan name which contains at least 3 characters
 
-	list<ClanMember *> members = getMembers();
+	list<ClanMember *> members;
+	getMembers(&members);
+
 	list<ClanMember *>::const_iterator itMembers = members.begin();
 	list<ClanMember *>::const_iterator lastMembers = members.end();
 

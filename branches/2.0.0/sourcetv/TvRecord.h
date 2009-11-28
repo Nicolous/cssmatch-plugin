@@ -45,6 +45,9 @@ namespace cssmatch
 
 		/** Is the record in progress ? */
 		bool recording;
+
+		// Functors
+		struct TvRecordToRemove;
 	public:
 		/** Prepares (but not starts) a new SourceTv record <br>
 		 * Unsupported characters (by the console or the OS) in the record name will be modified
@@ -68,6 +71,14 @@ namespace cssmatch
 		 * @throws TvRecordException if the record isn't started
 		 */
 		void stop() throw (TvRecordException);
+	};
+
+	struct TvRecordToRemove
+	{
+		void operator()(TvRecord * record)
+		{
+			delete record;
+		}
 	};
 }
 

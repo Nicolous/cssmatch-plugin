@@ -50,7 +50,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\hl2sdk\public,..\hl2sdk\public\tier0,..\hl2sdk\public\tier1,..\hl2sdk\dlls,..\hl2sdk\game_shared"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;serverplugin_emptyONLY"
+				PreprocessorDefinitions="TIXML_USE_TICPP"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
@@ -156,7 +156,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories="..\hl2sdk\public,..\hl2sdk\public\tier0,..\hl2sdk\public\tier1,..\hl2sdk\dlls,..\hl2sdk\game_shared"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;serverplugin_emptyONLY"
+				PreprocessorDefinitions="TIXML_USE_TICPP"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -569,6 +569,50 @@
 			</File>
 			<File
 				RelativePath=".\sourcetv\TvRecord.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="ticpp"
+			>
+			<File
+				RelativePath=".\ticpp\ticpp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ticpp\tinystr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ticpp\tinyxml.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ticpp\tinyxmlerror.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ticpp\tinyxmlparser.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="report"
+			>
+			<File
+				RelativePath=".\report\BaseReport.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\report\BaseReport.h"
+				>
+			</File>
+			<File
+				RelativePath=".\report\XmlReport.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\report\XmlReport.h"
 				>
 			</File>
 		</Filter>

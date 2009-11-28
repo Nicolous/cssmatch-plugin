@@ -78,7 +78,7 @@ class CBaseCombatCharacter;
 
 namespace cssmatch
 {
-	/** Get the current local time (using <time.h>)
+	/** Get the current local time (using <ctime>)
 	 * @return A pointer to a struct tm
 	 */
 	tm * getLocalTime();
@@ -113,7 +113,7 @@ namespace cssmatch
 	 * @param fileName The source file where the exception was threw (typically __FILE__)
 	 * @param line The line of the source file where the exception was threw (typically __LINE__)
 	 */
-	void printException(const BaseException & e, const std::string & fileName, int line);
+	void printException(const std::exception & e, const std::string & fileName, int line);
 
 	/** Make sure that an entity pointer is valid
 	 * @param entity The entity pointer to check

@@ -45,11 +45,13 @@ using namespace cssmatch;
 
 using std::string;
 using std::ostringstream;
+using std::exception;
 
 tm * cssmatch::getLocalTime()
 {
 	time_t date = time(NULL);
-	return gmtime(&date);
+	//return gmtime(&date);
+	return localtime(&date);
 }
 
 void cssmatch::normalizeFileName(std::string & fileName)
@@ -92,7 +94,7 @@ void cssmatch::print(const string & fileName, int line, const string & message)
 	ServerPlugin::getInstance()->log(buffer.str());
 }
 
-void cssmatch::printException(const BaseException & e, const string & fileName, int line)
+void cssmatch::printException(const exception & e, const string & fileName, int line)
 {
 	ostringstream buffer;
 	buffer << e.what() << " (" << fileName << ", l." << line << ")";

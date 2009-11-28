@@ -31,6 +31,7 @@
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "../sourcetv/TvRecord.h"
+#include "../report/XmlReport.h"
 
 #include <algorithm>
 
@@ -317,7 +318,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		plugin->queueCommand("plugin_print\n");
 
 		// Save the current date
-		infos.startTime = getLocalTime();
+		infos.startTime = *getLocalTime();
 
 		// Start to listen some events
 		listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
@@ -372,18 +373,6 @@ void MatchManager::stop() throw (MatchManagerException)
 		ValveInterfaces * interfaces = plugin->getInterfaces();
 		I18nManager * i18n = plugin->getI18nManager();
 
-		// Return to the initial state
-		setMatchState(initialState);
-
-		// Stop all event listeners
-		listener->removeCallbacks();
-
-		// Stop to monitor the ConVars monitored
-		alltalkWatch->cancel();
-		alltalkWatch = NULL;
-		cheatsWatch->cancel();
-		cheatsWatch = NULL;
-
 		// Send all the announcements
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
@@ -421,9 +410,25 @@ void MatchManager::stop() throw (MatchManagerException)
 			i18n->i18nChatSay(recipients,"match_no_winner");
 		}
 
-		// Do a time break before returning to the initial configuration
+		// Return to the initial state
+		setMatchState(initialState);
+
+		// Stop all event listeners
+		listener->removeCallbacks();
+
+		// Stop to monitor the ConVars monitored
+		alltalkWatch->cancel();
+		alltalkWatch = NULL;
+		cheatsWatch->cancel();
+		cheatsWatch = NULL;
+
+		// Remove any old tv record
+		for_each(records.begin(),records.end(),TvRecordToRemove());
+		records.clear();
+
 		try
 		{
+			// Do a time break before returning to the initial configuration
 			int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
 			if (breakDuration > 0)
 			{
@@ -436,6 +441,13 @@ void MatchManager::stop() throw (MatchManagerException)
 											"match_dead_time",
 											parametersBreak));
 				plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + breakDuration + 2.0f));
+			}
+
+			// Write the report
+			if (plugin->getConVar("cssmatch_report")->GetBool())
+			{
+				XmlReport report(this);
+				report.write();
 			}
 		}
 		catch(const ServerPluginException & e)

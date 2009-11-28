@@ -67,7 +67,7 @@ namespace cssmatch
 		int roundNumber;
 
 		/** Start date */
-		tm * startTime;
+		tm startTime;
 
 		/** Kniferound winner */
 		MatchClan * kniferoundWinner;
@@ -76,7 +76,7 @@ namespace cssmatch
 		bool warmup;
 
 		MatchInfo()
-			: setNumber(1), roundNumber(1), startTime(getLocalTime()), kniferoundWinner(NULL), warmup(false){}
+			: setNumber(1), roundNumber(1), startTime(*getLocalTime()), kniferoundWinner(NULL), warmup(false){}
 	};
 
 	/** A match manager <br>

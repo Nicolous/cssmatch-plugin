@@ -97,7 +97,7 @@
 			<span class="note"><sup>*</sup> Knife round winner (optionnal)</span>
 			<xsl:if test="../spectateurs">
 				<br/>	
-				<span class="note">Some players wad spectators at the end of the match, <a href="#spectateurs">click gere to see them</a></span>
+				<span class="note">Some players were spectators at the end of the match, <a href="#spectateurs">click gere to see them</a></span>
 			</xsl:if>
 		</div>
 		<a name="participants"><h1>Members :</h1></a>
