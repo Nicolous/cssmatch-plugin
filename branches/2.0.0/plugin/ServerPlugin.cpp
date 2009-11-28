@@ -195,7 +195,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_retag",cssm_retag,"cssm_retag"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_go",cssm_go,"cssm_go"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_restartmanche",cssm_restartmanche,"cssm_restartmanche")); // backward compatibility
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_restart",cssm_restart,"cssm_restart"));
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_restartround",cssm_restartround,"cssm_restartround"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_adminlist",cssm_adminlist,"cssm_adminlist"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_grant",cssm_grant,"cssm_grant"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_revoke",cssm_revoke,"cssm_revoke"));
@@ -272,32 +272,20 @@ const map<string,ConCommand *> * ServerPlugin::getPluginConCommands() const
 
 void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback callback)
 {
-	map<string,HookCallback>::iterator invalidHook = hookConCommands.end();
-	map<string,HookCallback>::iterator itHook = hookConCommands.find(commandName);
+	map<string,ConCommandHook *>::iterator invalidHook = hookConCommands.end();
+	map<string,ConCommandHook *>::iterator itHook = hookConCommands.find(commandName);
 
 	if (itHook == invalidHook)
 	{
 		char * cName = new char [commandName.size()];
 		V_strcpy(cName,commandName.c_str());
 
-		addPluginConCommand(new ConCommandHook(cName));
-		hookConCommands[commandName] = callback;
+		hookConCommands[commandName] = new ConCommandHook(cName,callback);
 	}
 	else
 	{
 		print(__FILE__,__LINE__,commandName + " is already hooked");
 	}
-}
-
-HookCallback ServerPlugin::getHookCallback(const std::string & commandName) throw(ServerPluginException)
-{
-	map<string,HookCallback>::iterator invalidHook = hookConCommands.end();
-	map<string,HookCallback>::iterator itHook = hookConCommands.find(commandName);
-
-	if (itHook == invalidHook)
-		throw ServerPluginException("\"" + commandName + "\" is not an existing hook");
-
-	return hookConCommands[commandName];
 }
 
 I18nManager * ServerPlugin::getI18nManager()

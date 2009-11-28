@@ -46,7 +46,7 @@ namespace cssmatch
 	void cssm_restartmanche();
 
 	/** Restarts the current round */
-	void cssm_restart();
+	void cssm_restartround();
 
 	/** Prints the referee steamid list */
 	void cssm_adminlist();

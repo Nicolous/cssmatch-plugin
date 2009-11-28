@@ -17,7 +17,7 @@
 [French]
 
 // ConCommands
-cssm_help =						"Liste et décrit les commandes RCON du plugin dans la console"
+cssm_help =						"cssm_help : Liste et décrit les commandes RCON du plugin dans la console"
 cssm_start =					"cssm_start [fichier de config optionnel] : lance un match"
 cssm_stop =						"cssm_stop : stoppe un match"
 cssm_retag =					"cssm_retag : lance la redétection des tags des teams"

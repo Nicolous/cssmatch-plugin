@@ -29,6 +29,7 @@
 #include "../player/Player.h"
 #include "../exceptions/BaseException.h"
 #include "../commands/ConCommandCallbacks.h"
+#include "../commands/ConCommandHook.h"
 
 #include "engine/iserverplugin.h"
 
@@ -84,12 +85,6 @@ namespace cssmatch
 		ServerPluginException(const std::string & message) : BaseException(message){}
 	};
 
-	/** Callback for a hook ConCommand <br>
-	 * The first parameter is the user who used the hooked command <br>
-	 * The secod is the IVEngineServer instance used to access the command arguments
-	 */
-	typedef bool (* HookCallback)(int,IVEngineServer *);
-
 	/** Source plugin IServerPluginCallbacks implementation */
 	class ServerPlugin : public BaseSingleton<ServerPlugin>, public IServerPluginCallbacks
 	{
@@ -119,7 +114,7 @@ namespace cssmatch
 		std::map<std::string,ConCommand *> pluginConCommands;
 
 		/** Hook console command list */
-		std::map<std::string,HookCallback> hookConCommands;
+		std::map<std::string,ConCommandHook *> hookConCommands;
 
 		/** Internationalization tool */
 		I18nManager * i18n;
@@ -187,13 +182,7 @@ namespace cssmatch
 		 * @param commandName The name of the ConCommand to hook
 		 * @param callback Callback to invoke when the hooked command is used
 		 */
-		void hookConCommand(const std::string & commandName, HookCallback);
-
-		/** Get the callback of a particular hook command
-		 * @param commandName The name of the hook command
-		 * @throws ServerPluginException if the hook does not exist
-		 */
-		HookCallback getHookCallback(const std::string & commandName) throw(ServerPluginException);
+		void hookConCommand(const std::string & commandName, HookCallback callback);
 
 		/** Get the internationalization tool */
 		I18nManager * getI18nManager();

@@ -66,7 +66,7 @@ void cssmatch::cssm_help()
 			ConCommand * command = itConCommand->second;
 
 			const char * helpText = command->GetHelpText();
-			Msg("%s\n",(string(command->GetName()) + ": " + helpText).c_str());
+			Msg("%s\n",helpText);
 			delete helpText;
 
 			itConCommand++;
@@ -78,9 +78,11 @@ void cssmatch::cssm_help()
 		if (itConCommand != lastConCommand)
 		{
 			const char * helpText = itConCommand->second->GetHelpText();
-			Msg("%s\n",(itConCommand->first + ": " + helpText).c_str());
+			Msg("%s\n",helpText);
 			delete helpText;
 		}
+		else
+			Msg("Command not found\n");
 	}
 }
 
@@ -154,9 +156,7 @@ void cssmatch::cssm_start()
 		}
 		break;
 	default:
-		plugin->log(
-			string(interfaces->engine->Cmd_Argv(0)) +
-				" [configuration file from cstrike/cfg/cssmatch/configurations [-cutround] [-warmup]]"); 
+		Msg("cssm_start [configuration file from cstrike/cfg/cssmatch/configurations [-cutround] [-warmup]]\n"); 
 	}
 }
 
@@ -250,7 +250,7 @@ void cssmatch::cssm_restartmanche()
 	}
 }
 
-void cssmatch::cssm_restart()
+void cssmatch::cssm_restartround()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();

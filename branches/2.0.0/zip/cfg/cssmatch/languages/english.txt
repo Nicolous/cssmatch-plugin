@@ -17,7 +17,7 @@
 [English]
 
 // ConCommands
-cssm_help =						"Lists cssmatch RCON commands in console"
+cssm_help =						"cssm_help : Lists cssmatch RCON commands in console"
 cssm_start =					"cssm_start [optional : config file] : Starts match"
 cssm_stop =						"cssm_stop : Stops match"
 cssm_retag =					"cssm_retag : New team's name detection"

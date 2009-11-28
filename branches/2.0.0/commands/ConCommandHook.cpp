@@ -31,8 +31,8 @@ using namespace cssmatch;
 using std::string;
 using std::list;
 
-ConCommandHook::ConCommandHook(const char * name)
-: ConCommand(name,NULL,PLUGIN_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL)
+ConCommandHook::ConCommandHook(const char * name, HookCallback hookCallback)
+: ConCommand(name,NULL,PLUGIN_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL), callback(hookCallback)
 {
 	Init();
 }
@@ -86,15 +86,8 @@ void ConCommandHook::Dispatch()
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
-	try
+	if (! callback(plugin->GetCommandClient()+1,interfaces->engine))
 	{
-		if (! plugin->getHookCallback(GetName())(plugin->GetCommandClient()+1,interfaces->engine))
-		{
-			hooked->Dispatch();
-		}
-	}
-	catch(const ServerPluginException & e)
-	{
-		printException(e,__FILE__,__LINE__);
+		hooked->Dispatch();
 	}
 }
