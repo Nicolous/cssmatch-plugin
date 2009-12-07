@@ -168,9 +168,6 @@ void cssmatch::cssm_stop()
 	Countdown * countdown = Countdown::getInstance();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	plugin->removeTimers();
-	countdown->stop();
-
 	try
 	{
 		match->stop();

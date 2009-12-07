@@ -410,17 +410,15 @@ void MatchManager::stop() throw (MatchManagerException)
 			i18n->i18nChatSay(recipients,"match_no_winner");
 		}
 
-		// Return to the initial state
-		setMatchState(initialState);
-
 		// Stop all event listeners
 		listener->removeCallbacks();
 
 		// Stop to monitor the ConVars monitored
-		alltalkWatch->cancel();
+	/*	alltalkWatch->cancel();
 		alltalkWatch = NULL;
 		cheatsWatch->cancel();
-		cheatsWatch = NULL;
+		cheatsWatch = NULL;*/
+		plugin->removeTimers();
 
 		// Remove any old tv record
 		for_each(records.begin(),records.end(),TvRecordToRemove());
@@ -454,6 +452,9 @@ void MatchManager::stop() throw (MatchManagerException)
 		{
 			printException(e,__FILE__,__LINE__);
 		}
+
+		// Return to the initial state
+		setMatchState(initialState);
 	}
 	else
 		throw MatchManagerException("No match in progress");
