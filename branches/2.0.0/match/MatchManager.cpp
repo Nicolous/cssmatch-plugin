@@ -44,7 +44,7 @@ using std::for_each;
 using std::map;
 
 MatchManager::MatchManager(BaseMatchState * iniState)
-: initialState(iniState), currentState(NULL), alltalkWatch(NULL), cheatsWatch(NULL)
+: initialState(iniState), currentState(NULL)
 {
 	if (iniState == NULL)
 		throw MatchManagerException("Initial match state can't be NULL");
@@ -58,12 +58,6 @@ MatchManager::MatchManager(BaseMatchState * iniState)
 MatchManager::~MatchManager()
 {
 	Countdown::getInstance()->stop();
-
-	if (alltalkWatch != NULL)
-		delete alltalkWatch;
-
-	if (cheatsWatch != NULL)
-		delete cheatsWatch;
 
 	delete listener;
 }
@@ -328,12 +322,12 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		try
 		{
 			// Monitor some variable
-			alltalkWatch = new ConVarMonitorTimer(
-				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk");
-			plugin->addTimer(alltalkWatch);
-			cheatsWatch = new ConVarMonitorTimer(
-				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats");
-			plugin->addTimer(cheatsWatch);
+			plugin->addTimer(
+				new ConVarMonitorTimer(
+					interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk"));
+			plugin->addTimer(
+				new ConVarMonitorTimer(
+					interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats"));
 
 			// Set the new server password
 			string password = plugin->getConVar("cssmatch_password")->GetString();
@@ -414,47 +408,36 @@ void MatchManager::stop() throw (MatchManagerException)
 		listener->removeCallbacks();
 
 		// Stop to monitor the ConVars monitored
-	/*	alltalkWatch->cancel();
-		alltalkWatch = NULL;
-		cheatsWatch->cancel();
-		cheatsWatch = NULL;*/
 		plugin->removeTimers();
 
 		// Remove any old tv record
 		for_each(records.begin(),records.end(),TvRecordToRemove());
 		records.clear();
 
-		try
+		// Write the report
+		if (plugin->getConVar("cssmatch_report")->GetBool())
 		{
-			// Do a time break before returning to the initial configuration
-			int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
-			if (breakDuration > 0)
-			{
-				map<string,string> parametersBreak;
-				parametersBreak["$time"] = toString(breakDuration);
-				Countdown::getInstance()->fire(breakDuration);
-				plugin->addTimer(
-					new TimerI18nChatSay(	interfaces->gpGlobals->curtime + 2.0f,
-											recipients,
-											"match_dead_time",
-											parametersBreak));
-				plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + breakDuration + 2.0f));
-			}
-
-			// Write the report
-			if (plugin->getConVar("cssmatch_report")->GetBool())
-			{
-				XmlReport report(this);
-				report.write();
-			}
-		}
-		catch(const ServerPluginException & e)
-		{
-			printException(e,__FILE__,__LINE__);
+			XmlReport report(this);
+			report.write();
 		}
 
 		// Return to the initial state
 		setMatchState(initialState);
+
+		// Do a time break before returning to the initial configuration
+		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
+		if (breakDuration > 0)
+		{
+			map<string,string> parametersBreak;
+			parametersBreak["$time"] = toString(breakDuration);
+			Countdown::getInstance()->fire(breakDuration);
+			plugin->addTimer(
+				new TimerI18nChatSay(	interfaces->gpGlobals->curtime + 2.0f,
+										recipients,
+										"match_dead_time",
+										parametersBreak));
+			plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + breakDuration + 2.0f));
+		}
 	}
 	else
 		throw MatchManagerException("No match in progress");

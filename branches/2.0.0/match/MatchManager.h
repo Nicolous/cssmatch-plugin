@@ -107,10 +107,6 @@ namespace cssmatch
 		/** Access to some information about the match */
 		MatchInfo infos;
 
-		// Monitored ConVars
-		ConVarMonitorTimer * alltalkWatch;
-		ConVarMonitorTimer * cheatsWatch;
-
 		/** SourceTv record list */
 		std::list<TvRecord *> records;
 		

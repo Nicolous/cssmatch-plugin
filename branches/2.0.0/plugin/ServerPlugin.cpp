@@ -80,6 +80,8 @@ ServerPlugin::ServerPlugin() : clientCommandIndex(0), match(NULL), i18n(NULL)
 
 ServerPlugin::~ServerPlugin()
 {
+	removeTimers();
+
 	if (interfaces.convars != NULL)
 		delete interfaces.convars;
 
