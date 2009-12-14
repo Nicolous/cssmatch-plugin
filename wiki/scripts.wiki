@@ -59,7 +59,7 @@ Par contre comme je viens de le dire, vous ne pouvez pas recharger ces scripts e
 
 
 <br>
-=== Déterminer la catégorie à laquelle appartient un script ===
+= Déterminer la catégorie à laquelle appartient un script =
 
 _"Tout ça est bien beau, mais comment savoir quel procédé utiliser pour quel script ?"_
 
@@ -69,7 +69,7 @@ Vous allez être déçu, mais il n'y a que deux "solutions" qui n'en sont pas vr
  * Demander à l'auteur du script comment désactiver/activer au mieux son script, ou demandez autour de vous ce qu'il en est (ou si vous savez scripter, regarder le code du script)
 
 
-=== Scripts installés automatiquement par votre hébergeur ===
+= Scripts installés automatiquement par votre hébergeur =
 
 Pensez à désactiver ou réactiver les scripts que vous avez installés de manière automatique via votre espace client. Par exemple, il se peut que vous trouviez ceci dans votre *autoexec.cfg* :
 {{{
