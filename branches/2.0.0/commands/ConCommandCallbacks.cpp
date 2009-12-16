@@ -146,10 +146,6 @@ void cssmatch::cssm_start()
 
 			i18n->i18nMsg("error_file_not_found",parameters);
 		}
-		catch(const ServerPluginException & e)
-		{
-			plugin->log(e.what());
-		}
 		catch(const MatchManagerException & e)
 		{
 			i18n->i18nMsg("match_in_progress");
@@ -543,7 +539,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			}
 		}
 		else
-			print(__FILE__,__LINE__,"Unable to find the player who typed cssmatch");
+			cssmatch_print("Unable to find the player who typed cssmatch");
 	}
 	// !go, ready: a clan is ready to end the warmup
 	else if ((chatCommand == "!go") || (chatCommand == "ready"))
@@ -559,7 +555,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			if (itPlayer != invalidPlayer)
 				WarmupMatchState::getInstance()->doGo(*itPlayer);
 			else
-				print(__FILE__,__LINE__,"Unable to find the player who typed !go/ready");		
+				cssmatch_print("Unable to find the player who typed !go/ready");		
 		}
 		else
 		{
@@ -655,7 +651,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			}
 		}
 		else
-			print(__FILE__,__LINE__,"Unable to find the player who typed !teamt");
+			cssmatch_print("Unable to find the player who typed !teamt");
 	}
 	// !teamct: cf cssm_teamct
 	else if (chatCommand == "!teamct")
@@ -715,7 +711,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			}
 		}
 		else
-			print(__FILE__,__LINE__,"Unable to find the player who typed !teamct");
+			cssmatch_print("Unable to find the player who typed !teamct");
 	}
 
 	return eat;

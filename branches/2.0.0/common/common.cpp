@@ -107,7 +107,7 @@ IServerEntity * cssmatch::getServerEntity(edict_t * entity)
 
 	if (! isValidServerEntity(sEntity))
 	{
-		print(__FILE__,__LINE__,"Unable to find the server entity corresponding to this entity");
+		cssmatch_print("Unable to find the server entity corresponding to this entity");
 		sEntity = NULL;
 	}
 
@@ -124,7 +124,7 @@ CBaseEntity * cssmatch::getBaseEntity(edict_t * entity)
 
 	if (! isValidBaseEntity(bEntity))
 	{
-		print(__FILE__,__LINE__,"Unable to find the base entity corresponding to this entity");
+		cssmatch_print("Unable to find the base entity corresponding to this entity");
 		bEntity = NULL;
 	}
 
@@ -137,7 +137,7 @@ IServerUnknown * cssmatch::getServerUnknow(edict_t * entity)
 
 	if (! isValidServerUnknown(sUnknown))
 	{
-		print(__FILE__,__LINE__,"Unable to find the server unknown corresponding to this entity");
+		cssmatch_print("Unable to find the server unknown corresponding to this entity");
 		sUnknown = NULL;
 	}
 

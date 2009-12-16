@@ -105,41 +105,33 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 
 	// Prepare a break time before lauching the next match state,
 	BaseMatchState * nextState = NULL;
-	try
+	if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 	{
-		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
-		{
-			nextState = WarmupMatchState::getInstance();
-		}
-		else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
-		{
-			nextState = SetMatchState::getInstance();
-		}
+		nextState = WarmupMatchState::getInstance();
+	}
+	else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
+	{
+		nextState = SetMatchState::getInstance();
+	}
 
-		if (nextState != NULL)
+	if (nextState != NULL)
+	{
+		int breakDuration = plugin->getConVar("cssmatch_end_kniferound")->GetInt();
+		if (breakDuration > 0)
 		{
-			int breakDuration = plugin->getConVar("cssmatch_end_kniferound")->GetInt();
-			if (breakDuration > 0)
-			{
-				BreakMatchState::doBreak(breakDuration,nextState);
+			BreakMatchState::doBreak(breakDuration,nextState);
 
-				//parameters["$team"] = // already set above
-				parameters["$time"] = toString(breakDuration);
-				i18n->i18nChatSay(recipients,"kniferound_dead_time",parameters);
-			}
-			else
-			{
-				match->setMatchState(nextState);
-			}
+			//parameters["$team"] = // already set above
+			parameters["$time"] = toString(breakDuration);
+			i18n->i18nChatSay(recipients,"kniferound_dead_time",parameters);
 		}
 		else
 		{
-			match->stop();
+			match->setMatchState(nextState);
 		}
 	}
-	catch(const ServerPluginException & e)
+	else
 	{
-		printException(e,__FILE__,__LINE__);
 		match->stop();
 	}
 }
@@ -224,7 +216,7 @@ void KnifeRoundMatchState::item_pickup(IGameEvent * event)
 			(*itPlayer)->removeWeapon(WEAPON_SLOT4);
 		}
 		else
-			print(__FILE__,__LINE__,"Unable to find the player wich pickups an item");
+			cssmatch_print("Unable to find the player wich pickups an item");
 	}
 }
 
@@ -241,14 +233,7 @@ void KnifeRoundMatchState::player_spawn(IGameEvent * event)
 		find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
 	if (itPlayer != invalidPlayer)
 	{
-		try
-		{
-			(*itPlayer)->setCash(plugin->getConVar("cssmatch_kniferound_money")->GetInt());
-		}
-		catch(const ServerPluginException & e)
-		{
-			printException(e,__FILE__,__LINE__);
-		}
+		(*itPlayer)->setCash(plugin->getConVar("cssmatch_kniferound_money")->GetInt());
 	}
 }
 
@@ -271,31 +256,24 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	try
+	if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
 	{
-		if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+
+		list<ClanMember *>::iterator itPlayer = 
+			find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
+		if (itPlayer != invalidPlayer)
 		{
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+			PlayerIdentity * identity = (*itPlayer)->getIdentity();
 
-			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
-			if (itPlayer != invalidPlayer)
-			{
-				PlayerIdentity * identity = (*itPlayer)->getIdentity();
+			interfaces->helpers->ClientCommand((*itPlayer)->getIdentity()->pEntity,"use weapon_knife");
 
-				interfaces->helpers->ClientCommand((*itPlayer)->getIdentity()->pEntity,"use weapon_knife");
-
-				RecipientFilter recipients;
-				recipients.addRecipient(identity->index);
-				i18n->i18nChatSay(recipients,"kniferound_c4");
-			}
-			else
-				print(__FILE__,__LINE__,"Unable to find the player who plants the bomb");
+			RecipientFilter recipients;
+			recipients.addRecipient(identity->index);
+			i18n->i18nChatSay(recipients,"kniferound_c4");
 		}
-	}
-	catch(const ServerPluginException & e)
-	{
-		printException(e,__FILE__,__LINE__);
+		else
+			cssmatch_print("Unable to find the player who plants the bomb");
 	}
 }

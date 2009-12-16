@@ -70,12 +70,12 @@ void ConCommandHook::Init()
 		}
 		else
 		{
-			print(__FILE__,__LINE__,string("Unable to hook ") + GetName() + ": command not found");
+			cssmatch_print(string("Unable to hook ") + GetName() + ": command not found");
 		}
 	}
 	else
 	{
-		print(__FILE__,__LINE__,string("Unable to hook ") + GetName() + ": the interface is not ready");
+		cssmatch_print(string("Unable to hook ") + GetName() + ": the interface is not ready");
 	}
 }
 

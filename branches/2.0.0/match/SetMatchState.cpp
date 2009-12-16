@@ -74,41 +74,34 @@ void SetMatchState::startState()
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
 
-	try
+	if (plugin->getConVar("cssmatch_sourcetv")->GetBool())
 	{
-		if (plugin->getConVar("cssmatch_sourcetv")->GetBool())
+		// Start a new record
+		tm * date = getLocalTime();
+		char dateBuffer[20];
+		strftime(dateBuffer,sizeof(dateBuffer),"%Y-%m-%d_%Hh%M",date);
+
+		ostringstream recordName;
+		recordName << dateBuffer << '_' << interfaces->gpGlobals->mapname.ToCStr() << "_set" << infos->setNumber;
+
+		TvRecord * record = NULL;
+		try
 		{
-			// Start a new record
-			tm * date = getLocalTime();
-			char dateBuffer[20];
-			strftime(dateBuffer,sizeof(dateBuffer),"%Y-%m-%d_%Hh%M",date);
-
-			ostringstream recordName;
-			recordName << dateBuffer << '_' << interfaces->gpGlobals->mapname.ToCStr() << "_set" << infos->setNumber;
-
-			TvRecord * record = NULL;
-			try
-			{
-				record = new TvRecord(recordName.str());
-				match->getRecords()->push_back(record);
-				record->start();
-			}
-			catch(const TvRecordException & e)
-			{
-				i18n->i18nChatWarning(recipients,"error_tv_not_connected");
-			}
+			record = new TvRecord(recordName.str());
+			match->getRecords()->push_back(record);
+			record->start();
 		}
+		catch(const TvRecordException & e)
+		{
+			i18n->i18nChatWarning(recipients,"error_tv_not_connected");
+		}
+	}
 
-		// Announce
-		map<string,string> parameters;
-		parameters["$current"] = toString(infos->setNumber);
-		parameters["$total"] = plugin->getConVar("cssmatch_sets")->GetString();
-		i18n->i18nChatSay(recipients,"match_start_manche",parameters);
-	}
-	catch(const ServerPluginException & e)
-	{
-		printException(e,__FILE__,__LINE__);
-	}
+	// Announce
+	map<string,string> parameters;
+	parameters["$current"] = toString(infos->setNumber);
+	parameters["$total"] = plugin->getConVar("cssmatch_sets")->GetString();
+	i18n->i18nChatSay(recipients,"match_start_manche",parameters);
 
 	i18n->i18nChatSay(recipients,"match_restarts");
 
@@ -168,62 +161,54 @@ void SetMatchState::endSet()
 	ClanStats * lastSetStatsClanCT = clanCT->getLastSetStats();
 	lastSetStatsClanCT->scoreCT = currentStatsClanCT->scoreCT;
 
-	try
+	if (infos->setNumber < plugin->getConVar("cssmatch_sets")->GetInt())
 	{
-		if (infos->setNumber < plugin->getConVar("cssmatch_sets")->GetInt())
+		// There is at least one other set to play
+		MatchLignup * lignup = match->getLignup();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+		map<string,string> parameters;
+
+		parameters["$current"] = toString(infos->setNumber);
+
+		ClanStats * statsClan1 = lignup->clan1.getStats();
+		parameters["$team1"] = *lignup->clan1.getName();
+		parameters["$score1"] = toString(statsClan1->scoreCT + statsClan1->scoreT);
+
+		ClanStats * statsClan2 = lignup->clan2.getStats();
+		parameters["$team2"] = *lignup->clan2.getName();
+		parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
+
+		i18n->i18nPopupSay(recipients,"match_end_manche_popup",6,parameters);
+		//i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
+
+		// Do a time break (if any) before starting the next state
+		BaseMatchState * nextState = this;
+		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 		{
-			// There is at least one other set to play
-			MatchLignup * lignup = match->getLignup();
+			nextState = WarmupMatchState::getInstance();
+		}
 
-			RecipientFilter recipients;
-			recipients.addAllPlayers();
-			map<string,string> parameters;
-
-			parameters["$current"] = toString(infos->setNumber);
-
-			ClanStats * statsClan1 = lignup->clan1.getStats();
-			parameters["$team1"] = *lignup->clan1.getName();
-			parameters["$score1"] = toString(statsClan1->scoreCT + statsClan1->scoreT);
-
-			ClanStats * statsClan2 = lignup->clan2.getStats();
-			parameters["$team2"] = *lignup->clan2.getName();
-			parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
-
-			i18n->i18nPopupSay(recipients,"match_end_manche_popup",6,parameters);
-			//i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
-
-			// Do a time break (if any) before starting the next state
-			BaseMatchState * nextState = this;
-			if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
-			{
-				nextState = WarmupMatchState::getInstance();
-			}
-
-			int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
-			if (breakDuration > 0)
-			{
-				BreakMatchState::doBreak(breakDuration,nextState);
-			}
-			else
-			{
-				match->setMatchState(nextState);
-			}
-			
-			// One more set prepared
-			infos->setNumber++;
-
-			// Swap every players
-			plugin->addTimer(new SwapTimer(interfaces->gpGlobals->curtime + (float)breakDuration));
+		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
+		if (breakDuration > 0)
+		{
+			BreakMatchState::doBreak(breakDuration,nextState);
 		}
 		else
 		{
-			// End of the match
-			match->stop();
+			match->setMatchState(nextState);
 		}
+		
+		// One more set prepared
+		infos->setNumber++;
+
+		// Swap every players
+		plugin->addTimer(new SwapTimer(interfaces->gpGlobals->curtime + (float)breakDuration));
 	}
-	catch(const ServerPluginException & e)
+	else
 	{
-		printException(e,__FILE__,__LINE__);
+		// End of the match
 		match->stop();
 	}
 }
@@ -305,14 +290,7 @@ void SetMatchState::round_start(IGameEvent * event)
 		break;
 	default:
 		parameters["$current"] = toString(infos->roundNumber);
-		try
-		{
-			parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();
-		}
-		catch(const ServerPluginException & e)
-		{
-			printException(e,__FILE__,__LINE__);
-		}
+		parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();
 		parameters["$team1"] = *lignup->clan1.getName();
 		parameters["$score1"] = toString(statsClan1->scoreCT + statsClan1->scoreT);
 		parameters["$team2"] = *lignup->clan2.getName();
@@ -349,7 +327,7 @@ void SetMatchState::round_end(IGameEvent * event)
 	}
 	catch(const MatchManagerException & e)
 	{
-		// printException(e,__FILE__,__LINE__); // round draw
+		// cssmatch_printException(e); // round draw
 	}
 }
 

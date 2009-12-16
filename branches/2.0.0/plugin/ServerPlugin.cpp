@@ -70,7 +70,7 @@ using std::ostringstream;
 	}
 	catch(const EntityPropException & e)
 	{
-		plugin->printException(e,__FILE__,__LINE__);
+		plugin->cssmatch_printException(e);
 	}
 }*/
 
@@ -142,14 +142,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 		MathLib_Init(2.2f,2.2f,0.0f,2.0f);
 
-		try
-		{
-			match = new MatchManager(DisabledMatchState::getInstance());
-		}
-		catch(const MatchManagerException & e)
-		{
-			printException(e,__FILE__,__LINE__);
-		}
+		match = new MatchManager(DisabledMatchState::getInstance());
 		
 		//	Initialize the translations tools
 		i18n = new I18nManager(interfaces.engine);
@@ -183,12 +176,26 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 		// Add existing ConVars
 		ICvar * cvars = interfaces.convars->getConVarAccessor();
-		addPluginConVar(cvars->FindVar("sv_cheats"));
-		addPluginConVar(cvars->FindVar("sv_alltalk"));
-		addPluginConVar(cvars->FindVar("hostname"));
-		addPluginConVar(cvars->FindVar("sv_password"));
-		addPluginConVar(cvars->FindVar("tv_enable"));
+		ConVar * sv_cheats = cvars->FindVar("sv_cheats");
+		ConVar * sv_alltalk = cvars->FindVar("sv_alltalk");
+		ConVar * hostname = cvars->FindVar("hostname");
+		ConVar * sv_password = cvars->FindVar("sv_password");
+		ConVar * tv_enable = cvars->FindVar("tv_enable");
+		if ((sv_cheats == NULL) ||
+			(sv_alltalk == NULL) ||
+			(hostname == NULL) ||
+			(sv_password == NULL) ||
+			(tv_enable == NULL))
+		{
+			success = false;
+			cssmatch_print("One or more game ConVar were not found");
+		}
 
+		addPluginConVar(sv_cheats);
+		addPluginConVar(sv_alltalk);
+		addPluginConVar(hostname);
+		addPluginConVar(sv_password);
+		addPluginConVar(tv_enable);
 		
 		// Create the plugin's commands
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_help",cssm_help,"cssm_help"));
@@ -251,13 +258,13 @@ void ServerPlugin::addPluginConVar(ConVar * variable)
 	pluginConVars[variable->GetName()] = variable;
 }
 
-ConVar * ServerPlugin::getConVar(const string & name) throw(ServerPluginException)
+ConVar * ServerPlugin::getConVar(const string & name)/* throw(ServerPluginException)*/
 {
 	map<string,ConVar *>::iterator invalidConVar = pluginConVars.end();
 	map<string,ConVar *>::iterator itConVar = pluginConVars.find(name);
 
-	if (itConVar == invalidConVar)
-		throw ServerPluginException("Attempts to access to an unknown variable name");
+	/*if (itConVar == invalidConVar)
+		throw ServerPluginException("Attempts to access to an unknown variable name");*/
 
 	return itConVar->second;
 }
@@ -286,7 +293,7 @@ void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback 
 	}
 	else
 	{
-		print(__FILE__,__LINE__,commandName + " is already hooked");
+		cssmatch_print(commandName + " is already hooked");
 	}
 }
 
@@ -409,7 +416,7 @@ void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
         }
         catch(const PlayerException & e)
         {
-            printException(e,__FILE__,__LINE__);
+            cssmatch_printException(e);
         }
     }
 }
@@ -468,7 +475,7 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 							}
 						}
 						else
-							print(__FILE__,__LINE__,"Unable to find the player who typed jointeam");
+							cssmatch_print("Unable to find the player who typed jointeam");
 					}
 					// Now test if the command is not invalid ("jointeam bla" will swap the player)
 					else if (atoi(arg1.c_str()) == 0)
@@ -511,7 +518,7 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 				}
 			}
 			else
-				print(__FILE__,__LINE__,"Unable to find the player who typed jointeam");
+				cssmatch_print("Unable to find the player who typed jointeam");
 
 			result = PLUGIN_STOP;
 		}

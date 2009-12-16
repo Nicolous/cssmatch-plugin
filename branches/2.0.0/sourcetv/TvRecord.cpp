@@ -30,7 +30,7 @@ using namespace cssmatch;
 using std::string;
 using std::ostringstream;
 
-TvRecord::TvRecord(std::string & recordName) throw (TvRecordException,ServerPluginException) : recording(false)
+TvRecord::TvRecord(std::string & recordName) throw (TvRecordException) : recording(false)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -41,15 +41,7 @@ TvRecord::TvRecord(std::string & recordName) throw (TvRecordException,ServerPlug
 		normalizeFileName(recordName);
 
 		// Construct the path
-		string basePath;
-		try
-		{
-			basePath = plugin->getConVar("cssmatch_sourcetv_path")->GetString();
-		}
-		catch(const ServerPluginException & e)
-		{
-			printException(e,__FILE__,__LINE__);
-		}
+		string basePath = plugin->getConVar("cssmatch_sourcetv_path")->GetString();
 		string baseName = recordName + ".dem";
 		if (basePath.size() > 0)
 			baseName = basePath + '/' + baseName;

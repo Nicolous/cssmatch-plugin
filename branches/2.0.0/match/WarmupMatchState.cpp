@@ -68,20 +68,12 @@ void WarmupMatchState::endWarmup()
 		timer->cancel();
 	}
 
-	try
+	if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 	{
-		if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
-		{
-			match->setMatchState(SetMatchState::getInstance());
-		}
-		else
-		{
-			match->stop();
-		}
+		match->setMatchState(SetMatchState::getInstance());
 	}
-	catch(const ServerPluginException & e)
+	else
 	{
-		printException(e,__FILE__,__LINE__);
 		match->stop();
 	}
 }
@@ -127,7 +119,7 @@ void WarmupMatchState::doGo(Player * player)
 	}
 	catch(const MatchManagerException & e)
 	{
-		printException(e,__FILE__,__LINE__);
+		cssmatch_printException(e);
 	}
 }
 
@@ -195,7 +187,6 @@ void WarmupMatchState::round_start(IGameEvent * event)
 		plugin->queueCommand("mp_restartgame 2\n");
 		break;
 	case 0:
-		try
 		{
 			int duration = plugin->getConVar("cssmatch_warmup_time")->GetInt()*60;
 
@@ -205,10 +196,6 @@ void WarmupMatchState::round_start(IGameEvent * event)
 
 			// Trick: Increment the round number so a restart will not re-lauch the countdown
 			infos->roundNumber++;
-		}
-		catch(const ServerPluginException & e)
-		{
-			printException(e,__FILE__,__LINE__);
 		}
 	//	break;
 	default:
@@ -242,7 +229,7 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 		i18n->i18nChatSay(recipients,"warmup_c4");
 	}
 	else
-		print(__FILE__,__LINE__,"Unable to find the player who plants the bomb");
+		cssmatch_print("Unable to find the player who plants the bomb");
 
 }
 

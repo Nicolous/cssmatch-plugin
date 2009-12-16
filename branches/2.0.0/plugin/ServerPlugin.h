@@ -79,11 +79,11 @@ namespace cssmatch
 				serverGameDll(NULL){}
 	};
 
-	class ServerPluginException : public BaseException
+	/*class ServerPluginException : public BaseException
 	{
 	public:
 		ServerPluginException(const std::string & message) : BaseException(message){}
-	};
+	};*/
 
 	/** Source plugin IServerPluginCallbacks implementation */
 	class ServerPlugin : public BaseSingleton<ServerPlugin>, public IServerPluginCallbacks
@@ -168,9 +168,8 @@ namespace cssmatch
 		/** Access to a known ConVar
 		 * @param name The name of the ConVar
 		 * @return A pointer on the ConVar if found
-		 * @throws ServerPluginException if the ConVar was not found
 		 */
-		ConVar * getConVar(const std::string & name) throw(ServerPluginException);
+		ConVar * getConVar(const std::string & name)/* throw(ServerPluginException)*//* but std::exception */;
 
 		/** Add a plugin console command */
 		void addPluginConCommand(ConCommand * command);

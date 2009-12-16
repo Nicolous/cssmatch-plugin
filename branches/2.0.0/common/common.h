@@ -217,4 +217,15 @@ namespace cssmatch
 	IServerUnknown * getServerUnknow(edict_t * entity);
 }
 
+/**
+ * @see cssmatch::print
+ */
+#define cssmatch_print(message) cssmatch::print(__FILE__,__LINE__,message);
+
+/**
+ * @see cssmatch::printException
+ */
+#define cssmatch_printException(e) cssmatch::printException(e,__FILE__,__LINE__);
+
+
 #endif // __COMMON_H__

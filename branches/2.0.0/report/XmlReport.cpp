@@ -271,6 +271,6 @@ void XmlReport::write()
 	}
 	catch(const ticpp::Exception & e)
 	{
-		printException(e,__FILE__,__LINE__);
+		cssmatch_printException(e);
 	}
 }

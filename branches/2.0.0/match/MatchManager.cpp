@@ -43,7 +43,7 @@ using std::find_if;
 using std::for_each;
 using std::map;
 
-MatchManager::MatchManager(BaseMatchState * iniState)
+MatchManager::MatchManager(BaseMatchState * iniState) throw(MatchManagerException)
 : initialState(iniState), currentState(NULL)
 {
 	if (iniState == NULL)
@@ -223,7 +223,7 @@ void MatchManager::detectClanName(TeamCode code) throw(MatchManagerException)
 		}
 		catch(const MatchManagerException & e)
 		{
-			printException(e,__FILE__,__LINE__);
+			cssmatch_printException(e);
 		}
 	}
 	else
@@ -233,34 +233,27 @@ void MatchManager::detectClanName(TeamCode code) throw(MatchManagerException)
 void MatchManager::updateHostname()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	try
+
+	ConVar * hostname = plugin->getConVar("cssmatch_hostname");
+	string newHostname = hostname->GetString();
+
+	// Replace %s by the clan names
+	size_t clanNameSlot = newHostname.find("%s");
+	if (clanNameSlot != string::npos)
 	{
-		ConVar * hostname = plugin->getConVar("cssmatch_hostname");
-		string newHostname = hostname->GetString();
-
-		// Replace %s by the clan names
-		size_t clanNameSlot = newHostname.find("%s");
-		if (clanNameSlot != string::npos)
-		{
-			const string * clan1Name = lignup.clan1.getName();
-			newHostname.replace(clanNameSlot,2,*clan1Name,0,clan1Name->size());
-		}
-
-		clanNameSlot = newHostname.find("%s");
-		if (clanNameSlot != string::npos)
-		{
-			const std::string * clan2Name = lignup.clan2.getName();
-			newHostname.replace(clanNameSlot,2,*clan2Name,0,clan2Name->size());
-		}
-
-		// Set the new hostname
-		hostname->SetValue(newHostname.c_str());
-	}
-	catch(const ServerPluginException & e)
-	{
-		printException(e,__FILE__,__LINE__);
+		const string * clan1Name = lignup.clan1.getName();
+		newHostname.replace(clanNameSlot,2,*clan1Name,0,clan1Name->size());
 	}
 
+	clanNameSlot = newHostname.find("%s");
+	if (clanNameSlot != string::npos)
+	{
+		const std::string * clan2Name = lignup.clan2.getName();
+		newHostname.replace(clanNameSlot,2,*clan2Name,0,clan2Name->size());
+	}
+
+	// Set the new hostname
+	hostname->SetValue(newHostname.c_str());
 }
 
 void MatchManager::setMatchState(BaseMatchState * newState) throw(MatchManagerException)
@@ -319,40 +312,33 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		listener->addCallback("player_team",&MatchManager::player_team);
 		listener->addCallback("player_changename",&MatchManager::player_changename);
 
-		try
-		{
-			// Monitor some variable
-			plugin->addTimer(
-				new ConVarMonitorTimer(
-					interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk"));
-			plugin->addTimer(
-				new ConVarMonitorTimer(
-					interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats"));
+		// Monitor some variable
+		plugin->addTimer(
+			new ConVarMonitorTimer(
+				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk"));
+		plugin->addTimer(
+			new ConVarMonitorTimer(
+				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats"));
 
-			// Set the new server password
-			string password = plugin->getConVar("cssmatch_password")->GetString();
-			plugin->getConVar("sv_password")->SetValue(password.c_str());
+		// Set the new server password
+		string password = plugin->getConVar("cssmatch_password")->GetString();
+		plugin->getConVar("sv_password")->SetValue(password.c_str());
 
-			map<string, string> parameters;
-			parameters["$password"] = password;
-			plugin->addTimer(
-				new TimerI18nPopupSay(
-					interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,parameters));
+		map<string, string> parameters;
+		parameters["$password"] = password;
+		plugin->addTimer(
+			new TimerI18nPopupSay(
+				interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,parameters));
 
-			// Maybe no warmup is needed
-			infos.warmup = warmup;
+		// Maybe no warmup is needed
+		infos.warmup = warmup;
 
-			// Start the first state
-			setMatchState(state);
+		// Start the first state
+		setMatchState(state);
 
-			// Try to find the clan names
-			detectClanName(T_TEAM);
-			detectClanName(CT_TEAM);
-		}
-		catch(const ServerPluginException & e)
-		{
-			printException(e,__FILE__,__LINE__);
-		}
+		// Try to find the clan names
+		detectClanName(T_TEAM);
+		detectClanName(CT_TEAM);
 	}
 	else
 		throw MatchManagerException("There is already a match in progress");
@@ -545,10 +531,6 @@ void RestoreConfigTimer::execute()
 
 		RunnableConfigurationFile config(string(CFG_FOLDER_PATH) + configPatch);
 		config.execute();
-	}
-	catch(const ServerPluginException & e)
-	{
-		printException(e,__FILE__,__LINE__);
 	}
 	catch(const ConfigurationFileException & e)
 	{

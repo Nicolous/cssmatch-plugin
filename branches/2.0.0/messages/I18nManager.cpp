@@ -97,7 +97,7 @@ TranslationFile * I18nManager::getTranslationFile(const string & language)
 					}
 					catch(const ConfigurationFileException & e)
 					{
-						print(__FILE__,__LINE__,"ERROR ! Default translation file not found !");
+						cssmatch_print("ERROR ! Default translation file not found !");
 					}
 				}
 				else
@@ -105,7 +105,7 @@ TranslationFile * I18nManager::getTranslationFile(const string & language)
 			}
 			else
 			{
-				print(__FILE__,__LINE__,"Unable to get the default language");
+				cssmatch_print("Unable to get the default language");
 			}
 		}
 	}
@@ -158,7 +158,7 @@ string I18nManager::getTranslation(	const string & lang,
 		}
 		catch(const TranslationException & e)
 		{
-			printException(e,__FILE__,__LINE__);
+			cssmatch_printException(e);
 		}
 	}
 	else
