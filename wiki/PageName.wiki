@@ -69,12 +69,12 @@ Pour ceux qui ne veulent pas prendre le risque d'être sanctionné sur ESL mais 
 
  # Installer le [http://zblock.cs-resourced.net/ zblock] dernière version.
  # Installer [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
- # Installer les [http://www.esl.eu/fr/css/rules/#rule_22733]Configurations ESL] (à placer dans le dossier cstrike/cfg)
+ # Installer les [http://www.esl.eu/fr/css/rules/#rule_22733 Configurations ESL] (à placer dans le dossier cstrike/cfg)
 
 
 *- Configuration de CSSMatch :*
 
-- Pour pouvoir lancer d'autres matchs qu'ESL vous pouvez[http://code.google.com/p/cssmatch-plugin/wiki/Configuration créer des configuration] que vous installez dans le dossier cstrike/cfg/cssmatch/configurations (exemples : clanfrance.cfg, clancalendar.cfg, clancalendarMR15.cfg etc...).
+- Pour pouvoir lancer d'autres matchs qu'ESL vous pouvez [http://code.google.com/p/cssmatch-plugin/wiki/Configuration créer des configuration] que vous installez dans le dossier cstrike/cfg/cssmatch/configurations (exemples : clanfrance.cfg, clancalendar.cfg, clancalendarMR15.cfg etc...).
 
 *- La source TV :*
 
