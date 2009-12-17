@@ -56,8 +56,12 @@ Il n'est pas nécessaire et même conseillé de ne pas toucher au reste.
 == La source TV ==
 
 Pour que les démos soient enregistrées il faut que la sourceTV soit en fonctionnement sur le serveur. 
+
 Habituellement pour cela on tape la commande RCON tv_enable 1 puis on change de map. Ensuite CSSMatch lance automatiquement l'enregistrement de la démo au début de chaque manche et l'arrête à la fin.
-Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
+
+Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. 
+
+Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
 
 == Lancement des matchs ==
 
@@ -87,8 +91,12 @@ Pour ceux qui ne veulent pas prendre le risque d'être sanctionné sur ESL mais 
 == La source TV ==
 
 Pour que les démos soient enregistrées il faut que la sourceTV soit en fonctionnement sur le serveur. 
+
 Habituellement pour cela on tape la commande RCON tv_enable 1 puis on change de map. Ensuite CSSMatch lance automatiquement l'enregistrement de la démo au début de chaque manche et l'arrête à la fin.
-Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
+
+Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. 
+
+Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
 
 == Lancement des matchs ==
 
