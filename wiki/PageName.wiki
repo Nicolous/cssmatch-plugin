@@ -13,6 +13,8 @@ Néanmoins, certaines personnes veulent tout de même utiliser CSSMatch pour gé
 En effet comme dit précédemment, les configs fournies par ESL sont faites pour fonctionner avec les fonctionnalités du zblock et ne contiennent aucune des variables nécessaires au bon fonctionnement de CSSMatch. Afin de vous faciliter la tâche pour configurer votre serveur avec CSSMatch pour des matchs ESL je vais vous décrire la procédure à suivre et vous donner les bonnes configurations  :) .
 
 = Gérer les matchs ESL + tous les autres matchs avec le plugin CSSMatch =
+
+== Installations ==
 (attention en gérant les matchs ESL avec le plugin vous risquez d'encourir des sanctions si la team adverse porte réclamation)
 
 
@@ -20,7 +22,7 @@ En effet comme dit précédemment, les configs fournies par ESL sont faites pour
   # Installez [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
 
 
-* Configuration de CSSMatch *
+== Configuration ==
 
 - Ajouter les fichiers de [http://www.ga-css.com/ajouts/esl_cfg_cssmatch.zip configuration ESL] configurés pour CSSMatch dans le dossier cstrike/cfg/cssmatch/configurations.
 
@@ -51,13 +53,13 @@ Il n'est pas nécessaire et même conseillé de ne pas toucher au reste.
 
 
 
-*- La source TV :*
+== La source TV ==
 
 Pour que les démos soient enregistrées il faut que la sourceTV soit en fonctionnement sur le serveur. 
 Habituellement pour cela on tape la commande RCON tv_enable 1 puis on change de map. Ensuite CSSMatch lance automatiquement l'enregistrement de la démo au début de chaque manche et l'arrête à la fin.
 Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
 
-*- Lancement des matchs :*
+== Lancement des matchs ==
 
 Une fois tout ceci terminé vous allez pouvoir lancer vos matchs.
 
@@ -72,23 +74,23 @@ Et là laissez faire CSSMatch  :D .
 
 Pour ceux qui ne veulent pas prendre le risque d'être sanctionné sur ESL mais qui veulent tout de même pouvoir gérer les autres matchs avec CSSMatch, je vais vous décrire comment configurer votre serveur.
 
-
+== Installations ==
  # Installer le [http://zblock.mgamez.eu/ zblock] dernière version.
  # Installer [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
  # Installer les [http://www.esl.eu/fr/css/rules/#rule_22733 Configurations ESL] (à placer dans le dossier cstrike/cfg)
 
 
-*- Configuration de CSSMatch :*
+== Configurations ==
 
 - Pour pouvoir lancer d'autres matchs qu'ESL vous pouvez [http://code.google.com/p/cssmatch-plugin/wiki/Configuration créer des configuration] que vous installez dans le dossier cstrike/cfg/cssmatch/configurations (exemples : clanfrance.cfg, clancalendar.cfg, clancalendarMR15.cfg etc...).
 
-*- La source TV :*
+== La source TV ==
 
 Pour que les démos soient enregistrées il faut que la sourceTV soit en fonctionnement sur le serveur. 
 Habituellement pour cela on tape la commande RCON tv_enable 1 puis on change de map. Ensuite CSSMatch lance automatiquement l'enregistrement de la démo au début de chaque manche et l'arrête à la fin.
 Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
 
-*- Lancement des matchs :*
+== Lancement des matchs ==
 
 Une fois tout ceci terminé vous allez pouvoir lancer vos matchs.
 
