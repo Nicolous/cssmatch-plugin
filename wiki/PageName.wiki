@@ -22,12 +22,7 @@ En effet comme dit précédemment, les configs fournies par ESL sont faites pour
 
 * Configuration de CSSMatch *
 
-Ajouter les fichiers de [http://www.ga-css.com/ajouts/esl_cfg_cssmatch.zip configuration ESL] configurés pour CSSMatch dans le dossier cstrike/cfg/cssmatch/configurations.
-
-* Remarques :* 
-- ne connaissant pas ESL j'ai créé deux types de fichiers de configuration : pour les matchs en MR12 et les matchs en MR15. Mettez seulement MR12, seulement MR15 ou MR12 et MR15 selon vos besoins.
-- ne surtout pas mettre la config ESL 3rs.cfg surtout dans une config CSSMatch. Les 3 restarts seront fait par le plugin cssmatch.
-
+- Ajouter les fichiers de [http://www.ga-css.com/ajouts/esl_cfg_cssmatch.zip configuration ESL] configurés pour CSSMatch dans le dossier cstrike/cfg/cssmatch/configurations.
 
 Vous pouvez modifier dans ces fichiers de configuration selon vos désirs : 
 
@@ -43,7 +38,18 @@ _cssmatch_password_ pour le mot de passe du serveur pendant le match
 
 Il n'est pas nécessaire et même conseillé de ne pas toucher au reste.
 
-x Pour pouvoir lancer d'autres matchs qu'ESL vous pouvez [http://code.google.com/p/cssmatch-plugin/wiki/Configuration créer d'autres configuration] que vous installez aussi dans le dossier cstrike/cfg/cssmatch/configurations (exemples : clanfrance.cfg, clancalendar.cfg, clancalendarMR15.cfg etc...).
+*Ne surtout pas mettre la config ESL 3rs.cfg, les 3 restarts seront gérés par le plugin cssmatch.*
+
+- Pour pouvoir lancer d'autres matchs qu'ESL vous pouvez [http://code.google.com/p/cssmatch-plugin/wiki/Configuration créer d'autres configuration] que vous installez aussi dans le dossier cstrike/cfg/cssmatch/configurations (exemples : clanfrance.cfg, clancalendar.cfg, clancalendarMR15.cfg etc...).
+
+
+* Remarques :* 
+
+- ne connaissant pas ESL j'ai créé deux types de fichiers de configuration : pour les matchs en MR12 et les matchs en MR15. Mettez seulement MR12, seulement MR15 ou MR12 et MR15 selon vos besoins.
+
+
+
+
 
 *- La source TV :*
 
