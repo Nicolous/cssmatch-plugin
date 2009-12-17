@@ -4,6 +4,7 @@
   * Installation et Configuration
     * [Installation Installer CSSMatch]
     * [Configuration Configurer les matchs]
+    * [configurationesl Configuration pour ESL]
   * Utilisation
     * [Arbitrage Devenir arbitre (admin)]
     * [lancer_un_match Lancer un match]
