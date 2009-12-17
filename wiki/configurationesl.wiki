@@ -1,0 +1,106 @@
+#summary Comment installer le plugin sur ESL ?
+
+<wiki:toc max_depth="2" />
+<br>
+
+= Introduction =
+
+Beaucoup d'entre vous jouent en [http://www.esl.eu/fr ligue ESL] et voudraient utiliser CSSMatch pour gérer les matchs. Il faut savoir qu'ESL n'autorise pas l'utilisation de plugin tel que CSSMatch lors de matchs dans cette ligue (voir règlement).
+
+D'après ce règlement un match ESL ne peut être lancé qu'avec l'aide de zblock. Je rappelle que zblock permet à la fois de contrôler et bloquer certaines variables serveur et client obligatoires lors d'un match et aussi peut permettre de gérer le lancement de matchs. Des configs ESL permettent de lancer ces matchs par commande RCON avec l'aide des options de zblock. Mani admin est alors toléré afin de gérer facilement le serveur comme par exemple swaper, kicker les joueurs et lancer les configs par RCON.
+
+Néanmoins, certaines personnes veulent tout de même utiliser CSSMatch pour gérer leurs matchs ESL et plus particulièrement les gather. Sachez que dans ce cas les configs fournies par ESL ne peuvent pas être utilisées tel quel en les mettant directement dans le dossier : cstrike/cfg/cssmatch/configurations.
+En effet comme dit précédemment, les configs fournies par ESL sont faites pour fonctionner avec les fonctionnalités du zblock et ne contiennent aucune des variables nécessaires au bon fonctionnement de CSSMatch. Afin de vous faciliter la tâche pour configurer votre serveur avec CSSMatch pour des matchs ESL je vais vous décrire la procédure à suivre et vous donner les bonnes configurations  :) .
+
+= Gérer les matchs ESL + tous les autres matchs avec le plugin CSSMatch =
+
+== Installations ==
+(attention en gérant les matchs ESL avec le plugin vous risquez d'encourir des sanctions si la team adverse porte réclamation)
+
+
+  # Installez le [http://zblock.mgamez.eu/ zblock] dernière version.
+  # Installez [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
+
+
+== Configuration ==
+
+- Ajouter les fichiers de [http://www.ga-css.com/ajouts/esl_cfg_cssmatch.zip configuration ESL] configurés pour CSSMatch dans le dossier cstrike/cfg/cssmatch/configurations.
+
+Vous pouvez modifier dans ces fichiers de configuration selon vos désirs : 
+
+_ cssmatch_end_cutround _ pour la durée (en secondes) entre la fin du CutRound et le début du StratsTime
+
+_cssmatch_end_manche_ pour la durée (en secondes) entre la fin d'une manche et la suite du match (c-à-d strats, nouvelle manche ou fin de match)
+
+_cssmatch_sourcetv_path_ si vous voulez stocker vos démos ailleurs que l'endroit par défaut : cfg/cssmatch/sourcetv
+
+_cssmatch_strats_time_ pour la durée maximale (en minutes) du StratsTime
+
+_cssmatch_password_ pour le mot de passe du serveur pendant le match
+
+Il n'est pas nécessaire et même conseillé de ne pas toucher au reste.
+
+*Ne surtout pas mettre la config ESL 3rs.cfg, les 3 restarts seront gérés par le plugin cssmatch.*
+
+- Pour pouvoir lancer d'autres matchs qu'ESL vous pouvez [http://code.google.com/p/cssmatch-plugin/wiki/Configuration créer d'autres configuration] que vous installez aussi dans le dossier cstrike/cfg/cssmatch/configurations (exemples : clanfrance.cfg, clancalendar.cfg, clancalendarMR15.cfg etc...).
+
+
+* Remarques :* 
+
+- ne connaissant pas ESL j'ai créé deux types de fichiers de configuration : pour les matchs en MR12 et les matchs en MR15. Mettez seulement MR12, seulement MR15 ou MR12 et MR15 selon vos besoins.
+
+
+
+
+
+== La source TV ==
+
+Pour que les démos soient enregistrées il faut que la sourceTV soit en fonctionnement sur le serveur. 
+
+Habituellement pour cela on tape la commande RCON tv_enable 1 puis on change de map. Ensuite CSSMatch lance automatiquement l'enregistrement de la démo au début de chaque manche et l'arrête à la fin.
+
+Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. 
+
+Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
+
+== Lancement des matchs ==
+
+Une fois tout ceci terminé vous allez pouvoir lancer vos matchs.
+
+Pour cela il suffira de taper dans votre console ou directement dans le chat : _cssmatch_
+Suivez les instructions et au moment où il vous demande de choisir la configuration, sélectionnez celle qui correspond au match.
+
+Et là laissez faire CSSMatch  :D .
+
+
+
+=Gérer seulement les matchs non ESL avec CSSMatch=
+
+Pour ceux qui ne veulent pas prendre le risque d'être sanctionné sur ESL mais qui veulent tout de même pouvoir gérer les autres matchs avec CSSMatch, je vais vous décrire comment configurer votre serveur.
+
+== Installations ==
+ # Installer le [http://zblock.mgamez.eu/ zblock] dernière version.
+ # Installer [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
+ # Installer les [http://www.esl.eu/fr/css/rules/#rule_22733 Configurations ESL] (à placer dans le dossier cstrike/cfg)
+
+
+== Configurations ==
+
+- Pour pouvoir lancer d'autres matchs qu'ESL vous pouvez [http://code.google.com/p/cssmatch-plugin/wiki/Configuration créer des configuration] que vous installez dans le dossier cstrike/cfg/cssmatch/configurations (exemples : clanfrance.cfg, clancalendar.cfg, clancalendarMR15.cfg etc...).
+
+== La source TV ==
+
+Pour que les démos soient enregistrées il faut que la sourceTV soit en fonctionnement sur le serveur. 
+
+Habituellement pour cela on tape la commande RCON tv_enable 1 puis on change de map. Ensuite CSSMatch lance automatiquement l'enregistrement de la démo au début de chaque manche et l'arrête à la fin.
+
+Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 dans votre server.cfg qui se trouve dans le dossier cstrike/cfg. Ainsi la source TV est en fonctionnement dès le lancement du serveur et à chaque reboot. 
+
+Pour lui donner un nom spécifique rajouter dans le même fichier la variable : tv_name "non_de_votre_sourceTV".
+
+== Lancement des matchs ==
+
+Une fois tout ceci terminé vous allez pouvoir lancer vos matchs.
+
+ # Pour les matchs ESL il vous faudra lancer les configurations ESL via les commandes RCON et ne pas utiliser CSSMatch.
+ # Pour les autres matchs il suffira de taper dans votre console ou directement dans le chat : _cssmatch_
