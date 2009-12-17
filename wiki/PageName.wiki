@@ -81,7 +81,7 @@ Pour ceux qui ne veulent pas prendre le risque d'être sanctionné sur ESL mais 
 == Installations ==
  # Installer le [http://zblock.mgamez.eu/ zblock] dernière version.
  # Installer [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
- # Installer les [http://gfx.esl.eu/gfx/media/fr/css/cfg/esl_cfg.rar Configurations ESL] (à placer dans le dossier cstrike/cfg)
+ # Installer les [http://www.esl.eu/fr/css/rules/#rule_22733 Configurations ESL] (à placer dans le dossier cstrike/cfg)
 
 
 == Configurations ==
