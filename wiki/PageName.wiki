@@ -88,7 +88,3 @@ Une fois tout ceci terminé vous allez pouvoir lancer vos matchs.
 
  # Pour les matchs ESL il vous faudra lancer les configurations ESL via les commandes RCON et ne pas utiliser CSSMatch.
  # Pour les autres matchs il suffira de taper dans votre console ou directement dans le chat : _cssmatch_
-
-Suivez les instructions et au moment où il vous demande de choisir la configuration, sélectionnez celle qui correspond au match.
-
-Et là laissez faire CSSMatch  :D .
