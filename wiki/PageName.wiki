@@ -17,7 +17,6 @@ En effet comme dit précédemment, les configs fournies par ESL sont faites pour
 
 
   # Installez le [http://zblock.cs-resourced.net/ zblock] dernière version.
-
   # Installez[http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
 
 
@@ -69,9 +68,7 @@ Pour ceux qui ne veulent pas prendre le risque d'être sanctionné sur ESL mais 
 
 
  # Installer le [http://zblock.cs-resourced.net/ zblock] dernière version.
-
  # Installer [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
-
  # Installer les [http://www.esl.eu/fr/css/rules/#rule_22733]Configurations ESL] (à placer dans le dossier cstrike/cfg)
 
 
@@ -89,9 +86,8 @@ Une astuce pour ne pas être embêté est de rajouter la variable tv_enable 1 da
 
 Une fois tout ceci terminé vous allez pouvoir lancer vos matchs.
 
-- Pour les matchs ESL il vous faudra lancer les configurations ESL via les commandes RCON et ne pas utiliser CSSMatch.
-
-- Pour les autres matchs il suffira de taper dans votre console ou directement dans le chat : _cssmatch_
+ # Pour les matchs ESL il vous faudra lancer les configurations ESL via les commandes RCON et ne pas utiliser CSSMatch.
+ # Pour les autres matchs il suffira de taper dans votre console ou directement dans le chat : _cssmatch_
 
 Suivez les instructions et au moment où il vous demande de choisir la configuration, sélectionnez celle qui correspond au match.
 
