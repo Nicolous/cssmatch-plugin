@@ -17,7 +17,7 @@ En effet comme dit précédemment, les configs fournies par ESL sont faites pour
 
 
   # Installez le [http://zblock.mgamez.eu/ zblock] dernière version.
-  # Installez[http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
+  # Installez [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
 
 
 * Configuration de CSSMatch *
