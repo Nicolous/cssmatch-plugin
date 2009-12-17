@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Beaucoup d'entre vous jouent en [http://www.esl.eu/fr]ligue ESL] et voudraient utiliser CSSMatch pour gérer les matchs. Il faut savoir qu'ESL n'autorise pas l'utilisation de plugin tel que CSSMatch lors de matchs dans cette ligue (voir règlement).
+Beaucoup d'entre vous jouent en [http://www.esl.eu/fr ligue ESL] et voudraient utiliser CSSMatch pour gérer les matchs. Il faut savoir qu'ESL n'autorise pas l'utilisation de plugin tel que CSSMatch lors de matchs dans cette ligue (voir règlement).
 
 D'après ce règlement un match ESL ne peut être lancé qu'avec l'aide de zblock. Je rappelle que zblock permet à la fois de contrôler et bloquer certaines variables serveur et client obligatoires lors d'un match et aussi peut permettre de gérer le lancement de matchs. Des configs ESL permettent de lancer ces matchs facilement par commande RCON avec l'aide des options de zblock. Mani admin est alors toléré afin de gérer facilement le serveur comme par exemple swaper, kicker les joueurs et lancer les configs par RCON.
 
