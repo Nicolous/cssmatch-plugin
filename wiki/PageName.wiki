@@ -1,4 +1,7 @@
-#summary One-sentence summary of this page.
+#summary Comment installer le plugin sur ESL ?
+
+<wiki:toc max_depth="2" />
+<br>
 
 = Introduction =
 
@@ -13,8 +16,8 @@ En effet comme dit précédemment, les configs fournies par ESL sont faites pour
 (attention en gérant les matchs ESL avec le plugin vous risquez d'encourir des sanctions si la team adverse porte réclamation)
 
 
-# Installez le [http://zblock.cs-resourced.net/ zblock] dernière version.
-# Installez[http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
+  # Installez le [http://zblock.cs-resourced.net/ zblock] dernière version.
+  # Installez[http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
 
 
 * Configuration de CSSMatch *
@@ -64,9 +67,9 @@ Et là laissez faire CSSMatch  :D .
 Pour ceux qui ne veulent pas prendre le risque d'être sanctionné sur ESL mais qui veulent tout de même pouvoir gérer les autres matchs avec CSSMatch, je vais vous décrire comment configurer votre serveur.
 
 
-#Installer le [http://zblock.cs-resourced.net/ zblock] dernière version.
-#Installer [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
-#Installer les [http://www.esl.eu/fr/css/rules/#rule_22733]Configurations ESL] (à placer dans le dossier cstrike/cfg)
+ #Installer le [http://zblock.cs-resourced.net/ zblock] dernière version.
+ #Installer [http://code.google.com/p/cssmatch-plugin/wiki/Installation CSSMatch]
+ #Installer les [http://www.esl.eu/fr/css/rules/#rule_22733]Configurations ESL] (à placer dans le dossier cstrike/cfg)
 
 
 *- Configuration de CSSMatch :*
