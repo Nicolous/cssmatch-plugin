@@ -2,17 +2,17 @@
 // Nicolous
 // http://code.google.com/p/cssmatch-plugin-en/
 
-// Please ONLY TRANSLATE the sentences between QUOTES
+// Ne traduisez QUE les phrases entre guillemets
 //
-// ABOUT THE KEYWORDS prefixed by $ 
-//	YOU CAN MOVE these keywords, but YOU MUST NOT MODIFY the name of the keyword
+// A propos des mots-clés préfixés par $ 
+//	Vous pouvez les DEPLACER, mais vous NE devez PAS les MODIFIER
 //
-// Keywords's message suffixed by _popup are the only which supports \n escape sequences
+// Les messages dont le nom finit par _popup sont les seuls qui supportent le caractère d'échappement \n
 //
-// Chat messages can use some colors :
+// Les messages affichés dans le tchat peuvent être colorés :
 //  (Alt+01) = orange
-//  (Alt+03) = light green or team color
-//  (Alt+04) = green
+//  (Alt+03) = vert clair (ou couleur de la team)
+//  (Alt+04) = vert
 
 [French]
 
