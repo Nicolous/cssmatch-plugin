@@ -24,6 +24,7 @@ sv_rcon_maxfailures 10
 
 // Téléchargements
 // sv_downloadurl "your_mirror_ended_by_/cstrike"
+sv_allowdownload 1
 
 
 // Logs
@@ -40,14 +41,15 @@ exec banned_ip.cfg
 exec mani_server.cfg
 
 
-// Connectivité
-decalfrequency 10
-sv_allowdownload 1
+// Réglages pour un tickrate 100
 sv_allowupload 1
-sv_minrate 0
-sv_minupdaterate 20
-sv_maxrate 0
-sv_maxupdaterate 60
+sv_minupdaterate 100
+sv_maxupdaterate 100
+sv_minrate 30000
+sv_maxrate 35000
+sv_mincmdrate 100
+sv_maxcmdrate 101
+decalfrequency 10
 
 
 // Configuration du jeu
