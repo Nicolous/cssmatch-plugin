@@ -8,7 +8,7 @@ Voici un fichier "server.cfg" complet. En adaptant ce fichier à votre serveur, 
 // Infos
 hostname "Nom du serveur"
 sv_contact "Votre e-mail"
-sv_lan 0 // (0) LAN (1) Web
+sv_lan 0 // (1) LAN (0) Web
 sv_region 3 // (0) USA East Cost, (1) USA West Cot, (2) South America, (3) Europe, (4) Asia, (5) Australia, (6) Orient, (7) Africa, (255) the World
 // sv_visiblemaxplayers 17
 
@@ -48,8 +48,9 @@ sv_maxupdaterate 100
 sv_minrate 30000
 sv_maxrate 35000
 sv_mincmdrate 100
-sv_maxcmdrate 101
+sv_maxcmdrate 100
 decalfrequency 10
+fps_max 0
 
 
 // Configuration du jeu
