@@ -2,6 +2,7 @@
 
   * [http://code.google.com/p/cssmatch-plugin/wiki/Accueil?tm=6 Accueil]
   * Installation et Configuration
+    * [Telechargements Téléchargement]    
     * [Installation Installer CSSMatch]
     * [Configuration Configurer les matchs]
     * [configurationesl Configuration pour ESL]
