@@ -376,6 +376,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\messages\Popup.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\messages\Popup.h"
+				>
+			</File>
+			<File
 				RelativePath=".\messages\RecipientFilter.cpp"
 				>
 			</File>
