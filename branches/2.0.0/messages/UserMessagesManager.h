@@ -31,7 +31,7 @@ class IVEngineServer;
 
 /** Max popup size <br>
  * Beyond this value, the popup can't be send in one message to the client, <br>
- * It has to be splitted in two or more popup
+ * It has to be split in two or more popup
  */
 #define POPUP_MAX_SIZE 250
 
@@ -138,10 +138,10 @@ namespace cssmatch
 		virtual ~UserMessagesManager();
 
 		/** Send a chat message <br>
-		 * \001, \003 and \004 will color the message
+		 * \001, \003 and \004 will colour the message
 		 * @param recipients Recipient list
 		 * @param message The message to send
-		 * @param playerIndex If specified, the message will appear in the colour associed to the player's team after \003
+		 * @param playerIndex If specified, any part of the message after \003 will appear in the color corresponding to the player's team
 		 */
 		void chatSay(	RecipientFilter & recipients,
 						const std::string & message,

@@ -86,10 +86,10 @@ namespace cssmatch
 
 
 		/** Send a chat message <br>
-		 * \001, \003 and \004 will color the message
+		 * \001, \003 and \004 will colour the message
 		 * @param recipients Recipient list
 		 * @param keyword The identifier of the translation to use
-		 * @param playerIndex If specified, the message will appear in the colour associated to the player's team after \003
+		 * @param playerIndex If specified, any part of the message after \003 will appear in the color corresponding to the player's team
 		 * @param parameters If specified, the message's parameters and their value
 		 * @see UserMessagesManager::chatSay
 		 */

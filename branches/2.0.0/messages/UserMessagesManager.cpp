@@ -77,7 +77,7 @@ void UserMessagesManager::popupSay(	RecipientFilter & recipients,
 									PopupSensitivityFlags flags)
 {
 	// Only POPUP_MAX_SIZE bytes can be sent in one user message
-	// So, as the popup menus are generally large, they are splitted in n messages of POPUP_MAX_SIZE bytes
+	// So, as the popup menus are generally large, they are split in n messages of POPUP_MAX_SIZE bytes
 
 	int iBegin = 0;
 	int popupSize = message.size();
