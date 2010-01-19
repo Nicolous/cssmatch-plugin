@@ -1,5 +1,5 @@
 /* 
- * Copyright 2009, 2010 Nicolas Maingot
+ * Copyright 2008-2010 Nicolas Maingot
  * 
  * This file is part of CSSMatch.
  * 
