@@ -54,8 +54,10 @@ tm * cssmatch::getLocalTime()
 	return localtime(&date);
 }
 
-void cssmatch::normalizeFileName(std::string & fileName)
+bool cssmatch::normalizeFileName(std::string & fileName)
 {
+	bool change = false;
+
 	string::iterator itChar = fileName.begin();
 	string::iterator invalidChar = fileName.end();
 	while(itChar != invalidChar)
@@ -80,10 +82,13 @@ void cssmatch::normalizeFileName(std::string & fileName)
 			currentChar == '\'')
 		{
 			*itChar = '-';
+			change = true;
 		}
 
 		itChar++;
 	}
+
+	return change;
 }
 
 void cssmatch::print(const string & fileName, int line, const string & message)

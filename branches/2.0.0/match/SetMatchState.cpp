@@ -27,11 +27,12 @@
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
+#include "../sourcetv/TvRecord.h"
+#include "../messages/Menu.h"
 #include "MatchManager.h"
 #include "DisabledMatchState.h"
 #include "BreakMatchState.h"
 #include "WarmupMatchState.h"
-#include "../sourcetv/TvRecord.h"
 
 #include "igameevents.h"
 
@@ -49,11 +50,19 @@ using std::ostringstream;
 SetMatchState::SetMatchState()
 {
 	listener = new EventListener<SetMatchState>(this);
+
+	setStateMenu = new Menu("menu_match",NULL);
+	setStateMenu->addLine(true,"menu_alltalk");
+	setStateMenu->addLine(true,"menu_restart");
+	setStateMenu->addLine(true,"menu_stop");
+	setStateMenu->addLine(true,"menu_retag");
+	setStateMenu->addLine(true,"menu_restart_manche");
 }
 
 SetMatchState::~SetMatchState()
 {
 	delete listener;
+	delete setStateMenu;
 }
 
 void SetMatchState::startState()
@@ -123,6 +132,19 @@ void SetMatchState::endState()
 		if (refLastRecord->isRecording())
 			refLastRecord->stop();
 	}
+}
+
+void SetMatchState::showMenu(Player * recipient)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->getI18nManager();
+	string language = interfaces->engine->GetClientConVarValue(recipient->getIdentity()->index,"cl_language");
+	bool alltalk = plugin->getConVar("sv_alltalk")->GetBool();
+
+	map<string,string> parameters;
+	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_enable" : "menu_disable");
+	recipient->sendMenu(setStateMenu,1,parameters);
 }
 
 void SetMatchState::endSet()

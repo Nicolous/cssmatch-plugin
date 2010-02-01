@@ -27,17 +27,20 @@
 #include "../entity/EntityProp.h"
 #include "../messages/RecipientFilter.h"
 #include "../common/common.h"
+#include "../messages/I18nManager.h"
 
 class IVEngineServer;
 class CBasePlayer;
 class CBaseCombatCharacter;
 class CBaseCombatWeapon;
 
+#include <map>
 #include <string>
 
 namespace cssmatch
 {
 	class RecipientFilter;
+	class Menu;
 
 	class PlayerException : public BaseException
 	{
@@ -82,6 +85,18 @@ namespace cssmatch
 		PlayerIdentity() : pEntity(NULL),index(INVALID_ENTITY_INDEX),userid(INVALID_PLAYER_USERID),steamid(""){};
 	};
 
+	struct PlayerMenuHandler
+	{
+		/** The Menu the player uses */
+		Menu * menu;
+
+		/** The page of the menu the player uses */
+		int page;
+
+		/** Is the menu will have to be deleted when it will be closed */
+		bool toDelete;
+	};
+
 	/** Base class for player informations */
 	class Player
 	{
@@ -104,6 +119,9 @@ namespace cssmatch
 		/** Life state handler */
 		EntityProp lifeStateHandler;
 
+		/** Menus handler */
+		PlayerMenuHandler menuHandler;
+
 	public:
 		/** Initialize the informations related to the player 
 		 * @param index The player's index (must be valid !)
@@ -117,6 +135,31 @@ namespace cssmatch
 		 * @see struct PlayerIdentity
 		 */
 		PlayerIdentity * getIdentity();
+
+		/** Send a menu to the player
+		 * @param usedMenu The menu
+		 * @param page The page of the menu actually used by the player
+		 * @param parameters The i18n parameters needed by the menu to send
+		 * @param toDelete If the menu has to be deleted once the player close it
+		 */
+		void sendMenu(	Menu * usedMenu,
+						int page,
+						const std::map<std::string,std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
+						bool toDelete = false);
+
+		/** Get info about the menu the player uses */
+		PlayerMenuHandler * getMenuHandler();
+
+		/** Send to the player the next page of the current menu */
+		void nextPage();
+
+		/** Send to the player the previous page of the current menu */
+		void previousPage();
+
+		/** Quit the current menu (and delete it if asked with Player::setMenu */
+		void quitMenu();
+
+		/** Set the menu currently used by this player */
 
 		/** Get the current team of this player
 		 * @return The team's id of the player, or INVALID_TEAM if something was invalid
@@ -160,6 +203,11 @@ namespace cssmatch
 		 * @return <code>false</code> if the player is already spectator
 		 */
 		bool spec();
+
+		/** Execute a command into the player console 
+		 * @param command The command line to execute
+		 */
+		void cexec(const std::string & command) const;
 
 		/** Remove a weapon at a specified slot 
 		 * @param slot The slot code where is weapon can be found

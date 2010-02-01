@@ -74,7 +74,7 @@ void UserMessagesManager::chatWarning(RecipientFilter & recipients, const string
 void UserMessagesManager::popupSay(	RecipientFilter & recipients,
 									const string & message,
 									int lifeTime,
-									PopupSensitivityFlags flags)
+									int flags)
 {
 	// Only POPUP_MAX_SIZE bytes can be sent in one user message
 	// So, as the popup menus are generally large, they are split in n messages of POPUP_MAX_SIZE bytes

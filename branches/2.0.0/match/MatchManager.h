@@ -40,6 +40,7 @@ namespace cssmatch
 	class RunnableConfigurationFile;
 	class ConVarMonitorTimer;
 	class TvRecord;
+	class Player;
 
 	class MatchManagerException : public BaseException
 	{
@@ -174,6 +175,9 @@ namespace cssmatch
 		 * @throws MatchManagerException if no match is running	
 		 */
 		void stop() throw(MatchManagerException);
+
+		/** Show to a player the admin menu corresponding to the current match state */
+		void showMenu(Player * player);
 
 		/** Restart the current round 
 		 * @throws MatchManagerException if no match is running	

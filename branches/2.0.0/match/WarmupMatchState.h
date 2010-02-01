@@ -38,6 +38,7 @@ namespace cssmatch
 	class MatchManager;
 	class WarmupTimer;
 	class Player;
+	class Menu;
 
 	/** Warmup time in progress <br>
 	 * Ends with a timeout, or if at least one player of each side types "ready"
@@ -46,6 +47,9 @@ namespace cssmatch
 	{
 	private:
 		EventListener<WarmupMatchState> * listener;
+
+		/** Admin menu of this state */
+		Menu * warmupMenu;
 
 		friend class BaseSingleton<WarmupMatchState>;
 		WarmupMatchState();
@@ -65,6 +69,7 @@ namespace cssmatch
 		// BaseMatchState methods
 		void startState();
 		void endState();
+		void showMenu(Player * recipient);
 
 		// Game event callbacks
 		void player_spawn(IGameEvent * event);

@@ -22,12 +22,14 @@
 
 #include "Player.h"
 #include "../plugin/ServerPlugin.h"
+#include "../messages/Menu.h"
 
 #include <sstream>
 
 using namespace cssmatch;
 
 using std::string;
+using std::map;
 using std::ostringstream;
 
 Player::Player(int index) throw (PlayerException)
@@ -55,11 +57,51 @@ Player::Player(int index) throw (PlayerException)
 
 Player::~Player()
 {
+	quitMenu();
 }
 
 PlayerIdentity * Player::getIdentity()
 {
 	return &identity;
+}
+
+PlayerMenuHandler * Player::getMenuHandler()
+{
+	return &menuHandler;
+}
+
+void Player::sendMenu(Menu * usedMenu, int page, const map<string,string> & parameters, bool toDelete)
+{
+	menuHandler.menu = usedMenu;
+	menuHandler.page = page;
+	menuHandler.toDelete = toDelete;
+
+	menuHandler.menu->send(this,page,parameters);
+}
+
+void Player::nextPage()
+{
+	menuHandler.page++;
+	menuHandler.menu->send(this,menuHandler.page);
+}
+
+void Player::previousPage()
+{
+	if (menuHandler.page > 1)
+	{
+		menuHandler.page--;
+		menuHandler.menu->send(this,menuHandler.page);
+	}
+}
+
+void Player::quitMenu()
+{
+	if (menuHandler.menu != NULL)
+	{
+		if (menuHandler.toDelete)
+			delete menuHandler.menu;
+		menuHandler.menu = NULL;
+	}
 }
 
 TeamCode Player::getMyTeam() const
@@ -194,6 +236,15 @@ bool Player::spec()
 	}
 
 	return success;
+}
+
+void Player::cexec(const std::string & command) const
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	interfaces->engine->ClientCommand(identity.pEntity,command.c_str());
+	
 }
 
 void Player::removeWeapon(WeaponSlotCode slot)

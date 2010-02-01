@@ -27,6 +27,7 @@
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
+#include "../messages/Menu.h"
 #include "DisabledMatchState.h"
 #include "BreakMatchState.h"
 #include "WarmupMatchState.h"
@@ -44,14 +45,28 @@ using std::list;
 using std::map;
 using std::find_if;
 
+namespace cssmatch
+{
+	void kniferoundMenuCallback(Player * player, int choice, MenuLine * selected)
+	{
+	}
+}
+
 KnifeRoundMatchState::KnifeRoundMatchState()
 {
 	listener = new EventListener<KnifeRoundMatchState>(this);
+
+	kniferoundMenu = new Menu("menu_kniferound",kniferoundMenuCallback);
+	kniferoundMenu->addLine(true,"menu_alltalk");
+	kniferoundMenu->addLine(true,"menu_restart");
+	kniferoundMenu->addLine(true,"menu_stop");
+	kniferoundMenu->addLine(true,"menu_retag");
 }
 
 KnifeRoundMatchState::~KnifeRoundMatchState()
 {
 	delete listener;
+	delete kniferoundMenu;
 }
 
 void KnifeRoundMatchState::endKniferound(TeamCode winner)
@@ -164,6 +179,19 @@ void KnifeRoundMatchState::startState()
 void KnifeRoundMatchState::endState()
 {
 	listener->removeCallbacks();
+}
+
+void KnifeRoundMatchState::showMenu(Player * recipient)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->getI18nManager();
+	string language = interfaces->engine->GetClientConVarValue(recipient->getIdentity()->index,"cl_language");
+	bool alltalk = plugin->getConVar("sv_alltalk")->GetBool();
+
+	map<string,string> parameters;
+	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_enable" : "menu_disable");
+	recipient->sendMenu(kniferoundMenu,1,parameters);
 }
 
 void KnifeRoundMatchState::round_start(IGameEvent * event)

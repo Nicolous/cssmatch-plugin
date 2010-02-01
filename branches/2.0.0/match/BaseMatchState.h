@@ -26,6 +26,7 @@
 namespace cssmatch
 {
 	class MatchManager;
+	class Player;
 
 	/** What is a match state id */
 	typedef int MatchStateId;
@@ -53,6 +54,9 @@ namespace cssmatch
 
 		/** Automatically called by the context (MatchManager) when this state ends */
 		virtual void endState() = 0;
+
+		/** Send the menu to a player */
+		virtual void showMenu(Player * recipient) = 0;
 	};
 }
 #endif // __BASE_MATCH_STATE_H__

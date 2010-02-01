@@ -82,7 +82,7 @@ namespace cssmatch
 		 */
 		std::string getTranslation(	const std::string & language,
 									const std::string & keyword, 
-									std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+									const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
 
 
 		/** Send a chat message <br>
@@ -95,7 +95,7 @@ namespace cssmatch
 		 */
 		void i18nChatSay(	RecipientFilter & recipients,
 							const std::string & keyword,
-							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS,
+							const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS,
 							int playerIndex = INVALID_ENTITY_INDEX);
 
 
@@ -106,7 +106,7 @@ namespace cssmatch
 		 */
 		void i18nChatWarning(	RecipientFilter & recipients, 
 								const std::string & keyword,
-								std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+								const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
 
 		/** Send a popup (windowed) message to the clients
 		 * @param recipients Recipient list
@@ -118,8 +118,8 @@ namespace cssmatch
 		void i18nPopupSay(	RecipientFilter & recipients,
 							const std::string & keyword,
 							int lifeTime,
-							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS,
-							PopupSensitivityFlags flags = OPTION_ALL);
+							const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS,
+							int flags = OPTION_ALL);
 
 		/** Send a centered (windowed) popup message
 		 * @param recipients Recipient list
@@ -128,7 +128,7 @@ namespace cssmatch
 		 */
 		void i18nHintSay(	RecipientFilter & recipients,
 							const std::string & keyword,
-							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+							const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
 
 		/** Send a centered message
 		 * @param recipients Recipient list
@@ -137,7 +137,7 @@ namespace cssmatch
 		 */
 		void i18nCenterSay(	RecipientFilter & recipients,
 							const std::string & keyword,
-							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+							const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
 
 		/** Send a console message
 		 * @param recipients Recipient list
@@ -146,14 +146,14 @@ namespace cssmatch
 		 */
 		void i18nConsoleSay(RecipientFilter & recipients,
 							const std::string & keyword,
-							std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+							const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
 
 		/** Send a message to the user of the RCON command (or the server console)
 		 * @param keyword The identifier of the translation to use
 		 * @param parameters If specified, the message's parameters and their value
 		 */
 		void i18nMsg(	const std::string & keyword,
-						std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
+						const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
 	};
 
 	/** Send a delayed message in the chat area 
@@ -185,7 +185,7 @@ namespace cssmatch
 		TimerI18nChatSay(	float executionDate,
 							RecipientFilter & recipients,
 							const std::string & keyword,
-							std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
+							const std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
 							int playerIndex = INVALID_ENTITY_INDEX);
 
 		/** @see BaseTimer */
@@ -211,7 +211,7 @@ namespace cssmatch
 		int lifeTime;
 
 		/** @see I18nManager::I18nPopupSay */
-		PopupSensitivityFlags flags;
+		int flags;
 
 		/** @see I18nManager::I18nChatSay */
 		std::map<std::string, std::string> parameters; // FIXME : that copies a std::map
@@ -225,8 +225,8 @@ namespace cssmatch
 							RecipientFilter & recipients,
 							const std::string & keyword,
 							int lifeTime,
-							std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
-							PopupSensitivityFlags flags = OPTION_ALL);
+							const std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
+							int  flags = OPTION_ALL);
 
 		/** @see BaseTimer */
 		void execute();

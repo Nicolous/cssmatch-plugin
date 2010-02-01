@@ -30,6 +30,7 @@
 #include "../entity/EntityProp.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
+#include "../messages/Menu.h"
 #include "../timer/BaseTimer.h"
 #include "../match/MatchManager.h"
 #include "../match/DisabledMatchState.h"
@@ -488,6 +489,62 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 				else
 					result = PLUGIN_STOP;
 			}
+		}
+		else if (command == "menuselect")
+		{
+			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+			list<ClanMember *>::iterator itPlayer =
+				find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+			if (itPlayer != invalidPlayer)
+			{
+				Menu * menu = (*itPlayer)->getMenuHandler()->menu;
+				if (menu != NULL)
+				{
+					if (interfaces.engine->Cmd_Argc() == 2)
+					{
+						int choice = atoi(interfaces.engine->Cmd_Argv(1));
+						if (choice != 0)
+						{
+							menu->doCallback(*itPlayer,choice);
+						}
+					}
+				}
+			}
+		}
+		else if (command == "cssmatch")
+		{
+			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+			list<ClanMember *>::iterator itPlayer =
+				find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+			if (itPlayer != invalidPlayer)
+			{
+				if ((*itPlayer)->isReferee())
+				{
+					// TODO: sound
+					match->showMenu(*itPlayer);
+				}
+				else
+				{
+					PlayerIdentity * playerid = (*itPlayer)->getIdentity();
+					RecipientFilter recipients;
+					recipients.addRecipient(playerid->index);
+
+					i18n->i18nChatSay(recipients,"player_you_not_admin");
+					log(playerid->steamid + " is not admin");
+
+					log("Admin list:");
+					list<string>::const_iterator itAdmin = adminlist.begin();
+					list<string>::const_iterator invalidAdmin = adminlist.end();
+					while(itAdmin != invalidAdmin)
+					{
+						log(*itAdmin);
+						
+						itAdmin++;
+					}
+				}
+			}
+
+			result = PLUGIN_STOP;
 		}
 		else if (command == "cssm_rates")
 		{

@@ -376,11 +376,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\messages\Popup.cpp"
+				RelativePath=".\messages\Menu.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\messages\Popup.h"
+				RelativePath=".\messages\Menu.h"
 				>
 			</File>
 			<File

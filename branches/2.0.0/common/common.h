@@ -98,8 +98,9 @@ namespace cssmatch
 
 	/** Remove all console escape chars and the forbidden characters (os specific) from the file name
 	 * @param fileName The file name to parse
+	 * @return <code>true</code> if something was changed
 	 */
-	void normalizeFileName(std::string & fileName);
+	bool normalizeFileName(std::string & fileName);
 
 	/** Print a debug message into the console
 	 * @param fileName The source file where the debug message come from (typically __FILE__)

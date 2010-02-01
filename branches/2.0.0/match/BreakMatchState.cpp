@@ -58,6 +58,11 @@ void BreakMatchState::endState()
 	//Countdown::getInstance()->stop(); // in case of interuption ?
 }
 
+void BreakMatchState::showMenu(Player * recipient)
+{
+	nextState->showMenu(recipient);
+}
+
 BreakMatchTimer::BreakMatchTimer(float date, BaseMatchState * state)
 	: BaseTimer(date), nextState(state)
 {

@@ -34,6 +34,7 @@ class IGameEvent;
 namespace cssmatch
 {
 	class MatchManager;
+	class Menu;
 
 	/** Match [round] Set in progress <br>
 	 * Ends when the number of scheduled rounds is reached
@@ -42,6 +43,9 @@ namespace cssmatch
 	{
 	private:
 		EventListener<SetMatchState> * listener;
+
+		/** Admin menu of this state */
+		Menu * setStateMenu;
 
 		friend class BaseSingleton<SetMatchState>;
 		SetMatchState();
@@ -55,6 +59,7 @@ namespace cssmatch
 		// BaseMatchState methods
 		void startState();
 		void endState();
+		void showMenu(Player * recipient);
 
 		// Game event callbacks
 		void player_death(IGameEvent * event);

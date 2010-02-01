@@ -56,6 +56,7 @@ namespace cssmatch
 		// BaseMatchState methods
 		void startState();
 		void endState();
+		void showMenu(Player * recipient);
 	};
 
 	namespace

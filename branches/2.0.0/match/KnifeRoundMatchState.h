@@ -34,6 +34,7 @@ class IGameEvent;
 namespace cssmatch
 {
 	class MatchManager;
+	class Menu;
 
 	/** Knife round in progress <br>
 	 * End with the end of the round (if there is a winner)
@@ -42,6 +43,9 @@ namespace cssmatch
 	{
 	private:
 		EventListener<KnifeRoundMatchState> * listener;
+
+		/** Admin menu of this state */
+		Menu * kniferoundMenu;		
 
 		friend class BaseSingleton<KnifeRoundMatchState>;
 		KnifeRoundMatchState();
@@ -56,6 +60,7 @@ namespace cssmatch
 		// BaseMatchState methods
 		void startState();
 		void endState();
+		void showMenu(Player * recipient);
 
 		// Game event callbacks
 		void round_start(IGameEvent * event);

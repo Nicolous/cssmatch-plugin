@@ -158,12 +158,12 @@ namespace cssmatch
 		 * @param recipients Recipient list
 		 * @param message The message to send
 		 * @param lifeTime Display time (in seconds)
-		 * @param flags Options that the player can select
+		 * @param flags Options that the player can select (see PopupSensitivityFlags)
 		 */
 		void popupSay(	RecipientFilter & recipients,
 						const std::string & message,
 						int lifeTime,
-						PopupSensitivityFlags flags = OPTION_ALL);
+						int flags = OPTION_ALL);
 
 		/** Send a centered (windowed) popup message
 		 * @param recipients Recipient list

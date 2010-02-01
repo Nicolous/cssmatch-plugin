@@ -429,6 +429,11 @@ void MatchManager::stop() throw (MatchManagerException)
 		throw MatchManagerException("No match in progress");
 }
 
+void MatchManager::showMenu(Player * player)
+{
+	currentState->showMenu(player);
+}
+
 void MatchManager::restartRound() throw (MatchManagerException)
 {
 	if (currentState != initialState)

@@ -26,6 +26,7 @@
 #include "../player/ClanMember.h"
 #include "../messages/Countdown.h"
 #include "../messages/I18nManager.h"
+#include "../messages/Menu.h"
 #include "MatchManager.h"
 #include "DisabledMatchState.h"
 #include "SetMatchState.h"
@@ -44,11 +45,19 @@ using std::find_if;
 WarmupMatchState::WarmupMatchState() : timer(NULL)
 {
 	listener = new EventListener<WarmupMatchState>(this);
+
+	warmupMenu = new Menu("menu_warmup",NULL);
+	warmupMenu->addLine(true,"menu_alltalk");
+	warmupMenu->addLine(true,"menu_restart");
+	warmupMenu->addLine(true,"menu_stop");
+	warmupMenu->addLine(true,"menu_retag");
+	warmupMenu->addLine(true,"menu_go");
 }
 
 WarmupMatchState::~WarmupMatchState()
 {
 	delete listener;
+	delete warmupMenu;
 }
 
 void WarmupMatchState::endWarmup()
@@ -147,6 +156,19 @@ void WarmupMatchState::endState()
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 
 	listener->removeCallbacks();
+}
+
+void WarmupMatchState::showMenu(Player * recipient)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->getI18nManager();
+	string language = interfaces->engine->GetClientConVarValue(recipient->getIdentity()->index,"cl_language");
+	bool alltalk = plugin->getConVar("sv_alltalk")->GetBool();
+
+	map<string,string> parameters;
+	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_enable" : "menu_disable");
+	recipient->sendMenu(warmupMenu,1,parameters);
 }
 
 void WarmupMatchState::player_spawn(IGameEvent * event)

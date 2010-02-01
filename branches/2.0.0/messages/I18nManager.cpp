@@ -120,7 +120,7 @@ TranslationFile * I18nManager::getTranslationFile(const string & language)
 
 string I18nManager::getTranslation(	const string & lang,
 									const string & keyword,
-									map<string,string> & parameters)
+									const map<string,string> & parameters)
 {
 	string message;
 
@@ -171,7 +171,7 @@ string I18nManager::getTranslation(	const string & lang,
 
 void I18nManager::i18nChatSay(	RecipientFilter & recipients,
 								const string & keyword,
-								map<string,string> & parameters,
+								const map<string,string> & parameters,
 								int playerIndex)
 {
 	const vector<int> * recipientVector = recipients.getVector();
@@ -193,7 +193,7 @@ void I18nManager::i18nChatSay(	RecipientFilter & recipients,
 
 void I18nManager::i18nChatWarning(	RecipientFilter & recipients, 
 									const string & keyword,
-									map<string,string> & parameters)
+									const map<string,string> & parameters)
 {
 	const vector<int> * recipientVector = recipients.getVector();
 	vector<int>::const_iterator itIndex = recipientVector->begin();
@@ -215,8 +215,8 @@ void I18nManager::i18nChatWarning(	RecipientFilter & recipients,
 void I18nManager::i18nPopupSay(	RecipientFilter & recipients,
 								const std::string & keyword,
 								int lifeTime,
-								map<string,string> & parameters,
-								PopupSensitivityFlags flags)
+								const map<string,string> & parameters,
+								int flags)
 {
 	const vector<int> * recipientVector = recipients.getVector();
 	vector<int>::const_iterator itIndex = recipientVector->begin();
@@ -237,7 +237,7 @@ void I18nManager::i18nPopupSay(	RecipientFilter & recipients,
 
 void I18nManager::i18nHintSay(	RecipientFilter & recipients,
 								const string & keyword,
-								map<string,string> & parameters)
+								const map<string,string> & parameters)
 {
 	const vector<int> * recipientVector = recipients.getVector();
 	vector<int>::const_iterator itIndex = recipientVector->begin();
@@ -258,7 +258,7 @@ void I18nManager::i18nHintSay(	RecipientFilter & recipients,
 
 void I18nManager::i18nCenterSay(RecipientFilter & recipients,
 								const string & keyword,
-								map<string,string> & parameters)
+								const map<string,string> & parameters)
 {
 	const vector<int> * recipientVector = recipients.getVector();
 	vector<int>::const_iterator itIndex = recipientVector->begin();
@@ -279,7 +279,7 @@ void I18nManager::i18nCenterSay(RecipientFilter & recipients,
 
 void I18nManager::i18nConsoleSay(	RecipientFilter & recipients,
 									const string & keyword,
-									map<string,string> & parameters)
+									const map<string,string> & parameters)
 {
 	const vector<int> * recipientVector = recipients.getVector();
 	vector<int>::const_iterator itIndex = recipientVector->begin();
@@ -298,7 +298,7 @@ void I18nManager::i18nConsoleSay(	RecipientFilter & recipients,
 	}
 }
 
-void I18nManager::i18nMsg(const string & keyword, map<string,string> & parameters)
+void I18nManager::i18nMsg(const string & keyword, const map<string,string> & parameters)
 {
 	string message = getTranslation("",keyword,parameters);
 	Msg("%s\n",message.c_str());
@@ -307,7 +307,7 @@ void I18nManager::i18nMsg(const string & keyword, map<string,string> & parameter
 TimerI18nChatSay::TimerI18nChatSay(	float date,
 									RecipientFilter & recip,
 									const string & key,
-									map<string,string> & param,
+									const map<string,string> & param,
 									int pIndex)
 	: BaseTimer(date), recipients(recip), keyword(key), parameters(param), playerIndex(pIndex)
 {
@@ -322,8 +322,8 @@ TimerI18nPopupSay::TimerI18nPopupSay(	float date,
 										RecipientFilter & recip,
 										const string & key,
 										int life,
-										map<string,string> & param,
-										PopupSensitivityFlags fl)
+										const map<string,string> & param,
+										int fl)
 	:	BaseTimer(date), recipients(recip), keyword(key), lifeTime(life), parameters(param), flags(fl)
 {
 }
