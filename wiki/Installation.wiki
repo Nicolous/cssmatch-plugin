@@ -6,7 +6,7 @@
 
 = Comment installer le plugin ? =
 
-  # [http://code.google.com/p/cssmatch-plugin/downloads/list Téléchargez le plugin]
+  # [http://code.google.com/p/cssmatch-plugin/wiki/Telechargements?tm=2 Téléchargez le plugin]
   # Décompressez le fichier sur votre ordinateur (avec [http://www.7-zip.org/fr/ 7Zip] par exemple)
   # Envoyez le contenu du dossier _addons_ dans le dossier _addons_ de votre serveur
   # Envoyez le contenu du dossier _cfg_ dans le dossier _cfg_ de votre serveur
