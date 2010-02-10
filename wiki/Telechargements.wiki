@@ -1,5 +1,4 @@
 #summary Téléchargements
-#labels Featured
 
 = Dernières versions =
  * [http://cssmatch.com/downloads/CSSMatch_1,3,6.zip Version 1.3.6]
