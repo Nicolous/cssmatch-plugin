@@ -48,8 +48,9 @@ namespace cssmatch
 	private:
 		EventListener<WarmupMatchState> * listener;
 
-		/** Admin menu of this state */
+		/** Admin menus of this state */
 		Menu * warmupMenu;
+		Menu * menuWithAdmin;
 
 		friend class BaseSingleton<WarmupMatchState>;
 		WarmupMatchState();

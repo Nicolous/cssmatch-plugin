@@ -44,8 +44,9 @@ namespace cssmatch
 	private:
 		EventListener<SetMatchState> * listener;
 
-		/** Admin menu of this state */
+		/** Admin menus of this state */
 		Menu * setStateMenu;
+		Menu * menuWithAdmin;
 
 		friend class BaseSingleton<SetMatchState>;
 		SetMatchState();

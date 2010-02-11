@@ -95,6 +95,8 @@ namespace cssmatch
 
 		/** Is the menu will have to be deleted when it will be closed */
 		bool toDelete;
+
+		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false) {}
 	};
 
 	/** Base class for player informations */

@@ -55,6 +55,7 @@ namespace cssmatch
 	class I18nManager;
 	class BaseTimer;
 	class MatchManager;
+	class Menu;
 
 	/** Valve's interface instances */
 	struct ValveInterfaces
@@ -100,6 +101,9 @@ namespace cssmatch
 
 		/** Referee steamid list */
 		std::list<std::string> adminlist;
+
+		/** Admin menu */
+		Menu * adminMenu;
 
 		/** Match manager */
 		MatchManager * match;
@@ -158,6 +162,9 @@ namespace cssmatch
 
 		/** Get the referee steamid list (read and write) */
 		std::list<std::string> * getAdminlist();
+
+		/** Show the admin menu to a player */
+		void showAdminMenu(Player * player);
 
 		/** Get the match manager */
 		MatchManager * getMatch();

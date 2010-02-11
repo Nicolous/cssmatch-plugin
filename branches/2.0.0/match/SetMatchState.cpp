@@ -47,16 +47,102 @@ using std::map;
 using std::find_if;
 using std::ostringstream;
 
+namespace cssmatch
+{
+	void setStateMenuCallback(Player * player, int choice, MenuLine * selected)
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		MatchManager * match = plugin->getMatch();
+		I18nManager * i18n = plugin->getI18nManager();
+
+		switch(choice)
+		{
+		case 1:
+			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
+			player->cexec("cssmatch");
+			break;
+		case 2:
+			{
+				RecipientFilter recipients;
+				map<string,string> parameters;
+				IPlayerInfo * pInfo = player->getPlayerInfo();
+
+				match->restartRound();
+
+				recipients.addAllPlayers();
+				if (pInfo != NULL)
+				{
+					parameters["$admin"] = pInfo->GetName();
+					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters);
+				}
+				else
+					i18n->i18nChatSay(recipients,"admin_round_restarted");
+			}
+			player->quitMenu();
+			break;
+		case 3:
+			match->stop();
+			player->quitMenu();
+			break;
+		case 4:
+			match->detectClanName(T_TEAM);
+			match->detectClanName(CT_TEAM);
+			player->quitMenu();
+			break;
+		case 5:
+			{
+				RecipientFilter recipients;
+				map<string,string> parameters;
+				IPlayerInfo * pInfo = player->getPlayerInfo();
+
+				match->restartSet();
+
+				recipients.addAllPlayers();
+				if (pInfo != NULL)
+				{
+					parameters["$admin"] = pInfo->GetName();
+					i18n->i18nChatSay(recipients,"admin_manche_restarted_by",parameters);
+				}
+				else
+					i18n->i18nChatSay(recipients,"admin_manche_restarted");
+			}
+			player->quitMenu();
+			break;
+		default:
+			player->quitMenu();
+		}
+	}
+
+	void setStateMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
+	{
+		if (choice == 1)
+		{
+			ServerPlugin * plugin = ServerPlugin::getInstance();
+			plugin->showAdminMenu(player);
+		}
+
+		setStateMenuCallback(player,choice-1,selected);
+	}
+}
+
 SetMatchState::SetMatchState()
 {
 	listener = new EventListener<SetMatchState>(this);
 
-	setStateMenu = new Menu("menu_match",NULL);
+	setStateMenu = new Menu("menu_match",setStateMenuCallback);
 	setStateMenu->addLine(true,"menu_alltalk");
 	setStateMenu->addLine(true,"menu_restart");
 	setStateMenu->addLine(true,"menu_stop");
 	setStateMenu->addLine(true,"menu_retag");
 	setStateMenu->addLine(true,"menu_restart_manche");
+
+	menuWithAdmin = new Menu("menu_match",setStateMenuWithAdminCallback);
+	menuWithAdmin->addLine(true,"menu_administration_options");
+	menuWithAdmin->addLine(true,"menu_alltalk");
+	menuWithAdmin->addLine(true,"menu_restart");
+	menuWithAdmin->addLine(true,"menu_stop");
+	menuWithAdmin->addLine(true,"menu_retag");
+	menuWithAdmin->addLine(true,"menu_restart_manche");
 }
 
 SetMatchState::~SetMatchState()
@@ -143,7 +229,7 @@ void SetMatchState::showMenu(Player * recipient)
 	bool alltalk = plugin->getConVar("sv_alltalk")->GetBool();
 
 	map<string,string> parameters;
-	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_enable" : "menu_disable");
+	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_disable" : "menu_enable");
 	recipient->sendMenu(setStateMenu,1,parameters);
 }
 

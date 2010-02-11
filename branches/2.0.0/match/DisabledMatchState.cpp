@@ -33,6 +33,7 @@
 #include "MatchManager.h"
 #include "KnifeRoundMatchState.h"
 #include "WarmupMatchState.h"
+#include "SetMatchState.h"
 
 #include <map>
 #include <string>
@@ -62,6 +63,17 @@ namespace cssmatch
 		}
 	}
 
+	void disabledMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
+	{
+		if (choice == 1)
+		{
+			ServerPlugin * plugin = ServerPlugin::getInstance();
+			plugin->showAdminMenu(player);
+		}
+
+		disabledMenuCallback(player,choice-1,selected);
+	}
+
 	void kniferoundQuestionCallback(Player * player, int choice, MenuLine * selected)
 	{
 		DisabledMatchState * state = DisabledMatchState::getInstance();
@@ -73,6 +85,7 @@ namespace cssmatch
 			//state->showWarmupQuestion(player);
 			//break;
 		case 2:
+			//state->getMatchSettings()->firstState = NULL;
 			state->showWarmupQuestion(player);
 			break;
 		case 3:
@@ -86,13 +99,20 @@ namespace cssmatch
 	void warmupQuestionCallback(Player * player, int choice, MenuLine * selected)
 	{
 		DisabledMatchState * state = DisabledMatchState::getInstance();
+		MatchSettings * settings = state->getMatchSettings();
 
 		switch(choice)
 		{
 		case 1:
-			state->getMatchSettings()->warmup = true;
-			//break;
+			//settings->warmup = true;
+			if (settings->firstState == NULL)
+				settings->firstState = WarmupMatchState::getInstance();
+			state->showConfigQuestion(player);
+			break;
 		case 2:
+			settings->warmup = false;
+			if (settings->firstState == NULL)
+				settings->firstState = SetMatchState::getInstance();
 			state->showConfigQuestion(player);
 			break;
 		case 3:
@@ -199,9 +219,16 @@ void ConfigMenu::send(Player * recipient, int page, const std::map<std::string,s
 
 DisabledMatchState::DisabledMatchState()
 {
+	settings.firstState = KnifeRoundMatchState::getInstance();
+
 	disabledMenu = new Menu("menu_no_match",disabledMenuCallback);
 	disabledMenu->addLine(true,"menu_alltalk");
 	disabledMenu->addLine(true,"menu_start");
+
+	menuWithAdmin = new Menu("menu_no_match",disabledMenuWithAdminCallback);
+	menuWithAdmin->addLine(true,"menu_administration_options");
+	menuWithAdmin->addLine(true,"menu_alltalk");
+	menuWithAdmin->addLine(true,"menu_start");
 
 	kniferoundQuestion = new Menu("menu_play_kniferound",kniferoundQuestionCallback);
 	kniferoundQuestion->addLine(true,"menu_yes");
@@ -217,6 +244,7 @@ DisabledMatchState::DisabledMatchState()
 DisabledMatchState::~DisabledMatchState()
 {
 	delete disabledMenu;
+	delete menuWithAdmin;
 	delete kniferoundQuestion;
 	delete warmupQuestion;
 }
@@ -245,8 +273,12 @@ void DisabledMatchState::showMenu(Player * recipient)
 	bool alltalk = plugin->getConVar("sv_alltalk")->GetBool();
 
 	map<string,string> parameters;
-	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_enable" : "menu_disable");
-	recipient->sendMenu(disabledMenu,1,parameters);
+	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_disable" : "menu_enable");
+
+	if (plugin->getConVar("cssmatch_advanced")->GetBool())
+		recipient->sendMenu(menuWithAdmin,1,parameters);
+	else
+		recipient->sendMenu(disabledMenu,1,parameters);
 }
 
 void DisabledMatchState::showKniferoundQuestion(Player * recipient)

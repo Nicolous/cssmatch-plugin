@@ -44,8 +44,9 @@ namespace cssmatch
 	private:
 		EventListener<KnifeRoundMatchState> * listener;
 
-		/** Admin menu of this state */
-		Menu * kniferoundMenu;		
+		/** Admin menus of this state */
+		Menu * kniferoundMenu;	
+		Menu * menuWithAdmin;
 
 		friend class BaseSingleton<KnifeRoundMatchState>;
 		KnifeRoundMatchState();

@@ -75,7 +75,17 @@ using std::ostringstream;
 	}
 }*/
 
-ServerPlugin::ServerPlugin() : clientCommandIndex(0), match(NULL), i18n(NULL)
+namespace cssmatch
+{
+	void adminMenuCallback(Player * player, int choice, MenuLine * selected)
+	{
+		switch(choice)
+		{
+		}
+	}
+}
+
+ServerPlugin::ServerPlugin() : clientCommandIndex(0), adminMenu(NULL), match(NULL), i18n(NULL)
 {
 }
 
@@ -87,6 +97,9 @@ ServerPlugin::~ServerPlugin()
 		delete interfaces.convars;
 
 	for_each(playerlist.begin(),playerlist.end(),PlayerToRemove());
+
+	if (adminMenu != NULL)
+		delete adminMenu;
 
 	if (match != NULL)
 		delete match;
@@ -142,6 +155,13 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		interfaces.gpGlobals = interfaces.playerinfomanager->GetGlobalVars();
 
 		MathLib_Init(2.2f,2.2f,0.0f,2.0f);
+
+		adminMenu = new Menu("menu_administration",adminMenuCallback);
+		adminMenu->addLine(true,"menu_changelevel");
+		adminMenu->addLine(true,"menu_swap");
+		adminMenu->addLine(true,"menu_spec");
+		adminMenu->addLine(true,"menu_kick");
+		adminMenu->addLine(true,"menu_ban");
 
 		match = new MatchManager(DisabledMatchState::getInstance());
 		
@@ -247,6 +267,11 @@ list<ClanMember *> * ServerPlugin::getPlayerlist()
 list<string> * ServerPlugin::getAdminlist()
 {
 	return &adminlist;
+}
+
+void ServerPlugin::showAdminMenu(Player * player)
+{
+	player->sendMenu(adminMenu,1);
 }
 
 MatchManager * ServerPlugin::getMatch()

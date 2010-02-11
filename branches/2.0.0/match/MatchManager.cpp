@@ -233,9 +233,10 @@ void MatchManager::detectClanName(TeamCode code) throw(MatchManagerException)
 void MatchManager::updateHostname()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ConVar * hostname = plugin->getConVar("hostname");
 
-	ConVar * hostname = plugin->getConVar("cssmatch_hostname");
-	string newHostname = hostname->GetString();
+	ConVar * cssmatch_hostname = plugin->getConVar("cssmatch_hostname");
+	string newHostname = cssmatch_hostname->GetString();
 
 	// Replace %s by the clan names
 	size_t clanNameSlot = newHostname.find("%s");

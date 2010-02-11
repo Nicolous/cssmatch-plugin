@@ -42,22 +42,110 @@ using std::list;
 using std::map;
 using std::find_if;
 
+namespace cssmatch
+{
+	void warmupMenuCallback(Player * player, int choice, MenuLine * selected)
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		MatchManager * match = plugin->getMatch();
+		I18nManager * i18n = plugin->getI18nManager();
+		WarmupMatchState * state = WarmupMatchState::getInstance();
+
+		switch(choice)
+		{
+		case 1:
+			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
+			player->cexec("cssmatch");
+			break;
+		case 2:
+			{
+				RecipientFilter recipients;
+				map<string,string> parameters;
+				IPlayerInfo * pInfo = player->getPlayerInfo();
+
+				recipients.addAllPlayers();
+				if (pInfo != NULL)
+				{
+					parameters["$admin"] = pInfo->GetName();
+					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters);
+				}
+				else
+					i18n->i18nChatSay(recipients,"admin_round_restarted");
+
+				match->restartRound();
+			}
+			player->quitMenu();
+			break;
+		case 3:
+			match->stop();
+			player->quitMenu();
+			break;
+		case 4:
+			match->detectClanName(T_TEAM);
+			match->detectClanName(CT_TEAM);
+			player->quitMenu();
+			break;
+		case 5:
+			{
+				RecipientFilter recipients;
+				map<string,string> parameters;
+				IPlayerInfo * pInfo = player->getPlayerInfo();
+
+				state->endWarmup();
+
+				recipients.addAllPlayers();
+				if (pInfo != NULL)
+				{
+					parameters["$admin"] = pInfo->GetName();
+					i18n->i18nChatSay(recipients,"admin_all_teams_say_ready_by",parameters);
+				}
+				else
+					i18n->i18nChatSay(recipients,"admin_all_teams_say_ready");
+			}
+			player->quitMenu();
+			break;
+		default:
+			player->quitMenu();
+		}
+	}
+
+	void warmupMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
+	{
+		if (choice == 1)
+		{
+			ServerPlugin * plugin = ServerPlugin::getInstance();
+			plugin->showAdminMenu(player);
+		}
+
+		warmupMenuCallback(player,choice-1,selected);
+	}
+}
+
 WarmupMatchState::WarmupMatchState() : timer(NULL)
 {
 	listener = new EventListener<WarmupMatchState>(this);
 
-	warmupMenu = new Menu("menu_warmup",NULL);
+	warmupMenu = new Menu("menu_warmup",warmupMenuCallback);
 	warmupMenu->addLine(true,"menu_alltalk");
 	warmupMenu->addLine(true,"menu_restart");
 	warmupMenu->addLine(true,"menu_stop");
 	warmupMenu->addLine(true,"menu_retag");
 	warmupMenu->addLine(true,"menu_go");
+
+	menuWithAdmin = new Menu("menu_warmup",warmupMenuWithAdminCallback);
+	menuWithAdmin->addLine(true,"menu_administration_options");
+	menuWithAdmin->addLine(true,"menu_alltalk");
+	menuWithAdmin->addLine(true,"menu_restart");
+	menuWithAdmin->addLine(true,"menu_stop");
+	menuWithAdmin->addLine(true,"menu_retag");
+	menuWithAdmin->addLine(true,"menu_go");
 }
 
 WarmupMatchState::~WarmupMatchState()
 {
 	delete listener;
 	delete warmupMenu;
+	delete menuWithAdmin;
 }
 
 void WarmupMatchState::endWarmup()
@@ -167,7 +255,7 @@ void WarmupMatchState::showMenu(Player * recipient)
 	bool alltalk = plugin->getConVar("sv_alltalk")->GetBool();
 
 	map<string,string> parameters;
-	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_enable" : "menu_disable");
+	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_disable" : "menu_enable");
 	recipient->sendMenu(warmupMenu,1,parameters);
 }
 

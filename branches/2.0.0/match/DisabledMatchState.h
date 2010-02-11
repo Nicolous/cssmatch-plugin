@@ -40,7 +40,7 @@ namespace cssmatch
 		/** Does a warmup time have to be played ? */
 		bool warmup;
 
-		//MatchSettings() : firstState(NULL), warmup(true){}
+		MatchSettings() : firstState(NULL), warmup(true){}
 	};
 
 	/* List of the .cfg files 
@@ -62,8 +62,9 @@ namespace cssmatch
 	class DisabledMatchState : public BaseMatchState, public BaseSingleton<DisabledMatchState>
 	{
 	private:
-		/** Admin menu of this state */
+		/** Admin menus of this state */
 		Menu * disabledMenu;
+		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
 		/* New math menus */
 		Menu * kniferoundQuestion;
