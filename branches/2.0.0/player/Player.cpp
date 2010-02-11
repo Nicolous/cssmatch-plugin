@@ -72,6 +72,8 @@ PlayerMenuHandler * Player::getMenuHandler()
 
 void Player::sendMenu(Menu * usedMenu, int page, const map<string,string> & parameters, bool toDelete)
 {
+	quitMenu();
+
 	menuHandler.menu = usedMenu;
 	menuHandler.page = page;
 	menuHandler.toDelete = toDelete;
@@ -192,6 +194,19 @@ void Player::kick(const string & reason) const
 	ostringstream command;
 	command << "kickid " << identity.userid << " " << reason << "\n";
 	plugin->queueCommand(command.str());
+}
+
+void Player::ban(int duration, const std::string & reason) const
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
+	ostringstream command;
+	command << "banid " << duration << " " << identity.userid << "\n";
+	plugin->queueCommand(command.str());
+	if (duration == 0)
+		plugin->queueCommand("writeid\n");
+
+	kick(reason);
 }
 
 bool Player::swap()

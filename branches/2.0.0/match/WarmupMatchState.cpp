@@ -62,12 +62,13 @@ namespace cssmatch
 				RecipientFilter recipients;
 				map<string,string> parameters;
 				IPlayerInfo * pInfo = player->getPlayerInfo();
+				PlayerIdentity * identity = player->getIdentity();
 
 				recipients.addAllPlayers();
 				if (pInfo != NULL)
 				{
 					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters);
+					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_round_restarted");
@@ -90,6 +91,7 @@ namespace cssmatch
 				RecipientFilter recipients;
 				map<string,string> parameters;
 				IPlayerInfo * pInfo = player->getPlayerInfo();
+				PlayerIdentity * identity = player->getIdentity();
 
 				state->endWarmup();
 
@@ -97,7 +99,7 @@ namespace cssmatch
 				if (pInfo != NULL)
 				{
 					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_all_teams_say_ready_by",parameters);
+					i18n->i18nChatSay(recipients,"admin_all_teams_say_ready_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_all_teams_say_ready");
@@ -111,13 +113,15 @@ namespace cssmatch
 
 	void warmupMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
 	{
+		warmupMenuCallback(player,choice-1,selected);
+
+		// Have to be here because the above callback could invoke player->quitMenu()
 		if (choice == 1)
 		{
 			ServerPlugin * plugin = ServerPlugin::getInstance();
 			plugin->showAdminMenu(player);
 		}
 
-		warmupMenuCallback(player,choice-1,selected);
 	}
 }
 

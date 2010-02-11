@@ -65,13 +65,14 @@ namespace cssmatch
 
 	void disabledMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
 	{
+		disabledMenuCallback(player,choice-1,selected);
+
+		// Have to be here because the above callback could invoke player->quitMenu()
 		if (choice == 1)
 		{
 			ServerPlugin * plugin = ServerPlugin::getInstance();
 			plugin->showAdminMenu(player);
 		}
-
-		disabledMenuCallback(player,choice-1,selected);
 	}
 
 	void kniferoundQuestionCallback(Player * player, int choice, MenuLine * selected)
@@ -143,11 +144,12 @@ namespace cssmatch
 				RecipientFilter recipients;
 				recipients.addAllPlayers();
 
+				PlayerIdentity * identity = player->getIdentity();
 				IPlayerInfo * pInfo = player->getPlayerInfo();
 				if (pInfo != NULL)
 				{
 					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"match_started_by",parameters);
+					i18n->i18nChatSay(recipients,"match_started_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"match_started");

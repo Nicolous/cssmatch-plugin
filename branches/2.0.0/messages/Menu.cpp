@@ -71,10 +71,10 @@ void Menu::doCallback(Player * user, int choice)
 	}
 }
 
-void Menu::addLine(bool isI18nKeyword, const string & line)
+void Menu::addLine(bool isI18nKeyword, const string & line, int hiddenData)
 {
 	int linecount = lines.size();
-	MenuLine * toAdd = new MenuLine(NORMAL,isI18nKeyword,line);
+	MenuLine * toAdd = new MenuLine(NORMAL,isI18nKeyword,line,hiddenData);
 
 	if (linecount < 9) // Is the first page not full ?
 	{

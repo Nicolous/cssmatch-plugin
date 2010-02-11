@@ -66,6 +66,7 @@ namespace cssmatch
 				RecipientFilter recipients;
 				map<string,string> parameters;
 				IPlayerInfo * pInfo = player->getPlayerInfo();
+				PlayerIdentity * identity = player->getIdentity();
 
 				match->restartRound();
 
@@ -73,7 +74,7 @@ namespace cssmatch
 				if (pInfo != NULL)
 				{
 					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters);
+					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_round_restarted");
@@ -94,6 +95,7 @@ namespace cssmatch
 				RecipientFilter recipients;
 				map<string,string> parameters;
 				IPlayerInfo * pInfo = player->getPlayerInfo();
+				PlayerIdentity * identity = player->getIdentity();
 
 				match->restartSet();
 
@@ -101,7 +103,7 @@ namespace cssmatch
 				if (pInfo != NULL)
 				{
 					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_manche_restarted_by",parameters);
+					i18n->i18nChatSay(recipients,"admin_manche_restarted_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_manche_restarted");
@@ -115,13 +117,14 @@ namespace cssmatch
 
 	void setStateMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
 	{
+		setStateMenuCallback(player,choice-1,selected);
+
+		// Have to be here because the above callback could invoke player->quitMenu()
 		if (choice == 1)
 		{
 			ServerPlugin * plugin = ServerPlugin::getInstance();
 			plugin->showAdminMenu(player);
 		}
-
-		setStateMenuCallback(player,choice-1,selected);
 	}
 }
 

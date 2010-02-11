@@ -96,7 +96,10 @@ namespace cssmatch
 		/** Is the menu will have to be deleted when it will be closed */
 		bool toDelete;
 
-		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false) {}
+		/** Data associated to the selected line in the menu */
+		int data; // FIXME: Make me generic
+
+		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false), data(INVALID_PLAYER_USERID) {}
 	};
 
 	/** Base class for player informations */
@@ -195,6 +198,12 @@ namespace cssmatch
 		 * @param reason Reason for the kick
 		 */
 		void kick(const std::string & reason) const;
+
+		/** Ban this player
+		 * @param duration Ban duration (in minutes, 0=permanent)
+		 * @param reason Reason for the kick
+		 */
+		void ban(int duration, const std::string & reason) const;
 
 		/** Swap this player 
 		 * @return <code>false</code> if the player is spectator

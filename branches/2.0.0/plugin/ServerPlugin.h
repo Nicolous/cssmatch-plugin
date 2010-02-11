@@ -104,6 +104,7 @@ namespace cssmatch
 
 		/** Admin menu */
 		Menu * adminMenu;
+		Menu * bantimeMenu;
 
 		/** Match manager */
 		MatchManager * match;
@@ -163,8 +164,15 @@ namespace cssmatch
 		/** Get the referee steamid list (read and write) */
 		std::list<std::string> * getAdminlist();
 
-		/** Show the admin menu to a player */
+		/** Show the admin menu (or its sub-menu) to a player */
 		void showAdminMenu(Player * player);
+		void showChangelevelMenu(Player * player); // maplist.txt content
+		void constructPlayerlistMenu(Menu * to); // generates a player list menu
+		void showSwapMenu(Player * player); // player list
+		void showSpecMenu(Player * player); // player list
+		void showKickMenu(Player * player); // player list
+		void showBanMenu(Player * player); // player list
+		void showBanTimeMenu(Player * player); // ban time choose
 
 		/** Get the match manager */
 		MatchManager * getMatch();

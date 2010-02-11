@@ -51,7 +51,7 @@ namespace cssmatch
 		NEXT
 	};
 
-	/** A menu line */
+	/** Menu line */
 	struct MenuLine
 	{
 		/** The menu line type */
@@ -63,8 +63,14 @@ namespace cssmatch
 		/** The text content of this line */
 		std::string text;
 
-		MenuLine(MenuLineType lineType, bool isI18n, const std::string & content)
-			: type(lineType), i18n(isI18n), text(content) {};
+		/** Data carried by the line */
+		int data; // FIXME: Make me generic
+
+		MenuLine(	MenuLineType lineType,
+					bool isI18n,
+					const std::string & content,
+					int hiddenData = INVALID_PLAYER_USERID)
+			: type(lineType), i18n(isI18n), text(content), data(hiddenData) {};
 	};
 
 	/** Menu callback 
@@ -106,8 +112,9 @@ namespace cssmatch
 		/** Add a line to the menu 
 		 * @param isI18nKeyword Is the line a keyword from the translation files ?
 		 * @param line The line to add
+		 * @param hiddenData The hidden data shipped in this line
 		 */
-		void addLine(bool isI18nKeyword, const std::string & line);
+		void addLine(bool isI18nKeyword, const std::string & line, int hiddenData = INVALID_PLAYER_USERID);
 
 		/** Returns a pointer to a line 
 		 * @param page The page where the line is
