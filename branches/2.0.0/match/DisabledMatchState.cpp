@@ -53,7 +53,7 @@ namespace cssmatch
 		{
 		case 1:
 			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
-			player->cexec("cssmatch");
+			player->cexec("cssmatch\n");
 			break;
 		case 2:
 			state->showKniferoundQuestion(player);
@@ -83,14 +83,14 @@ namespace cssmatch
 		{
 		case 1:
 			state->getMatchSettings()->firstState = KnifeRoundMatchState::getInstance();
-			//state->showWarmupQuestion(player);
-			//break;
+			state->showWarmupQuestion(player);
+			break;
 		case 2:
-			//state->getMatchSettings()->firstState = NULL;
+			state->getMatchSettings()->firstState = NULL;
 			state->showWarmupQuestion(player);
 			break;
 		case 3:
-			player->cexec("cssmatch");
+			player->cexec("cssmatch\n");
 			break;
 		default:
 			player->quitMenu();
@@ -105,7 +105,7 @@ namespace cssmatch
 		switch(choice)
 		{
 		case 1:
-			//settings->warmup = true;
+			settings->warmup = true;
 			if (settings->firstState == NULL)
 				settings->firstState = WarmupMatchState::getInstance();
 			state->showConfigQuestion(player);
@@ -117,7 +117,7 @@ namespace cssmatch
 			state->showConfigQuestion(player);
 			break;
 		case 3:
-			player->cexec("cssmatch");
+			player->cexec("cssmatch\n");
 			break;
 		default:
 			player->quitMenu();
@@ -139,20 +139,20 @@ namespace cssmatch
 			{
 				RunnableConfigurationFile config(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + selected->text);
 
-				match->start(config,settings->warmup,settings->firstState);
-
 				RecipientFilter recipients;
 				recipients.addAllPlayers();
 
 				PlayerIdentity * identity = player->getIdentity();
 				IPlayerInfo * pInfo = player->getPlayerInfo();
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					parameters["$admin"] = pInfo->GetName();
 					i18n->i18nChatSay(recipients,"match_started_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"match_started");
+
+				match->start(config,settings->warmup,settings->firstState);
 			}
 			catch(const ConfigurationFileException & e)
 			{
@@ -260,6 +260,10 @@ void DisabledMatchState::startState()
 {
 	// Stop any countdown in progress
 	Countdown::getInstance()->stop();
+
+	// Reset the next math settings
+	settings.firstState = NULL;
+	settings.warmup = true;
 }
 
 void DisabledMatchState::endState()

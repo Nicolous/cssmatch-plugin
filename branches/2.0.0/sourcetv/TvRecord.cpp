@@ -42,25 +42,29 @@ TvRecord::TvRecord(std::string & recordName) throw (TvRecordException) : recordi
 
 		// Construct the path
 		string basePath = plugin->getConVar("cssmatch_sourcetv_path")->GetString();
-		string baseName = recordName + ".dem";
+		string baseName;
 		if (basePath.size() > 0)
-			baseName = basePath + '/' + baseName;
+			baseName = basePath + '/';
+		baseName += recordName;
 
 		/*if (baseName.size() == 0)
 			throw TvRecordException("The demo name is empty");*/
 
 		// Rename the file while it matches another existing file name on the hd
 		// (Obselete with the current way we construct the demo name, but can change)
-		name = baseName;
+		string tempName = baseName;
 		int fileCount = 1;
-		while(interfaces->filesystem->FileExists(name.c_str(),"MOD"))
+		while(interfaces->filesystem->FileExists(tempName.c_str(),"MOD"))
 		{
 			ostringstream newName;
-			newName << '[' << fileCount << ']' << baseName;
-			name = newName.str();
+
+			newName << baseName << '_' << fileCount;
+
+			tempName = newName.str();
 
 			fileCount++;
 		}
+		name = baseName + ".dem";
 	}
 	else
 		throw TvRecordException("SourceTv not connected");
@@ -96,7 +100,7 @@ void TvRecord::stop() throw (TvRecordException)
 	{
 		recording = false;
 
-		ServerPlugin::getInstance()->executeCommand("tv_stoprecord " + name + "\n");
+		ServerPlugin::getInstance()->queueCommand("tv_stoprecord\n");
 	}
 	else
 		throw TvRecordException("No record in progress");

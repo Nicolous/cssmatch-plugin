@@ -112,10 +112,12 @@ TeamCode Player::getMyTeam() const
 	IPlayerInfo * pInfo = getPlayerInfo();
 
 	if (isValidPlayer(pInfo))
+	{
 		team = (TeamCode)pInfo->GetTeamIndex();
-
-	if ((! pInfo->IsHLTV()) && (team == INVALID_TEAM))
-		cssmatch_print("The plugin was unable to find the team of a Player");
+	
+		if ((! pInfo->IsHLTV()) && (team == INVALID_TEAM))
+			CSSMATCH_PRINT("The plugin was unable to find the team of a Player");
+	}
 
 	return team;
 }
@@ -130,7 +132,7 @@ CBasePlayer * Player::getBasePlayer() const
 
 	if (! isValidBasePlayer(bPlayer))
 	{
-		cssmatch_print("The plugin was unable to find the base player pointer of a Player");
+		CSSMATCH_PRINT("The plugin was unable to find the base player pointer of a Player");
 		bPlayer = NULL;
 	}
 
@@ -147,7 +149,7 @@ CBaseCombatCharacter * Player::getBaseCombatCharacter() const
 
 	if (! isValidBaseCombatCharacter(bCombatCharacter))
 	{
-		cssmatch_print("The plugin was unable to find the base combat character of a Player");
+		CSSMATCH_PRINT("The plugin was unable to find the base combat character of a Player");
 		bCombatCharacter = NULL;
 	}
 
@@ -166,7 +168,7 @@ IPlayerInfo * Player::getPlayerInfo() const
 	// For now SourceTV is added to the playerlist, because it should be able to recieve the message from CSSMatch
 	if (pInfo == NULL)
 	{
-		cssmatch_print("The plugin was unable to find the player's infos of a Player");
+		CSSMATCH_PRINT("The plugin was unable to find the player's infos of a Player");
 	}
 
 	return pInfo;
@@ -277,7 +279,7 @@ void Player::setCash(unsigned int newCash)
 	}
 	catch(const EntityPropException & e)
 	{
-		cssmatch_printException(e);
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }
 
@@ -289,6 +291,6 @@ void Player::setLifeState(unsigned int newState)
 	}
 	catch(const EntityPropException & e)
 	{
-		cssmatch_printException(e);
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }

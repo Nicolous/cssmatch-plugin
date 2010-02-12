@@ -32,7 +32,7 @@ using std::string;
 using std::list;
 
 ConCommandHook::ConCommandHook(const char * name, HookCallback hookCallback)
-: ConCommand(name,NULL,PLUGIN_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL), callback(hookCallback)
+: ConCommand(name,NULL,CSSMATCH_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL), callback(hookCallback)
 {
 	Init();
 }
@@ -70,12 +70,12 @@ void ConCommandHook::Init()
 		}
 		else
 		{
-			cssmatch_print(string("Unable to hook ") + GetName() + ": command not found");
+			CSSMATCH_PRINT(string("Unable to hook ") + GetName() + ": command not found");
 		}
 	}
 	else
 	{
-		cssmatch_print(string("Unable to hook ") + GetName() + ": the interface is not ready");
+		CSSMATCH_PRINT(string("Unable to hook ") + GetName() + ": the interface is not ready");
 	}
 }
 

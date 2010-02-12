@@ -83,6 +83,9 @@ namespace cssmatch
 		/** Get clan's stats */
 		ClanStats * getStats();
 
+		/** Reset the stats */
+		void resetStats();
+
 		/** Try to automatically detect the clan's name */
 		void detectClanName();
 

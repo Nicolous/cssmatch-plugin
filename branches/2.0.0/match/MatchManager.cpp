@@ -223,7 +223,7 @@ void MatchManager::detectClanName(TeamCode code) throw(MatchManagerException)
 		}
 		catch(const MatchManagerException & e)
 		{
-			cssmatch_printException(e);
+			CSSMATCH_PRINT_EXCEPTION(e);
 		}
 	}
 	else
@@ -291,8 +291,15 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		// Update match infos
 		infos.setNumber = 1;
 		infos.roundNumber = 1;
+		infos.kniferoundWinner = NULL;
 
-		// Reset the stats of all players
+		// Reset all clan related info
+		lignup.clan1.resetStats();
+		lignup.clan1.setReady(false);
+		lignup.clan2.resetStats();
+		lignup.clan2.setReady(false);
+
+		// Reset all player stats
 		list<ClanMember *> * playerlist = plugin->getPlayerlist();
 		for_each(playerlist->begin(),playerlist->end(),ResetStats());
 
@@ -397,10 +404,6 @@ void MatchManager::stop() throw (MatchManagerException)
 		// Stop to monitor the ConVars monitored
 		plugin->removeTimers();
 
-		// Remove any old tv record
-		for_each(records.begin(),records.end(),TvRecordToRemove());
-		records.clear();
-
 		// Write the report
 		if (plugin->getConVar("cssmatch_report")->GetBool())
 		{
@@ -410,6 +413,10 @@ void MatchManager::stop() throw (MatchManagerException)
 
 		// Return to the initial state
 		setMatchState(initialState);
+
+		// Remove any old tv record
+		for_each(records.begin(),records.end(),TvRecordToRemove());
+		records.clear();
 
 		// Do a time break before returning to the initial configuration
 		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
@@ -432,6 +439,7 @@ void MatchManager::stop() throw (MatchManagerException)
 
 void MatchManager::showMenu(Player * player)
 {
+	player->cexec("playgamesound UI/buttonrollover.wav\n");
 	currentState->showMenu(player);
 }
 

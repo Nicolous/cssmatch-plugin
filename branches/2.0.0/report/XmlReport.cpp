@@ -57,10 +57,10 @@ void XmlReport::writePlugin(ticpp::Element * cssmatch)
 {
 	ticpp::Element * ePlugin = new ticpp::Element("plugin");
 
-	ticpp::Element * eVersion = new ticpp::Element("version",PLUGIN_VERSION_LIGHT);
+	ticpp::Element * eVersion = new ticpp::Element("version",CSSMATCH_VERSION_LIGHT);
 	ePlugin->LinkEndChild(eVersion);
 
-	ticpp::Element * eUrl = new ticpp::Element("url",PLUGIN_SITE);
+	ticpp::Element * eUrl = new ticpp::Element("url",CSSMATCH_SITE);
 	ePlugin->LinkEndChild(eUrl);
 
 	cssmatch->LinkEndChild(ePlugin);
@@ -178,7 +178,7 @@ void XmlReport::writeJoueur(ticpp::Element * eJoueurs, ClanMember * player)
 	IPlayerInfo * pInfo = player->getPlayerInfo();
 	PlayerStats * stats = player->getCurrentStats();
 
-	if (pInfo != NULL)
+	if (isValidPlayer(pInfo))
 	{
 		ticpp::Element * eJoueur = new ticpp::Element("joueur");
 		eJoueur->SetAttribute("steamid",pInfo->GetNetworkIDString());
@@ -238,7 +238,7 @@ void XmlReport::writeSourcetv(ticpp::Element * eMatch)
 		int recordNumber = 1;
 		while(itRecord != invalidRecord)
 		{
-			ticpp::Element * eManche = new ticpp::Element("manche",(*itRecord)->getName());
+			ticpp::Element * eManche = new ticpp::Element("manche",*(*itRecord)->getName());
 			eManche->SetAttribute("numero",recordNumber);
 
 			eSourcetv->LinkEndChild(eManche);
@@ -271,6 +271,6 @@ void XmlReport::write()
 	}
 	catch(const ticpp::Exception & e)
 	{
-		cssmatch_printException(e);
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }

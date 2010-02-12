@@ -96,7 +96,7 @@ namespace cssmatch
 		void i18nChatSay(	RecipientFilter & recipients,
 							const std::string & keyword,
 							const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS,
-							int playerIndex = INVALID_ENTITY_INDEX);
+							int playerIndex = CSSMATCH_INVALID_INDEX);
 
 
 		/** Send a colorful chat message
@@ -186,7 +186,7 @@ namespace cssmatch
 							RecipientFilter & recipients,
 							const std::string & keyword,
 							const std::map<std::string, std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
-							int playerIndex = INVALID_ENTITY_INDEX);
+							int playerIndex = CSSMATCH_INVALID_INDEX);
 
 		/** @see BaseTimer */
 		void execute();

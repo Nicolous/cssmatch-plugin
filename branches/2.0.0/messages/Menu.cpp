@@ -161,7 +161,7 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 	int iBegin = (page-1)*9;
 	if ((iBegin >= 0) && (iBegin <= linecount))
 	{
-		//int iEnd = iBegin+9; // TODO: multi-page => bad sensibility
+		//int iEnd = iBegin+9; // multi-page => bad sensibility
 		int iEnd = iBegin + min(linecount-iBegin,9);
 
 		// Set the options which the player will be able to select
@@ -188,7 +188,7 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 		{
 			menu << " \n" << i18n->getTranslation(language,"menu_empty") << "\n \n";
 
-			cssmatch_print("Empty menu");
+			CSSMATCH_PRINT("Empty menu");
 		}
 		else
 		{
@@ -212,6 +212,6 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 		i18n->popupSay(recipients,menu.str(),-1,sensibilityFlags);
 	}
 	else
-		cssmatch_print("Invalid menu page");
+		CSSMATCH_PRINT("Invalid menu page");
 }
 

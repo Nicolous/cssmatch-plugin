@@ -45,7 +45,7 @@ UserMessagesManager::~UserMessagesManager()
 void UserMessagesManager::chatSay(RecipientFilter & recipients, const string & message, int playerIndex)
 {
 	ostringstream output;
-	output << "\004[" << PLUGIN_NAME << "]\001 " << message << "\n";
+	output << "\004[" << CSSMATCH_NAME << "]\001 " << message << "\n";
 
 	bf_write * pBitBuf = engine->UserMessageBegin(&recipients,MESSAGE_SAYTEXT);
 
@@ -59,7 +59,7 @@ void UserMessagesManager::chatSay(RecipientFilter & recipients, const string & m
 void UserMessagesManager::chatWarning(RecipientFilter & recipients, const string & message)
 {
 	ostringstream output;
-	output << "\004[" << PLUGIN_NAME << "]\003 " << message << "\n";
+	output << "\004[" << CSSMATCH_NAME << "]\003 " << message << "\n";
 
 	bf_write * pBitBuf = engine->UserMessageBegin(&recipients,MESSAGE_SAYTEXT);
 

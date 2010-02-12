@@ -57,7 +57,7 @@ namespace cssmatch
 		{
 		case 1:
 			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
-			player->cexec("cssmatch");
+			player->cexec("cssmatch\n");
 			break;
 		case 2:
 			{
@@ -66,16 +66,16 @@ namespace cssmatch
 				IPlayerInfo * pInfo = player->getPlayerInfo();
 				PlayerIdentity * identity = player->getIdentity();
 
-				match->restartRound();
-
 				recipients.addAllPlayers();
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					parameters["$admin"] = pInfo->GetName();
 					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_round_restarted");
+
+				match->restartRound();
 			}
 
 			player->quitMenu();
@@ -85,9 +85,20 @@ namespace cssmatch
 			player->quitMenu();
 			break;
 		case 4:
-			match->detectClanName(T_TEAM);
-			match->detectClanName(CT_TEAM);
-			player->quitMenu();
+			{
+				MatchLignup * lignup = match->getLignup();
+				match->detectClanName(T_TEAM);
+				match->detectClanName(CT_TEAM);
+
+				RecipientFilter recipients;
+				recipients.addRecipient(player->getIdentity()->index);
+				map<string,string> parameters;
+				parameters["$team1"] = *lignup->clan1.getName();
+				parameters["$team2"] = *lignup->clan2.getName();
+				i18n->i18nChatSay(recipients,"match_name",parameters);
+
+				player->quitMenu();
+			}
 			break;
 		default:
 			player->quitMenu();
@@ -171,7 +182,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 		}
 		else if (playerTeam == teamLoser)
 		{
-			if (pInfo != NULL)
+			if (isValidPlayer(pInfo))
 			{
 				if (pInfo->IsFakeClient())
 					(*itPlayer)->kick("CSSMatch: Spec Bot");
@@ -312,7 +323,7 @@ void KnifeRoundMatchState::item_pickup(IGameEvent * event)
 			(*itPlayer)->removeWeapon(WEAPON_SLOT4);
 		}
 		else
-			cssmatch_print("Unable to find the player wich pickups an item");
+			CSSMATCH_PRINT("Unable to find the player wich pickups an item");
 	}
 }
 
@@ -370,6 +381,6 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 			i18n->i18nChatSay(recipients,"kniferound_c4");
 		}
 		else
-			cssmatch_print("Unable to find the player who plants the bomb");
+			CSSMATCH_PRINT("Unable to find the player who plants the bomb");
 	}
 }

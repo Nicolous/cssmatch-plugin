@@ -94,7 +94,7 @@ bool cssmatch::normalizeFileName(std::string & fileName)
 void cssmatch::print(const string & fileName, int line, const string & message)
 {
 	ostringstream buffer;
-	buffer << PLUGIN_NAME << " (" << fileName << " l." << line << ") : " << message << "\n";
+	buffer << CSSMATCH_NAME << " (" << fileName << " l." << line << ") : " << message << "\n";
 	//Msg(buffer.str().c_str());
 	ServerPlugin::getInstance()->log(buffer.str());
 }
@@ -112,7 +112,7 @@ IServerEntity * cssmatch::getServerEntity(edict_t * entity)
 
 	if (! isValidServerEntity(sEntity))
 	{
-		cssmatch_print("Unable to find the server entity corresponding to this entity");
+		CSSMATCH_PRINT("Unable to find the server entity corresponding to this entity");
 		sEntity = NULL;
 	}
 
@@ -129,7 +129,7 @@ CBaseEntity * cssmatch::getBaseEntity(edict_t * entity)
 
 	if (! isValidBaseEntity(bEntity))
 	{
-		cssmatch_print("Unable to find the base entity corresponding to this entity");
+		CSSMATCH_PRINT("Unable to find the base entity corresponding to this entity");
 		bEntity = NULL;
 	}
 
@@ -142,7 +142,7 @@ IServerUnknown * cssmatch::getServerUnknow(edict_t * entity)
 
 	if (! isValidServerUnknown(sUnknown))
 	{
-		cssmatch_print("Unable to find the server unknown corresponding to this entity");
+		CSSMATCH_PRINT("Unable to find the server unknown corresponding to this entity");
 		sUnknown = NULL;
 	}
 

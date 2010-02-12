@@ -66,7 +66,7 @@ void RecipientFilter::addAllPlayers()
 
 int RecipientFilter::GetRecipientIndex(int slot) const
 {
-	int index = INVALID_ENTITY_INDEX; 
+	int index = CSSMATCH_INVALID_INDEX; 
 
 	try
 	{

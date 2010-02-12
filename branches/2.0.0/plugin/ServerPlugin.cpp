@@ -71,7 +71,7 @@ using std::ostringstream;
 	}
 	catch(const EntityPropException & e)
 	{
-		plugin->cssmatch_printException(e);
+		plugin->CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }*/
 
@@ -151,7 +151,7 @@ namespace cssmatch
 
 				(*itPlayer)->swap();
 
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					recipients.addAllPlayers();
 					parameters["$admin"] = pInfo->GetName();
@@ -192,7 +192,7 @@ namespace cssmatch
 
 				(*itPlayer)->spec();
 
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					recipients.addAllPlayers();
 					parameters["$admin"] = pInfo->GetName();
@@ -237,7 +237,7 @@ namespace cssmatch
 
 				(*itPlayer)->kick(i18n->getTranslation(targetLanguage,"admin_kick"));
 
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					recipients.addAllPlayers();
 					parameters["$admin"] = pInfo->GetName();
@@ -394,7 +394,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 	catch(const BaseConvarsAccessorException & e)
 	{
 		success = false;
-		Msg(PLUGIN_NAME " : %s\n",e.what()); // Do not use printException here as interfaces.engine isn't initialized !
+		Msg(CSSMATCH_NAME " : %s\n",e.what()); // Do not use printException here as interfaces.engine isn't initialized !
 	}
 
 	success &= 
@@ -432,7 +432,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		i18n->setDefaultLanguage(cssmatch_language);
 
 		// Create the other convars
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_version",PLUGIN_VERSION_LIGHT,FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_version",cssmatch_version));
+		addPluginConVar(new I18nConVar(i18n,"cssmatch_version",CSSMATCH_VERSION_LIGHT,FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_version",cssmatch_version));
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_advanced","0",FCVAR_NONE,"cssmatch_advanced",true,0.0f,true,1.0f));
 
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_report","1",FCVAR_NONE,"cssmatch_report",true,0.0f,true,1.0f));
@@ -469,7 +469,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			(tv_enable == NULL))
 		{
 			success = false;
-			cssmatch_print("One or more game ConVar were not found");
+			CSSMATCH_PRINT("One or more game ConVar were not found");
 		}
 
 		addPluginConVar(sv_cheats);
@@ -497,8 +497,8 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		// Hook needed commands
 		hookConCommand("say",say_hook);
 		hookConCommand("say_team",say_hook);
-		hookConCommand("tv_stoprecord",tv_stoprecord_hook);
-		hookConCommand("tv_stop",tv_stoprecord_hook);
+		/*hookConCommand("tv_stoprecord",tv_stoprecord_hook);
+		hookConCommand("tv_stop",tv_stoprecord_hook);*/
 	}
 
 	return success;
@@ -555,7 +555,7 @@ void ServerPlugin::showChangelevelMenu(Player * player)
 	}
 	catch(const ConfigurationFileException & e)
 	{
-		cssmatch_printException(e);
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 
 	player->sendMenu(maplist,1,I18nManager::WITHOUT_PARAMETERS,true);
@@ -568,7 +568,7 @@ void ServerPlugin::constructPlayerlistMenu(Menu * to)
 	while(itPlayer != invalidPlayer)
 	{
 		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
-		if (pInfo != NULL)
+		if (isValidPlayer(pInfo))
 			to->addLine(false,pInfo->GetName(),pInfo->GetUserID());
 			
 		itPlayer++;
@@ -661,7 +661,7 @@ void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback 
 	}
 	else
 	{
-		cssmatch_print(commandName + " is already hooked");
+		CSSMATCH_PRINT(commandName + " is already hooked");
 	}
 }
 
@@ -710,7 +710,7 @@ void ServerPlugin::UnPause()
 
 const char * ServerPlugin::GetPluginDescription()
 {
-	return PLUGIN_VERSION;
+	return CSSMATCH_VERSION;
 }
 
 void ServerPlugin::LevelInit(char const * pMapName)
@@ -721,8 +721,15 @@ void ServerPlugin::LevelInit(char const * pMapName)
 
 	// Update the referee steamid list
 	adminlist.clear();
-	ConfigurationFile adminlistFile(CFG_FOLDER_PATH "cssmatch/adminlist.txt");
-	adminlistFile.getLines(adminlist);
+	try
+	{
+		ConfigurationFile adminlistFile(CFG_FOLDER_PATH "cssmatch/adminlist.txt");
+		adminlistFile.getLines(adminlist);
+	}
+	catch(const ConfigurationFileException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
 
 	// Delete all pending timers
 	removeTimers();
@@ -784,7 +791,7 @@ void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
         }
         catch(const PlayerException & e)
         {
-            cssmatch_printException(e);
+            CSSMATCH_PRINT_EXCEPTION(e);
         }
     }
 }
@@ -807,145 +814,152 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 {
 	PLUGIN_RESULT result = PLUGIN_CONTINUE;
 
-	if (isValidEntity(pEntity))
+	try
 	{
-		string command = interfaces.engine->Cmd_Argv(0);
-		
-		// Stop a player from joining another team during the match 
-		// (Excepted during the kniferound, or if the player wants to join the spectators or come from the spectators)
-		if (command == "jointeam")
+		if (isValidEntity(pEntity))
 		{
-			MatchStateId matchState = match->getMatchState();
-			if (matchState != DisabledMatchState::getInstance()->getId() &&
-				matchState != KnifeRoundMatchState::getInstance()->getId())
+			string command = interfaces.engine->Cmd_Argv(0);
+			
+			// Stop a player from joining another team during the match 
+			// (Excepted during the kniferound, or if the player wants to join the spectators or come from the spectators)
+			if (command == "jointeam")
 			{
-				// Check for command sanity (jointeam without argument causes a error message but swap the player)
-				if (interfaces.engine->Cmd_Argc() > 1)
+				MatchStateId matchState = match->getMatchState();
+				if (matchState != DisabledMatchState::getInstance()->getId() &&
+					matchState != KnifeRoundMatchState::getInstance()->getId())
 				{
-					string arg1 = interfaces.engine->Cmd_Argv(1);
-
-					// If the team the player wants to join is a non-spectator team
-					if ((arg1 == "2") || (arg1 == "3"))
+					// Check for command sanity (jointeam without argument causes a error message but swap the player)
+					if (interfaces.engine->Cmd_Argc() > 1)
 					{
-						list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-						list<ClanMember *>::iterator itPlayer =
-							find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-						if (itPlayer != invalidPlayer)
-						{
-							// If the team is not a spectator team
-							if ((*itPlayer)->getMyTeam() > SPEC_TEAM)
-							{
-								RecipientFilter recipients;
-								recipients.addRecipient((*itPlayer)->getIdentity()->index);
+						string arg1 = interfaces.engine->Cmd_Argv(1);
 
-								i18n->i18nChatSay(recipients,"player_no_swap_in_match");
-								result = PLUGIN_STOP;
+						// If the team the player wants to join is a non-spectator team
+						if ((arg1 == "2") || (arg1 == "3"))
+						{
+							list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+							list<ClanMember *>::iterator itPlayer =
+								find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+							if (itPlayer != invalidPlayer)
+							{
+								// If the team is not a spectator team
+								if ((*itPlayer)->getMyTeam() > SPEC_TEAM)
+								{
+									RecipientFilter recipients;
+									recipients.addRecipient((*itPlayer)->getIdentity()->index);
+
+									i18n->i18nChatSay(recipients,"player_no_swap_in_match");
+									result = PLUGIN_STOP;
+								}
+							}
+							else
+								CSSMATCH_PRINT("Unable to find the player who typed jointeam");
+						}
+						// Now test if the command is not invalid ("jointeam bla" will swap the player)
+						else if (atoi(arg1.c_str()) == 0)
+						{
+							//Msg("Never trust the user input\n");
+							result = PLUGIN_STOP;
+						}
+						// arg1 < 0 and arg1 > 3 is refused by the game
+					}
+					else
+						result = PLUGIN_STOP;
+				}
+			}
+			else if (command == "menuselect")
+			{
+				list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+				list<ClanMember *>::iterator itPlayer =
+					find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+				if (itPlayer != invalidPlayer)
+				{
+					Menu * menu = (*itPlayer)->getMenuHandler()->menu;
+					if (menu != NULL)
+					{
+						if (interfaces.engine->Cmd_Argc() == 2)
+						{
+							int choice = atoi(interfaces.engine->Cmd_Argv(1));
+							if (choice != 0)
+							{
+								(*itPlayer)->cexec("playgamesound UI/buttonrollover.wav\n");
+								menu->doCallback(*itPlayer,choice);
 							}
 						}
-						else
-							cssmatch_print("Unable to find the player who typed jointeam");
 					}
-					// Now test if the command is not invalid ("jointeam bla" will swap the player)
-					else if (atoi(arg1.c_str()) == 0)
-					{
-						//Msg("Never trust the user input\n");
-						result = PLUGIN_STOP;
-					}
-					// arg1 < 0 and arg1 > 3 is refused by the game
 				}
-				else
-					result = PLUGIN_STOP;
 			}
-		}
-		else if (command == "menuselect")
-		{
-			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-			list<ClanMember *>::iterator itPlayer =
-				find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-			if (itPlayer != invalidPlayer)
+			else if (command == "cssmatch")
 			{
-				Menu * menu = (*itPlayer)->getMenuHandler()->menu;
-				if (menu != NULL)
+				list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+				list<ClanMember *>::iterator itPlayer =
+					find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+				if (itPlayer != invalidPlayer)
 				{
-					if (interfaces.engine->Cmd_Argc() == 2)
+					if ((*itPlayer)->isReferee())
 					{
-						int choice = atoi(interfaces.engine->Cmd_Argv(1));
-						if (choice != 0)
+						match->showMenu(*itPlayer);
+					}
+					else
+					{
+						PlayerIdentity * playerid = (*itPlayer)->getIdentity();
+						RecipientFilter recipients;
+						recipients.addRecipient(playerid->index);
+
+						i18n->i18nChatSay(recipients,"player_you_not_admin");
+						log(playerid->steamid + " is not admin");
+
+						log("Admin list:");
+						list<string>::const_iterator itAdmin = adminlist.begin();
+						list<string>::const_iterator invalidAdmin = adminlist.end();
+						while(itAdmin != invalidAdmin)
 						{
-							menu->doCallback(*itPlayer,choice);
+							log(*itAdmin);
+							
+							itAdmin++;
 						}
 					}
 				}
+
+				result = PLUGIN_STOP;
 			}
-		}
-		else if (command == "cssmatch")
-		{
-			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-			list<ClanMember *>::iterator itPlayer =
-				find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-			if (itPlayer != invalidPlayer)
+			else if (command == "cssm_rates")
 			{
-				if ((*itPlayer)->isReferee())
+				list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+				list<ClanMember *>::iterator itPlayer =
+					find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
+				if (itPlayer != invalidPlayer)
 				{
-					// TODO: sound
-					match->showMenu(*itPlayer);
-				}
-				else
-				{
-					PlayerIdentity * playerid = (*itPlayer)->getIdentity();
 					RecipientFilter recipients;
-					recipients.addRecipient(playerid->index);
+					recipients.addRecipient((*itPlayer)->getIdentity()->index);
 
-					i18n->i18nChatSay(recipients,"player_you_not_admin");
-					log(playerid->steamid + " is not admin");
-
-					log("Admin list:");
-					list<string>::const_iterator itAdmin = adminlist.begin();
-					list<string>::const_iterator invalidAdmin = adminlist.end();
-					while(itAdmin != invalidAdmin)
+					list<ClanMember *>::const_iterator currentPlayer = playerlist.begin();
+					while(currentPlayer != invalidPlayer)
 					{
-						log(*itAdmin);
-						
-						itAdmin++;
+						int playerIndex = (*currentPlayer)->getIdentity()->index;
+
+						ostringstream message;
+						message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << " : " << std::endl
+								<< "\t" << "cl_updaterate  : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << std::endl
+								<< "\t" << "cl_cmdrate     : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << std::endl
+								<< "\t" << "cl_interpolate : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << std::endl
+								<< "\t" << "rate           : " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << std::endl
+								<< std::endl;
+
+						i18n->consoleSay(recipients,message.str());
+							
+						currentPlayer++;
 					}
 				}
+				else
+					CSSMATCH_PRINT("Unable to find the player who typed jointeam");
+
+				result = PLUGIN_STOP;
 			}
-
-			result = PLUGIN_STOP;
 		}
-		else if (command == "cssm_rates")
-		{
-			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-			list<ClanMember *>::iterator itPlayer =
-				find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-			if (itPlayer != invalidPlayer)
-			{
-				RecipientFilter recipients;
-				recipients.addRecipient((*itPlayer)->getIdentity()->index);
-
-				list<ClanMember *>::const_iterator currentPlayer = playerlist.begin();
-				while(currentPlayer != invalidPlayer)
-				{
-					int playerIndex = (*currentPlayer)->getIdentity()->index;
-
-					ostringstream message;
-					message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << " : " << std::endl
-							<< "\t" << "cl_updaterate  : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << std::endl
-							<< "\t" << "cl_cmdrate     : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << std::endl
-							<< "\t" << "cl_interpolate : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << std::endl
-							<< "\t" << "rate           : " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << std::endl
-							<< std::endl;
-
-					i18n->consoleSay(recipients,message.str());
-						
-					currentPlayer++;
-				}
-			}
-			else
-				cssmatch_print("Unable to find the player who typed jointeam");
-
-			result = PLUGIN_STOP;
-		}
+	}
+	catch(const BaseException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 
 	return result;
@@ -959,7 +973,7 @@ PLUGIN_RESULT ServerPlugin::NetworkIDValidated(const char * pszUserName, const c
 void ServerPlugin::log(const std::string & message) const
 {
 	ostringstream buffer;
-	buffer << PLUGIN_NAME << " : " << message << "\n";
+	buffer << CSSMATCH_NAME << " : " << message << "\n";
 	interfaces.engine->LogPrint(buffer.str().c_str());
 }
 
@@ -970,7 +984,7 @@ void ServerPlugin::queueCommand(const string & command) const
 
 void ServerPlugin::executeCommand(const std::string & command) const
 {
-	//interfaces.engine->InsertServerCommand(command.c_str()); // Causes crash
+	//interfaces.engine->InsertServerCommand(command.c_str());
 	queueCommand(command);
 	interfaces.engine->ServerExecute();
 }

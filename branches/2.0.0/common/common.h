@@ -59,22 +59,22 @@ class CBaseCombatCharacter;
 
 #include "../exceptions/BaseException.h" // here because I generally define the exception object inline*/
 
-#define PLUGIN_NAME "CSSMatch"
+#define CSSMATCH_NAME "CSSMatch"
 
-#define PLUGIN_VERSION_LIGHT "2.0.0 Alpha"
+#define CSSMATCH_VERSION_LIGHT "2.0.0 Alpha"
 
-#define PLUGIN_SITE "http://code.google.com/p/cssmatch-plugin-en/"
+#define CSSMATCH_SITE "http://code.google.com/p/cssmatch-plugin-en/"
 
-#define PLUGIN_VERSION "Nico's " \
-		PLUGIN_NAME ", version " \
-		PLUGIN_VERSION_LIGHT " (" __DATE__ "), " \
-		PLUGIN_SITE
+#define CSSMATCH_VERSION "Nico's " \
+		CSSMATCH_NAME ", version " \
+		CSSMATCH_VERSION_LIGHT " (" __DATE__ "), " \
+		CSSMATCH_SITE
 
 /** Invalid entity index */
-#define INVALID_ENTITY_INDEX 0
+#define CSSMATCH_INVALID_INDEX 0
 
 /** invalid player userid */
-#define INVALID_PLAYER_USERID -1
+#define CSSMATCH_INVALID_USERID -1
 
 namespace cssmatch
 {
@@ -141,7 +141,7 @@ namespace cssmatch
 	 */
 	inline bool isValidPlayerIndex(int index, int maxClients)
 	{
-		return (index > INVALID_ENTITY_INDEX) && index <= maxClients;
+		return (index > CSSMATCH_INVALID_INDEX) && index <= maxClients;
 	}
 
 	/** Make sure that a player userid is valid
@@ -151,7 +151,7 @@ namespace cssmatch
 	 */
 	inline bool isValidPlayerUserid(int userid)
 	{
-		return userid > INVALID_PLAYER_USERID;
+		return userid > CSSMATCH_INVALID_USERID;
 	}
 
 	/** Make sure that a server entity pointer is valid
@@ -221,12 +221,12 @@ namespace cssmatch
 /**
  * @see cssmatch::print
  */
-#define cssmatch_print(message) cssmatch::print(__FILE__,__LINE__,message);
+#define CSSMATCH_PRINT(message) cssmatch::print(__FILE__,__LINE__,message);
 
 /**
  * @see cssmatch::printException
  */
-#define cssmatch_printException(e) cssmatch::printException(e,__FILE__,__LINE__);
+#define CSSMATCH_PRINT_EXCEPTION(e) cssmatch::printException(e,__FILE__,__LINE__);
 
 
 #endif // __COMMON_H__

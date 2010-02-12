@@ -120,7 +120,7 @@ string ConfigurationFile::getPatchFromCfg() const
 	if (iCfg != string::npos)
 		path = filePath.substr(iCfg+strlen(CFG_FOLDER_PATH));
 	else
-		cssmatch_print(filePath + " isn't localized in the cstrike directory");
+		CSSMATCH_PRINT(filePath + " isn't localized in the cstrike directory");
 
 	return path;
 }

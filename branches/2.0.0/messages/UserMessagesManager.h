@@ -145,7 +145,7 @@ namespace cssmatch
 		 */
 		void chatSay(	RecipientFilter & recipients,
 						const std::string & message,
-						int playerIndex = INVALID_ENTITY_INDEX);
+						int playerIndex = CSSMATCH_INVALID_INDEX);
 
 
 		/** Send a colorful chat message

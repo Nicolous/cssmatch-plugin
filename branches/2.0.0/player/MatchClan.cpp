@@ -74,7 +74,7 @@ void MatchClan::getMembers(list<ClanMember *> * members)
 	}
 	catch(const MatchManagerException & e)
 	{
-		cssmatch_printException(e);
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }
 
@@ -86,6 +86,14 @@ ClanStats * MatchClan::getLastSetStats()
 ClanStats * MatchClan::getStats()
 {
 	return &stats;
+}
+
+void MatchClan::resetStats()
+{
+	lastSetStats.scoreT = 0;
+	lastSetStats.scoreCT = 0;
+	stats.scoreT = 0;
+	stats.scoreCT = 0;
 }
 
 void MatchClan::detectClanName()
@@ -178,7 +186,7 @@ void MatchClan::detectClanName()
 			}
 			else // Error :-(
 			{
-				cssmatch_print("An error occured detecting a clan name !");
+				CSSMATCH_PRINT("An error occured detecting a clan name !");
 				setName("Nobody");
 			}
 		}
@@ -191,7 +199,7 @@ void MatchClan::detectClanName()
 			}
 			else // Error :-(
 			{
-				cssmatch_print("An error occured detecting a clan name !");
+				CSSMATCH_PRINT("An error occured detecting a clan name !");
 				setName("Nobody");
 			}
 		}

@@ -113,6 +113,10 @@ void cssmatch::cssm_start()
 		{
     		RunnableConfigurationFile configuration(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile);
 
+			RecipientFilter recipients;
+			recipients.addAllPlayers();
+			i18n->i18nChatSay(recipients,"match_started");
+
 			// Determine the initial match state
 			BaseMatchState * initialState = NULL;
 			if (plugin->getConVar("cssmatch_kniferound")->GetBool() && kniferound)
@@ -134,10 +138,6 @@ void cssmatch::cssm_start()
 				i18n->i18nChatWarning(recipients,"match_config_error");
 			}
 			match->start(configuration,warmup,initialState);
-
-			RecipientFilter recipients;
-			recipients.addAllPlayers();
-			i18n->i18nChatSay(recipients,"match_started");
 		}
 		catch(const ConfigurationFileException & e)
 		{
@@ -231,11 +231,11 @@ void cssmatch::cssm_restartmanche()
 
 	try
 	{
-		match->restartSet();
-
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
 		i18n->i18nChatSay(recipients,"admin_manche_restarted");
+
+		match->restartSet();
 	}
 	catch(const MatchManagerException & e)
 	{
@@ -251,11 +251,11 @@ void cssmatch::cssm_restartround()
 
 	try
 	{
-		match->restartRound();
-
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
 		i18n->i18nChatSay(recipients,"admin_round_restarted");
+
+		match->restartRound();
 	}
 	catch(const MatchManagerException & e)
 	{
@@ -528,7 +528,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 		{
 			if ((*itPlayer)->isReferee())
 			{
-				// TODO: Display the menu
+				plugin->showAdminMenu((*itPlayer));
 			}
 			else
 			{
@@ -539,7 +539,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			}
 		}
 		else
-			cssmatch_print("Unable to find the player who typed cssmatch");
+			CSSMATCH_PRINT("Unable to find the player who typed cssmatch");
 	}
 	// !go, ready: a clan is ready to end the warmup
 	else if ((chatCommand == "!go") || (chatCommand == "ready"))
@@ -555,7 +555,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			if (itPlayer != invalidPlayer)
 				WarmupMatchState::getInstance()->doGo(*itPlayer);
 			else
-				cssmatch_print("Unable to find the player who typed !go/ready");		
+				CSSMATCH_PRINT("Unable to find the player who typed !go/ready");		
 		}
 		else
 		{
@@ -651,7 +651,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			}
 		}
 		else
-			cssmatch_print("Unable to find the player who typed !teamt");
+			CSSMATCH_PRINT("Unable to find the player who typed !teamt");
 	}
 	// !teamct: cf cssm_teamct
 	else if (chatCommand == "!teamct")
@@ -711,13 +711,13 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			}
 		}
 		else
-			cssmatch_print("Unable to find the player who typed !teamct");
+			CSSMATCH_PRINT("Unable to find the player who typed !teamct");
 	}
 
 	return eat;
 }
 
-bool cssmatch::tv_stoprecord_hook(int userIndex, IVEngineServer * engine)
+/*bool cssmatch::tv_stoprecord_hook(int userIndex, IVEngineServer * engine)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
@@ -732,3 +732,4 @@ bool cssmatch::tv_stoprecord_hook(int userIndex, IVEngineServer * engine)
 
 	return false;
 }
+*/

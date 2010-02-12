@@ -30,8 +30,8 @@ namespace cssmatch
 	/** Make cssmatch_version constants */
 	void cssmatch_version(ConVar * var, char const * pOldString);
 
-	/** Apply changes related to cssmatch_advanced */
-	void cssmatch_advanced(ConVar * var, char const * pOldString);
+	/* Apply changes related to cssmatch_advanced */
+	//void cssmatch_advanced(ConVar * var, char const * pOldString);
 }
 
 #endif // __CON_VAR_CALLBACKS_H__

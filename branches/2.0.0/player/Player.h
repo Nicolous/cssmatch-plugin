@@ -82,7 +82,7 @@ namespace cssmatch
 		/** Steamid of this player */
 		std::string steamid;
 
-		PlayerIdentity() : pEntity(NULL),index(INVALID_ENTITY_INDEX),userid(INVALID_PLAYER_USERID),steamid(""){};
+		PlayerIdentity() : pEntity(NULL),index(CSSMATCH_INVALID_INDEX),userid(CSSMATCH_INVALID_USERID),steamid(""){};
 	};
 
 	struct PlayerMenuHandler
@@ -99,7 +99,7 @@ namespace cssmatch
 		/** Data associated to the selected line in the menu */
 		int data; // FIXME: Make me generic
 
-		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false), data(INVALID_PLAYER_USERID) {}
+		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false), data(CSSMATCH_INVALID_USERID) {}
 	};
 
 	/** Base class for player informations */

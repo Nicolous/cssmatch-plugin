@@ -69,7 +69,7 @@ namespace cssmatch
 		MenuLine(	MenuLineType lineType,
 					bool isI18n,
 					const std::string & content,
-					int hiddenData = INVALID_PLAYER_USERID)
+					int hiddenData = CSSMATCH_INVALID_USERID)
 			: type(lineType), i18n(isI18n), text(content), data(hiddenData) {};
 	};
 
@@ -114,7 +114,7 @@ namespace cssmatch
 		 * @param line The line to add
 		 * @param hiddenData The hidden data shipped in this line
 		 */
-		void addLine(bool isI18nKeyword, const std::string & line, int hiddenData = INVALID_PLAYER_USERID);
+		void addLine(bool isI18nKeyword, const std::string & line, int hiddenData = CSSMATCH_INVALID_USERID);
 
 		/** Returns a pointer to a line 
 		 * @param page The page where the line is

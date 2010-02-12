@@ -93,8 +93,15 @@ namespace cssmatch
 
 		if (callbacks.find(eventName) != callbacks.end())
 		{
-			// Call all the callback corresponding to this event
-			((object)->*(callbacks[eventName]))(event);
+			try
+			{
+				// Call all the callback corresponding to this event
+				((object)->*(callbacks[eventName]))(event);
+			}
+			catch(const BaseException & e)
+			{
+				CSSMATCH_PRINT_EXCEPTION(e);
+			}
 		}
 	}
 

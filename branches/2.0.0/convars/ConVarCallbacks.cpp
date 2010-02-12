@@ -30,13 +30,13 @@ using namespace cssmatch;
 
 void cssmatch::cssmatch_version(ConVar * var, char const * pOldString)
 {
-	if (strcmp(var->GetString(),PLUGIN_VERSION_LIGHT) != 0)
+	if (strcmp(var->GetString(),CSSMATCH_VERSION_LIGHT) != 0)
 	{
-		var->SetValue(PLUGIN_VERSION_LIGHT);
+		var->SetValue(CSSMATCH_VERSION_LIGHT);
 	}
 }
 
-void cssmatch::cssmatch_advanced(ConVar * var, char const * pOldString)
+/*void cssmatch::cssmatch_advanced(ConVar * var, char const * pOldString)
 {
-	// TODO: cssmatch::cssmatch_advanced
-}
+
+}*/

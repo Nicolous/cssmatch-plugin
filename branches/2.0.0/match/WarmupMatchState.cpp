@@ -55,7 +55,7 @@ namespace cssmatch
 		{
 		case 1:
 			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
-			player->cexec("cssmatch");
+			player->cexec("cssmatch\n");
 			break;
 		case 2:
 			{
@@ -65,7 +65,7 @@ namespace cssmatch
 				PlayerIdentity * identity = player->getIdentity();
 
 				recipients.addAllPlayers();
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					parameters["$admin"] = pInfo->GetName();
 					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
@@ -82,9 +82,20 @@ namespace cssmatch
 			player->quitMenu();
 			break;
 		case 4:
-			match->detectClanName(T_TEAM);
-			match->detectClanName(CT_TEAM);
-			player->quitMenu();
+			{
+				MatchLignup * lignup = match->getLignup();
+				match->detectClanName(T_TEAM);
+				match->detectClanName(CT_TEAM);
+
+				RecipientFilter recipients;
+				recipients.addRecipient(player->getIdentity()->index);
+				map<string,string> parameters;
+				parameters["$team1"] = *lignup->clan1.getName();
+				parameters["$team2"] = *lignup->clan2.getName();
+				i18n->i18nChatSay(recipients,"match_name",parameters);
+
+				player->quitMenu();
+			}
 			break;
 		case 5:
 			{
@@ -93,16 +104,16 @@ namespace cssmatch
 				IPlayerInfo * pInfo = player->getPlayerInfo();
 				PlayerIdentity * identity = player->getIdentity();
 
-				state->endWarmup();
-
 				recipients.addAllPlayers();
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					parameters["$admin"] = pInfo->GetName();
 					i18n->i18nChatSay(recipients,"admin_all_teams_say_ready_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_all_teams_say_ready");
+
+				state->endWarmup();
 			}
 			player->quitMenu();
 			break;
@@ -220,7 +231,7 @@ void WarmupMatchState::doGo(Player * player)
 	}
 	catch(const MatchManagerException & e)
 	{
-		cssmatch_printException(e);
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }
 
@@ -343,7 +354,7 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 		i18n->i18nChatSay(recipients,"warmup_c4");
 	}
 	else
-		cssmatch_print("Unable to find the player who plants the bomb");
+		CSSMATCH_PRINT("Unable to find the player who plants the bomb");
 
 }
 

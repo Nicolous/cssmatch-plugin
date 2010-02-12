@@ -59,7 +59,7 @@ namespace cssmatch
 		{
 		case 1:
 			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
-			player->cexec("cssmatch");
+			player->cexec("cssmatch\n");
 			break;
 		case 2:
 			{
@@ -68,16 +68,16 @@ namespace cssmatch
 				IPlayerInfo * pInfo = player->getPlayerInfo();
 				PlayerIdentity * identity = player->getIdentity();
 
-				match->restartRound();
-
 				recipients.addAllPlayers();
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					parameters["$admin"] = pInfo->GetName();
 					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_round_restarted");
+
+				match->restartRound();
 			}
 			player->quitMenu();
 			break;
@@ -86,9 +86,20 @@ namespace cssmatch
 			player->quitMenu();
 			break;
 		case 4:
-			match->detectClanName(T_TEAM);
-			match->detectClanName(CT_TEAM);
-			player->quitMenu();
+			{
+				MatchLignup * lignup = match->getLignup();
+				match->detectClanName(T_TEAM);
+				match->detectClanName(CT_TEAM);
+
+				RecipientFilter recipients;
+				recipients.addRecipient(player->getIdentity()->index);
+				map<string,string> parameters;
+				parameters["$team1"] = *lignup->clan1.getName();
+				parameters["$team2"] = *lignup->clan2.getName();
+				i18n->i18nChatSay(recipients,"match_name",parameters);
+
+				player->quitMenu();
+			}
 			break;
 		case 5:
 			{
@@ -97,16 +108,16 @@ namespace cssmatch
 				IPlayerInfo * pInfo = player->getPlayerInfo();
 				PlayerIdentity * identity = player->getIdentity();
 
-				match->restartSet();
-
 				recipients.addAllPlayers();
-				if (pInfo != NULL)
+				if (isValidPlayer(pInfo))
 				{
 					parameters["$admin"] = pInfo->GetName();
 					i18n->i18nChatSay(recipients,"admin_manche_restarted_by",parameters,identity->index);
 				}
 				else
 					i18n->i18nChatSay(recipients,"admin_manche_restarted");
+
+				match->restartSet();
 			}
 			player->quitMenu();
 			break;
@@ -186,8 +197,8 @@ void SetMatchState::startState()
 		try
 		{
 			record = new TvRecord(recordName.str());
-			match->getRecords()->push_back(record);
 			record->start();
+			match->getRecords()->push_back(record);
 		}
 		catch(const TvRecordException & e)
 		{
@@ -219,7 +230,7 @@ void SetMatchState::endState()
 	{
 		list<TvRecord *>::reference refLastRecord = recordlist->back();
 		if (refLastRecord->isRecording())
-			refLastRecord->stop();
+			refLastRecord->stop(); // TODO: delay?
 	}
 }
 
@@ -438,7 +449,7 @@ void SetMatchState::round_end(IGameEvent * event)
 	}
 	catch(const MatchManagerException & e)
 	{
-		// cssmatch_printException(e); // round draw
+		// CSSMATCH_PRINT_EXCEPTION(e); // round draw
 	}
 }
 
