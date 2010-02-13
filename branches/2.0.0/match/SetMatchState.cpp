@@ -198,7 +198,8 @@ void SetMatchState::startState()
 		TvRecord * record = NULL;
 		try
 		{
-			record = new TvRecord(recordName.str());
+		    string finalName = recordName.str(); // for gcc
+			record = new TvRecord(finalName);
 			record->start();
 			match->getRecords()->push_back(record);
 		}
@@ -232,7 +233,7 @@ void SetMatchState::endState()
 	{
 		list<TvRecord *>::reference refLastRecord = recordlist->back();
 		if (refLastRecord->isRecording())
-			refLastRecord->stop(); // TODO: delay?
+			refLastRecord->stop();
 	}
 }
 

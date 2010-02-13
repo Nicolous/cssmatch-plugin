@@ -192,9 +192,19 @@ CBaseCombatWeapon * Player::getWeaponFromWeaponSlot(WeaponSlotCode slot) const
 void Player::kick(const string & reason) const
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+	I18nManager * i18n = plugin->getI18nManager();
+	
+	string textReason;
+	
+    IPlayerInfo * pInfo = getPlayerInfo();
+    if (isValidPlayer(pInfo) && (! pInfo->IsFakeClient()))
+		textReason = i18n->getTranslation(reason,interfaces->engine->GetClientConVarValue(identity.index,"cl_language"));
+    else
+        textReason = "Kick bot";
 
 	ostringstream command;
-	command << "kickid " << identity.userid << " " << reason << "\n";
+	command << "kickid " << identity.userid << " " << textReason << "\n";
 	plugin->queueCommand(command.str());
 }
 

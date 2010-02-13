@@ -282,7 +282,6 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 	{
 		ServerPlugin * plugin = ServerPlugin::getInstance();
 		ValveInterfaces * interfaces = plugin->getInterfaces();
-		I18nManager * i18n = plugin->getI18nManager();
 
 		// Global recipient list
 		RecipientFilter recipients;

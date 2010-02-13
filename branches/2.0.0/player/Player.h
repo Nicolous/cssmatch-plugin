@@ -195,13 +195,13 @@ namespace cssmatch
 		CBaseCombatWeapon * getWeaponFromWeaponSlot(WeaponSlotCode slot) const;
 
 		/** Kick this player
-		 * @param reason Reason for the kick
+		 * @param reason Reason for the kick (i18n keyword)
 		 */
 		void kick(const std::string & reason) const;
 
 		/** Ban this player
 		 * @param duration Ban duration (in minutes, 0=permanent)
-		 * @param reason Reason for the kick
+		 * @param reason Reason for the kick/ban (i18n keyword)
 		 */
 		void ban(int duration, const std::string & reason) const;
 

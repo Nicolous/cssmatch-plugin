@@ -20,13 +20,13 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "XmlReport.h"
-
 #include "../match/MatchManager.h"
 #include "../player/MatchClan.h"
 #include "../player/ClanMember.h"
 #include "../player/Player.h"
 #include "../sourcetv/TvRecord.h"
+
+#include "XmlReport.h" // leave it here, or there are conflicting declarations of std::min & min, and std::max & max
 
 #include <ctime>
 

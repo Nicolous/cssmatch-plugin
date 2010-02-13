@@ -111,8 +111,7 @@ void cssmatch::cssm_start()
 	case 1:
 		try
 		{
-    		RunnableConfigurationFile configuration(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile);
-
+    		RunnableConfigurationFile configuration(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile);
 			RecipientFilter recipients;
 			recipients.addAllPlayers();
 			i18n->i18nChatSay(recipients,"match_started");

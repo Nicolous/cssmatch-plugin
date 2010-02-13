@@ -55,9 +55,8 @@ ARCH = i486
 ARCH_BIN = .so
 
 # Options du compilateur
-USER_CFLAGS =
-BASE_CFLAGS = 	-fno-rtti \
-				-msse \
+USER_CFLAGS = -DTIXML_USE_TICPP
+BASE_CFLAGS = 	-msse \
 				-fpermissive \
 				-D_LINUX \
 				-DNDEBUG \
@@ -73,10 +72,10 @@ BASE_CFLAGS = 	-fno-rtti \
 				-Wno-deprecated \
 				-msse 
 OPT_FLAGS = -O3 \
-			-fno-rtti \
 			-funroll-loops \
 			-s \
 			-pipe
+#			-fno-rtti \
 DEBUG_FLAGS = 	-g \
 				-ggdb3 \
 				-O0 \

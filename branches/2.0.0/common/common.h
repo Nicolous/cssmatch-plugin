@@ -29,7 +29,7 @@
 #pragma warning(disable :4101) /* unreferenced local variable */
 #endif // _MSC_VER
 
-// Do the STL include here, because the Valve's headers could cause conflict with gcc STL declarations (e.g. min/max macros)
+// Do the STL includes here, because the Valve's headers could cause conflict with gcc STL declarations (e.g. min/max macros)
 #ifdef _LINUX // Under Linux (or just gcc 4.1.3?), these headers are required to make <string> and <sstream> working (e.g. for std::min/max declarations)
 #include <vector>
 #include <fstream>

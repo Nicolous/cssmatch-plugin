@@ -216,7 +216,6 @@ namespace cssmatch
 
 		if (choice != 10)
 		{
-			ValveInterfaces * interfaces = plugin->getInterfaces();
 			PlayerIdentity * pIdentity = player->getIdentity();
 			I18nManager * i18n = plugin->getI18nManager();
 			RecipientFilter recipients;
@@ -233,9 +232,7 @@ namespace cssmatch
 				PlayerIdentity * identity = player->getIdentity();
 				IPlayerInfo * pInfo = player->getPlayerInfo();
 
-				string targetLanguage = interfaces->engine->GetClientConVarValue(identity->index,"cl_language");
-
-				(*itPlayer)->kick(i18n->getTranslation(targetLanguage,"admin_kick"));
+				(*itPlayer)->kick("admin_kick");
 
 				if (isValidPlayer(pInfo))
 				{
@@ -272,9 +269,7 @@ namespace cssmatch
 	{
 		if (choice != 10)
 		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			ValveInterfaces * interfaces = plugin->getInterfaces();
-			
+			ServerPlugin * plugin = ServerPlugin::getInstance();
 			PlayerIdentity * pIdentity = player->getIdentity();
 
 			I18nManager * i18n = plugin->getI18nManager();
@@ -294,8 +289,6 @@ namespace cssmatch
 				IPlayerInfo * adminInfo = player->getPlayerInfo();
 				IPlayerInfo * targetInfo = (*itPlayer)->getPlayerInfo();
 
-				string targetLanguage = interfaces->engine->GetClientConVarValue(identity->index,"cl_language");
-
 				int time = 0;
 				switch(choice)
 				{
@@ -307,7 +300,7 @@ namespace cssmatch
 					break;
 				}
 
-				(*itPlayer)->ban(time,i18n->getTranslation(targetLanguage,"admin_ban"));
+				(*itPlayer)->ban(time,"admin_ban");
 
 				if (adminInfo != NULL)
 				{

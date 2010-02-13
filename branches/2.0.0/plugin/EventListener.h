@@ -108,7 +108,7 @@ namespace cssmatch
 	template<class T>
 	bool EventListener<T>::addCallback(	const std::string & eventName,
 						void (T::* callback)(IGameEvent * event),
-						bool serverSide = true)
+						bool serverSide)
 	{
 		ServerPlugin * plugin = ServerPlugin::getInstance();
 		ValveInterfaces * interfaces = plugin->getInterfaces();
