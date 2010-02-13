@@ -58,16 +58,13 @@ Player::Player(int index) throw (PlayerException)
 Player::~Player()
 {
 	quitMenu();
+	if (menuHandler.data != NULL)
+		delete menuHandler.data;
 }
 
 PlayerIdentity * Player::getIdentity()
 {
 	return &identity;
-}
-
-PlayerMenuHandler * Player::getMenuHandler()
-{
-	return &menuHandler;
 }
 
 void Player::sendMenu(Menu * usedMenu, int page, const map<string,string> & parameters, bool toDelete)
@@ -79,6 +76,28 @@ void Player::sendMenu(Menu * usedMenu, int page, const map<string,string> & para
 	menuHandler.toDelete = toDelete;
 
 	menuHandler.menu->send(this,page,parameters);
+}
+
+Menu * Player::getMenu() const
+{
+	return menuHandler.menu;
+}
+
+int Player::getPage() const
+{
+	return menuHandler.page;
+}
+
+void Player::storeMenuData(BaseMenuLineData * data)
+{
+	if (menuHandler.data != NULL)
+		delete menuHandler.data;
+	menuHandler.data = data;
+}
+
+BaseMenuLineData * const Player::getMenuData()
+{
+	return menuHandler.data;
 }
 
 void Player::nextPage()

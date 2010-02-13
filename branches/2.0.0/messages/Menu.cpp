@@ -44,6 +44,8 @@ Menu::~Menu()
 	vector<MenuLine *>::iterator invalidLine = lines.end();
 	while(itLine != invalidLine)
 	{
+		if ((*itLine)->data != NULL)
+			delete (*itLine)->data;
 		delete *itLine;
 		itLine++;
 	}
@@ -53,7 +55,7 @@ Menu::~Menu()
 void Menu::doCallback(Player * user, int choice)
 {
 	// FIXME: BACK/NEXT loose the i18n parameters
-	int page = user->getMenuHandler()->page;
+	int page = user->getPage();
 	MenuLine * selected = getLine(page,choice);
 
 	switch(selected->type)
@@ -71,10 +73,10 @@ void Menu::doCallback(Player * user, int choice)
 	}
 }
 
-void Menu::addLine(bool isI18nKeyword, const string & line, int hiddenData)
+void Menu::addLine(bool isI18nKeyword, const string & line, BaseMenuLineData * data)
 {
 	int linecount = lines.size();
-	MenuLine * toAdd = new MenuLine(NORMAL,isI18nKeyword,line,hiddenData);
+	MenuLine * toAdd = new MenuLine(NORMAL,isI18nKeyword,line,data);
 
 	if (linecount < 9) // Is the first page not full ?
 	{

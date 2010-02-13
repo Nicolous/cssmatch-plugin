@@ -51,6 +51,12 @@ namespace cssmatch
 		NEXT
 	};
 
+	/** Base polymorphic struct to carry data into a menu line */
+	struct BaseMenuLineData
+	{
+		virtual ~BaseMenuLineData(){};
+	};
+
 	/** Menu line */
 	struct MenuLine
 	{
@@ -64,12 +70,12 @@ namespace cssmatch
 		std::string text;
 
 		/** Data carried by the line */
-		int data; // FIXME: Make me generic
+		BaseMenuLineData * data;
 
 		MenuLine(	MenuLineType lineType,
 					bool isI18n,
 					const std::string & content,
-					int hiddenData = CSSMATCH_INVALID_USERID)
+					BaseMenuLineData * hiddenData = NULL)
 			: type(lineType), i18n(isI18n), text(content), data(hiddenData) {};
 	};
 
@@ -112,9 +118,9 @@ namespace cssmatch
 		/** Add a line to the menu 
 		 * @param isI18nKeyword Is the line a keyword from the translation files ?
 		 * @param line The line to add
-		 * @param hiddenData The hidden data shipped in this line
+		 * @param data The data shipped in this line
 		 */
-		void addLine(bool isI18nKeyword, const std::string & line, int hiddenData = CSSMATCH_INVALID_USERID);
+		void addLine(bool isI18nKeyword, const std::string & line, BaseMenuLineData * data = NULL);
 
 		/** Returns a pointer to a line 
 		 * @param page The page where the line is

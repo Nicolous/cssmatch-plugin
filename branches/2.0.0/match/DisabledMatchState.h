@@ -31,33 +31,6 @@ namespace cssmatch
 {
 	class MatchManager;
 
-	/** Settings of the next match */
-	struct MatchSettings
-	{
-		/** The first state of the match */
-		BaseMatchState * firstState;
-
-		/** Does a warmup time have to be played ? */
-		bool warmup;
-
-		MatchSettings() : firstState(NULL), warmup(true){}
-	};
-
-	/* List of the .cfg files 
-	class ConfigMenu : public Menu
-	{
-	public:
-		ConfigMenu(const std::string & menuTitle, MenuCallback menuCallback);
-		//ConfigMenu(ConfigMenu & menu);
-
-		// Menu methods
-		void doCallback(Player * user, int choice);
-		//void addLine(bool isI18nKeyword, const std::string & line);
-		void send(	Player * recipient,
-					int page,
-					const std::map<std::string,std::string> & parameters = I18nManager::WITHOUT_PARAMETERS);
-	};*/
-
 	/** Base class for "no match in progress" state */
 	class DisabledMatchState : public BaseMatchState, public BaseSingleton<DisabledMatchState>
 	{
@@ -70,16 +43,10 @@ namespace cssmatch
 		Menu * kniferoundQuestion;
 		Menu * warmupQuestion;
 
-		/** Settings of the next match */
-		MatchSettings settings;
-
 		friend class BaseSingleton<DisabledMatchState>;
 		DisabledMatchState();
 		~DisabledMatchState();
 	public:
-		/** Read/write accessor on the next match settings */
-		MatchSettings * getMatchSettings();
-
 		// BaseMatchState methods
 		void startState();
 		void endState();

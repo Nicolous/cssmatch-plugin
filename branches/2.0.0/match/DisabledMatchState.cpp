@@ -44,6 +44,15 @@ using std::string;
 
 namespace cssmatch
 {
+	/** Data to be carried by the player throught all menus that config the match to lauch */
+	struct MatchMenuLineData : public BaseMenuLineData
+	{
+		BaseMatchState * state;
+		bool warmup;
+
+		MatchMenuLineData(BaseMatchState * firstState, bool doWarmup) : state(firstState), warmup(doWarmup){};
+	};
+
 	void disabledMenuCallback(Player * player, int choice, MenuLine * selected)
 	{
 		ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -82,11 +91,11 @@ namespace cssmatch
 		switch(choice)
 		{
 		case 1:
-			state->getMatchSettings()->firstState = KnifeRoundMatchState::getInstance();
+			player->storeMenuData(new MatchMenuLineData(KnifeRoundMatchState::getInstance(),true));
 			state->showWarmupQuestion(player);
 			break;
 		case 2:
-			state->getMatchSettings()->firstState = NULL;
+			player->storeMenuData(new MatchMenuLineData(NULL,true));
 			state->showWarmupQuestion(player);
 			break;
 		case 3:
@@ -100,20 +109,20 @@ namespace cssmatch
 	void warmupQuestionCallback(Player * player, int choice, MenuLine * selected)
 	{
 		DisabledMatchState * state = DisabledMatchState::getInstance();
-		MatchSettings * settings = state->getMatchSettings();
+		MatchMenuLineData * const matchSettings = static_cast<MatchMenuLineData * const>(player->getMenuData());
 
 		switch(choice)
 		{
 		case 1:
-			settings->warmup = true;
-			if (settings->firstState == NULL)
-				settings->firstState = WarmupMatchState::getInstance();
+			matchSettings->warmup = true;
+			if (matchSettings->state == NULL)
+				matchSettings->state = WarmupMatchState::getInstance();
 			state->showConfigQuestion(player);
 			break;
 		case 2:
-			settings->warmup = false;
-			if (settings->firstState == NULL)
-				settings->firstState = SetMatchState::getInstance();
+			matchSettings->warmup = false;
+			if (matchSettings->state == NULL)
+				matchSettings->state = SetMatchState::getInstance();
 			state->showConfigQuestion(player);
 			break;
 		case 3:
@@ -129,10 +138,10 @@ namespace cssmatch
 		if (choice != 10)
 		{
 			DisabledMatchState * state = DisabledMatchState::getInstance();
-			MatchSettings * settings = state->getMatchSettings();
 			ServerPlugin * plugin = ServerPlugin::getInstance();
 			MatchManager * match = plugin->getMatch();
 			I18nManager * i18n = plugin->getI18nManager();
+			MatchMenuLineData * const matchSettings = static_cast<MatchMenuLineData * const>(player->getMenuData());
 
 			map<string,string> parameters;
 			try
@@ -152,7 +161,7 @@ namespace cssmatch
 				else
 					i18n->i18nChatSay(recipients,"match_started");
 
-				match->start(config,settings->warmup,settings->firstState);
+				match->start(config,matchSettings->warmup,matchSettings->state);
 			}
 			catch(const ConfigurationFileException & e)
 			{
@@ -170,59 +179,8 @@ namespace cssmatch
 	}
 }
 
-/*ConfigMenu::ConfigMenu(const std::string & menuTitle, MenuCallback menuCallback)
-	: Menu(menuTitle,menuCallback)
-{
-}
-
-void ConfigMenu::doCallback(Player * user, int choice)
-{
-	Menu::doCallback(user,choice);
-	
-	int page = user->getMenuPage();
-	MenuLine * selected = getLine(page,choice);
-	if (selected->type == NORMAL)
-		delete this;
-}
-
-
-void ConfigMenu::send(Player * recipient, int page, const std::map<std::string,std::string> & parameters)
-{
-	// Displaying the first page autocreates the list
-	if (page == 1)
-	{
-		lines.clear();
-
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-		ValveInterfaces * interfaces = plugin->getInterfaces();
-
-		FileFindHandle_t fh;
-		const char * cfg = interfaces->filesystem->FindFirstEx("cfg/" MATCH_CONFIGURATIONS_PATH "/*.cfg","MOD",&fh);
-		while(cfg != NULL)
-		{
-			string filename = cfg;
-			string copy = filename;
-			if (normalizeFileName(filename))
-			{
-				interfaces->filesystem->RenameFile(
-					("cfg/" MATCH_CONFIGURATIONS_PATH "/" + copy).c_str(), ("cfg/" MATCH_CONFIGURATIONS_PATH "/" + filename).c_str());
-				plugin->log(copy + " has been renamed to " + filename);
-			}
-			
-			addLine(false,filename);
-
-			cfg = interfaces->filesystem->FindNext(fh);
-		}
-	}
-
-	Menu::send(recipient,page,parameters);
-	recipient->setMenu(new ConfigMenu(*this),page);
-}*/
-
 DisabledMatchState::DisabledMatchState()
 {
-	settings.firstState = KnifeRoundMatchState::getInstance();
-
 	disabledMenu = new Menu("menu_no_match",disabledMenuCallback);
 	disabledMenu->addLine(true,"menu_alltalk");
 	disabledMenu->addLine(true,"menu_start");
@@ -251,19 +209,10 @@ DisabledMatchState::~DisabledMatchState()
 	delete warmupQuestion;
 }
 
-MatchSettings * DisabledMatchState::getMatchSettings()
-{
-	return &settings;
-}
-
 void DisabledMatchState::startState()
 {
 	// Stop any countdown in progress
 	Countdown::getInstance()->stop();
-
-	// Reset the next math settings
-	settings.firstState = NULL;
-	settings.warmup = true;
 }
 
 void DisabledMatchState::endState()

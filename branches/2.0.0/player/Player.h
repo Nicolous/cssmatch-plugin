@@ -41,6 +41,7 @@ namespace cssmatch
 {
 	class RecipientFilter;
 	class Menu;
+	struct BaseMenuLineData;
 
 	class PlayerException : public BaseException
 	{
@@ -97,9 +98,9 @@ namespace cssmatch
 		bool toDelete;
 
 		/** Data associated to the selected line in the menu */
-		int data; // FIXME: Make me generic
+		BaseMenuLineData * data;
 
-		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false), data(CSSMATCH_INVALID_USERID) {}
+		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false), data(NULL) {}
 	};
 
 	/** Base class for player informations */
@@ -151,9 +152,12 @@ namespace cssmatch
 						int page,
 						const std::map<std::string,std::string> & parameters = I18nManager::WITHOUT_PARAMETERS,
 						bool toDelete = false);
+		Menu * getMenu() const;
+		int getPage() const;
 
-		/** Get info about the menu the player uses */
-		PlayerMenuHandler * getMenuHandler();
+		/** Memorize menu related data */
+		void storeMenuData(BaseMenuLineData * data);
+		BaseMenuLineData * const getMenuData();
 
 		/** Send to the player the next page of the current menu */
 		void nextPage();

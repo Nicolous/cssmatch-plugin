@@ -77,6 +77,23 @@ using std::ostringstream;
 
 namespace cssmatch
 {
+	/** Data to be carried in the player list menu lines */
+	struct UseridMenuLineData : public BaseMenuLineData
+	{
+		int userid;
+
+		UseridMenuLineData(int playerUserid) : userid(playerUserid){};
+	};
+
+	/** Data to be carried in the player list menu lines */
+	struct PlayerMenuLineData : public BaseMenuLineData
+	{
+		string name;
+		int userid;
+
+		PlayerMenuLineData(const string & playername, int playerUserid) : name(playername), userid(playerUserid){};
+	};
+
 	void adminMenuCallback(Player * player, int choice, MenuLine * selected)
 	{
 		ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -140,11 +157,12 @@ namespace cssmatch
 			map<string,string> parameters;
 
 			parameters["$username"] = selected->text;
+			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
 
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(selected->data));
+				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(useridData->userid));
 			if (itPlayer != invalidPlayer)
 			{
 				IPlayerInfo * pInfo = player->getPlayerInfo();
@@ -181,11 +199,12 @@ namespace cssmatch
 			map<string,string> parameters;
 
 			parameters["$username"] = selected->text;
+			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
 
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(selected->data));
+				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(useridData->userid));
 			if (itPlayer != invalidPlayer)
 			{
 				IPlayerInfo * pInfo = player->getPlayerInfo();
@@ -222,11 +241,12 @@ namespace cssmatch
 			map<string,string> parameters;
 
 			parameters["$username"] = selected->text;
+			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
 
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(selected->data));
+				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(useridData->userid));
 			if (itPlayer != invalidPlayer)
 			{
 				PlayerIdentity * identity = player->getIdentity();
@@ -257,8 +277,9 @@ namespace cssmatch
 		if (choice != 10)
 		{
 			ServerPlugin * plugin = ServerPlugin::getInstance();
+			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
 
-			player->getMenuHandler()->data = selected->data;
+			player->storeMenuData(new PlayerMenuLineData(selected->text,useridData->userid));
 			plugin->showBanTimeMenu(player);
 		}
 		else
@@ -276,18 +297,17 @@ namespace cssmatch
 			RecipientFilter recipients;
 			map<string,string> parameters;
 
-			parameters["$username"] = "(unknown)"; // FIXME: I'm not the username of the player
+			PlayerMenuLineData * const targetData = static_cast<PlayerMenuLineData * const>(player->getMenuData());
+			parameters["$username"] = targetData->name;
 
 			list<ClanMember *> * playerlist = plugin->getPlayerlist();
 			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
 			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(player->getMenuHandler()->data));
+				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(targetData->userid));
 			if (itPlayer != invalidPlayer)
 			{
 				PlayerIdentity * identity = player->getIdentity();
-
 				IPlayerInfo * adminInfo = player->getPlayerInfo();
-				IPlayerInfo * targetInfo = (*itPlayer)->getPlayerInfo();
 
 				int time = 0;
 				switch(choice)
@@ -299,15 +319,11 @@ namespace cssmatch
 					time = 60;
 					break;
 				}
-
 				(*itPlayer)->ban(time,"admin_ban");
 
 				if (adminInfo != NULL)
 				{
 					recipients.addAllPlayers();
-
-					if (targetInfo != NULL)
-						parameters["$username"] = targetInfo->GetName();
 					parameters["$admin"] = adminInfo->GetName();
 
 					if (time == 0)
@@ -562,7 +578,7 @@ void ServerPlugin::constructPlayerlistMenu(Menu * to)
 	{
 		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
 		if (isValidPlayer(pInfo))
-			to->addLine(false,pInfo->GetName(),pInfo->GetUserID());
+			to->addLine(false,pInfo->GetName(),new UseridMenuLineData(pInfo->GetUserID()));
 			
 		itPlayer++;
 	}
@@ -866,7 +882,7 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 					find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
 				if (itPlayer != invalidPlayer)
 				{
-					Menu * menu = (*itPlayer)->getMenuHandler()->menu;
+					Menu * menu = (*itPlayer)->getMenu();
 					if (menu != NULL)
 					{
 						if (interfaces.engine->Cmd_Argc() == 2)
