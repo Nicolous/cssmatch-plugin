@@ -132,7 +132,6 @@ namespace cssmatch
 			ServerPlugin * plugin = ServerPlugin::getInstance();
 			plugin->showAdminMenu(player);
 		}
-
 	}
 }
 
@@ -271,7 +270,11 @@ void WarmupMatchState::showMenu(Player * recipient)
 
 	map<string,string> parameters;
 	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_disable" : "menu_enable");
-	recipient->sendMenu(warmupMenu,1,parameters);
+
+	if (plugin->getConVar("cssmatch_advanced")->GetBool())
+		recipient->sendMenu(menuWithAdmin,1,parameters);
+	else
+		recipient->sendMenu(warmupMenu,1,parameters);
 }
 
 void WarmupMatchState::player_spawn(IGameEvent * event)

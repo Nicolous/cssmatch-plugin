@@ -247,7 +247,11 @@ void SetMatchState::showMenu(Player * recipient)
 
 	map<string,string> parameters;
 	parameters["$action"] = i18n->getTranslation(language,alltalk ? "menu_disable" : "menu_enable");
-	recipient->sendMenu(setStateMenu,1,parameters);
+
+	if (plugin->getConVar("cssmatch_advanced")->GetBool())
+		recipient->sendMenu(menuWithAdmin,1,parameters);
+	else
+		recipient->sendMenu(setStateMenu,1,parameters);
 }
 
 void SetMatchState::endSet()
@@ -440,7 +444,7 @@ void SetMatchState::round_start(IGameEvent * event)
 			parameters["$team2"] = *lignup->clan2.getName();
 			parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
 			plugin->addTimer(
-				new TimerI18nPopupSay(0.5f,recipients,"match_round_popup",5,parameters));
+				new TimerI18nPopupSay(1.0f,recipients,"match_round_popup",5,parameters));
 		}
 	}
 }

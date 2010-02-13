@@ -32,6 +32,9 @@ class IGameEventManager2;
 
 namespace cssmatch
 {
+	class BreakMatchTimer;
+	class Menu;
+
 	/** Time break, between two main match states 
 	 * Ends with a timeout
 	 */
@@ -44,8 +47,16 @@ namespace cssmatch
 		/** The state to lauch once the break ended */
 		BaseMatchState * nextState;
 
+		/** "end of break" timer */
+		BreakMatchTimer * timer;
+
+		/** Admin menu of this state */
+		Menu * breakMenu;
+		Menu * menuWithAdmin;
+
 		friend class BaseSingleton<BreakMatchState>;
 		BreakMatchState();
+		~BreakMatchState();
 	public:
 		/** Do a time break
 		 * @param duration The break duration (in secs)
@@ -59,25 +70,23 @@ namespace cssmatch
 		void showMenu(Player * recipient);
 	};
 
-	namespace
-	{
-		/** Break timer used for the timeout */
-		class BreakMatchTimer : public BaseTimer
-		{
-		private:
-			/** The state to lauch once the break is ended */
-			BaseMatchState * nextState;
-		public:
-			/** 
-			 * @param match The state manager required to lauch the new state
-			 * @param nextState The state the lauch once the break ended
-			 */
-			BreakMatchTimer(float date, BaseMatchState * nextState);
 
-			// BaseTimer method
-			void execute();
-		};
-	}
+	/** Break timer used for the timeout */
+	class BreakMatchTimer : public BaseTimer
+	{
+	private:
+		/** The state to lauch once the break is ended */
+		BaseMatchState * nextState;
+	public:
+		/** 
+		 * @param match The state manager required to lauch the new state
+		 * @param nextState The state the lauch once the break ended
+		 */
+		BreakMatchTimer(float date, BaseMatchState * nextState);
+
+		// BaseTimer method
+		void execute();
+	};
 }
 
 #endif // __BREAK_MATCH_STATE_H__

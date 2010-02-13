@@ -52,12 +52,12 @@ namespace cssmatch
 		Menu * warmupMenu;
 		Menu * menuWithAdmin;
 
+		/** "end of warmup" timer */
+		WarmupTimer * timer;
+
 		friend class BaseSingleton<WarmupMatchState>;
 		WarmupMatchState();
 		~WarmupMatchState();
-	protected:
-		/** "end of warmup" timer */
-		WarmupTimer * timer;
 	public:
 		/** End the warmup time <br>
 		 * Here is the code which musn't be executed if the match is interupted
