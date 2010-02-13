@@ -89,17 +89,16 @@ namespace cssmatch
 
 BreakMatchState::BreakMatchState() : duration(0), nextState(NULL), timer(NULL)
 {
-	breakMenu = new Menu("menu_breaktime",breakMenuCallback);
+	breakMenu = new Menu("menu_time-out",breakMenuCallback);
 	breakMenu->addLine(true,"menu_alltalk");
 	breakMenu->addLine(true,"menu_stop");
 	breakMenu->addLine(true,"menu_retag");
 	
-	menuWithAdmin = new Menu("menu_breaktime",breakMenuWithAdminCallback);
+	menuWithAdmin = new Menu("menu_time-out",breakMenuWithAdminCallback);
 	menuWithAdmin->addLine(true,"menu_administration_options");
 	menuWithAdmin->addLine(true,"menu_alltalk");
 	menuWithAdmin->addLine(true,"menu_stop");
 	menuWithAdmin->addLine(true,"menu_retag");
-	
 }
 
 BreakMatchState::~BreakMatchState()
