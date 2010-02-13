@@ -88,7 +88,7 @@ namespace cssmatch
 				match->detectClanName(CT_TEAM);
 
 				RecipientFilter recipients;
-				recipients.addRecipient(player->getIdentity()->index);
+				recipients.addRecipient(player);
 				map<string,string> parameters;
 				parameters["$team1"] = *lignup->clan1.getName();
 				parameters["$team2"] = *lignup->clan2.getName();
@@ -347,10 +347,10 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 	{
 		PlayerIdentity * identity = (*itPlayer)->getIdentity();
 
-		interfaces->helpers->ClientCommand((*itPlayer)->getIdentity()->pEntity,"use weapon_knife");
+		interfaces->helpers->ClientCommand(identity->pEntity,"use weapon_knife");
 
 		RecipientFilter recipients;
-		recipients.addRecipient(identity->index);
+		recipients.addRecipient(*itPlayer);
 		i18n->i18nChatSay(recipients,"warmup_c4");
 	}
 	else

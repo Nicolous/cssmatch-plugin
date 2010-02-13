@@ -313,16 +313,16 @@ namespace cssmatch
 		}
 	};
 
-	/** Functor to add a player in a recipient (index list) */
+	/** Functor to add a player in a recipient list */
 	struct PlayerToRecipient
 	{
 		RecipientFilter * recipientFilter;
 
 		PlayerToRecipient(RecipientFilter * filter) : recipientFilter(filter){}
 
-		void operator ()(const Player * player)
+		void operator ()(Player * player)
 		{
-			recipientFilter->addRecipient(player->identity.index);
+			recipientFilter->addRecipient(player);
 		}
 	};
 

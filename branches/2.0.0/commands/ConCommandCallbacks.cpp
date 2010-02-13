@@ -532,7 +532,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			else
 			{
 				RecipientFilter recipients;
-				recipients.addRecipient(userIndex);
+				recipients.addRecipient(*itPlayer);
 				i18n->i18nChatSay(recipients,"player_you_not_admin");
 				plugin->queueCommand("cssm_adminlist\n");
 			}
@@ -631,20 +631,20 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 					}
 					catch(const MatchManagerException & e)
 					{
-						recipients.addRecipient(userIndex);
+						recipients.addRecipient(*itPlayer);
 						i18n->i18nChatSay(recipients,"match_not_in_progress");
 					}
 				}
 				else
 				{
-					recipients.addRecipient(userIndex);
+					recipients.addRecipient(*itPlayer);
 					i18n->i18nChatSay(recipients,"admin_new_tag");
 				}
 			}
 			else
 			{
 				RecipientFilter recipients;
-				recipients.addRecipient(userIndex);
+				recipients.addRecipient(*itPlayer);
 				i18n->i18nChatSay(recipients,"player_you_not_admin");
 				plugin->queueCommand("cssm_adminlist\n");
 			}
@@ -691,20 +691,20 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 					}
 					catch(const MatchManagerException & e)
 					{
-						recipients.addRecipient(userIndex);
+						recipients.addRecipient(*itPlayer);
 						i18n->i18nChatSay(recipients,"match_not_in_progress");
 					}
 				}
 				else
 				{
-					recipients.addRecipient(userIndex);
+					recipients.addRecipient(*itPlayer);
 					i18n->i18nChatSay(recipients,"admin_new_tag");
 				}
 			}
 			else
 			{
 				RecipientFilter recipients;
-				recipients.addRecipient(userIndex);
+				recipients.addRecipient(*itPlayer);
 				i18n->i18nChatSay(recipients,"player_you_not_admin");
 				plugin->queueCommand("cssm_adminlist\n");
 			}

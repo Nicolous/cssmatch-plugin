@@ -84,9 +84,7 @@ void TvRecord::start() throw (TvRecordException)
 {
 	if (! recording)
 	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-		
-		plugin->executeCommand("tv_stoprecord;tv_record " + name + "\n"); // Stops any record in progress (e.g. a record lauched by tv_autorecord)
+		ServerPlugin::getInstance()->queueCommand("tv_stoprecord;tv_record " + name + "\n"); // Stops any record in progress (e.g. a record lauched by tv_autorecord)
 
 		recording = true;
 	}

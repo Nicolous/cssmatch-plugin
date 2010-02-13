@@ -156,7 +156,7 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 	string language = interfaces->engine->GetClientConVarValue(playerIndex,"cl_language");
 	int linecount = lines.size();
 	RecipientFilter recipients;
-	recipients.addRecipient(playerIndex);
+	recipients.addRecipient(recipient);
 
 	int iBegin = (page-1)*9;
 	if ((iBegin >= 0) && (iBegin <= linecount))

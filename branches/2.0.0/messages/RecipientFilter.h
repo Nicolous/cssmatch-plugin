@@ -29,6 +29,8 @@
 
 namespace cssmatch
 {
+	class Player;
+
 	/** User messages recipient list */
 	class RecipientFilter : public IRecipientFilter
 	{
@@ -56,7 +58,12 @@ namespace cssmatch
 		virtual int GetRecipientIndex(int slot) const;
 
 		/** Add a player to the recipient list
-		 * @param index Player's index
+		 * @param recipient The recipient to add
+		 */
+		void addRecipient(Player * recipient);
+
+		/** Add a player to the recipient list (DOES NOT CHECK IF THE PLAYER IS A BOT)
+		 * @param index The recipient index
 		 */
 		void addRecipient(int index);
 

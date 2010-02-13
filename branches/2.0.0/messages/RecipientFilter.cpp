@@ -51,6 +51,16 @@ int RecipientFilter::GetRecipientCount() const
 	return recipients.size();
 }
 
+void RecipientFilter::addRecipient(Player * recipient)
+{
+	IPlayerInfo * pInfo = recipient->getPlayerInfo();
+	if ((pInfo != NULL) && pInfo->IsConnected() && pInfo->IsPlayer()) // isValidPlayer excludes SourceTv
+	{
+		if (! pInfo->IsFakeClient())
+			recipients.push_back(recipient->getIdentity()->index);
+	}
+}
+
 void RecipientFilter::addRecipient(int index)
 {
 	recipients.push_back(index);

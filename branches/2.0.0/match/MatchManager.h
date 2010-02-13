@@ -140,6 +140,7 @@ namespace cssmatch
 		MatchClan * getClan(TeamCode code) throw(MatchManagerException);
 
 		// Game event callbacks
+		void player_activate(IGameEvent * event);
 		void player_disconnect(IGameEvent * event);
 		void player_team(IGameEvent * event);
 		void player_changename(IGameEvent * event);

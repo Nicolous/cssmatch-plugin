@@ -112,6 +112,36 @@ MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
 		throw MatchManagerException("No match in progress");
 }
 
+void MatchManager::player_activate(IGameEvent * event)
+{
+	// Announce any connection
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	std::list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	std::list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+	std::list<ClanMember *>::iterator itPlayer =
+		std::find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
+	if (itPlayer != invalidPlayer)
+	{
+		I18nManager * i18n = plugin->getI18nManager();
+		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
+		if (isValidPlayer(pInfo))
+		{
+			RecipientFilter recipients;
+			recipients.addAllPlayers();
+			map<string, string> parameters;
+			parameters["$username"] = pInfo->GetName();
+
+			i18n->i18nChatSay(recipients,"player_join_game",parameters);
+		}
+
+		RecipientFilter newplayerRecipient;
+		newplayerRecipient.addRecipient(*itPlayer);
+	
+		i18n->i18nPopupSay(newplayerRecipient,"player_match_hosted_popup",0);
+	}
+}
+
 void MatchManager::player_disconnect(IGameEvent * event)
 {
 	// Announce any disconnection 
@@ -315,6 +345,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		infos.startTime = *getLocalTime();
 
 		// Start to listen some events
+		listener->addCallback("player_activate",&MatchManager::player_activate);
 		listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
 		listener->addCallback("player_team",&MatchManager::player_team);
 		listener->addCallback("player_changename",&MatchManager::player_changename);

@@ -60,6 +60,9 @@ namespace cssmatch
 		 */
 		void endSet();
 
+		/** Declare the round set finished, so the next round start will end this state */
+		void finish();
+
 		// BaseMatchState methods
 		void startState();
 		void endState();
