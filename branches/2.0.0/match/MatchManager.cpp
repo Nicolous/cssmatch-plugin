@@ -496,10 +496,14 @@ void MatchManager::restartRound() throw (MatchManagerException)
 		}
 
 		// Back to the last round (round_start will maybe increment that)
-		infos.roundNumber -= 1; // FIXME: In cssmatch1, if the first round was restarted, 3 restarts were scheduled
+		if (infos.roundNumber == 1)
+			infos.roundNumber = -2; 
+			// by convention, we say that a negative round number causes game restarts until the round number reaches 1
+		else
+			infos.roundNumber -= 1;
 
 		// Do the restart
-		plugin->queueCommand("mp_restartgame 1\n");
+		plugin->queueCommand("mp_restartgame 2\n");
 	}
 	else
 		throw MatchManagerException("No match in progress");
@@ -539,7 +543,8 @@ void MatchManager::restartSet() throw (MatchManagerException)
 		currentStatsClanCT->scoreCT = lastSetStatsClanCT->scoreCT;
 
 		// Back to the first round (round_start will maybe increment that)
-		infos.roundNumber = 0;
+		infos.roundNumber = -2;
+		// by convention, we say that a negative round number causes game restarts until the round number reaches 1
 
 		// Do the restart
 		plugin->queueCommand("mp_restartgame 1\n");
