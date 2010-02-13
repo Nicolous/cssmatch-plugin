@@ -48,6 +48,9 @@ namespace cssmatch
 		Menu * setStateMenu;
 		Menu * menuWithAdmin;
 
+		/** Does this state finished ? */
+		bool finished;
+
 		friend class BaseSingleton<SetMatchState>;
 		SetMatchState();
 		~SetMatchState();

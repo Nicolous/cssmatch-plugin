@@ -20,8 +20,8 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#ifndef __SIMPLE_PLUGIN_H__
-#define __SIMPLE_PLUGIN_H__
+#ifndef __SERVER_PLUGIN_H__
+#define __SERVER_PLUGIN_H__
 
 #include "../messages/RecipientFilter.h"
 #include "../features/BaseSingleton.h"
@@ -259,11 +259,17 @@ namespace cssmatch
 		 */
 		int getPlayerCount(TeamCode team = INVALID_TEAM) const;
 	};
-}
 
-/* Loop over all players excluding the 0 index 
+	/* Loop over all players excluding the 0 index 
 #define FOREACH_PLAYER(indexVar) \
 	int maxplayers = ServerPlugin::getInstance()->getInterfaces()->gpGlobals->maxClients; \
 	for (int indexVar=1;indexVar<=maxplayers;indexVar++)*/
 
-#endif // __SIMPLE_PLUGIN_H__
+/*#define CSSMATCH_GET_VALID_PLAYER(itPlayer,predicate) \
+	std::list<ClanMember *> * playerlist = ServerPlugin::getInstance()->getPlayerlist(); \
+	std::list<ClanMember *>::iterator invalidPlayer = playerlist->end(); \
+	itPlayer = std::find_if(playerlist->begin(),invalidPlayer,predicate); \
+	if (itPlayer != invalidPlayer)*/
+}	
+
+#endif // __SERVER_PLUGIN_H__

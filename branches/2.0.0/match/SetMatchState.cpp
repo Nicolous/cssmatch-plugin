@@ -139,7 +139,7 @@ namespace cssmatch
 	}
 }
 
-SetMatchState::SetMatchState()
+SetMatchState::SetMatchState() : finished(false)
 {
 	listener = new EventListener<SetMatchState>(this);
 
@@ -163,6 +163,7 @@ SetMatchState::~SetMatchState()
 {
 	delete listener;
 	delete setStateMenu;
+	delete menuWithAdmin;
 }
 
 void SetMatchState::startState()
@@ -179,6 +180,7 @@ void SetMatchState::startState()
 	listener->addCallback("round_end",&SetMatchState::round_end);
 
 	infos->roundNumber = -2; // a negative round number causes a game restart (see round_start)
+	finished = false;
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
@@ -372,53 +374,62 @@ void SetMatchState::player_death(IGameEvent * event)
 
 void SetMatchState::round_start(IGameEvent * event)
 {
-	// Update the score history of each player, do the restart and announce the begin of a new round
-
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->getI18nManager();
-
-	MatchInfo * infos = match->getInfos();
-
-	MatchLignup * lignup = match->getLignup();
-	ClanStats * statsClan1 = lignup->clan1.getStats();
-	ClanStats * statsClan2 = lignup->clan2.getStats();
-
-	RecipientFilter recipients;
-	recipients.addAllPlayers();
-	map<string,string> parameters;
-
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-	while(itPlayer != invalidPlayer)
+	if (finished)
 	{
-		PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
-		PlayerStats * lastRoundStats = (*itPlayer)->getLastRoundStats();
+		// All rounds done, stop this state and the sourcetv records
 
-		lastRoundStats->deaths = currentStats->deaths;
-		lastRoundStats->kills = currentStats->kills;
-
-		itPlayer++;
+		endSet();
 	}
-
-	switch(infos->roundNumber++)
+	else
 	{
-	case -2:
-		plugin->queueCommand("mp_restartgame 1\n");
-		break;
-	case -1:
-		plugin->queueCommand("mp_restartgame 2\n");
-		break;
-	default:
-		parameters["$current"] = toString(infos->roundNumber);
-		parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();
-		parameters["$team1"] = *lignup->clan1.getName();
-		parameters["$score1"] = toString(statsClan1->scoreCT + statsClan1->scoreT);
-		parameters["$team2"] = *lignup->clan2.getName();
-		parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
-		plugin->addTimer(
-			new TimerI18nPopupSay(0.5f,recipients,"match_round_popup",5,parameters));
+		// Update the score history of each player, do the restart and announce the begin of a new round
+
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		MatchManager * match = plugin->getMatch();
+		I18nManager * i18n = plugin->getI18nManager();
+
+		MatchInfo * infos = match->getInfos();
+
+		MatchLignup * lignup = match->getLignup();
+		ClanStats * statsClan1 = lignup->clan1.getStats();
+		ClanStats * statsClan2 = lignup->clan2.getStats();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+		map<string,string> parameters;
+
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+		list<ClanMember *>::iterator itPlayer = playerlist->begin();
+		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
+		while(itPlayer != invalidPlayer)
+		{
+			PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
+			PlayerStats * lastRoundStats = (*itPlayer)->getLastRoundStats();
+
+			lastRoundStats->deaths = currentStats->deaths;
+			lastRoundStats->kills = currentStats->kills;
+
+			itPlayer++;
+		}
+
+		switch(infos->roundNumber++)
+		{
+		case -2:
+			plugin->queueCommand("mp_restartgame 1\n");
+			break;
+		case -1:
+			plugin->queueCommand("mp_restartgame 2\n");
+			break;
+		default:
+			parameters["$current"] = toString(infos->roundNumber);
+			parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();
+			parameters["$team1"] = *lignup->clan1.getName();
+			parameters["$score1"] = toString(statsClan1->scoreCT + statsClan1->scoreT);
+			parameters["$team2"] = *lignup->clan2.getName();
+			parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
+			plugin->addTimer(
+				new TimerI18nPopupSay(0.5f,recipients,"match_round_popup",5,parameters));
+		}
 	}
 }
 
@@ -443,9 +454,7 @@ void SetMatchState::round_end(IGameEvent * event)
 			winner->getStats()->scoreCT++;
 			break;
 		}
-
-		if (infos->roundNumber >= plugin->getConVar("cssmatch_rounds")->GetInt())
-			endSet();
+		finished = infos->roundNumber >= plugin->getConVar("cssmatch_rounds")->GetInt();
 	}
 	catch(const MatchManagerException & e)
 	{
