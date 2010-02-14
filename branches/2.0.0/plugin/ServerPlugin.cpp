@@ -494,6 +494,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_retag",cssm_retag,"cssm_retag"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_go",cssm_go,"cssm_go"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_restartmanche",cssm_restartmanche,"cssm_restartmanche")); // backward compatibility
+		addPluginConCommand(new I18nConCommand(i18n,"cssm_restarthalf",cssm_restartmanche,"cssm_restartmanche")); // same than cssm_restartmanche
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_restartround",cssm_restartround,"cssm_restartround"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_adminlist",cssm_adminlist,"cssm_adminlist"));
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_grant",cssm_grant,"cssm_grant"));
@@ -726,7 +727,7 @@ void ServerPlugin::LevelInit(char const * pMapName)
 {
 	// End any match in progress
 	if (match->getMatchState() != match->getInitialState())
-		match->stop();
+		match->switchToInitialState();
 
 	// Update the referee steamid list
 	adminlist.clear();

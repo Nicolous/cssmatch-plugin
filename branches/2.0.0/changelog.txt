@@ -12,6 +12,14 @@
 
 * Changements sur l'arrêt des records : au round_start
 
+* Bug corrigés :
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=25
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=51
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=53
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=72
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=76
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=77
+
 * Lorsqu'aucun match n'est en cours, le plugin ne consomme plus rien (pas d'écoute d'évènements, mais recherche de timers)
 * Si aucune traduction n'est disponible, un message d'explication sera affiché (plutôt qu'un message vide)
 * Retrait du messages match_retag dans les fichiers de langage

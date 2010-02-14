@@ -156,6 +156,10 @@ void MatchManager::player_disconnect(IGameEvent * event)
 	parameters["$reason"] = event->GetString("reason");
 
 	i18n->i18nChatSay(recipients,"player_leave_game",parameters);
+
+	// If all the players have disconnected, stop the match (and thus the SourceTv records)
+	if ((plugin->getPlayerCount()-1) <= 0)
+		stop();
 }
 
 void MatchManager::player_team(IGameEvent * event)
@@ -428,12 +432,6 @@ void MatchManager::stop() throw (MatchManagerException)
 			i18n->i18nChatSay(recipients,"match_no_winner");
 		}
 
-		// Stop all event listeners
-		listener->removeCallbacks();
-
-		// Stop to monitor the ConVars monitored
-		plugin->removeTimers();
-
 		// Write the report
 		if (plugin->getConVar("cssmatch_report")->GetBool())
 		{
@@ -441,12 +439,8 @@ void MatchManager::stop() throw (MatchManagerException)
 			report.write();
 		}
 
-		// Return to the initial state
-		setMatchState(initialState);
-
-		// Remove any old tv record
-		for_each(records.begin(),records.end(),TvRecordToRemove());
-		records.clear();
+		// Return to the initial state / context
+		switchToInitialState();
 
 		// Do a time break before returning to the initial configuration
 		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
@@ -465,6 +459,24 @@ void MatchManager::stop() throw (MatchManagerException)
 	}
 	else
 		throw MatchManagerException("No match in progress");
+}
+
+void MatchManager::switchToInitialState()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
+	// Stop all event listeners
+	listener->removeCallbacks();
+
+	// Stop all pending timers
+	plugin->removeTimers();
+
+	// Return to the initial state
+	setMatchState(initialState);
+
+	// Remove any old tv record
+	for_each(records.begin(),records.end(),TvRecordToRemove());
+	records.clear();
 }
 
 void MatchManager::showMenu(Player * player)

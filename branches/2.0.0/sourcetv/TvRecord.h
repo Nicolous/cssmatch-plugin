@@ -77,6 +77,8 @@ namespace cssmatch
 	{
 		void operator()(TvRecord * record)
 		{
+			if (record->isRecording())
+				record->stop();
 			delete record;
 		}
 	};

@@ -177,6 +177,9 @@ namespace cssmatch
 		 */
 		void stop() throw(MatchManagerException);
 
+		/** Return to the initial state (plus remove all listeners, all timers, all records) */
+		void switchToInitialState();
+
 		/** Show to a player the admin menu corresponding to the current match state */
 		void showMenu(Player * player);
 

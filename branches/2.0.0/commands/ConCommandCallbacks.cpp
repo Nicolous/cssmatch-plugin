@@ -111,10 +111,7 @@ void cssmatch::cssm_start()
 	case 1:
 		try
 		{
-    		RunnableConfigurationFile configuration(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile);
-			RecipientFilter recipients;
-			recipients.addAllPlayers();
-			i18n->i18nChatSay(recipients,"match_started");
+    		RunnableConfigurationFile configuration(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + configurationFile);
 
 			// Determine the initial match state
 			BaseMatchState * initialState = NULL;
@@ -137,6 +134,10 @@ void cssmatch::cssm_start()
 				i18n->i18nChatWarning(recipients,"match_config_error");
 			}
 			match->start(configuration,warmup,initialState);
+
+			RecipientFilter recipients;
+			recipients.addAllPlayers();
+			i18n->i18nChatSay(recipients,"match_started");
 		}
 		catch(const ConfigurationFileException & e)
 		{
@@ -206,11 +207,11 @@ void cssmatch::cssm_go()
 	MatchStateId currentState = match->getMatchState();
 	if (currentState == warmupState->getId())
 	{
+		warmupState->endWarmup();
+
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
-
 		i18n->i18nChatSay(recipients,"admin_all_teams_say_ready");
-		warmupState->endWarmup();
 	}
 	else if (currentState != match->getInitialState())
 	{
@@ -230,11 +231,11 @@ void cssmatch::cssm_restartmanche()
 
 	try
 	{
+		match->restartSet();
+
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
 		i18n->i18nChatSay(recipients,"admin_manche_restarted");
-
-		match->restartSet();
 	}
 	catch(const MatchManagerException & e)
 	{
@@ -250,11 +251,11 @@ void cssmatch::cssm_restartround()
 
 	try
 	{
+		match->restartRound();
+
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
 		i18n->i18nChatSay(recipients,"admin_round_restarted");
-
-		match->restartRound();
 	}
 	catch(const MatchManagerException & e)
 	{

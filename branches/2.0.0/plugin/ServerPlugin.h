@@ -253,7 +253,7 @@ namespace cssmatch
 		 */
 		bool hltvConnected() const;
 
-		/** Get the current player count 
+		/** Get the current player count (ignores SourceTv)
 		 * @param team If specified, the count will be limited to a particular team
 		 * @return The player count
 		 */
