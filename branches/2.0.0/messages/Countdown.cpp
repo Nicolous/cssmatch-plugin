@@ -23,8 +23,6 @@
 #include "Countdown.h"
 
 #include "../plugin/ServerPlugin.h"
-#include "../player/Player.h"
-#include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
 
 #include <sstream>
@@ -34,14 +32,14 @@ using namespace cssmatch;
 using std::ostringstream;
 using std::list;
 
-Countdown::CountdownTick::CountdownTick(float dateExecution, int nextCount)
-	: BaseTimer(dateExecution), left(nextCount)
+Countdown::CountdownTick::CountdownTick(float executionDate, int nextCount)
+	: BaseTimer(executionDate), left(nextCount)
 {
 }
 
 void Countdown::CountdownTick::execute()
 {
-	// Convert the time left to minutes and seconds values
+	// Convert the time left to minutes/seconds values
 	int seconds = left;
 	int minutes = (int)(seconds/60);
 	//seconds -= minutes*60;

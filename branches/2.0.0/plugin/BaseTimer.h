@@ -25,9 +25,7 @@
 
 namespace cssmatch
 {
-	/** Permit to delay the execution of some class members <br>
-	 * Any timer has to be derived from this "stub" class in order to use the timer in a generic way
-	 */
+	/** Any timer has to be derived from this "stub" class in order to use the timer in a generic way */
 	class BaseTimer
 	{		
 	protected:
@@ -42,6 +40,7 @@ namespace cssmatch
 	public:
 		/** Prepare a timer
 		 * @param executionDate When (in server time seconds) the delayed function must be executed
+		 * @see CGlobalVarsBase::curtime
 		 */
 		BaseTimer(float executionDate);
 

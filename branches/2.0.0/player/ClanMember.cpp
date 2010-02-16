@@ -22,12 +22,7 @@
 
 #include "ClanMember.h"
 
-#include "dlls/iplayerinfo.h"
-#include "eiface.h"
-
 using namespace cssmatch;
-
-using std::list;
 
 ClanMember::ClanMember(int index, bool ref) : Player(index), referee(ref)
 {

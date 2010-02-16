@@ -39,10 +39,11 @@ I18nConCommand::I18nConCommand(	I18nManager * i18nManager,
 {
 }
 
-// FIXME : detect the language of the client using "rcon the_con_var"
+// FIXME: detect the language of the client using "rcon the_con_command"
 char const * I18nConCommand::GetHelpText() const
 {
 	// Return the translation
+
 	string translation = i18n->getTranslation(i18n->getDefaultLanguage(),ConCommand::GetHelpText());
 
 	char * text = new char [translation.size()];

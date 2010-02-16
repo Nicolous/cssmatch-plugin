@@ -24,13 +24,13 @@
 #define __COMMON_H__
 
 #ifdef _MSC_VER // VC++ only
-#pragma warning(disable : 4290) /* C++ exception specification ignored except to indicate a 
-								 * function is not __declspec(nothrow) */
-#pragma warning(disable :4101) /* unreferenced local variable */
+#pragma warning(disable:4290) /* C++ exception specification ignored except to indicate a function is not __declspec(nothrow) */
+#pragma warning(disable:4101) /* unreferenced local variable */
 #endif // _MSC_VER
 
-// Do the STL includes here, because the Valve's headers could cause conflict with gcc STL declarations (e.g. min/max macros)
-#ifdef _LINUX // Under Linux (or just gcc 4.1.3?), these headers are required to make <string> and <sstream> working (e.g. for std::min/max declarations)
+// Do the STL includes here, 
+//  because the Valve's headers could cause conflict with gcc STL declarations (e.g. min/max macros)
+#ifdef _LINUX // Under Linux (or just gcc 4.1.3?), these headers are required to make <string>/<sstream> working (e.g. for std::min/max declarations)
 #include <vector>
 #include <fstream>
 #endif // _LINUX
@@ -48,7 +48,7 @@ struct tm; // will be defined in <ctime>
 #include "edict.h" // required by iplayerinfo.h
 #include "dlls/iplayerinfo.h"
 
-// Some Valve's objects we use
+// Some Valve's objects we need
 struct edict_t;
 class IPlayerInfo;
 class IServerEntity;
@@ -56,8 +56,6 @@ class CBaseEntity;
 class IServerUnknown;
 class CBasePlayer;
 class CBaseCombatCharacter;
-
-#include "../exceptions/BaseException.h" // here because I generally define the exception object inline*/
 
 #define CSSMATCH_NAME "CSSMatch"
 
@@ -102,14 +100,14 @@ namespace cssmatch
 	 */
 	bool normalizeFileName(std::string & fileName);
 
-	/** Print a debug message into the console
+	/** Print a debug message into the console (use CSSMATCH_PRINT instead)
 	 * @param fileName The source file where the debug message come from (typically __FILE__)
 	 * @param line The source file line where the debug message come from (typically __LINE__)
 	 * @param message The message
 	 */
 	void print(const std::string & fileName, int line, const std::string & message);
 
-	/** Print debug informations relating to an exception
+	/** Print debug informations relating to an exception (use CSSMATCH_PRINT_EXCEPTION instead)
 	 * @param e The exception to debug
 	 * @param fileName The source file where the exception was threw (typically __FILE__)
 	 * @param line The line of the source file where the exception was threw (typically __LINE__)
@@ -125,11 +123,11 @@ namespace cssmatch
 		return (entity != NULL) && (! entity->IsFree());
 	}
 
-	/** Make sure that a player pointer is valid
+	/** Make sure that a player info pointer is valid
 	 * @param pInfo The player pointer to check
 	 * @return <code>true</code> if the player pointer is valid, or <code>false</code> if the player is invalid or SourceTV
 	 */
-	inline bool isValidPlayer(IPlayerInfo * pInfo)
+	inline bool isValidPlayerInfo(IPlayerInfo * pInfo)
 	{
 		return (pInfo != NULL) && pInfo->IsConnected() && pInfo->IsPlayer() && (! pInfo->IsHLTV());
 	}
@@ -139,7 +137,7 @@ namespace cssmatch
 	 * @ param maxClients The current max clients of the server
 	 * @return <code>true</code> if the player index is valid, <code>false</code> otherwise
 	 */
-	inline bool isValidPlayerIndex(int index, int maxClients)
+	inline bool isValidPlayerInfoIndex(int index, int maxClients)
 	{
 		return (index > CSSMATCH_INVALID_INDEX) && index <= maxClients;
 	}
@@ -149,7 +147,7 @@ namespace cssmatch
 	 * @param userid The player's userid to check
 	 * @return <code>true</code> if the player userid is valid, <code>false</code> otherwise
 	 */
-	inline bool isValidPlayerUserid(int userid)
+	inline bool isValidPlayerInfoUserid(int userid)
 	{
 		return userid > CSSMATCH_INVALID_USERID;
 	}

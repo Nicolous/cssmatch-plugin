@@ -41,13 +41,13 @@ namespace cssmatch
 		MenuException(const std::string & message) : BaseException(message){}
 	};
 
-	/** What kind of line ? */
+	/** Line types */
 	enum MenuLineType
 	{
 		NORMAL,
-		/** This line is the "back" option */
+		/** "back" option */
 		BACK,
-		/** This line is the "next" option */
+		/** "next" option */
 		NEXT
 	};
 
@@ -63,7 +63,7 @@ namespace cssmatch
 		/** The menu line type */
 		MenuLineType type;
 
-		/** Is the menu line a keyword from the translation files ? */
+		/** Is the text a keyword from the translation files? */
 		bool i18n;
 
 		/** The text content of this line */
@@ -79,12 +79,40 @@ namespace cssmatch
 			: type(lineType), i18n(isI18n), text(content), data(hiddenData) {};
 	};
 
-	/** Menu callback 
-	 * @param user The player who uses the menu
-	 * @param choice The option (1...10) selected by the player
-	 * @param selected The line selected by the player (may be an empty line if the player quit the menu)
+	/** Base menu callback 
+	 * @see MenuCallback
 	 */
-	typedef void (*MenuCallback)(Player * user, int choice, MenuLine * selected);
+	class BaseMenuCallback
+	{
+	public:
+		virtual ~BaseMenuCallback(){};
+
+		/**
+		 * @param user The player who uses the menu
+		 * @param choice The option (1...10) selected by the player
+		 * @param selected The line selected by the player (may be an empty line if the player quit the menu)
+		 */
+		virtual void execute(Player * user, int choice, MenuLine * selected){};
+	};
+
+	/** BaseMenuCallback implementation template */
+	template<class T>
+	class MenuCallback : public BaseMenuCallback
+	{
+	private:
+		typedef void (T::*Method)(Player * user, int choice, MenuLine * selected);
+		T * instance;
+		Method callback;
+	public:
+		MenuCallback(T * objectInstance, Method objectCallback)
+			: instance(objectInstance), callback(objectCallback) 
+		{}
+
+		void execute(Player * user, int choice, MenuLine * selected)
+		{
+			(instance->*callback)(user,choice,selected);
+		}
+	};
 
 	/** A popup based menu */
 	class Menu
@@ -93,32 +121,32 @@ namespace cssmatch
 		/* Parent menu (can be NULL) */
 		//Menu * parent;
 
-		/** Title of this menu */
+		/** Menu title */
 		std::string title;
 
 		/** Menu callback */
-		MenuCallback callback;
+		BaseMenuCallback * callback;
 
 		/** Menu lines */
 		std::vector<MenuLine *> lines;
 	public:
 		/** 
 		 * @param menuTitle The menu title
-		 * @param menuCallback The function to call each time the menu is used
+		 * @param menuCallback Callback invoked when the menu is used (deleted by ~Menu!)
 		 */
-		Menu(/*Menu * parentMenu, */const std::string & menuTitle, MenuCallback menuCallback);
+		Menu(/*Menu * parentMenu, */const std::string & menuTitle, BaseMenuCallback * menuCallback);
 		~Menu();
 
 		/** Call the menu callback with the provided info 
-		 * @param user The player who used the menu
+		 * @param user The user of the menu
 		 * @param choice The option selected (1...10) by the player
 		 */
 		void doCallback(Player * user, int choice);
 
 		/** Add a line to the menu 
-		 * @param isI18nKeyword Is the line a keyword from the translation files ?
+		 * @param isI18nKeyword Is the text a keyword from the translation files?
 		 * @param line The line to add
-		 * @param data The data shipped in this line
+		 * @param data The data shipped into this line
 		 */
 		void addLine(bool isI18nKeyword, const std::string & line, BaseMenuLineData * data = NULL);
 
@@ -131,7 +159,7 @@ namespace cssmatch
 
 		/** Display the menu to a player <br>
 		 * IMPORTANT: Use Player::sendMenu instead, otherwise the player will not be able to select anything
-		 * @param recipient The player
+		 * @param recipient The recipient
 		 * @param page The page number to send to the player
 		 * @param parameters I18n parameters if needed
 		 */

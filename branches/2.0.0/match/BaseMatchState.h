@@ -28,26 +28,12 @@ namespace cssmatch
 	class MatchManager;
 	class Player;
 
-	/** What is a match state id */
-	typedef int MatchStateId;
-
-	/** Base match state (e.g. disabled, kniferound, warmup, set, etc.) <br>
-	 *	Match states should not be directly used, use them through enum MatchStateId instead
-	 */
+	/** Base match state (e.g. disabled, kniferound, warmup, half, etc.) */
 	class BaseMatchState
 	{
-	private:
-		/** The next state id */
-		static MatchStateId nextId;
-	protected:
-		/** Unique id for this state */
-		MatchStateId id;
 	public:
 		BaseMatchState();
 		virtual ~BaseMatchState();
-
-		/** Return the id of this state */
-		MatchStateId getId() const;
 
 		/** Automatically called by the context (MatchManager) when this state starts */
 		virtual void startState() = 0;

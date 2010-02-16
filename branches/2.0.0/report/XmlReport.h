@@ -40,10 +40,10 @@ namespace cssmatch
 		/** The xml document */
 		ticpp::Document document;
 
-		/** Creates the xml document */
+		/** Create the xml document */
 		void writeHeader();
 
-		/** Writes the report content (<cssmatch>)*/
+		/** Write the report content (<cssmatch>)*/
 		void writeCorpse();
 
 			/** <plugin> */
@@ -63,7 +63,7 @@ namespace cssmatch
 				/** <sourcetv> */
 				void writeSourcetv(ticpp::Element * eMatch);
 
-		/* Ends and save the xml document */
+		/* End and save the xml document */
 		//void writeFooter();
 
 	public:

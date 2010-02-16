@@ -29,11 +29,11 @@ namespace cssmatch
 	class CannotBeCopied
 	{
 	private:
-		// These methods don't have a definition : they musn't be called
+		// These methods don't have a definition: they can't be called
 		CannotBeCopied(const CannotBeCopied & toCopy);
 		CannotBeCopied & operator =(const CannotBeCopied & toCopy);
 	protected:
-		// Allowing the instanciation of the children
+		// Allow the instanciation of the children
 		CannotBeCopied();
 		/*virtual causes crash*/ ~CannotBeCopied();
 	};

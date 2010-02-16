@@ -23,15 +23,15 @@
 #ifndef __WARMUP_MATCH_STATE_H__
 #define __WARMUP_MATCH_STATE_H__
 
-class IGameEventManager2;
-class IGameEvent;
-
 #include "BaseMatchState.h"
 #include "../features/BaseSingleton.h"
-#include "../timer/BaseTimer.h"
-#include "../plugin/EventListener.h"
+#include "../plugin/BaseTimer.h"
+#include "../messages/Menu.h"
 
-class IVEngineServer;
+#include "igameevents.h" // IGameEventListener2, IGameEvent
+
+#include <map>
+#include <string>
 
 namespace cssmatch
 {
@@ -43,14 +43,18 @@ namespace cssmatch
 	/** Warmup time in progress <br>
 	 * Ends with a timeout, or if at least one player of each side types "ready"
 	 */
-	class WarmupMatchState : public BaseMatchState, public BaseSingleton<WarmupMatchState>
+	class WarmupMatchState
+		: public BaseMatchState, public BaseSingleton<WarmupMatchState>, public IGameEventListener2
 	{
 	private:
-		EventListener<WarmupMatchState> * listener;
+		typedef void (WarmupMatchState::*EventCallback)(IGameEvent * event);
 
-		/** Admin menus of this state */
+		/** {event => callback} map used in FireGameEvent */
+		std::map<std::string,EventCallback> eventCallbacks;
+
+		/** Menus for this state*/
 		Menu * warmupMenu;
-		Menu * menuWithAdmin;
+		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
 		/** "end of warmup" timer */
 		WarmupTimer * timer;
@@ -72,7 +76,12 @@ namespace cssmatch
 		void endState();
 		void showMenu(Player * recipient);
 
+		// Menus callbacks
+		void warmupMenuCallback(Player * player, int choice, MenuLine * selected);
+		void menuWithAdminCallback(Player * player, int choice, MenuLine * selected);
+
 		// Game event callbacks
+		void FireGameEvent(IGameEvent * event); // IGameEventListener2 method
 		void player_spawn(IGameEvent * event);
 		void round_start(IGameEvent * event);
 		void bomb_beginplant(IGameEvent * event);

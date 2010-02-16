@@ -31,16 +31,14 @@ namespace cssmatch
 {
 	class I18nManager;
 
-	/** Abstraction of the Valve's ConVar to allow dynamic translations for ConVar's description
-	 * (Glad that GetHelpText is virtual)
-	 */
+	/** Internationalized ConVar */
 	class I18nConVar : public ConVar
 	{
 	protected:
-		/** Internationalization tool */
+		/** I18n manager */
 		I18nManager * i18n;
 	public:
-		// Classic ConVar constructors plus the internalization tool
+		// Classic ConVar constructors plus the i18n manager
 		I18nConVar(I18nManager * i18nManager, char const * pName, char const * pDefaultValue, int flags = 0);
 		I18nConVar(I18nManager * i18nManager, char const * pName, char const * pDefaultValue, int flags, char const * pHelpString);
 
@@ -72,11 +70,11 @@ namespace cssmatch
 					float fMax,
 					FnChangeCallback callback);
 
-		/** ConVar methods override : dynamically allocates the memory ! */
+		/** ConVar methods override: dynamically allocates the memory! */
 		virtual char const * GetHelpText() const;
 
-		/** Functor to quickly find a ConVar instance by his name */
-		friend class ConvarHavingName;
+		/* Functor to quickly find a ConVar instance by his name */
+		//friend class ConvarHavingName;
 	};
 
 /*	class ConvarHavingName

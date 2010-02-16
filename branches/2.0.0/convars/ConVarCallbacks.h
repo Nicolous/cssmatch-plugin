@@ -27,7 +27,7 @@ class ConVar;
 
 namespace cssmatch
 {
-	/** Make cssmatch_version constants */
+	/** Make cssmatch_version constant */
 	void cssmatch_version(ConVar * var, char const * pOldString);
 
 	/* Apply changes related to cssmatch_advanced */

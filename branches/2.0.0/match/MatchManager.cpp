@@ -39,27 +39,28 @@ using namespace cssmatch;
 
 using std::string;
 using std::list;
-using std::find_if;
 using std::for_each;
 using std::map;
 
 MatchManager::MatchManager(BaseMatchState * iniState) throw(MatchManagerException)
-: initialState(iniState), currentState(NULL)
+	: initialState(iniState), currentState(NULL)
 {
 	if (iniState == NULL)
 		throw MatchManagerException("Initial match state can't be NULL");
 
-	listener = new EventListener<MatchManager>(this);
+	currentState = iniState;
+	currentState->startState();
 
-	setMatchState(iniState);
+	eventCallbacks["player_activate"] = &MatchManager::player_activate;
+	eventCallbacks["player_disconnect"] = &MatchManager::player_disconnect;
+	eventCallbacks["player_team"] = &MatchManager::player_team;
+	eventCallbacks["player_changename"] = &MatchManager::player_changename;
 }
 
 
 MatchManager::~MatchManager()
 {
 	Countdown::getInstance()->stop();
-
-	delete listener;
 }
 
 MatchLignup * MatchManager::getLignup()
@@ -77,9 +78,9 @@ std::list<TvRecord *> * MatchManager::getRecords()
 	return &records;
 }
 
-MatchStateId MatchManager::getInitialState() const
+BaseMatchState * MatchManager::getInitialState() const
 {
-	return initialState->getId();
+	return initialState;
 }
 
 MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
@@ -91,13 +92,13 @@ MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
 		switch(code)
 		{
 		case T_TEAM:
-			if (infos.setNumber & 1)
+			if (infos.halfNumber & 1)
 				clan = &lignup.clan1;
 			else
 				clan = &lignup.clan2;
 			break;
 		case CT_TEAM:
-			if (infos.setNumber & 1)
+			if (infos.halfNumber & 1)
 				clan = &lignup.clan2;
 			else
 				clan = &lignup.clan1;	
@@ -112,20 +113,22 @@ MatchClan * MatchManager::getClan(TeamCode code) throw(MatchManagerException)
 		throw MatchManagerException("No match in progress");
 }
 
+void MatchManager::FireGameEvent(IGameEvent * event)
+{
+	(this->*eventCallbacks[event->GetName()])(event);
+}
+
 void MatchManager::player_activate(IGameEvent * event)
 {
 	// Announce any connection
 
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	std::list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	std::list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-	std::list<ClanMember *>::iterator itPlayer =
-		std::find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
-	if (itPlayer != invalidPlayer)
+	ClanMember * player = NULL;
+	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
 		I18nManager * i18n = plugin->getI18nManager();
-		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
-		if (isValidPlayer(pInfo))
+		IPlayerInfo * pInfo = player->getPlayerInfo();
+		if (isValidPlayerInfo(pInfo))
 		{
 			RecipientFilter recipients;
 			recipients.addAllPlayers();
@@ -136,7 +139,7 @@ void MatchManager::player_activate(IGameEvent * event)
 		}
 
 		RecipientFilter newplayerRecipient;
-		newplayerRecipient.addRecipient(*itPlayer);
+		newplayerRecipient.addRecipient(player);
 	
 		i18n->i18nPopupSay(newplayerRecipient,"player_match_hosted_popup",0);
 	}
@@ -157,7 +160,7 @@ void MatchManager::player_disconnect(IGameEvent * event)
 
 	i18n->i18nChatSay(recipients,"player_leave_game",parameters);
 
-	// If all the players have disconnected, stop the match (and thus the SourceTv records)
+	// If all the players have disconnected, stop the match (and thus the SourceTv record)
 	if ((plugin->getPlayerCount()-1) <= 0)
 		stop();
 }
@@ -188,9 +191,11 @@ void MatchManager::player_team(IGameEvent * event)
 		break;
 	}
 	if ((toReDetect != INVALID_TEAM) && (playercount < 2))
-			// "< 2" because the game does not immediatly update the player's team got via IPlayerInfo
+	{
+			// "< 2" because the game has not update the player's team got via IPlayerInfo yet
 			// And that's why we use a timer to redetect the clan's name
 		plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,toReDetect));
+	}
 
 	toReDetect = INVALID_TEAM;
 	switch(oldSide)
@@ -205,27 +210,24 @@ void MatchManager::player_team(IGameEvent * event)
 		break;
 	}
 	if ((toReDetect != INVALID_TEAM) && (playercount < 3)) // "< 3" see above
+	{
 		plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,toReDetect));
+	}
 }
 
 void MatchManager::player_changename(IGameEvent * event)
 {
-	// Retect the corresponfing clan name if needed
-	// i.e. if the player is alone is his team
+	// Detect the corresponding clan name if needed
+	// i.e. if the player is alone in his team
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();
-
-	list<ClanMember *>::const_iterator thisPlayer = 
-		find_if(itPlayer,invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
-	if (thisPlayer != invalidPlayer)
+	ClanMember * player = NULL;
+	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 	{
-		TeamCode playerteam = (*thisPlayer)->getMyTeam();
+		TeamCode playerteam = player->getMyTeam();
 		if ((playerteam > SPEC_TEAM) && (plugin->getPlayerCount(playerteam) == 1))
 			plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,playerteam));
 	}
@@ -233,26 +235,11 @@ void MatchManager::player_changename(IGameEvent * event)
 
 void MatchManager::detectClanName(TeamCode code) throw(MatchManagerException)
 {
-	/*ServerPlugin * plugin = ServerPlugin::getInstance();
-	I18nManager * i18n = plugin->getI18nManager();*/
-
 	if (currentState != initialState)
 	{
 		try
 		{
 			getClan(code)->detectClanName();
-
-			/*RecipientFilter recipients;
-			recipients.addAllPlayers();
-
-			i18n->i18nChatSay(recipients,"match_retag");
-
-			map<string,string> parameters;
-			parameters["$team1"] = *(lignup.clan1.getName());
-			parameters["$team2"] = *(lignup.clan2.getName());
-			i18n->i18nChatSay(recipients,"match_name",0,parameters);*/
-
-
 			updateHostname();
 		}
 		catch(const MatchManagerException & e)
@@ -291,27 +278,25 @@ void MatchManager::updateHostname()
 	hostname->SetValue(newHostname.c_str());
 }
 
-void MatchManager::setMatchState(BaseMatchState * newState) throw(MatchManagerException)
+void MatchManager::setMatchState(BaseMatchState * newState)
 {
 	if (newState == NULL)
 		throw MatchManagerException("The news state can't be NULL");
 
-	if (currentState != NULL) // currentState is initialized to NULL
-		currentState->endState();
-
+	currentState->endState();
 	currentState = newState;
 	currentState->startState();
 }
 
-MatchStateId MatchManager::getMatchState() const
+BaseMatchState * MatchManager::getMatchState() const
 {
-	return currentState->getId();
+	return currentState;
 }
 
 void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state)
 	 throw(MatchManagerException)
 {
-	// Make sure there is not already a match in progress
+	// Make sure there isn't already a match in progress
 	if (currentState == initialState)
 	{
 		ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -322,7 +307,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		recipients.addAllPlayers();
 
 		// Update match infos
-		infos.setNumber = 1;
+		infos.halfNumber = 1;
 		infos.roundNumber = 1;
 		infos.kniferoundWinner = NULL;
 
@@ -349,10 +334,13 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		infos.startTime = *getLocalTime();
 
 		// Start to listen some events
-		listener->addCallback("player_activate",&MatchManager::player_activate);
-		listener->addCallback("player_disconnect",&MatchManager::player_disconnect);
-		listener->addCallback("player_team",&MatchManager::player_team);
-		listener->addCallback("player_changename",&MatchManager::player_changename);
+		map<string,EventCallback>::iterator itEvent = eventCallbacks.begin();
+		map<string,EventCallback>::iterator invalidEvent = eventCallbacks.end();
+		while(itEvent != invalidEvent)
+		{
+			interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
+			itEvent++;
+		}
 
 		// Monitor some variable
 		plugin->addTimer(
@@ -383,7 +371,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		detectClanName(CT_TEAM);
 	}
 	else
-		throw MatchManagerException("There is already a match in progress");
+		throw MatchManagerException("There already is a match in progress");
 }
 
 void MatchManager::stop() throw (MatchManagerException)
@@ -442,19 +430,19 @@ void MatchManager::stop() throw (MatchManagerException)
 		// Return to the initial state / context
 		switchToInitialState();
 
-		// Do a time break before returning to the initial configuration
-		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
-		if (breakDuration > 0)
+		// Do a time-out before returning to the initial config
+		int timeoutDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
+		if (timeoutDuration > 0)
 		{
 			map<string,string> parametersBreak;
-			parametersBreak["$time"] = toString(breakDuration);
-			Countdown::getInstance()->fire(breakDuration);
+			parametersBreak["$time"] = toString(timeoutDuration);
+			Countdown::getInstance()->fire(timeoutDuration);
 			plugin->addTimer(
 				new TimerI18nChatSay(	interfaces->gpGlobals->curtime + 2.0f,
 										recipients,
 										"match_dead_time",
 										parametersBreak));
-			plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + breakDuration + 2.0f));
+			plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + timeoutDuration + 2.0f));
 		}
 	}
 	else
@@ -464,9 +452,10 @@ void MatchManager::stop() throw (MatchManagerException)
 void MatchManager::switchToInitialState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	// Stop all event listeners
-	listener->removeCallbacks();
+	interfaces->gameeventmanager2->RemoveListener(this);
 
 	// Stop all pending timers
 	plugin->removeTimers();
@@ -510,7 +499,7 @@ void MatchManager::restartRound() throw (MatchManagerException)
 		// Back to the last round (round_start will maybe increment that)
 		if (infos.roundNumber == 1)
 			infos.roundNumber = -2; 
-			// by convention, we say that a negative round number causes game restarts until the round number reaches 1
+			// by convention, a negative round number causes game restarts until the round number reaches 1
 		else
 			infos.roundNumber -= 1;
 
@@ -521,7 +510,7 @@ void MatchManager::restartRound() throw (MatchManagerException)
 		throw MatchManagerException("No match in progress");
 }
 
-void MatchManager::restartSet() throw (MatchManagerException)
+void MatchManager::restartHalf() throw (MatchManagerException)
 {
 	if (currentState != initialState)
 	{
@@ -556,10 +545,10 @@ void MatchManager::restartSet() throw (MatchManagerException)
 
 		// Back to the first round (round_start will maybe increment that)
 		infos.roundNumber = -2;
-		// by convention, we say that a negative round number causes game restarts until the round number reaches 1
+		// by convention,  a negative round number causes game restarts until the round number reaches 1
 
 		// Do the restart
-		plugin->queueCommand("mp_restartgame 1\n");
+		plugin->queueCommand("mp_restartgame 2\n");
 	}
 	else
 		throw MatchManagerException("No match in progress");

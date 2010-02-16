@@ -27,15 +27,13 @@
 
 #include <string>
 
-class IVEngineServer;
-
 namespace cssmatch
 {
-	/** Callback for a hook ConCommand <br>
+	/** Callback for a hook <br>
 	 * The first parameter is the user who used the hooked command <br>
-	 * The second is the IVEngineServer instance used to access the command arguments
+	 * Returns <code>true</code> to eat the command
 	 */
-	typedef bool (* HookCallback)(int,IVEngineServer *);
+	typedef bool (* HookCallback)(int);
 
 	/** Hook a command at runtime 
 	 * Note that this object calls ConCommand::Init(), <br>

@@ -23,7 +23,7 @@
 #ifndef __RUNNABLE_CONFIGURATION_FILE_H__
 #define __RUNNABLE_CONFIGURATION_FILE_H__
 
-/** Match configurations path (ignoring the game and cfg directories) */
+/** Match config files path (not including cstrike nor cfg) */
 #define MATCH_CONFIGURATIONS_PATH "cssmatch/configurations/"
 
 /** Default config name */
@@ -31,36 +31,35 @@
 
 #include "ConfigurationFile.h"
 
-#include <map>
+//#include <map>
 #include <string>
 
 namespace cssmatch
 {
 	/** Configuration file designed to be executed <br>
-	 * In the future, CSSMatch may be able to restore the previous server configuration <br>
-	 * at the end of the match. So it stores the value of the variables modified by the match configuration file <br>
-	 * before executing it.
+	 * In the future, CSSMatch may be able to restore the previous server configuration at the end of the match. <br>
+	 * So it can store the value of the variables modified by the match configuration file.
 	 */
 	class RunnableConfigurationFile : public ConfigurationFile
 	{
 	private:
-		/** {Server variable pointer => value} map */
-		std::map<ConVar *, std::string> data;
+		/* {Server variable pointer => old value} map */
+		//std::map<ConVar *, std::string> data;
 
-		/** Extract the server variable name and its value from a text line
+		/* Extract a server variable name and its value from a text line
 		 * @param line The line to parse
 		 */
-		std::pair<std::string, std::string> searchData(std::string & line);
+		//std::pair<std::string, std::string> searchData(std::string & line);
 
-		/** Retrieve the server variables and their value */
-		void getData();
+		/* Retrieve the server variables and their value */
+		//void getData();
 	public:
 		/** Prepare a runnable configuration file
 		 * @param filePath The path of the file
 		 */
 		RunnableConfigurationFile(const std::string & filePath) throw (ConfigurationFileException);
 	
-		/** Immediatly execute the configuration file */
+		/** Immediatly execute the configuration file (see RunnableConfigurationFile::execute below) */
 		void execute() const;
 
 		/** Immediatly execute a configuration file, then immediatly execute the commands read from the file

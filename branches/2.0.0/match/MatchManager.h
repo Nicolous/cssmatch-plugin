@@ -23,14 +23,13 @@
 #ifndef __MATCH_MANAGER_H__
 #define __MATCH_MANAGER_H__
 
-#include "igameevents.h"
-
 #include "../player/MatchClan.h" // MatchClan [, ClanMember]
 #include "../common/common.h"
 #include "../exceptions/BaseException.h"
-#include "../timer/BaseTimer.h"
-#include "../plugin/EventListener.h"
-#include "BaseMatchState.h" // MatchStateId
+#include "../plugin/BaseTimer.h"
+#include "BaseMatchState.h"
+
+#include "igameevents.h" // IGameEventListener2, IGameEvent
 
 #include <string>
 #include <map>
@@ -51,10 +50,7 @@ namespace cssmatch
 	/** A match lign-up */
 	struct MatchLignup
 	{
-		/** First clan */
 		MatchClan clan1;
-
-		/** Second clan */
 		MatchClan clan2;
 	};
 
@@ -62,7 +58,7 @@ namespace cssmatch
 	struct MatchInfo
 	{
 		/** Set number */
-		int setNumber;
+		int halfNumber;
 
 		/** Round number */
 		int roundNumber;
@@ -70,28 +66,30 @@ namespace cssmatch
 		/** Start date */
 		tm startTime;
 
-		/** Kniferound winner */
+		/** Knife round winner */
 		MatchClan * kniferoundWinner;
 
-		/** Did a warmup was asked by the laucher ? */
+		/** Did a warmup was asked by the admin? */
 		bool warmup;
 
 		MatchInfo()
-			: setNumber(1), roundNumber(1), startTime(*getLocalTime()), kniferoundWinner(NULL), warmup(false){}
+			: halfNumber(1), roundNumber(1), startTime(*getLocalTime()), kniferoundWinner(NULL), warmup(false){}
 	};
 
-	/** A match manager <br>
+	/** Match manager <br>
 	 * Each match can be decomposed in somes states : <br>
 	 * - a knife round <br>
 	 * - a warmup time <br>
-	 * - one or more sets of n rounds <br>
+	 * - one or more halfs of n rounds <br>
 	 * The states plus this class implement a state pattern (This class is the context)
 	 */
-	class MatchManager
+	class MatchManager : public IGameEventListener2
 	{
 	private:
-		/** Event listener */
-		EventListener<MatchManager> * listener;
+		typedef void (MatchManager::*EventCallback)(IGameEvent * event);
+
+		/** {event => callback} map used in FireGameEvent */
+		std::map<std::string,EventCallback> eventCallbacks;
 
 		/** Update "hostname" according to the clan names */
 		void updateHostname();
@@ -118,34 +116,35 @@ namespace cssmatch
 		 */
 		MatchManager(BaseMatchState * initialState) throw(MatchManagerException);
 
-		/** Note : stop any current countdown here */
+		/** Note: stop any current countdown here */
 		~MatchManager();
 
 		/** Get the match lignup */
 		MatchLignup * getLignup();
 
-		/** Get some informations about the match */
+		/** Get the match info */
 		MatchInfo * getInfos();
 
-		/** Get the SourceTv record list */
+		/** Get the record list */
 		std::list<TvRecord *> * getRecords();
 
-		/** Get the initial/default match state (chan no match is running) */
-		MatchStateId getInitialState() const;
+		/** Get the initial/default match state (when no match is running) */
+		BaseMatchState * getInitialState() const;
 
-		/** Get a clan by team, depending to the current set 
+		/** Get a clan by team, depending to the current half
 		 * @param code The clan's team code 
-		 * @throws MatchManagerException if no match is running or if the team code corresponds to a spectator team
+		 * @throws MatchManagerException if no match is running or if the team code corresponds to a spec team
 		 */
 		MatchClan * getClan(TeamCode code) throw(MatchManagerException);
 
 		// Game event callbacks
+		void FireGameEvent(IGameEvent * event); // IGameEventListener2 method
 		void player_activate(IGameEvent * event);
 		void player_disconnect(IGameEvent * event);
 		void player_team(IGameEvent * event);
 		void player_changename(IGameEvent * event);
 
-		/** Redetect a clan name then announce it
+		/** Redetect a clan name
 		 * @param code The clan's team code
 		 * @throws MatchManagerException if no match is running
 		 */
@@ -154,19 +153,18 @@ namespace cssmatch
 		/** Set a new match state <br>
 		 * Call the endState method of the previous state, then the startState of the new state
 		 * @param newState The new match state
-		 * @throws MatchManagerException if initialState is NULL
 		 */
-		void setMatchState(BaseMatchState * newState) throw(MatchManagerException);
+		void setMatchState(BaseMatchState * newState);
 
 		/** Get the current match state */
-		MatchStateId getMatchState() const;
+		BaseMatchState * getMatchState() const;
 
-		/** Start a new match in a given state <br>
+		/** Start a new match <br>
 		 * Do nothing if a match is already running
 		 * @param config The configuration of the match
 		 * @param warmup If a warmup must be done
 		 * @param state The first state of the match
-		 * @throws MatchManagerException if no match is running	
+		 * @throws MatchManagerException if there already is a match running
 		 */
 		void start(RunnableConfigurationFile & config, bool warmup, BaseMatchState * state)
 			 throw(MatchManagerException);
@@ -177,10 +175,10 @@ namespace cssmatch
 		 */
 		void stop() throw(MatchManagerException);
 
-		/** Return to the initial state (plus remove all listeners, all timers, all records) */
+		/** Return to the initial state (plus remove all listeners/timers/records) */
 		void switchToInitialState();
 
-		/** Show to a player the admin menu corresponding to the current match state */
+		/** Send to a player the admin menu corresponding to the current match state */
 		void showMenu(Player * player);
 
 		/** Restart the current round 
@@ -188,14 +186,14 @@ namespace cssmatch
 		 */
 		void restartRound() throw (MatchManagerException);
 
-		/** Restart the current round set
+		/** Restart the current half
 		 * @throws MatchManagerException if no match is running	
 		 */
-		void restartSet() throw (MatchManagerException);
+		void restartHalf() throw (MatchManagerException);
 	};
 
 
-	/** Timer used to redetect the clan names */
+	/** Timer used to redetect the clan names (e.g. after player_changename) */
 	class ClanNameDetectionTimer : public BaseTimer
 	{
 	private:
@@ -218,7 +216,7 @@ namespace cssmatch
 		void execute();
 	};
 
-	/** Timer used watch a ConVar value <br>
+	/** Timer used to watch a ConVar value (e.g. sv_alltalk) <br>
 	 * Installing a callback for the value changes isn't satisfying because it's easy to get around
 	 */
 	class ConVarMonitorTimer : public BaseTimer
@@ -230,13 +228,13 @@ namespace cssmatch
 		/** The expected value of this variable */
 		std::string value;
 
-		/** Message to send if the ConVar value is != the expected value */
+		/** Message to send if the ConVar value is different from the expected value */
 		std::string message;
 	public:
 		/**
 		 * @param varToWatch The ConVar to watch
 		 * @param expectedValue The expected value of this variable
-		 * @param warningMessage Message (designed by its keyword) to send if the ConVar is not equalto to the expected value
+		 * @param warningMessage Message (its i18n keyword) to send if the ConVar is not equalto to the expected value
 		 * @see BaseTimer
 		 */
 		ConVarMonitorTimer(	float date,

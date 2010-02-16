@@ -23,13 +23,15 @@
 #ifndef __KNIFEROUND_MATCH_STATE_H__
 #define __KNIFEROUND_MATCH_STATE_H__
 
-class IGameEventManager2;
-class IGameEvent;
-
 #include "BaseMatchState.h"
 #include "../features/BaseSingleton.h"
-#include "../plugin/EventListener.h"
 #include "../player/Player.h" // TeamCode
+#include "../messages/Menu.h"
+
+#include "igameevents.h" // IGameEventListener2, IGameEvent
+
+#include <map>
+#include <string>
 
 namespace cssmatch
 {
@@ -39,21 +41,25 @@ namespace cssmatch
 	/** Knife round in progress <br>
 	 * End with the end of the round (if there is a winner)
 	 */
-	class KnifeRoundMatchState : public BaseMatchState, public BaseSingleton<KnifeRoundMatchState>
+	class KnifeRoundMatchState 
+		: public BaseMatchState, public BaseSingleton<KnifeRoundMatchState>, public IGameEventListener2
 	{
 	private:
-		EventListener<KnifeRoundMatchState> * listener;
+		typedef void (KnifeRoundMatchState::*EventCallback)(IGameEvent * event);
 
-		/** Admin menus of this state */
+		/** {event => callback} map used in FireGameEvent */
+		std::map<std::string,EventCallback> eventCallbacks;
+
+		/** Menus for this state*/
 		Menu * kniferoundMenu;	
-		Menu * menuWithAdmin;
+		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
 		friend class BaseSingleton<KnifeRoundMatchState>;
 		KnifeRoundMatchState();
 		~KnifeRoundMatchState();
 	public:
 		/** End the warmup time <br>
-		 * Here is the code which musn't be executed if the match is interupted
+		 * Here is the code which musn't be executed if the match is interupted during the kniferound
 		 * @param winner Id of the team which win the round
 		 */
 		void endKniferound(TeamCode winner);
@@ -63,7 +69,12 @@ namespace cssmatch
 		void endState();
 		void showMenu(Player * recipient);
 
+		// Menus callbacks
+		void kniferoundMenuCallback(Player * player, int choice, MenuLine * selected);
+		void menuWithAdminCallback(Player * player, int choice, MenuLine * selected);
+
 		// Game event callbacks
+		void FireGameEvent(IGameEvent * event); // IGameEventListener2 method
 		void round_start(IGameEvent * event);
 		void item_pickup(IGameEvent * event);
 		void player_spawn(IGameEvent * event);

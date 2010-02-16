@@ -30,19 +30,28 @@
 namespace cssmatch
 {
 	class MatchManager;
+	class Player;
 
 	/** Base class for "no match in progress" state */
 	class DisabledMatchState : public BaseMatchState, public BaseSingleton<DisabledMatchState>
 	{
 	private:
-		/** Admin menus of this state */
+		/** Data carried by the player through all menus that config the match to start */
+		struct MatchMenuLineData : public BaseMenuLineData
+		{
+			BaseMatchState * state;
+			bool warmup;
+
+			MatchMenuLineData(BaseMatchState * firstState, bool doWarmup) : state(firstState), warmup(doWarmup){};
+		};
+
+		/** Menus for this state*/
 		Menu * disabledMenu;
 		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
-		/* New math menus */
+		/* New match menus */
 		Menu * kniferoundQuestion;
 		Menu * warmupQuestion;
-
 		friend class BaseSingleton<DisabledMatchState>;
 		DisabledMatchState();
 		~DisabledMatchState();
@@ -56,6 +65,13 @@ namespace cssmatch
 		void showKniferoundQuestion(Player * recipient);
 		void showWarmupQuestion(Player * recipient);
 		void showConfigQuestion(Player * recipient);
+
+		// Menus callbacks
+		void disabledMenuCallback(Player * player, int choice, MenuLine * selected);
+		void menuWithAdminCallback(Player * player, int choice, MenuLine * selected);
+		void kniferoundQuestionCallback(Player * player, int choice, MenuLine * selected);
+		void warmupQuestionCallback(Player * player, int choice, MenuLine * selected);
+		void configQuestionCallback(Player * player, int choice, MenuLine * selected);
 	};
 }
 

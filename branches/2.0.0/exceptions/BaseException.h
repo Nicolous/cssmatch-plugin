@@ -28,7 +28,7 @@
 namespace cssmatch
 {
 	/** A base exception for CSSMatch <br>
-	 * Note that VC++ implementation of std::exception differs from the gcc's one
+	 * Note: VC++ implementation of std::exception differs from the gcc's one
 	 */
 	class BaseException : public std::exception
 	{

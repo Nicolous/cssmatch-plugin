@@ -20,13 +20,15 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
+#include "../plugin/ServerPlugin.h"
 #include "../match/MatchManager.h"
 #include "../player/MatchClan.h"
 #include "../player/ClanMember.h"
 #include "../player/Player.h"
 #include "../sourcetv/TvRecord.h"
 
-#include "XmlReport.h" // leave it here, or there are conflicting declarations of std::min & min, and std::max & max
+// leave it here, or there are conflicting declarations for std::min & min, and std::max & max
+#include "XmlReport.h"
 
 #include <ctime>
 
@@ -178,7 +180,7 @@ void XmlReport::writeJoueur(ticpp::Element * eJoueurs, ClanMember * player)
 	IPlayerInfo * pInfo = player->getPlayerInfo();
 	PlayerStats * stats = player->getCurrentStats();
 
-	if (isValidPlayer(pInfo))
+	if (isValidPlayerInfo(pInfo))
 	{
 		ticpp::Element * eJoueur = new ticpp::Element("joueur");
 		eJoueur->SetAttribute("steamid",pInfo->GetNetworkIDString());

@@ -20,7 +20,7 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#include "SetMatchState.h"
+#include "HalfMatchState.h"
 
 #include "../common/common.h"
 #include "../plugin/ServerPlugin.h"
@@ -28,145 +28,49 @@
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
 #include "../sourcetv/TvRecord.h"
-#include "../messages/Menu.h"
 #include "MatchManager.h"
 #include "DisabledMatchState.h"
-#include "BreakMatchState.h"
+#include "TimeoutMatchState.h"
 #include "WarmupMatchState.h"
 
-#include "igameevents.h"
-
 #include <ctime>
-#include <algorithm>
 
 using namespace cssmatch;
 
 using std::string;
 using std::list;
 using std::map;
-using std::find_if;
 using std::ostringstream;
 
-namespace cssmatch
+HalfMatchState::HalfMatchState() : finished(false)
 {
-	void setStateMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-		MatchManager * match = plugin->getMatch();
-		I18nManager * i18n = plugin->getI18nManager();
+	halfMenu = new Menu("menu_match",new MenuCallback<HalfMatchState>(this,&HalfMatchState::halfMenuCallback));
+	halfMenu->addLine(true,"menu_alltalk");
+	halfMenu->addLine(true,"menu_restart");
+	halfMenu->addLine(true,"menu_stop");
+	halfMenu->addLine(true,"menu_retag");
+	halfMenu->addLine(true,"menu_restart_manche");
 
-		switch(choice)
-		{
-		case 1:
-			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
-			player->cexec("cssmatch\n");
-			break;
-		case 2:
-			{
-				RecipientFilter recipients;
-				map<string,string> parameters;
-				IPlayerInfo * pInfo = player->getPlayerInfo();
-				PlayerIdentity * identity = player->getIdentity();
-
-				recipients.addAllPlayers();
-				if (isValidPlayer(pInfo))
-				{
-					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
-				}
-				else
-					i18n->i18nChatSay(recipients,"admin_round_restarted");
-
-				match->restartRound();
-			}
-			player->quitMenu();
-			break;
-		case 3:
-			match->stop();
-			player->quitMenu();
-			break;
-		case 4:
-			{
-				MatchLignup * lignup = match->getLignup();
-				match->detectClanName(T_TEAM);
-				match->detectClanName(CT_TEAM);
-
-				RecipientFilter recipients;
-				recipients.addRecipient(player);
-				map<string,string> parameters;
-				parameters["$team1"] = *lignup->clan1.getName();
-				parameters["$team2"] = *lignup->clan2.getName();
-				i18n->i18nChatSay(recipients,"match_name",parameters);
-
-				player->quitMenu();
-			}
-			break;
-		case 5:
-			{
-				RecipientFilter recipients;
-				map<string,string> parameters;
-				IPlayerInfo * pInfo = player->getPlayerInfo();
-				PlayerIdentity * identity = player->getIdentity();
-
-				recipients.addAllPlayers();
-				if (isValidPlayer(pInfo))
-				{
-					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_manche_restarted_by",parameters,identity->index);
-				}
-				else
-					i18n->i18nChatSay(recipients,"admin_manche_restarted");
-
-				match->restartSet();
-			}
-			player->quitMenu();
-			break;
-		default:
-			player->quitMenu();
-		}
-	}
-
-	void setStateMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
-	{
-		setStateMenuCallback(player,choice-1,selected);
-
-		// Have to be here because the above callback could invoke player->quitMenu()
-		if (choice == 1)
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			plugin->showAdminMenu(player);
-		}
-	}
-}
-
-SetMatchState::SetMatchState() : finished(false)
-{
-	listener = new EventListener<SetMatchState>(this);
-
-	setStateMenu = new Menu("menu_match",setStateMenuCallback);
-	setStateMenu->addLine(true,"menu_alltalk");
-	setStateMenu->addLine(true,"menu_restart");
-	setStateMenu->addLine(true,"menu_stop");
-	setStateMenu->addLine(true,"menu_retag");
-	setStateMenu->addLine(true,"menu_restart_manche");
-
-	menuWithAdmin = new Menu("menu_match",setStateMenuWithAdminCallback);
+	menuWithAdmin = new Menu("menu_match",new MenuCallback<HalfMatchState>(this,&HalfMatchState::menuWithAdminCallback));
 	menuWithAdmin->addLine(true,"menu_administration_options");
 	menuWithAdmin->addLine(true,"menu_alltalk");
 	menuWithAdmin->addLine(true,"menu_restart");
 	menuWithAdmin->addLine(true,"menu_stop");
 	menuWithAdmin->addLine(true,"menu_retag");
 	menuWithAdmin->addLine(true,"menu_restart_manche");
+
+	eventCallbacks["player_death"] = &HalfMatchState::player_death;
+	eventCallbacks["round_start"] = &HalfMatchState::round_start;
+	eventCallbacks["round_end"] = &HalfMatchState::round_end;
 }
 
-SetMatchState::~SetMatchState()
+HalfMatchState::~HalfMatchState()
 {
-	delete listener;
-	delete setStateMenu;
+	delete halfMenu;
 	delete menuWithAdmin;
 }
 
-void SetMatchState::startState()
+void HalfMatchState::startState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -175,12 +79,16 @@ void SetMatchState::startState()
 	I18nManager * i18n = plugin->getI18nManager();
 
 	// Subscribe to the needed game events
-	listener->addCallback("player_death",&SetMatchState::player_death);
-	listener->addCallback("round_start",&SetMatchState::round_start);
-	listener->addCallback("round_end",&SetMatchState::round_end);
+	map<string,EventCallback>::iterator itEvent = eventCallbacks.begin();
+	map<string,EventCallback>::iterator invalidEvent = eventCallbacks.end();
+	while(itEvent != invalidEvent)
+	{
+		interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
+		itEvent++;
+	}
 
 	infos->roundNumber = -2; // a negative round number causes a game restart (see round_start)
-	finished = false;
+	finished = false; // (This half is not finished yet)
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
@@ -193,7 +101,7 @@ void SetMatchState::startState()
 		strftime(dateBuffer,sizeof(dateBuffer),"%Y-%m-%d_%Hh%M",date);
 
 		ostringstream recordName;
-		recordName << dateBuffer << '_' << interfaces->gpGlobals->mapname.ToCStr() << "_set" << infos->setNumber;
+		recordName << dateBuffer << '_' << interfaces->gpGlobals->mapname.ToCStr() << "_set" << infos->halfNumber;
 
 		TvRecord * record = NULL;
 		try
@@ -211,7 +119,7 @@ void SetMatchState::startState()
 
 	// Announce
 	map<string,string> parameters;
-	parameters["$current"] = toString(infos->setNumber);
+	parameters["$current"] = toString(infos->halfNumber);
 	parameters["$total"] = plugin->getConVar("cssmatch_sets")->GetString();
 	i18n->i18nChatSay(recipients,"match_start_manche",parameters);
 
@@ -220,12 +128,13 @@ void SetMatchState::startState()
 	plugin->queueCommand("mp_restartgame 2\n");
 }
 
-void SetMatchState::endState()
+void HalfMatchState::endState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 
-	listener->removeCallbacks();
+	interfaces->gameeventmanager2->RemoveListener(this);
 
 	// Stop the last record lauched (if any)
 	list<TvRecord *> * recordlist = match->getRecords();
@@ -237,7 +146,7 @@ void SetMatchState::endState()
 	}
 }
 
-void SetMatchState::showMenu(Player * recipient)
+void HalfMatchState::showMenu(Player * recipient)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -251,10 +160,104 @@ void SetMatchState::showMenu(Player * recipient)
 	if (plugin->getConVar("cssmatch_advanced")->GetBool())
 		recipient->sendMenu(menuWithAdmin,1,parameters);
 	else
-		recipient->sendMenu(setStateMenu,1,parameters);
+		recipient->sendMenu(halfMenu,1,parameters);
 }
 
-void SetMatchState::endSet()
+void HalfMatchState::halfMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	// 1. Enable/Disable alltalk
+	// 2. Restart round
+	// 3. Clan name detection
+	// 4. Half restart
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	switch(choice)
+	{
+	case 1:
+		plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
+		player->cexec("cssmatch\n");
+		break;
+	case 2:
+		{
+			RecipientFilter recipients;
+			map<string,string> parameters;
+			IPlayerInfo * pInfo = player->getPlayerInfo();
+			PlayerIdentity * identity = player->getIdentity();
+
+			recipients.addAllPlayers();
+			if (isValidPlayerInfo(pInfo))
+			{
+				parameters["$admin"] = pInfo->GetName();
+				i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
+			}
+			else
+				i18n->i18nChatSay(recipients,"admin_round_restarted");
+
+			match->restartRound();
+		}
+		player->quitMenu();
+		break;
+	case 3:
+		match->stop();
+		player->quitMenu();
+		break;
+	case 4:
+		{
+			MatchLignup * lignup = match->getLignup();
+			match->detectClanName(T_TEAM);
+			match->detectClanName(CT_TEAM);
+
+			RecipientFilter recipients;
+			recipients.addRecipient(player);
+			map<string,string> parameters;
+			parameters["$team1"] = *lignup->clan1.getName();
+			parameters["$team2"] = *lignup->clan2.getName();
+			i18n->i18nChatSay(recipients,"match_name",parameters);
+
+			player->quitMenu();
+		}
+		break;
+	case 5:
+		{
+			RecipientFilter recipients;
+			map<string,string> parameters;
+			IPlayerInfo * pInfo = player->getPlayerInfo();
+			PlayerIdentity * identity = player->getIdentity();
+
+			recipients.addAllPlayers();
+			if (isValidPlayerInfo(pInfo))
+			{
+				parameters["$admin"] = pInfo->GetName();
+				i18n->i18nChatSay(recipients,"admin_manche_restarted_by",parameters,identity->index);
+			}
+			else
+				i18n->i18nChatSay(recipients,"admin_manche_restarted");
+
+			match->restartHalf();
+		}
+		player->quitMenu();
+		break;
+	default:
+		player->quitMenu();
+	}
+}
+
+void HalfMatchState::menuWithAdminCallback(Player * player, int choice, MenuLine * selected)
+{
+	halfMenuCallback(player,choice-1,selected);
+
+	// Here because the above callback could invoke player->quitMenu()
+	if (choice == 1)
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		plugin->showAdminMenu(player);
+	}
+}
+
+void HalfMatchState::endHalf()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -289,32 +292,32 @@ void SetMatchState::endSet()
 	ClanStats * lastSetStatsClanCT = clanCT->getLastSetStats();
 	lastSetStatsClanCT->scoreCT = currentStatsClanCT->scoreCT;
 
-	if (infos->setNumber < plugin->getConVar("cssmatch_sets")->GetInt())
+	if (infos->halfNumber < plugin->getConVar("cssmatch_sets")->GetInt())
 	{
-		// There is at least one more set to play
+		// There is at least one more half to play
 
-		// Do a time break (if any) before starting the next state
+		// Do a time-out (if any) before starting the next state
 		BaseMatchState * nextState = this;
 		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 		{
 			nextState = WarmupMatchState::getInstance();
 		}
 
-		int breakDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
-		if (breakDuration > 0)
+		int timeoutDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
+		if (timeoutDuration > 0)
 		{
-			BreakMatchState::doBreak(breakDuration,nextState);
+			TimeoutMatchState::doTimeout(timeoutDuration,nextState);
 		}
 		else
 		{
 			match->setMatchState(nextState);
 		}
 		
-		// One more set prepared
-		infos->setNumber++;
+		// One more half started
+		infos->halfNumber++;
 
 		// Swap every players
-		plugin->addTimer(new SwapTimer(interfaces->gpGlobals->curtime + (float)breakDuration));
+		plugin->addTimer(new SwapTimer(interfaces->gpGlobals->curtime + (float)timeoutDuration));
 	}
 	else
 	{
@@ -323,7 +326,7 @@ void SetMatchState::endSet()
 	}
 }
 
-void SetMatchState::finish()
+void HalfMatchState::finish()
 {
 	finished = true;
 
@@ -339,7 +342,7 @@ void SetMatchState::finish()
 	recipients.addAllPlayers();
 	map<string,string> parameters;
 
-	parameters["$current"] = toString(infos->setNumber);
+	parameters["$current"] = toString(infos->halfNumber);
 
 	ClanStats * statsClan1 = lignup->clan1.getStats();
 	parameters["$team1"] = *lignup->clan1.getName();
@@ -353,34 +356,33 @@ void SetMatchState::finish()
 	//i18n->i18nConsoleSay(recipients,"match_end_manche_popup",parameters);
 }
 
-void SetMatchState::player_death(IGameEvent * event)
+void HalfMatchState::FireGameEvent(IGameEvent * event)
+{
+	(this->*eventCallbacks[event->GetName()])(event);
+}
+
+void HalfMatchState::player_death(IGameEvent * event)
 {
 	// Update the score [history] of the involved players
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
-	int userid = event->GetInt("userid");
-	list<ClanMember *>::iterator itVictim = 
-		find_if(itPlayer,invalidPlayer,PlayerHavingUserid(userid));
-	if (itVictim != invalidPlayer)
+	int idVictim = event->GetInt("userid");
+	ClanMember * victim = NULL;
+	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,idVictim,victim)
 	{
-		PlayerStats * currentStats = (*itVictim)->getCurrentStats();
+		PlayerStats * currentStats = victim->getCurrentStats();
 		currentStats->deaths++;
 	}
 
-	int attacker = event->GetInt("attacker");
-	if (attacker != userid)
+	int idAttacker = event->GetInt("attacker");
+	if (idAttacker != idVictim)
 	{
-		list<ClanMember *>::iterator itAttacker = 
-			find_if(itPlayer,invalidPlayer,PlayerHavingUserid(attacker));
-		if (itAttacker != invalidPlayer)
+		ClanMember * attacker = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,idAttacker,attacker)
 		{
-			PlayerStats * currentStats = (*itAttacker)->getCurrentStats();
-			if ((*itVictim)->getMyTeam() != (*itAttacker)->getMyTeam())
+			PlayerStats * currentStats = attacker->getCurrentStats();
+			if (attacker->getMyTeam() != attacker->getMyTeam())
 				currentStats->kills++;
 			else
 				currentStats->kills--;
@@ -388,13 +390,13 @@ void SetMatchState::player_death(IGameEvent * event)
 	}
 }
 
-void SetMatchState::round_start(IGameEvent * event)
+void HalfMatchState::round_start(IGameEvent * event)
 {
 	if (finished)
 	{
 		// All rounds done, stop this state and the sourcetv records
 
-		endSet();
+		endHalf();
 	}
 	else
 	{
@@ -449,9 +451,9 @@ void SetMatchState::round_start(IGameEvent * event)
 	}
 }
 
-void SetMatchState::round_end(IGameEvent * event)
+void HalfMatchState::round_end(IGameEvent * event)
 {
-	// Update the score of each clan, then end the [round] set if scheduled number of rounds is reached
+	// Update the score of each clan, then end the half if roundNumber >= cssmatch_rounds
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();

@@ -51,40 +51,27 @@ void ConfigurationFile::removeComments(string & line)
 		line = line.substr(0,iComment);
 }
 
-void ConfigurationFile::strip(string & line)
+void ConfigurationFile::trim(string & line)
 {
-	size_t strSize = line.size();
 	size_t iDataBegin = 0;
-	size_t iDataEnd = strSize;
+	size_t iDataEnd = line.size();
 
-	// Strip front
+	// Trim front
 	string::const_iterator itChar = line.begin();
 	string::const_iterator lastChar = line.end();
-	bool allFound = false;
-	while((itChar != lastChar) && (! allFound))
+	while((itChar != lastChar) && ((*itChar == ' ') || (*itChar == '\t')))
 	{
-		if ((*itChar == ' ') || (*itChar == '\t'))
-		{
-			iDataBegin++;
-			itChar++;
-		}
-		else
-			allFound = true;
+		iDataBegin++;
+		itChar++;
 	}
 
-	// Strip back
+	// Trim back
 	string::const_reverse_iterator itRChar = line.rbegin();
 	string::const_reverse_iterator lastRChar = line.rend();
-	allFound = false;
-	while((itRChar != lastRChar) && (! allFound))
+	while((itRChar != lastRChar) && ((*itRChar == ' ') || (*itRChar == '\t')))
 	{
-		if ((*itRChar == ' ') || (*itRChar == '\t'))
-		{
-			iDataEnd--;
-			itRChar++;
-		}
-		else
-			allFound = true;
+		iDataEnd--;
+		itRChar++;
 	}
 
 	line = line.substr(iDataBegin,iDataEnd-iDataBegin);
@@ -137,7 +124,7 @@ void ConfigurationFile::getLines(list<string> & out)
 		{
 			removeComments(line);
 			removeEndLine(line);
-			strip(line);
+			trim(line);
 
 			if (line.length() > 0)
 				out.push_back(line);

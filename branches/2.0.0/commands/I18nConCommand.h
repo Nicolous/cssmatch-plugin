@@ -29,14 +29,14 @@ namespace cssmatch
 {
 	class I18nManager;
 
-	/** As I18nConVar, this class allows the internationalization of the ConCommand's description */
+	/** Internationalized ConCommand */
 	class I18nConCommand : public ConCommand
 	{
 	protected:
-		/** Internationalization tool */
+		/** I18n manager */
 		I18nManager * i18n;
 	public:
-		// Classic ConCommand constructors plus the internalization tool
+		// Classic ConCommand constructors plus the i18n manager
 		I18nConCommand(	I18nManager * i18nManager,
 						char const * pName,
 						FnCommandCallback callback,
@@ -44,7 +44,7 @@ namespace cssmatch
 						int flags = 0,
 						FnCommandCompletionCallback completionFunc = 0);
 
-		// ConCommand methods override : dynamically allocates the memory ! 
+		// ConCommand methods override: dynamically allocates the memory! 
 		virtual char const * GetHelpText() const;
 	};
 }

@@ -53,7 +53,6 @@ void MatchClan::getMembers(list<ClanMember *> * members)
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
 
-	// We have to construct a list of members who take part to this clan
 	try
 	{
 		TeamCode team = (match->getClan(CT_TEAM) == this) ? CT_TEAM : T_TEAM;
@@ -100,7 +99,7 @@ void MatchClan::detectClanName()
 {
 	// 1. Get two members
 	// 2. Get their names
-	// 3. Accumulate consecutive/common characters until we find a clan name which contains at least 3 characters
+	// 3. Accumulate consecutive/common characters until we find a clan name than satisfies isValidClanName
 
 	list<ClanMember *> members;
 	getMembers(&members);
@@ -125,7 +124,7 @@ void MatchClan::detectClanName()
 			// 2.
 			IPlayerInfo * pInfo1 = member1->getPlayerInfo();
 			IPlayerInfo * pInfo2 = member2->getPlayerInfo();
-			if (isValidPlayer(pInfo1) && isValidPlayer(pInfo2))
+			if (isValidPlayerInfo(pInfo1) && isValidPlayerInfo(pInfo2))
 			{
 				string memberName1 = pInfo1->GetName();
 				string memberName2 = pInfo2->GetName();
@@ -140,10 +139,10 @@ void MatchClan::detectClanName()
 				string::const_iterator endMemberName2 = memberName2.end();
 
 				// For each character of member1
-				//	Is a character common to a character of member2 ?
+				//	Is a character common to a character of member2?
 				//		Try to accumulate all consecutive/common characters
-				//		Is the clan name coherent ?
-				//			Found a new clan name !
+				//		Is the clan name coherent?
+				//			Found a new clan name!
 				//	Otherwise continue
 				while(itMemberName1 != endMemberName1)
 				{
@@ -193,7 +192,7 @@ void MatchClan::detectClanName()
 		else // One member in this clan => clan's name = member's name
 		{
 			IPlayerInfo * pInfo = member1->getPlayerInfo();
-			if (isValidPlayer(pInfo))
+			if (isValidPlayerInfo(pInfo))
 			{
 				name = pInfo->GetName();
 			}

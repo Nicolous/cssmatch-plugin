@@ -45,7 +45,7 @@ Player::Player(int index) throw (PlayerException)
 		throw PlayerException("The plugin was unable to construct a Player instance => player entity not found");
 
 	identity.userid = interfaces->engine->GetPlayerUserId(identity.pEntity);
-	if (! isValidPlayerUserid(identity.userid))
+	if (! isValidPlayerInfoUserid(identity.userid))
 		throw PlayerException("The plugin was unable to construct a Player instance => player userid not found");
 
 	const char * tempSteamid = interfaces->engine->GetPlayerNetworkIDString(identity.pEntity);
@@ -130,7 +130,7 @@ TeamCode Player::getMyTeam() const
 	TeamCode team = INVALID_TEAM;
 	IPlayerInfo * pInfo = getPlayerInfo();
 
-	if (isValidPlayer(pInfo))
+	if (isValidPlayerInfo(pInfo))
 	{
 		team = (TeamCode)pInfo->GetTeamIndex();
 	
@@ -182,8 +182,8 @@ IPlayerInfo * Player::getPlayerInfo() const
 
 	IPlayerInfo * pInfo = interfaces->playerinfomanager->GetPlayerInfo(identity.pEntity);
 
-	//if (! isValidPlayer(pInfo))
-	// Don't use isValidPlayer here because it excludes SourceTv
+	//if (! isValidPlayerInfo(pInfo))
+	// Don't use isValidPlayerInfo here because it excludes SourceTv
 	// For now SourceTV is added to the playerlist, because it should be able to recieve the message from CSSMatch
 	if (pInfo == NULL)
 	{
@@ -217,7 +217,7 @@ void Player::kick(const string & reason) const
 	string textReason;
 	
     IPlayerInfo * pInfo = getPlayerInfo();
-    if (isValidPlayer(pInfo) && (! pInfo->IsFakeClient()))
+    if (isValidPlayerInfo(pInfo) && (! pInfo->IsFakeClient()))
 		textReason = i18n->getTranslation(reason,interfaces->engine->GetClientConVarValue(identity.index,"cl_language"));
     else
         textReason = "Kick bot";
@@ -245,7 +245,7 @@ bool Player::swap()
 	bool success = true;
 
 	IPlayerInfo * pInfo = getPlayerInfo();
-	if (isValidPlayer(pInfo))
+	if (isValidPlayerInfo(pInfo))
 	{
 		if (pInfo->IsFakeClient())
 			kick("Swap Bot");
@@ -273,7 +273,7 @@ bool Player::spec()
 	bool success = true;
 
 	IPlayerInfo * pInfo = getPlayerInfo();
-	if (isValidPlayer(pInfo))
+	if (isValidPlayerInfo(pInfo))
 	{
 		if (pInfo->GetTeamIndex() != SPEC_TEAM)
 			pInfo->ChangeTeam((int)SPEC_TEAM);
@@ -290,7 +290,6 @@ void Player::cexec(const std::string & command) const
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	interfaces->engine->ClientCommand(identity.pEntity,command.c_str());
-	
 }
 
 void Player::removeWeapon(WeaponSlotCode slot)

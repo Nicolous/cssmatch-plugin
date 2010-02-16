@@ -54,7 +54,7 @@ int RecipientFilter::GetRecipientCount() const
 void RecipientFilter::addRecipient(Player * recipient)
 {
 	IPlayerInfo * pInfo = recipient->getPlayerInfo();
-	if ((pInfo != NULL) && pInfo->IsConnected() && pInfo->IsPlayer()) // isValidPlayer excludes SourceTv
+	if ((pInfo != NULL) && pInfo->IsConnected() && pInfo->IsPlayer()) // isValidPlayerInfo excludes SourceTv
 	{
 		if (! pInfo->IsFakeClient())
 			recipients.push_back(recipient->getIdentity()->index);

@@ -24,7 +24,7 @@
 #define __COUNTDOWN_H__
 
 #include "../features/BaseSingleton.h"
-#include "../timer/BaseTimer.h"
+#include "../plugin/BaseTimer.h"
 
 namespace cssmatch
 {
@@ -40,10 +40,10 @@ namespace cssmatch
 			int left;
 		public:
 			/** 
-			 * @param dateExecution see BaseTimer
+			 * @param executionDate see BaseTimer
 			 * @param nextCount The next count to display
 			 */
-			CountdownTick(float dateExecution, int nextCount);
+			CountdownTick(float executionDate, int nextCount);
 
 			/**
 			 * @see BaseTimer
@@ -63,8 +63,8 @@ namespace cssmatch
 		Countdown();
 		~Countdown();
 	public:
-		/** Lauch the countdown
-		 * @param seconds The left until the end of the countdown
+		/** Start the countdown
+		 * @param seconds Seconds left until the end of the countdown
 		 */
 		void fire(int seconds);
 

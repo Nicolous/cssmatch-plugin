@@ -43,7 +43,7 @@ void ConCommandHook::Init()
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	ICvar * cvars = interfaces->convars->getConVarAccessor();
+	ICvar * cvars = interfaces->convars->getConVarInterface();
 
 	if (cvars != NULL)
 	{
@@ -56,11 +56,10 @@ void ConCommandHook::Init()
 				(listedCommand != this) &&
 				(V_strcmp(listedCommand->GetName(),GetName()) == 0))
 			{
-				hooked = (ConCommand *)const_cast<ConCommandBase *>(listedCommand);
+				hooked = static_cast<ConCommand *>(const_cast<ConCommandBase *>(listedCommand));
 				success = true;
 				break;
 			}
-
 			listedCommand = listedCommand->GetNext();
 		}
 		
@@ -84,9 +83,8 @@ void ConCommandHook::Dispatch()
 	// Call the corresponding callback, and eat the command call if asked
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
 
-	if (! callback(plugin->GetCommandClient()+1,interfaces->engine))
+	if (! callback(plugin->GetCommandClient()+1))
 	{
 		hooked->Dispatch();
 	}

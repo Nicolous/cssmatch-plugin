@@ -26,10 +26,9 @@
 #include "UserMessagesManager.h"
 #include "RecipientFilter.h"
 #include "../features/CannotBeCopied.h"
-#include "../timer/BaseTimer.h"
+#include "../plugin/BaseTimer.h"
 
 class ConVar;
-class IVEngineServer;
 
 #include <map>
 #include <string>
@@ -40,18 +39,38 @@ namespace cssmatch
 {
 	class TranslationFile;
 
-	/** Support for internationalized messages <br>
+	/** Support for internationalized/localized messages <br>
 	 * Messages can have parameters, prefixed by $ (e.g. : "The attacker is $attackername") <br>
-	 * These parameters have to be passed under the form of a {parameter => value} map
+	 * These parameters are passed under the form of a {parameter => value} map <br>
+	 * <br>
+	 * Some things are cached: <br>
+	 * - TranslationFile instances are cached into a {language => TranslationFile} map (avoid mutiple parses of the translation files) <br>
+	 * - When a localized message is prepared, the final messages are cached into a {language => I18nMessage} map (avoid multiple calls/searches and parameters handling)
 	 */
 	class I18nManager : public CannotBeCopied, public UserMessagesManager
 	{
 	private:
-		/** What is the default language to use ? */
+		/** What is the default language? */
 		ConVar * defaultLanguage;
 
 		/** {language name => translation set} */
 		std::map<std::string,TranslationFile *> languages;
+
+		/** i18n message (used to cache a message depending to a language) */
+		struct I18nMessage
+		{
+			RecipientFilter recipients;
+			std::string message;
+		};
+
+		/** {language => I18nMessage} */
+		std::map<std::string, I18nMessage> messageCache;
+
+		/** Update the message cache */
+		void updateMessageCache(	int recipientIndex,
+									const std::string & language,
+									const std::string & keyword,
+									const std::map<std::string, std::string> & parameters);
 	public:
 		/** Empty map for messages which have no option to parse */
 		static std::map<std::string, std::string> WITHOUT_PARAMETERS;
@@ -59,7 +78,7 @@ namespace cssmatch
 		/**
 		 * @see UserMessagesManager
 		 */
-		I18nManager(IVEngineServer * engine);
+		I18nManager();
 		~I18nManager();
 
 		/** Set the default language to use if no translation is found for a particular keyword */
@@ -69,7 +88,7 @@ namespace cssmatch
 		std::string getDefaultLanguage() const;
 
 		/** Retrieve the TranslationFile instance corresponding to a language <br>
-		 * Store/cache it if it's not already done 
+		 * Store/Cache it if it's not already done 
 		 * @param language The language which has to be used
 		 * @return The corresponding translation file 
 		 */
@@ -78,7 +97,7 @@ namespace cssmatch
 		/** Retrieve the translation of a message
 		 * @param language The language of the translation
 		 * @param keyword The identifier of the translation to retrieve
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param parameters If specified, the message's parameters and their values
 		 */
 		std::string getTranslation(	const std::string & language,
 									const std::string & keyword, 
@@ -90,7 +109,7 @@ namespace cssmatch
 		 * @param recipients Recipient list
 		 * @param keyword The identifier of the translation to use
 		 * @param playerIndex If specified, any part of the message after \003 will appear in the color corresponding to the player's team
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param parameters If specified, the message's parameters and their values
 		 * @see UserMessagesManager::chatSay
 		 */
 		void i18nChatSay(	RecipientFilter & recipients,
@@ -102,7 +121,7 @@ namespace cssmatch
 		/** Send a colorful chat message
 		 * @param recipients Recipient list
 		 * @param keyword The identifier of the translation to use
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param parameters If specified, the message's parameters and their values
 		 */
 		void i18nChatWarning(	RecipientFilter & recipients, 
 								const std::string & keyword,
@@ -112,8 +131,8 @@ namespace cssmatch
 		 * @param recipients Recipient list
 		 * @param keyword The identifier of the translation to use
 		 * @param lifeTime Display time (in seconds)
-		 * @param flags Options which the play can select
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param flags Options that the player can select
+		 * @param parameters If specified, the message's parameters and their values
 		 */
 		void i18nPopupSay(	RecipientFilter & recipients,
 							const std::string & keyword,
@@ -124,7 +143,7 @@ namespace cssmatch
 		/** Send a centered (windowed) popup message
 		 * @param recipients Recipient list
 		 * @param keyword The identifier of the translation to use
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param parameters If specified, the message's parameters and their values
 		 */
 		void i18nHintSay(	RecipientFilter & recipients,
 							const std::string & keyword,
@@ -133,7 +152,7 @@ namespace cssmatch
 		/** Send a centered message
 		 * @param recipients Recipient list
 		 * @param keyword The identifier of the translation to use
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param parameters If specified, the message's parameters and their values
 		 */
 		void i18nCenterSay(	RecipientFilter & recipients,
 							const std::string & keyword,
@@ -142,7 +161,7 @@ namespace cssmatch
 		/** Send a console message
 		 * @param recipients Recipient list
 		 * @param keyword The identifier of the translation to use
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param parameters If specified, the message's parameters and their values
 		 */
 		void i18nConsoleSay(RecipientFilter & recipients,
 							const std::string & keyword,
@@ -150,7 +169,7 @@ namespace cssmatch
 
 		/** Send a message to the user of the RCON command (or the server console)
 		 * @param keyword The identifier of the translation to use
-		 * @param parameters If specified, the message's parameters and their value
+		 * @param parameters If specified, the message's parameters and their values
 		 */
 		void i18nMsg(	const std::string & keyword,
 						const std::map<std::string, std::string> & parameters = WITHOUT_PARAMETERS);
@@ -175,7 +194,7 @@ namespace cssmatch
 		int playerIndex;
 
 		/** @see I18nManager::I18nChatSay */
-		std::map<std::string, std::string> parameters; // FIXME : that copies a std::map
+		std::map<std::string, std::string> parameters;
 	public:
 		/**
 		 * @param i18n The message manager
@@ -214,7 +233,7 @@ namespace cssmatch
 		int flags;
 
 		/** @see I18nManager::I18nChatSay */
-		std::map<std::string, std::string> parameters; // FIXME : that copies a std::map
+		std::map<std::string, std::string> parameters;
 	public:
 		/**
 		 * @param i18n The message manager

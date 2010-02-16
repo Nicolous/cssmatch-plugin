@@ -39,12 +39,12 @@ namespace cssmatch
 		std::vector<int> recipients;
 
 	public:
-		/** FIXME : not implemented 
+		/** FIXME: not implemented 
 		 * @see IRecipientFilter::IsReliable
 		 */
 		virtual bool IsReliable() const;
 
-		/** FIXME : not implemented 
+		/** FIXME: not implemented 
 		 * @see IRecipientFilter::IsReliable
 		 */
 		virtual bool IsInitMessage() const;
@@ -53,7 +53,7 @@ namespace cssmatch
 		virtual int GetRecipientCount() const;
 
 		/** Get the player index at a given recipient slot
-		 * @param slot Player's position in the list
+		 * @param slot Position in the list
 		 */
 		virtual int GetRecipientIndex(int slot) const;
 
@@ -67,7 +67,7 @@ namespace cssmatch
 		 */
 		void addRecipient(int index);
 
-		/** Add a the player to the recipient list */
+		/** Add every players to the recipient list */
 		void addAllPlayers();
 
 		/** Get a vector of the recipient list */

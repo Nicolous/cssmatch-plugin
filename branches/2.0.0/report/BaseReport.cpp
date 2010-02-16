@@ -33,9 +33,10 @@ using std::ostringstream;
 
 using namespace cssmatch;
 
-
 BaseReport::BaseReport(MatchManager * matchManager) : match(matchManager)
 {
+	// Initialize date & path
+
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
@@ -47,7 +48,6 @@ BaseReport::BaseReport(MatchManager * matchManager) : match(matchManager)
 	bufferedReportPath << REPORTS_PATH << '/' << formatDate << '_' << interfaces->gpGlobals->mapname.ToCStr();
 
 	reportPath = bufferedReportPath.str();
-
 }
 
 BaseReport::~BaseReport()

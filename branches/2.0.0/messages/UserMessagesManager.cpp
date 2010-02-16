@@ -23,6 +23,8 @@
 #include "UserMessagesManager.h"
 
 #include "RecipientFilter.h"
+#include "../plugin/ServerPlugin.h"
+
 #include "bitbuf.h"
 
 #include <algorithm>
@@ -30,12 +32,55 @@
 
 using namespace cssmatch;
 
+using std::map;
 using std::string;
 using std::ostringstream;
 using std::vector;
 
-UserMessagesManager::UserMessagesManager(IVEngineServer * eng) : engine(eng)
+int UserMessagesManager::findMessageType(const std::string & typeName)
 {
+	int id = CSSMATCH_INVALID_MSG_TYPE;
+	
+	// Does this message type already known?
+	map<string,int>::iterator itTypeId = messageTypes.find(typeName);
+	if (itTypeId == messageTypes.end())
+	{
+		// No, search/cache it
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		ValveInterfaces * interfaces = plugin->getInterfaces();
+		
+		char foundName[20];
+		int foundNameSize = 0;
+		int i = 0;
+		int nbTypes = plugin->getConVar("cssmatch_usermessages")->GetInt();
+		while(i < nbTypes)
+		{
+			if (interfaces->serverGameDll->GetUserMessageInfo(i,foundName,sizeof(foundName),foundNameSize))
+			{
+				if (typeName == foundName)
+				{
+					messageTypes[typeName] = i;
+					id = i;
+					break;
+				}
+			}
+			i++;
+		}
+		if (id == CSSMATCH_INVALID_MSG_TYPE)
+			CSSMATCH_PRINT("Unknown message type " + typeName)
+	}
+	else
+	{
+		// Yes
+		id = itTypeId->second;
+	}
+
+	return id;
+}
+
+UserMessagesManager::UserMessagesManager()
+{
+	engine = ServerPlugin::getInstance()->getInterfaces()->engine;
 }
 
 UserMessagesManager::~UserMessagesManager()
@@ -47,7 +92,7 @@ void UserMessagesManager::chatSay(RecipientFilter & recipients, const string & m
 	ostringstream output;
 	output << "\004[" << CSSMATCH_NAME << "]\001 " << message << "\n";
 
-	bf_write * pBitBuf = engine->UserMessageBegin(&recipients,MESSAGE_SAYTEXT);
+	bf_write * pBitBuf = engine->UserMessageBegin(&recipients,findMessageType("SayText"));
 
 	pBitBuf->WriteByte(playerIndex);
 	pBitBuf->WriteString(output.str().c_str());
@@ -61,7 +106,7 @@ void UserMessagesManager::chatWarning(RecipientFilter & recipients, const string
 	ostringstream output;
 	output << "\004[" << CSSMATCH_NAME << "]\003 " << message << "\n";
 
-	bf_write * pBitBuf = engine->UserMessageBegin(&recipients,MESSAGE_SAYTEXT);
+	bf_write * pBitBuf = engine->UserMessageBegin(&recipients,findMessageType("SayText"));
 
 	pBitBuf->WriteByte(0x02); // \003 => team color
 	pBitBuf->WriteString(output.str().c_str());
@@ -76,8 +121,8 @@ void UserMessagesManager::popupSay(	RecipientFilter & recipients,
 									int lifeTime,
 									int flags)
 {
-	// Only POPUP_MAX_SIZE bytes can be sent in one user message
-	// So, as the popup menus are generally large, they are split in n messages of POPUP_MAX_SIZE bytes
+	// Only CSSMATCH_MAX_MSG_SIZE bytes can be sent in one user message
+	// So, as the popup menus are generally large, they are split in n messages of CSSMATCH_MAX_MSG_SIZE bytes
 
 	int iBegin = 0;
 	int popupSize = message.size();
@@ -85,10 +130,10 @@ void UserMessagesManager::popupSay(	RecipientFilter & recipients,
 
 	do
 	{
-		string toSend = message.substr(iBegin,POPUP_MAX_SIZE);
-		iBegin += POPUP_MAX_SIZE;
+		string toSend = message.substr(iBegin,CSSMATCH_MAX_MSG_SIZE);
+		iBegin += CSSMATCH_MAX_MSG_SIZE;
 
-		bf_write * pBuffer = engine->UserMessageBegin(&recipients,MESSAGE_SHOWMENU);
+		bf_write * pBuffer = engine->UserMessageBegin(&recipients,findMessageType("ShowMenu"));
 
 		pBuffer->WriteShort(flags); // set the flags
 		pBuffer->WriteChar(lifeTime); // set the lifetime
@@ -105,7 +150,7 @@ void UserMessagesManager::popupSay(	RecipientFilter & recipients,
 
 void UserMessagesManager::hintSay(RecipientFilter & recipients, const string & message)
 {
-	bf_write * pWrite = engine->UserMessageBegin(&recipients,MESSAGE_HINTTEXT);
+	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("HintText"));
 
 	pWrite->WriteByte(1); // DOCUMENT ME
 	pWrite->WriteString(message.c_str());
@@ -116,7 +161,7 @@ void UserMessagesManager::hintSay(RecipientFilter & recipients, const string & m
 
 void UserMessagesManager::centerSay(RecipientFilter & recipients, const string & message)
 {
-	bf_write * pWrite = engine->UserMessageBegin(&recipients,MESSAGE_TEXTMSG);
+	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("TextMsg"));
 
 	pWrite->WriteByte(4); // DOCUMENT ME 
 	pWrite->WriteString(message.c_str()); 

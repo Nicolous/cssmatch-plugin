@@ -39,26 +39,26 @@ namespace cssmatch
 	};
 
 	/** Translation file <br>
-	 * Rules : <br>
-	 *	- // marks a commentary statement <br>
-	 *	- A [header] must be placed before any translation, e.g. [French] <br>
-	 *	- Each translation line must takes place on its proper line <br>
-	 *	- Each translation line must be under this format :  <br>
+	 * Description: <br>
+	 *	- // marks the begin a commentary statement <br>
+	 *	- The file must begin with a [header], e.g. [French] <br>
+	 *	- 1 translation/line <br>
+	 *	- Each translation line must have this format:  <br>
 	 *		keyword = translation <br>
-	 *	- Both keyword and translation can be between quotation marks, to delimit where the data ends <br>
-	 *  Support the ANSI and UTF-8 encoding <br>
-	 * Note: \n are interpreted
+	 *	- Both keyword and translation can have quotation marks to delimit where the data begins/ends <br>
+	 *  Support ANSI and UTF-8 encoding <br>
+	 * Note: \n are supported
 	 */
 	class TranslationFile : public ConfigurationFile
 	{
 	private:
-		/** [header] (e.g. translation name)*/
+		/** [header] */
 		std::string header;
 
 		/** {keyword => translation} map */
 		std::map<std::string,std::string> translations;
 
-		/** Search and store the header and the translations 
+		/** Parse the translation file 
 		 * @throws TranslationException if not header was found
 		 */
 		void parse() throw(TranslationException);
@@ -73,7 +73,7 @@ namespace cssmatch
 		 */
 		void parseTranslations(std::list<std::string> & lines);
 	public:
-		/** Parse a new translation file
+		/** Load and parse a new translation file
 		 * @param filePath The path of the file to parse
 		 * @throws TranslationException if not header was found (incorrect translations are just ignored)
 		 */
@@ -84,7 +84,7 @@ namespace cssmatch
 		std::string getHeader() const;
 
 		/** In-memory header modification */
-		void setHeader(const std::string & header);
+		void setHeader(const std::string & newHeader);
 
 		/** Add a translation 
 		 * @param keyword Identifier for the translation
@@ -94,7 +94,7 @@ namespace cssmatch
 
 		/** Check if a translation exists
 		 * @param keyword The keyword corresponding to the translation
-		 * @return <code>true</code> if the translation was found, <code>false</code> otherwise
+		 * @return <code>true</code> if the translation exists, <code>false</code> otherwise
 		 */
 		bool keywordExists(const std::string & keyword) const;
 

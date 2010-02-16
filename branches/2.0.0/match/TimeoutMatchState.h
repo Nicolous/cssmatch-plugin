@@ -20,73 +20,75 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#ifndef __BREAK_MATCH_STATE_H__
-#define __BREAK_MATCH_STATE_H__
+#ifndef __TIMEOUT_MATCH_STATE_H__
+#define __TIMEOUT_MATCH_STATE_H__
 
 #include "BaseMatchState.h"
 #include "MatchManager.h"
 #include "../features/BaseSingleton.h"
-#include "../timer/BaseTimer.h"
-
-class IGameEventManager2;
+#include "../plugin/BaseTimer.h"
+#include "../messages/Menu.h"
 
 namespace cssmatch
 {
-	class BreakMatchTimer;
-	class Menu;
+	class TimeoutMatchTimer;
 
-	/** Time break, between two main match states 
-	 * Ends with a timeout
+	/** Time-out between two match states 
+	 * Ended by a timer
 	 */
-	class BreakMatchState : public BaseMatchState, private BaseSingleton<BreakMatchState>
+	class TimeoutMatchState : public BaseMatchState, private BaseSingleton<TimeoutMatchState>
 	{
 	private:
-		/** The time break duration (in secs) before lauch the next match state */
+		/** The time-out duration (in secs) before lauch the next match state */
 		int duration;
 
-		/** The state to lauch once the break ended */
+		/** The state to lauch once the time-out ended */
 		BaseMatchState * nextState;
 
-		/** "end of break" timer */
-		BreakMatchTimer * timer;
+		/** "end of time-out" timer */
+		TimeoutMatchTimer * timer;
 
-		/** Admin menu of this state */
-		Menu * breakMenu;
-		Menu * menuWithAdmin;
+		/** Menus of this state */
+		Menu * timeoutMenu;
+		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
-		friend class BaseSingleton<BreakMatchState>;
-		BreakMatchState();
-		~BreakMatchState();
+		friend class BaseSingleton<TimeoutMatchState>;
+		TimeoutMatchState();
+		~TimeoutMatchState();
 	public:
-		/** Do a time break
-		 * @param duration The break duration (in secs)
-		 * @param nextState The state the lauch once the break ends
+		/** Do a time-out
+		 * @param duration The time-out duration (in secs)
+		 * @param nextState The state the lauch once the time-out ends
 		 */
-		static void doBreak(int duration, BaseMatchState * nextState);
+		static void doTimeout(int duration, BaseMatchState * nextState);
 
 		// BaseMatchState methods
 		void startState();
 		void endState();
 		void showMenu(Player * recipient);
+
+		// Menus callbacks
+		void timeoutMenuCallback(Player * player, int choice, MenuLine * selected);
+		void menuWithAdminCallback(Player * player, int choice, MenuLine * selected);
 	};
 
 
-	/** Break timer used for the timeout */
-	class BreakMatchTimer : public BaseTimer
+	/** Timer used for the time-out */
+	class TimeoutMatchTimer : public BaseTimer
 	{
 	private:
-		/** The state to lauch once the break is ended */
+		/** The state to lauch once the time-out is ended */
 		BaseMatchState * nextState;
 	public:
 		/** 
 		 * @param match The state manager required to lauch the new state
-		 * @param nextState The state the lauch once the break ended
+		 * @param nextState The state the lauch once the time-out ended
 		 */
-		BreakMatchTimer(float date, BaseMatchState * nextState);
+		TimeoutMatchTimer(float date, BaseMatchState * nextState);
 
 		// BaseTimer method
 		void execute();
 	};
 }
 
-#endif // __BREAK_MATCH_STATE_H__
+#endif // __TIMEOUT_MATCH_STATE_H__

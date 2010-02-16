@@ -28,65 +28,20 @@
 class IVEngineServer;
 
 #include <string>
+#include <map>
 
 /** Max popup size <br>
- * Beyond this value, the popup can't be send in one message to the client, <br>
- * It has to be split in two or more popup
+ * Beyond this value, the message can't be send in one message to the client, <br>
+ * It has to be split in two or more message
  */
-#define POPUP_MAX_SIZE 250
+#define CSSMATCH_MAX_MSG_SIZE 250 // Only used for popup for now
+
+/** Invalid message type id */
+#define CSSMATCH_INVALID_MSG_TYPE 0
 
 namespace cssmatch
 {
 	class RecipientFilter;
-
-	enum UserMessageType
-	{
-		MESSAGE_GEIGER = 0,
-		MESSAGE_TRAIN,
-		MESSAGE_HUDTEXT,
-
-		/** Chat message */
-		MESSAGE_SAYTEXT,
-
-		/** Chat message */
-		MESSAGE_SAYTEXT2,
-
-		/** Centered message */
-		MESSAGE_TEXTMSG,
-
-		MESSAGE_HUDMSG,
-		MESSAGE_RESETHUD,
-		MESSAGE_GAMETITLE,
-		MESSAGE_ITEMPICKUP,
-
-		/** Popup (windowed) message */
-		MESSAGE_SHOWMENU,
-
-		/** Shake the client screen */
-		MESSAGE_SHAKE,
-
-		/** Fade the client screen */
-		MESSAGE_FADE,
-
-		MESSAGE_VGUIMENU,
-		MESSAGE_CLOSECAPTION,
-		MESSAGE_SENDAUDIO,
-		MESSAGE_RAWAUDIO,
-		MESSAGE_VOICEMASK,
-		MESSAGE_REQUESTSTATE,
-		MESSAGE_BARTIME,
-		MESSAGE_DAMAGE,
-		MESSAGE_RADIOTEXT,
-
-		/** Centerd popup (windowed) message */
-		MESSAGE_HINTTEXT,
-
-		MESSAGE_RELOADEFFECT,
-		MESSAGE_PLAYERANIMEVENT,
-		MESSAGE_AMMODENIED,
-		MESSAGE_UPDATERADAR,
-		MESSAGE_KILLCAM
-	};
 
 	/** Popup options which can be selected */
 	enum PopupSensitivityFlags
@@ -120,21 +75,26 @@ namespace cssmatch
 	/** Send different kind of message to the players */
 	class UserMessagesManager
 	{
+	private:
+		/** {message type name => user message id} map filled by findMessageType */
+		std::map<std::string,int> messageTypes;
 	protected:
 		/** Valve's IVEngineServer instance */
-		IVEngineServer * engine;
+		IVEngineServer * engine; // Optimisation
 
-		/** Tool : send a console message to a client 
-		 * @param index The player's index
+		/** Lookup a message type id 
+		 * @param The message type name (e.g. ShowMenu)
+		 * @return The message type id, CSSMATCH_INVALID_MSG_TYPE otherwise
+		 */
+		int findMessageType(const std::string & typeName);
+
+		/** Send a console message to a single client 
+		 * @param index The client index
 		 * @param message The message to send
 		 */
 		void consoleTell(int index, const std::string & message);
 	public:
-		/** 
-		 * @param engine Because it will be used in a loop, the Valve's IVEngineServer instance
-		 */
-		UserMessagesManager(IVEngineServer * engine);
-
+		UserMessagesManager();
 		virtual ~UserMessagesManager();
 
 		/** Send a chat message <br>

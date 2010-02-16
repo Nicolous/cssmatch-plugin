@@ -23,44 +23,44 @@
 #ifndef __CON_COMMAND_CALLBACKS_H__
 #define __CON_COMMAND_CALLBACKS_H__
 
-class IVEngineServer;
+//class IVEngineServer;
 
 namespace cssmatch
 {
 	/** Help for commands use */
 	void cssm_help();
 
-	/** Starts a match */
+	/** Start a match */
 	void cssm_start();
 
-	/** Stops a match */
+	/** Stop a match */
 	void cssm_stop();
 
-	/** Redetects the clan names */
+	/** Redetect the clan names */
 	void cssm_retag();
 
-	/** Declares a clan ready to end the warmup */
+	/** Declare a clan ready to end the warmup */
 	void cssm_go();
 
-	/** Restarts the current round set */
+	/** Restart the current round set */
 	void cssm_restartmanche();
 
-	/** Restarts the current round */
+	/** Restart the current round */
 	void cssm_restartround();
 
-	/** Prints the referee steamid list */
+	/** Print the referee steamid list */
 	void cssm_adminlist();
 
-	/** Makes a player a referee by steamid (until the next map change) */
+	/** Make a player referee by steamid (until the next map change) */
 	void cssm_grant();
 
-	/** Removes a referee by steamid (until the next map change) */
+	/** Remove a referee by steamid (until the next map change) */
 	void cssm_revoke();
 
-	/** Changes the name of the clan which plays in the terrorists team */
+	/** Change the name of the terrorist clan */
 	void cssm_teamt();
 
-	/** Changes the name of the clan which plays in the anti-terrorists team */
+	/** Change the name of the counter-terrorist clan */
 	void cssm_teamct();
 
 	/** Swap a player by userid */
@@ -70,10 +70,10 @@ namespace cssmatch
 	void cssm_spec();
 
 	/** !go, !score, !teamt, etc. */
-	bool say_hook(int userIndex, IVEngineServer * engine);
+	bool say_hook(int userIndex);
 
-	/* Want to stop the cssmatch's record ? */
-	//bool tv_stoprecord_hook(int userIndex, IVEngineServer * engine);
+	/* Want to stop the current record ? */
+	//bool tv_stoprecord_hook(int userIndex);
 }
 
 #endif // __CON_COMMAND_CALLBACKS_H__

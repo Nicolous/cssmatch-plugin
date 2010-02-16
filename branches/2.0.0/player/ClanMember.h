@@ -25,20 +25,15 @@
 
 #include "Player.h"
 
-class IVEngineServer;
-class IPlayerInfoManager;
-
-#include <list>
-
 namespace cssmatch
 {
-	/** Player's stats info */
+	/** Player stats */
 	struct PlayerStats
 	{
-		/** Player's score */
+		/** Score */
 		int kills;
 
-		/** Player's deaths */
+		/** Deaths */
 		int deaths;
 
 		PlayerStats() : kills(0), deaths(0){}
@@ -49,27 +44,33 @@ namespace cssmatch
 	class ClanMember : public Player
 	{
 	protected:
-		/** Stats of this player at the previous round (used in case of restart) */
+		/** Player stats for the previous round (used if the round restarts) */
 		PlayerStats lastRoundStats;
 
-		/** Stats of this player at the previous round set (used in case of restart) */
+		/** Player stats for the previous half (used if the half is restarted) */
 		PlayerStats lastSetStats;
 
-		/** Current stats of this player */
+		/** Current players stats */
 		PlayerStats currentStats;
 
-		/** Is this player a referee ? */
+		/** Is this player a referee (admin)? */
 		bool referee;
 
 		// Functors
 		friend struct ResetStats;
 	public:
+		/** 
+		 * @param index The player index
+		 * @param referee Is the player a referee (admin)?
+		 */
 		ClanMember(int index, bool referee = false);
 
+		// Accessors to the differents stats
 		PlayerStats * getLastRoundStats();
 		PlayerStats * getLastSetStats();
 		PlayerStats * getCurrentStats();
 
+		// Rights management
 		bool isReferee() const;
 		void setReferee(bool isReferee);
 	};

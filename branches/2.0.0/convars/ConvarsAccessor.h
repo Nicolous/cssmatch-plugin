@@ -23,34 +23,45 @@
 #ifndef __CONVARS_ACCESSOR_H__
 #define __CONVARS_ACCESSOR_H__
 
-#include "BaseConvarsAccessor.h"
-
 #include "../common/common.h"
+#include "../exceptions/BaseException.h"
 
-#include "convar.h" // CreateInterfaceFn
+#include "icvar.h" // IConCommandBaseAccessor, CreateInterfaceFn
 class ConCommandBase;
 class ICvar;
 
 namespace cssmatch
 {
-	/** A simple implementation of a console variables/commands accessor */
-	class ConvarsAccessor : public BaseConvarsAccessor
+	class ConvarsAccessorException : public BaseException
 	{
 	public:
-		/** Initialize the interface
-		 * @see cssmatch::BaseConvarsAccessor
-		 */
-		virtual void initializeInterface(CreateInterfaceFn cvarFactory) throw (BaseConvarsAccessorException);
+		ConvarsAccessorException(const std::string & message) : BaseException(message){}
+	};
 
-		/** Retrieve the plugin's console variables/commands accessor
-		 * @see cssmatch::BaseConvarsAccessor::getConVarAccessor
+	/** Implementation of a console variables/commands accessor */
+	class ConvarsAccessor : public IConCommandBaseAccessor
+	{
+	private:
+		/** Valve's console variables/commands interface */
+		ICvar * cvars;
+	public:
+		ConvarsAccessor();
+
+		/** Initialize the interface
+		 * @param cvarFactory The factory used to retrieve the accessor
+		 * @throws ConvarsAccessorException If the console variable/command accessor cannot be initialized
 		 */
-		virtual ICvar * getConVarAccessor();
+		void initializeInterface(CreateInterfaceFn cvarFactory) throw (ConvarsAccessorException);
+
+		/** Get the plugin's console variables/commands accessor
+		 * @return The console commands/variables interface
+		 */
+		ICvar * getConVarInterface();
 
 		/** IConCommandBaseAccessor method <br>
 		 * Automatically add the FCVAR_PLUGIN flag to all the ConVar/ConCommand by the plugin
 		 */
-		virtual bool RegisterConCommandBase(ConCommandBase * variable);
+		bool RegisterConCommandBase(ConCommandBase * variable);
 	};
 }
 

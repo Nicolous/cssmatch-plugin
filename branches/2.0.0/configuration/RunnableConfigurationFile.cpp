@@ -30,11 +30,11 @@
 using namespace cssmatch;
 
 using std::string;
-using std::pair;
-using std::list;
+//using std::pair;
+//using std::list;
 using std::ostringstream;
 
-pair<string, string> RunnableConfigurationFile::searchData(string & line)
+/*pair<string, string> RunnableConfigurationFile::searchData(string & line)
 {
 	string varName;
 	string varValue;
@@ -67,7 +67,7 @@ pair<string, string> RunnableConfigurationFile::searchData(string & line)
 	}
 
 	// Try to find the server variable value
-	//	We don't care about any quote, the console handles them
+	//	We don't care about quotes, the console handles them
 	if ((iDataBegin > 0) && (iDataBegin+1 < strSize))
 		varValue = line.substr(iDataBegin+1,strSize-iDataBegin);
 
@@ -78,7 +78,7 @@ void RunnableConfigurationFile::getData()
 {	
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
-	ICvar * cvars = interfaces->convars->getConVarAccessor();
+	ICvar * cvars = interfaces->convars->getConVarInterface();
 
 	data.clear();
 
@@ -101,7 +101,7 @@ void RunnableConfigurationFile::getData()
 
 		itLine++;
 	}
-}
+}*/
 
 RunnableConfigurationFile::RunnableConfigurationFile(const string & filePath)
 	throw (ConfigurationFileException) : ConfigurationFile(filePath)
@@ -127,6 +127,6 @@ void RunnableConfigurationFile::execute(const string & filePath)
 	// Execute the exec command
 	interfaces->engine->ServerExecute();
 
-	// Execute the commands added by the file in the console queue
+	// Execute the commands added by the exec command in the console queue
 	interfaces->engine->ServerExecute();
 }

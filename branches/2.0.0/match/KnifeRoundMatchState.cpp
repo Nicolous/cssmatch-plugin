@@ -27,119 +27,44 @@
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
-#include "../messages/Menu.h"
 #include "DisabledMatchState.h"
-#include "BreakMatchState.h"
+#include "TimeoutMatchState.h"
 #include "WarmupMatchState.h"
-#include "SetMatchState.h"
+#include "HalfMatchState.h"
 #include "MatchManager.h"
-
-#include "igameevents.h"
-
-#include <algorithm>
 
 using namespace cssmatch;
 
 using std::string;
 using std::list;
 using std::map;
-using std::find_if;
-
-namespace cssmatch
-{
-	void kniferoundMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-		MatchManager * match = plugin->getMatch();
-		I18nManager * i18n = plugin->getI18nManager();
-
-		switch(choice)
-		{
-		case 1:
-			plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
-			player->cexec("cssmatch\n");
-			break;
-		case 2:
-			{
-				RecipientFilter recipients;
-				map<string,string> parameters;
-				IPlayerInfo * pInfo = player->getPlayerInfo();
-				PlayerIdentity * identity = player->getIdentity();
-
-				recipients.addAllPlayers();
-				if (isValidPlayer(pInfo))
-				{
-					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
-				}
-				else
-					i18n->i18nChatSay(recipients,"admin_round_restarted");
-
-				match->restartRound();
-			}
-
-			player->quitMenu();
-			break;
-		case 3:
-			match->stop();
-			player->quitMenu();
-			break;
-		case 4:
-			{
-				MatchLignup * lignup = match->getLignup();
-				match->detectClanName(T_TEAM);
-				match->detectClanName(CT_TEAM);
-
-				RecipientFilter recipients;
-				recipients.addRecipient(player);
-				map<string,string> parameters;
-				parameters["$team1"] = *lignup->clan1.getName();
-				parameters["$team2"] = *lignup->clan2.getName();
-				i18n->i18nChatSay(recipients,"match_name",parameters);
-
-				player->quitMenu();
-			}
-			break;
-		default:
-			player->quitMenu();
-		}	
-			
-	}
-
-	void kniferoundMenuWithAdminCallback(Player * player, int choice, MenuLine * selected)
-	{
-		kniferoundMenuCallback(player,choice-1,selected);
-
-		// Have to be here because the above callback could invoke player->quitMenu()
-		if (choice == 1)
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			plugin->showAdminMenu(player);
-		}
-	}
-}
 
 KnifeRoundMatchState::KnifeRoundMatchState()
 {
-	listener = new EventListener<KnifeRoundMatchState>(this);
-
-	kniferoundMenu = new Menu("menu_kniferound",kniferoundMenuCallback);
+	kniferoundMenu = new Menu("menu_kniferound",
+		new MenuCallback<KnifeRoundMatchState>(this,&KnifeRoundMatchState::kniferoundMenuCallback));
 	kniferoundMenu->addLine(true,"menu_alltalk");
 	kniferoundMenu->addLine(true,"menu_restart");
 	kniferoundMenu->addLine(true,"menu_stop");
 	kniferoundMenu->addLine(true,"menu_retag");
 
-	menuWithAdmin = new Menu("menu_kniferound",kniferoundMenuWithAdminCallback);
+	menuWithAdmin = new Menu("menu_kniferound",
+		new MenuCallback<KnifeRoundMatchState>(this,&KnifeRoundMatchState::menuWithAdminCallback));
 	menuWithAdmin->addLine(true,"menu_administration_options");
 	menuWithAdmin->addLine(true,"menu_alltalk");
 	menuWithAdmin->addLine(true,"menu_restart");
 	menuWithAdmin->addLine(true,"menu_stop");
 	menuWithAdmin->addLine(true,"menu_retag");
+
+	eventCallbacks["round_start"] = &KnifeRoundMatchState::round_start;
+	eventCallbacks["item_pickup"] = &KnifeRoundMatchState::item_pickup;
+	eventCallbacks["player_spawn"] = &KnifeRoundMatchState::player_spawn;
+	eventCallbacks["round_end"] = &KnifeRoundMatchState::round_end;
+	eventCallbacks["bomb_beginplant"] = &KnifeRoundMatchState::bomb_beginplant;
 }
 
 KnifeRoundMatchState::~KnifeRoundMatchState()
 {
-	delete listener;
 	delete kniferoundMenu;
 	delete menuWithAdmin;
 }
@@ -152,9 +77,9 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	I18nManager * i18n = plugin->getI18nManager();
 
 	MatchInfo * infos = match->getInfos();
-	// Save the winner of this round, it will be used into the match report
+	// Save the winner of this round for the report
 	infos->kniferoundWinner = match->getClan(winner);
-		// don't care about the exception, winner is validated above
+		// note: winner is supposed valid
 
 	// Global recipient list
 	RecipientFilter recipients;
@@ -182,7 +107,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 		}
 		else if (playerTeam == teamLoser)
 		{
-			if (isValidPlayer(pInfo))
+			if (isValidPlayerInfo(pInfo))
 			{
 				if (pInfo->IsFakeClient())
 					(*itPlayer)->kick("CSSMatch: Spec Bot");
@@ -193,7 +118,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 		itPlayer++;
 	}
 
-	// Prepare a break time before lauching the next match state,
+	// Prepare a time-out before starting the next match state,
 	BaseMatchState * nextState = NULL;
 	if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 	{
@@ -201,18 +126,18 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	}
 	else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 	{
-		nextState = SetMatchState::getInstance();
+		nextState = HalfMatchState::getInstance();
 	}
 
 	if (nextState != NULL)
 	{
-		int breakDuration = plugin->getConVar("cssmatch_end_kniferound")->GetInt();
-		if (breakDuration > 0)
+		int timeoutDuration = plugin->getConVar("cssmatch_end_kniferound")->GetInt();
+		if (timeoutDuration > 0)
 		{
-			BreakMatchState::doBreak(breakDuration,nextState);
+			TimeoutMatchState::doTimeout(timeoutDuration,nextState);
 
 			//parameters["$team"] = // already set above
-			parameters["$time"] = toString(breakDuration);
+			parameters["$time"] = toString(timeoutDuration);
 			i18n->i18nChatSay(recipients,"kniferound_dead_time",parameters);
 		}
 		else
@@ -229,6 +154,7 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 void KnifeRoundMatchState::startState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->getI18nManager();
 
@@ -237,11 +163,13 @@ void KnifeRoundMatchState::startState()
 	recipients.addAllPlayers();
 
 	// Register to the needed events
-	listener->addCallback("round_start",&KnifeRoundMatchState::round_start);
-	listener->addCallback("round_end",&KnifeRoundMatchState::round_end);
-	listener->addCallback("item_pickup",&KnifeRoundMatchState::item_pickup);
-	listener->addCallback("player_spawn",&KnifeRoundMatchState::player_spawn);
-	listener->addCallback("bomb_beginplant",&KnifeRoundMatchState::bomb_beginplant);
+	map<string,EventCallback>::iterator itEvent = eventCallbacks.begin();
+	map<string,EventCallback>::iterator invalidEvent = eventCallbacks.end();
+	while(itEvent != invalidEvent)
+	{
+		interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
+		itEvent++;
+	}
 
 	i18n->i18nChatSay(recipients,"kniferound_restarts");
 
@@ -253,7 +181,10 @@ void KnifeRoundMatchState::startState()
 
 void KnifeRoundMatchState::endState()
 {
-	listener->removeCallbacks();
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	interfaces->gameeventmanager2->RemoveListener(this);
 }
 
 void KnifeRoundMatchState::showMenu(Player * recipient)
@@ -271,6 +202,86 @@ void KnifeRoundMatchState::showMenu(Player * recipient)
 		recipient->sendMenu(menuWithAdmin,1,parameters);
 	else
 		recipient->sendMenu(kniferoundMenu,1,parameters);
+}
+
+void KnifeRoundMatchState::kniferoundMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	// 1. Enable/Disable alltalk
+	// 2. Restart round
+	// 3. Stop the match
+	// 3. Clan name detection
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	switch(choice)
+	{
+	case 1:
+		plugin->queueCommand(string("sv_alltalk ") + (plugin->getConVar("sv_alltalk")->GetBool() ? "0\n" : "1\n"));
+		player->cexec("cssmatch\n");
+		break;
+	case 2:
+		{
+			RecipientFilter recipients;
+			map<string,string> parameters;
+			IPlayerInfo * pInfo = player->getPlayerInfo();
+			PlayerIdentity * identity = player->getIdentity();
+
+			recipients.addAllPlayers();
+			if (isValidPlayerInfo(pInfo))
+			{
+				parameters["$admin"] = pInfo->GetName();
+				i18n->i18nChatSay(recipients,"admin_round_restarted_by",parameters,identity->index);
+			}
+			else
+				i18n->i18nChatSay(recipients,"admin_round_restarted");
+
+			match->restartRound();
+		}
+
+		player->quitMenu();
+		break;
+	case 3:
+		match->stop();
+		player->quitMenu();
+		break;
+	case 4:
+		{
+			MatchLignup * lignup = match->getLignup();
+			match->detectClanName(T_TEAM);
+			match->detectClanName(CT_TEAM);
+
+			RecipientFilter recipients;
+			recipients.addRecipient(player);
+			map<string,string> parameters;
+			parameters["$team1"] = *lignup->clan1.getName();
+			parameters["$team2"] = *lignup->clan2.getName();
+			i18n->i18nChatSay(recipients,"match_name",parameters);
+
+			player->quitMenu();
+		}
+		break;
+	default:
+		player->quitMenu();
+	}	
+}
+
+void KnifeRoundMatchState::menuWithAdminCallback(Player * player, int choice, MenuLine * selected)
+{
+	kniferoundMenuCallback(player,choice-1,selected);
+
+	// Here because the above callback could invoke player->quitMenu()
+	if (choice == 1)
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		plugin->showAdminMenu(player);
+	}
+}
+
+void KnifeRoundMatchState::FireGameEvent(IGameEvent * event)
+{
+	(this->*eventCallbacks[event->GetName()])(event);
 }
 
 void KnifeRoundMatchState::round_start(IGameEvent * event)
@@ -309,39 +320,33 @@ void KnifeRoundMatchState::item_pickup(IGameEvent * event)
 
 	if (item != "knife")
 	{
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
-		list<ClanMember *>::iterator itPlayer = 
-			find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
-		if (itPlayer != invalidPlayer)
+		ClanMember * player = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 		{
-			interfaces->helpers->ClientCommand((*itPlayer)->getIdentity()->pEntity,"use weapon_knife");
+			interfaces->helpers->ClientCommand(player->getIdentity()->pEntity,"use weapon_knife");
 			// Kill any other weapon entity the player has
-			(*itPlayer)->removeWeapon(WEAPON_SLOT1);
-			(*itPlayer)->removeWeapon(WEAPON_SLOT2);
-			(*itPlayer)->removeWeapon(WEAPON_SLOT4);
+			player->removeWeapon(WEAPON_SLOT1);
+			player->removeWeapon(WEAPON_SLOT2);
+			player->removeWeapon(WEAPON_SLOT4);
 		}
 		else
-			CSSMATCH_PRINT("Unable to find the player wich pickups an item");
+			CSSMATCH_PRINT("Unable to find the player who pickups an item");
 	}
 }
 
 void KnifeRoundMatchState::player_spawn(IGameEvent * event)
 {
-	// Set the money for the knife round (determines if some equipments can be bought)
+	// Set the money for the knife round
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
-	list<ClanMember *>::iterator itPlayer = 
-		find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
-	if (itPlayer != invalidPlayer)
+	ClanMember * player = NULL;
+	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 	{
-		(*itPlayer)->setCash(plugin->getConVar("cssmatch_kniferound_money")->GetInt());
+		player->setCash(plugin->getConVar("cssmatch_kniferound_money")->GetInt());
 	}
+	else
+		CSSMATCH_PRINT("Unable to find the player who spawns");
 }
 
 void KnifeRoundMatchState::round_end(IGameEvent * event)
@@ -365,19 +370,15 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 
 	if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
 	{
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
-		list<ClanMember *>::iterator itPlayer = 
-			find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(event->GetInt("userid")));
-		if (itPlayer != invalidPlayer)
+		ClanMember * player = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 		{
-			PlayerIdentity * identity = (*itPlayer)->getIdentity();
+			PlayerIdentity * identity = player->getIdentity();
 
 			interfaces->helpers->ClientCommand(identity->pEntity,"use weapon_knife");
 
 			RecipientFilter recipients;
-			recipients.addRecipient(*itPlayer);
+			recipients.addRecipient(player);
 			i18n->i18nChatSay(recipients,"kniferound_c4");
 		}
 		else

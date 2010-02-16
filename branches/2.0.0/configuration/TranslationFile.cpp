@@ -39,7 +39,7 @@ void TranslationFile::parse() throw(TranslationException)
 	if (header.empty())
 		throw TranslationException("The file " + filePath + " does not have a valid header");
 
-	// II - Header found, now we'll try to get the translations
+	// II - Header found, try to get the translations
 	parseTranslations(lines);
 }
 
@@ -69,7 +69,7 @@ void TranslationFile::parseHeader(list<string> & lines)
 void TranslationFile::parseTranslations(list<string> & lines)
 {
 	// Search for "keyword = translation" statement 
-	//	(quotation marks are optionnals, but delimit the end of a string if they exist)
+	//	(quotation marks are optionnals, but can delimit the begin/end of a string)
 
 	while(! lines.empty())
 	{
@@ -94,7 +94,7 @@ void TranslationFile::parseTranslations(list<string> & lines)
 				break;
 
 			case '=':
-					equalFound = (! betweenQuotes); // We found the equal symbol
+				equalFound = (! betweenQuotes); // We found the equal symbol
 				break;
 			}
 
@@ -105,23 +105,24 @@ void TranslationFile::parseTranslations(list<string> & lines)
 		if (iEqual != lineSize-1)
 		{ // No, we can get the data
 			string dataName = line.substr(0,iEqual); //	
-			ConfigurationFile::strip(dataName);
+			ConfigurationFile::trim(dataName);
 
 		// Keyword part :
 
-			// Stripping the quotes if required
 			size_t iLastCharDataName = dataName.size() - 1;
 			if (iLastCharDataName>0)
 			{
+				// Remove the quotes if needed
 				if ((dataName[0] == '"') && (dataName[iLastCharDataName] == '"'))
 					dataName = dataName.substr(1,iLastCharDataName - 1);
 
+				// Get the translation value part
 				string dataValue = line.substr(iEqual+1,lineSize); // +1 to pass the equal symbol
-				ConfigurationFile::strip(dataValue);
+				ConfigurationFile::trim(dataValue);
 
 		// Translation part :
 
-				// Stripping the quotes if required
+				// Remove the quotes if needed
 				size_t iLastCharDataValue = dataValue.size()-1;
 				if (iLastCharDataValue>0)
 				{
@@ -141,6 +142,7 @@ void TranslationFile::parseTranslations(list<string> & lines)
 						addTranslation(dataName,dataValue);
 						//Msg("Found : '%s'='%s'\n",dataName.c_str(),dataValue.c_str());
 					}
+					// Else we ignore this invalid line
 				}
 			}
 		}
@@ -165,9 +167,9 @@ string TranslationFile::getHeader() const
 	return header;
 }
 
-void TranslationFile::setHeader(const string & header)
+void TranslationFile::setHeader(const string & newHeader)
 {
-	this->header = header;
+	header = newHeader;
 }
 
 void TranslationFile::addTranslation(const string & keyword, const string & translation)

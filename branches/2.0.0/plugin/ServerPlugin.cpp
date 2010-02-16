@@ -21,6 +21,7 @@
  */
 
 #include "ServerPlugin.h"
+#include "BaseTimer.h"
 #include "../configuration/ConfigurationFile.h"
 #include "../convars/I18nConVar.h"
 #include "../commands/I18nConCommand.h"
@@ -30,8 +31,6 @@
 #include "../entity/EntityProp.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
-#include "../messages/Menu.h"
-#include "../timer/BaseTimer.h"
 #include "../match/MatchManager.h"
 #include "../match/DisabledMatchState.h"
 #include "../match/KnifeRoundMatchState.h"
@@ -44,7 +43,6 @@
 #include "convar.h"
 #include "interface.h"
 
-#include <algorithm>
 #include <sstream>
 
 using namespace cssmatch;
@@ -75,277 +73,6 @@ using std::ostringstream;
 	}
 }*/
 
-namespace cssmatch
-{
-	/** Data to be carried in the player list menu lines */
-	struct UseridMenuLineData : public BaseMenuLineData
-	{
-		int userid;
-
-		UseridMenuLineData(int playerUserid) : userid(playerUserid){};
-	};
-
-	/** Data to be carried in the player list menu lines */
-	struct PlayerMenuLineData : public BaseMenuLineData
-	{
-		string name;
-		int userid;
-
-		PlayerMenuLineData(const string & playername, int playerUserid) : name(playername), userid(playerUserid){};
-	};
-
-	void adminMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-
-		switch(choice)
-		{
-		case 1:
-			plugin->showChangelevelMenu(player);
-			break;
-		case 2:
-			plugin->showSwapMenu(player);
-			break;
-		case 3:
-			plugin->showSpecMenu(player);
-			break;
-		case 4:
-			plugin->showKickMenu(player);
-			break;
-		case 5:
-			plugin->showBanMenu(player);
-			break;	
-		default:
-			player->quitMenu();
-		}
-	}
-
-	void changelevelMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		if (choice != 10)
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			I18nManager * i18n = plugin->getI18nManager();
-			ValveInterfaces * interfaces = plugin->getInterfaces();
-
-			string mapname = selected->text;
-			if (interfaces->engine->IsMapValid(mapname.c_str()))
-				plugin->queueCommand("changelevel " + mapname + "\n");
-			else
-			{
-				RecipientFilter recipients;
-				recipients.addRecipient(player->getIdentity()->index);
-
-				map<string,string> parameters;
-				parameters["$map"] = mapname;
-
-				i18n->i18nChatSay(recipients,"admin_map_not_found",parameters);
-			}
-		}
-		player->quitMenu();
-	}
-
-	void swapMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-
-		if (choice != 10)
-		{
-			PlayerIdentity * pIdentity = player->getIdentity();
-			I18nManager * i18n = plugin->getI18nManager();
-			RecipientFilter recipients;
-			map<string,string> parameters;
-
-			parameters["$username"] = selected->text;
-			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
-
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(useridData->userid));
-			if (itPlayer != invalidPlayer)
-			{
-				IPlayerInfo * pInfo = player->getPlayerInfo();
-
-				(*itPlayer)->swap();
-
-				if (isValidPlayer(pInfo))
-				{
-					recipients.addAllPlayers();
-					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_swap",parameters,pIdentity->index);
-				}
-			}
-			else
-			{
-				recipients.addRecipient(pIdentity->index);
-				i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
-			}
-			plugin->showSwapMenu(player);
-		}
-		else
-			player->quitMenu();
-	}
-
-	void specMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-
-		if (choice != 10)
-		{
-			PlayerIdentity * pIdentity = player->getIdentity();
-			I18nManager * i18n = plugin->getI18nManager();
-			RecipientFilter recipients;
-			map<string,string> parameters;
-
-			parameters["$username"] = selected->text;
-			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
-
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(useridData->userid));
-			if (itPlayer != invalidPlayer)
-			{
-				IPlayerInfo * pInfo = player->getPlayerInfo();
-
-				(*itPlayer)->spec();
-
-				if (isValidPlayer(pInfo))
-				{
-					recipients.addAllPlayers();
-					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_spec",parameters,pIdentity->index);
-				}
-			}
-			else
-			{
-				recipients.addRecipient(pIdentity->index);
-				i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
-			}
-			plugin->showSpecMenu(player);
-		}
-		else
-			player->quitMenu();
-	}
-
-	void kickMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-
-		if (choice != 10)
-		{
-			PlayerIdentity * pIdentity = player->getIdentity();
-			I18nManager * i18n = plugin->getI18nManager();
-			RecipientFilter recipients;
-			map<string,string> parameters;
-
-			parameters["$username"] = selected->text;
-			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
-
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(useridData->userid));
-			if (itPlayer != invalidPlayer)
-			{
-				PlayerIdentity * identity = player->getIdentity();
-				IPlayerInfo * pInfo = player->getPlayerInfo();
-
-				(*itPlayer)->kick("admin_kick");
-
-				if (isValidPlayer(pInfo))
-				{
-					recipients.addAllPlayers();
-					parameters["$admin"] = pInfo->GetName();
-					i18n->i18nChatSay(recipients,"admin_kick_by",parameters,pIdentity->index);
-				}
-			}
-			else
-			{
-				recipients.addRecipient(pIdentity->index);
-				i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
-			}
-			plugin->showKickMenu(player);
-		}
-		else
-			player->quitMenu();
-	}
-
-	void banMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		if (choice != 10)
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
-
-			player->storeMenuData(new PlayerMenuLineData(selected->text,useridData->userid));
-			plugin->showBanTimeMenu(player);
-		}
-		else
-			player->quitMenu();
-	}
-
-	void bantimeMenuCallback(Player * player, int choice, MenuLine * selected)
-	{
-		if (choice != 10)
-		{
-			ServerPlugin * plugin = ServerPlugin::getInstance();
-			PlayerIdentity * pIdentity = player->getIdentity();
-
-			I18nManager * i18n = plugin->getI18nManager();
-			RecipientFilter recipients;
-			map<string,string> parameters;
-
-			PlayerMenuLineData * const targetData = static_cast<PlayerMenuLineData * const>(player->getMenuData());
-			parameters["$username"] = targetData->name;
-
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer = 
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(targetData->userid));
-			if (itPlayer != invalidPlayer)
-			{
-				PlayerIdentity * identity = player->getIdentity();
-				IPlayerInfo * adminInfo = player->getPlayerInfo();
-
-				int time = 0;
-				switch(choice)
-				{
-				case 1:
-					time = 5;
-					break;
-				case 2:
-					time = 60;
-					break;
-				}
-				(*itPlayer)->ban(time,"admin_ban");
-
-				if (adminInfo != NULL)
-				{
-					recipients.addAllPlayers();
-					parameters["$admin"] = adminInfo->GetName();
-
-					if (time == 0)
-						i18n->i18nChatSay(recipients,"admin_permanently_ban",parameters,pIdentity->index);
-					else
-						i18n->i18nChatSay(recipients,"admin_temporaly_ban",parameters,pIdentity->index);
-				}
-			}
-			else
-			{
-				recipients.addRecipient(pIdentity->index);
-				i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
-			}
-			plugin->showBanMenu(player); 
-			// FIXME: last banned player still appear because kickid is not yet executed here
-			// (engine->ServerExecute logs a "unknown command: kickid" message)
-		}
-		else
-			player->quitMenu();
-	}
-}
-
 ServerPlugin::ServerPlugin() : clientCommandIndex(0), adminMenu(NULL), bantimeMenu(NULL), match(NULL), i18n(NULL)
 {
 }
@@ -372,6 +99,7 @@ ServerPlugin::~ServerPlugin()
 		delete i18n;
 
 	// TODO: Unlink and delete all ConVar/ConCommand when unloading
+	// https://forums.alliedmods.net/showthread.php?p=319104#post319104 ?
 	/*std::list<ConVar *>::iterator itConVar = pluginConVars.begin();
 	std::list<ConVar *>::iterator lastConVar = pluginConVars.end();
 	while (itConVar != lastConVar)
@@ -400,10 +128,10 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		interfaces.convars = new ConvarsAccessor();
 		interfaces.convars->initializeInterface(interfaceFactory);
 	}
-	catch(const BaseConvarsAccessorException & e)
+	catch(const ConvarsAccessorException & e)
 	{
 		success = false;
-		Msg(CSSMATCH_NAME " : %s\n",e.what()); // Do not use printException here as interfaces.engine isn't initialized !
+		Msg(CSSMATCH_NAME " : %s\n",e.what()); // Do not use printException here as interfaces.engine isn't initialized!
 	}
 
 	success &= 
@@ -420,14 +148,17 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 		MathLib_Init(2.2f,2.2f,0.0f,2.0f);
 
-		adminMenu = new Menu("menu_administration",adminMenuCallback);
+		// Initialize the admin menus
+		adminMenu = new Menu("menu_administration",
+			new MenuCallback<ServerPlugin>(this,&ServerPlugin::adminMenuCallback));
 		adminMenu->addLine(true,"menu_changelevel");
 		adminMenu->addLine(true,"menu_swap");
 		adminMenu->addLine(true,"menu_spec");
 		adminMenu->addLine(true,"menu_kick");
 		adminMenu->addLine(true,"menu_ban");
 
-		bantimeMenu = new Menu("menu_ban_time",bantimeMenuCallback);
+		bantimeMenu = new Menu("menu_ban_time",
+			new MenuCallback<ServerPlugin>(this,&ServerPlugin::bantimeMenuCallback));
 		bantimeMenu->addLine(true,"menu_5_min");
 		bantimeMenu->addLine(true,"menu_1_h");
 		bantimeMenu->addLine(true,"menu_permanent");
@@ -435,7 +166,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		match = new MatchManager(DisabledMatchState::getInstance());
 		
 		//	Initialize the translations tools
-		i18n = new I18nManager(interfaces.engine);
+		i18n = new I18nManager();
 		I18nConVar * cssmatch_language = new I18nConVar(i18n,"cssmatch_language","english",FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_language");
 		addPluginConVar(cssmatch_language);
 		i18n->setDefaultLanguage(cssmatch_language);
@@ -464,8 +195,10 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_password","inwar",FCVAR_NONE,"cssmatch_password"));
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_default_config","server.cfg",FCVAR_NONE,"cssmatch_default_config"));
 
-		// Add existing ConVars
-		ICvar * cvars = interfaces.convars->getConVarAccessor();
+		addPluginConVar(new I18nConVar(i18n,"cssmatch_usermessages","28",FCVAR_NONE,"cssmatch_usermessages"));
+
+		// Grab some existing ConVars
+		ICvar * cvars = interfaces.convars->getConVarInterface();
 		ConVar * sv_cheats = cvars->FindVar("sv_cheats");
 		ConVar * sv_alltalk = cvars->FindVar("sv_alltalk");
 		ConVar * hostname = cvars->FindVar("hostname");
@@ -478,9 +211,8 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			(tv_enable == NULL))
 		{
 			success = false;
-			CSSMATCH_PRINT("One or more game ConVar were not found");
+			CSSMATCH_PRINT("At least one game ConVars was not found");
 		}
-
 		addPluginConVar(sv_cheats);
 		addPluginConVar(sv_alltalk);
 		addPluginConVar(hostname);
@@ -546,7 +278,8 @@ void ServerPlugin::showAdminMenu(Player * player)
 
 void ServerPlugin::showChangelevelMenu(Player * player)
 {
-	Menu * maplist = new Menu("menu_map",changelevelMenuCallback);
+	Menu * maplist = new Menu("menu_map",
+		new MenuCallback<ServerPlugin>(this,&ServerPlugin::changelevelMenuCallback));
 
 	try
 	{
@@ -578,7 +311,7 @@ void ServerPlugin::constructPlayerlistMenu(Menu * to)
 	while(itPlayer != invalidPlayer)
 	{
 		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
-		if (isValidPlayer(pInfo))
+		if (isValidPlayerInfo(pInfo))
 			to->addLine(false,pInfo->GetName(),new UseridMenuLineData(pInfo->GetUserID()));
 			
 		itPlayer++;
@@ -587,7 +320,8 @@ void ServerPlugin::constructPlayerlistMenu(Menu * to)
 
 void ServerPlugin::showSwapMenu(Player * player)
 {
-	Menu * swapMenu = new Menu("menu_player",swapMenuCallback);
+	Menu * swapMenu = new Menu("menu_player",
+		new MenuCallback<ServerPlugin>(this,&ServerPlugin::swapMenuCallback));
 
 	constructPlayerlistMenu(swapMenu);
 
@@ -596,7 +330,8 @@ void ServerPlugin::showSwapMenu(Player * player)
 
 void ServerPlugin::showSpecMenu(Player * player)
 {
-	Menu * swapMenu = new Menu("menu_player",specMenuCallback);
+	Menu * swapMenu = new Menu("menu_player",
+		new MenuCallback<ServerPlugin>(this,&ServerPlugin::specMenuCallback));
 
 	constructPlayerlistMenu(swapMenu);
 
@@ -605,7 +340,8 @@ void ServerPlugin::showSpecMenu(Player * player)
 
 void ServerPlugin::showKickMenu(Player * player)
 {
-	Menu * swapMenu = new Menu("menu_player",kickMenuCallback);
+	Menu * swapMenu = new Menu("menu_player",
+		new MenuCallback<ServerPlugin>(this,&ServerPlugin::kickMenuCallback));
 
 	constructPlayerlistMenu(swapMenu);
 
@@ -614,7 +350,8 @@ void ServerPlugin::showKickMenu(Player * player)
 
 void ServerPlugin::showBanMenu(Player * player)
 {
-	Menu * swapMenu = new Menu("menu_player",banMenuCallback);
+	Menu * swapMenu = new Menu("menu_player",
+		new MenuCallback<ServerPlugin>(this,&ServerPlugin::banMenuCallback));
 
 	constructPlayerlistMenu(swapMenu);
 
@@ -624,6 +361,227 @@ void ServerPlugin::showBanMenu(Player * player)
 void ServerPlugin::showBanTimeMenu(Player * player)
 {
 	player->sendMenu(bantimeMenu,1);
+}
+
+void ServerPlugin::adminMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	switch(choice)
+	{
+	case 1:
+		showChangelevelMenu(player);
+		break;
+	case 2:
+		showSwapMenu(player);
+		break;
+	case 3:
+		showSpecMenu(player);
+		break;
+	case 4:
+		showKickMenu(player);
+		break;
+	case 5:
+		showBanMenu(player);
+		break;	
+	default:
+		player->quitMenu();
+	}
+}
+
+void ServerPlugin::changelevelMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	if (choice != 10)
+	{
+		string mapname = selected->text;
+		if (interfaces.engine->IsMapValid(mapname.c_str()))
+			queueCommand("changelevel " + mapname + "\n");
+		else
+		{
+			RecipientFilter recipients;
+			recipients.addRecipient(player->getIdentity()->index);
+
+			map<string,string> parameters;
+			parameters["$map"] = mapname;
+
+			i18n->i18nChatSay(recipients,"admin_map_not_found",parameters);
+		}
+	}
+	player->quitMenu();
+}
+
+void ServerPlugin::swapMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	if (choice != 10)
+	{
+		PlayerIdentity * pIdentity = player->getIdentity();
+		RecipientFilter recipients;
+		map<string,string> parameters;
+
+		parameters["$username"] = selected->text;
+		UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
+
+		ClanMember * target = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,useridData->userid,target)
+		{
+			IPlayerInfo * pInfo = player->getPlayerInfo();
+
+			target->swap();
+
+			if (isValidPlayerInfo(pInfo))
+			{
+				recipients.addAllPlayers();
+				parameters["$admin"] = pInfo->GetName();
+				i18n->i18nChatSay(recipients,"admin_swap",parameters,pIdentity->index);
+			}
+		}
+		else
+		{
+			recipients.addRecipient(pIdentity->index);
+			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
+		}
+		showSwapMenu(player);
+	}
+	else
+		player->quitMenu();
+}
+
+void ServerPlugin::specMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	if (choice != 10)
+	{
+		PlayerIdentity * pIdentity = player->getIdentity();
+		RecipientFilter recipients;
+		map<string,string> parameters;
+
+		parameters["$username"] = selected->text;
+		UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
+
+		ClanMember * target = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,useridData->userid,target)
+		{
+			IPlayerInfo * pInfo = player->getPlayerInfo();
+
+			target->spec();
+
+			if (isValidPlayerInfo(pInfo))
+			{
+				recipients.addAllPlayers();
+				parameters["$admin"] = pInfo->GetName();
+				i18n->i18nChatSay(recipients,"admin_spec",parameters,pIdentity->index);
+			}
+		}
+		else
+		{
+			recipients.addRecipient(pIdentity->index);
+			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
+		}
+		showSpecMenu(player);
+	}
+	else
+		player->quitMenu();
+}
+
+void ServerPlugin::kickMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	if (choice != 10)
+	{
+		PlayerIdentity * pIdentity = player->getIdentity();
+		RecipientFilter recipients;
+		map<string,string> parameters;
+
+		parameters["$username"] = selected->text;
+		UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
+
+		ClanMember * target = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,useridData->userid,target)
+		{
+			PlayerIdentity * identity = player->getIdentity();
+			IPlayerInfo * pInfo = player->getPlayerInfo();
+
+			target->kick("admin_kick");
+
+			if (isValidPlayerInfo(pInfo))
+			{
+				recipients.addAllPlayers();
+				parameters["$admin"] = pInfo->GetName();
+				i18n->i18nChatSay(recipients,"admin_kick_by",parameters,pIdentity->index);
+			}
+		}
+		else
+		{
+			recipients.addRecipient(pIdentity->index);
+			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
+		}
+		showKickMenu(player);
+	}
+	else
+		player->quitMenu();
+}
+
+void ServerPlugin::banMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	if (choice != 10)
+	{
+		UseridMenuLineData * useridData = static_cast<UseridMenuLineData *>(selected->data);
+
+		player->storeMenuData(new PlayerMenuLineData(selected->text,useridData->userid));
+		showBanTimeMenu(player);
+	}
+	else
+		player->quitMenu();
+}
+
+void ServerPlugin::bantimeMenuCallback(Player * player, int choice, MenuLine * selected)
+{
+	if (choice != 10)
+	{
+		PlayerIdentity * pIdentity = player->getIdentity();
+
+		RecipientFilter recipients;
+		map<string,string> parameters;
+
+		PlayerMenuLineData * const targetData = static_cast<PlayerMenuLineData * const>(player->getMenuData());
+		parameters["$username"] = targetData->name;
+
+		ClanMember * target = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,targetData->userid,target)
+		{
+			PlayerIdentity * identity = player->getIdentity();
+			IPlayerInfo * adminInfo = player->getPlayerInfo();
+
+			int time = 0;
+			switch(choice)
+			{
+			case 1:
+				time = 5;
+				break;
+			case 2:
+				time = 60;
+				break;
+			}
+			target->ban(time,"admin_ban");
+
+			if (adminInfo != NULL)
+			{
+				recipients.addAllPlayers();
+				parameters["$admin"] = adminInfo->GetName();
+
+				if (time == 0)
+					i18n->i18nChatSay(recipients,"admin_permanently_ban",parameters,pIdentity->index);
+				else
+					i18n->i18nChatSay(recipients,"admin_temporaly_ban",parameters,pIdentity->index);
+			}
+		}
+		else
+		{
+			recipients.addRecipient(pIdentity->index);
+			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
+		}
+		showBanMenu(player); 
+		// FIXME: last banned player still appear because kickid is not yet executed here
+		// (engine->ServerExecute logs a "unknown command: kickid" message)
+	}
+	else
+		player->quitMenu();
 }
 
 MatchManager * ServerPlugin::getMatch()
@@ -638,13 +596,14 @@ void ServerPlugin::addPluginConVar(ConVar * variable)
 
 ConVar * ServerPlugin::getConVar(const string & name)/* throw(ServerPluginException)*/
 {
-	map<string,ConVar *>::iterator invalidConVar = pluginConVars.end();
+	/*map<string,ConVar *>::iterator invalidConVar = pluginConVars.end();
 	map<string,ConVar *>::iterator itConVar = pluginConVars.find(name);
 
-	/*if (itConVar == invalidConVar)
-		throw ServerPluginException("Attempts to access to an unknown variable name");*/
+	if (itConVar == invalidConVar)
+		throw ServerPluginException("Attempts to access to an unknown variable name");
 
-	return itConVar->second;
+	return itConVar->second;*/
+	return pluginConVars.find(name)->second;
 }
 
 void ServerPlugin::addPluginConCommand(ConCommand * command)
@@ -696,14 +655,6 @@ void ServerPlugin::removeTimers()
 		itTimer++;
 	}
 	timers.clear();
-}
-
-void ServerPlugin::setConvarsAccessor(BaseConvarsAccessor * convarsAccessor)
-{
-	if (interfaces.convars != NULL)
-		delete interfaces.convars;
-
-	interfaces.convars = convarsAccessor;
 }
 
 void ServerPlugin::Unload()
@@ -765,13 +716,10 @@ void ServerPlugin::ClientActive(edict_t * pEntity)
 
 void ServerPlugin::ClientDisconnect(edict_t * pEntity)
 {
-	list<ClanMember *>::iterator endPlayer = playerlist.end();
-	list<ClanMember *>::iterator itPlayer = find_if(playerlist.begin(),endPlayer,PlayerHavingPEntity(pEntity));
-	if (itPlayer != endPlayer)
+	ClanMember * toRemove = NULL;
+	CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,toRemove)
 	{
-		ClanMember * toRemove = *itPlayer;
 		playerlist.remove(toRemove);
-		// PlayerToRemove()(toRemove);
 		delete toRemove;
 	}
 }
@@ -779,9 +727,9 @@ void ServerPlugin::ClientDisconnect(edict_t * pEntity)
 void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
 {
 	int index = interfaces.engine->IndexOfEdict(pEntity);
-    if (isValidPlayerIndex(index,interfaces.gpGlobals->maxClients))
+    if (isValidPlayerInfoIndex(index,interfaces.gpGlobals->maxClients))
     {
-		// Firstly remove the player if he's already listed
+		// First remove the player if he's already in the list
 		list<ClanMember *>::iterator invalidPlayer = playerlist.end();
 		list<ClanMember *>::iterator itPlayer =
 			find_if(playerlist.begin(),invalidPlayer,PlayerHavingIndex(index));
@@ -791,6 +739,7 @@ void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
 			playerlist.erase(itPlayer);
 		}
 
+		// Then add the new player to the player list
         try
         {
 			list<string>::iterator itSteamid = adminlist.begin();
@@ -834,9 +783,9 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 			// (Excepted during the kniferound, or if the player wants to join the spectators or come from the spectators)
 			if (command == "jointeam")
 			{
-				MatchStateId matchState = match->getMatchState();
-				if (matchState != DisabledMatchState::getInstance()->getId() &&
-					matchState != KnifeRoundMatchState::getInstance()->getId())
+				BaseMatchState * matchState = match->getMatchState();
+				if (matchState != DisabledMatchState::getInstance() &&
+					matchState != KnifeRoundMatchState::getInstance())
 				{
 					// Check for command sanity (jointeam without argument causes a error message but swap the player)
 					if (interfaces.engine->Cmd_Argc() > 1)
@@ -846,16 +795,14 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 						// If the team the player wants to join is a non-spectator team
 						if ((arg1 == "2") || (arg1 == "3"))
 						{
-							list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-							list<ClanMember *>::iterator itPlayer =
-								find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-							if (itPlayer != invalidPlayer)
+							ClanMember * player = NULL;
+							CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
 							{
 								// If the team is not a spectator team
-								if ((*itPlayer)->getMyTeam() > SPEC_TEAM)
+								if (player->getMyTeam() > SPEC_TEAM)
 								{
 									RecipientFilter recipients;
-									recipients.addRecipient((*itPlayer)->getIdentity()->index);
+									recipients.addRecipient(player);
 
 									i18n->i18nChatSay(recipients,"player_no_swap_in_match");
 									result = PLUGIN_STOP;
@@ -878,12 +825,10 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 			}
 			else if (command == "menuselect")
 			{
-				list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-				list<ClanMember *>::iterator itPlayer =
-					find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-				if (itPlayer != invalidPlayer)
+				ClanMember * player = NULL;
+				CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
 				{
-					Menu * menu = (*itPlayer)->getMenu();
+					Menu * menu = player->getMenu();
 					if (menu != NULL)
 					{
 						if (interfaces.engine->Cmd_Argc() == 2)
@@ -891,8 +836,8 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 							int choice = atoi(interfaces.engine->Cmd_Argv(1));
 							if (choice != 0)
 							{
-								(*itPlayer)->cexec("playgamesound UI/buttonrollover.wav\n");
-								menu->doCallback(*itPlayer,choice);
+								player->cexec("playgamesound UI/buttonrollover.wav\n");
+								menu->doCallback(player,choice);
 							}
 						}
 					}
@@ -900,18 +845,16 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 			}
 			else if (command == "cssmatch")
 			{
-				list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-				list<ClanMember *>::iterator itPlayer =
-					find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-				if (itPlayer != invalidPlayer)
+				ClanMember * player = NULL;
+				CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
 				{
-					if ((*itPlayer)->isReferee())
+					if (player->isReferee())
 					{
-						match->showMenu(*itPlayer);
+						match->showMenu(player);
 					}
 					else
 					{
-						PlayerIdentity * playerid = (*itPlayer)->getIdentity();
+						PlayerIdentity * playerid = player->getIdentity();
 						RecipientFilter recipients;
 						recipients.addRecipient(playerid->index);
 
@@ -934,15 +877,14 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 			}
 			else if (command == "cssm_rates")
 			{
-				list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-				list<ClanMember *>::iterator itPlayer =
-					find_if(playerlist.begin(),invalidPlayer,PlayerHavingPEntity(pEntity));
-				if (itPlayer != invalidPlayer)
+				ClanMember * player = NULL;
+				CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
 				{
 					RecipientFilter recipients;
-					recipients.addRecipient((*itPlayer)->getIdentity()->index);
+					recipients.addRecipient(player->getIdentity()->index);
 
 					list<ClanMember *>::const_iterator currentPlayer = playerlist.begin();
+					list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
 					while(currentPlayer != invalidPlayer)
 					{
 						int playerIndex = (*currentPlayer)->getIdentity()->index;
@@ -1013,6 +955,7 @@ int ServerPlugin::getPlayerCount(TeamCode team) const
 			playerCount = (int)playerlist.size();
 	else
 			playerCount = count_if(playerlist.begin(),playerlist.end(),PlayerHavingTeam(team));
+
 	return playerCount;
 }
 

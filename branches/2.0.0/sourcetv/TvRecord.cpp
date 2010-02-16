@@ -37,7 +37,7 @@ TvRecord::TvRecord(std::string & recordName) throw (TvRecordException) : recordi
 
 	if (plugin->hltvConnected())
 	{
-		// Strip unsupported characters
+		// Replace unsupported characters
 		normalizeFileName(recordName);
 
 		// Construct the path
@@ -51,7 +51,7 @@ TvRecord::TvRecord(std::string & recordName) throw (TvRecordException) : recordi
 			throw TvRecordException("The demo name is empty");*/
 
 		// Rename the file while it matches another existing file name on the hd
-		// (Obselete with the current way we construct the demo name, but can change)
+		// (Should be obselete with the current way we construct the demo name, but that can change)
 		string tempName = baseName;
 		int fileCount = 1;
 		while(interfaces->filesystem->FileExists(tempName.c_str(),"MOD"))
@@ -84,7 +84,8 @@ void TvRecord::start() throw (TvRecordException)
 {
 	if (! recording)
 	{
-		ServerPlugin::getInstance()->queueCommand("tv_stoprecord;tv_record " + name + "\n"); // Stops any record in progress (e.g. a record lauched by tv_autorecord)
+		// Stops any record in progress (e.g. a record started by tv_autorecord)
+		ServerPlugin::getInstance()->queueCommand("tv_stoprecord;tv_record " + name + "\n");
 
 		recording = true;
 	}

@@ -25,11 +25,12 @@
 
 #include "../messages/RecipientFilter.h"
 #include "../features/BaseSingleton.h"
-#include "../convars/ConvarsAccessor.h" // BaseConvarsAccessorException
+#include "../convars/ConvarsAccessor.h" // ConvarsAccessorException
 #include "../player/Player.h"
 #include "../exceptions/BaseException.h"
 #include "../commands/ConCommandCallbacks.h"
 #include "../commands/ConCommandHook.h"
+#include "../messages/Menu.h"
 
 #include "engine/iserverplugin.h"
 
@@ -47,15 +48,15 @@ class ConCommand;
 #include <string>
 #include <list>
 #include <map>
+#include <algorithm>
 
 namespace cssmatch
 {
-	class BaseConvarsAccessor;
+	class ConvarsAccessor;
 	class ClanMember;
 	class I18nManager;
 	class BaseTimer;
 	class MatchManager;
-	class Menu;
 
 	/** Valve's interface instances */
 	struct ValveInterfaces
@@ -66,7 +67,7 @@ namespace cssmatch
 		IPlayerInfoManager * playerinfomanager; // game dll interface to interact with players
 		IServerPluginHelpers * helpers; // special 3rd party plugin helpers from the engine
 		CGlobalVars * gpGlobals; // global vars
-		BaseConvarsAccessor * convars; // console vars
+		ConvarsAccessor * convars; // console vars
 		IServerGameDLL * serverGameDll; // Access to some DLL infos
 
 		ValveInterfaces()
@@ -80,16 +81,26 @@ namespace cssmatch
 				serverGameDll(NULL){}
 	};
 
-	/*class ServerPluginException : public BaseException
-	{
-	public:
-		ServerPluginException(const std::string & message) : BaseException(message){}
-	};*/
-
 	/** Source plugin IServerPluginCallbacks implementation */
 	class ServerPlugin : public BaseSingleton<ServerPlugin>, public IServerPluginCallbacks
 	{
-	protected:
+	private:
+		// Some data type the admin menu put into the menu lines
+		struct UseridMenuLineData : public BaseMenuLineData
+		{
+			int userid;
+
+			UseridMenuLineData(int playerUserid) : userid(playerUserid){};
+		};
+		struct PlayerMenuLineData : public BaseMenuLineData
+		{
+			std::string name;
+			int userid;
+
+			PlayerMenuLineData(const std::string & playername, int playerUserid)
+				: name(playername), userid(playerUserid){};
+		};
+
 		/** Valve's interfaces accessor */
 		ValveInterfaces interfaces;
 
@@ -142,7 +153,7 @@ namespace cssmatch
 			toInitialize = (T *)factory(interfaceVersion.c_str(),NULL);
 
 			if (toInitialize == NULL)
-				Msg(std::string("CSSMatch : Unable to get the \"" + interfaceVersion + "\" interface !\n").c_str());
+				Msg(std::string("CSSMatch : Unable to get the \"" + interfaceVersion + "\" interface!\n").c_str());
 			else
 				success = true;
 
@@ -161,6 +172,29 @@ namespace cssmatch
 		/** Get the global playerlist */
 		std::list<ClanMember *> * getPlayerlist();
 
+		/** Get a player
+		 * @param pred Predicat to use
+		 * @param out Out var
+		 * @return <code>true</code> if the player was found, <code>false</code> otherwise
+		 */
+		template<class Predicat>
+		bool getPlayer(const Predicat & pred, ClanMember * & out)
+		{
+			bool found = false;
+
+			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+			list<ClanMember *>::iterator itPlayer = std::find_if(playerlist.begin(),invalidPlayer,pred);
+			if (itPlayer != invalidPlayer)
+			{
+				found = true;
+				out = *itPlayer;
+			}
+			else
+				out = NULL;
+
+			return found;
+		}
+
 		/** Get the referee steamid list (read and write) */
 		std::list<std::string> * getAdminlist();
 
@@ -173,6 +207,15 @@ namespace cssmatch
 		void showKickMenu(Player * player); // player list
 		void showBanMenu(Player * player); // player list
 		void showBanTimeMenu(Player * player); // ban time choose
+
+		// Menus callbacks
+		void adminMenuCallback(Player * player, int choice, MenuLine * selected);
+		void changelevelMenuCallback(Player * player, int choice, MenuLine * selected);
+		void swapMenuCallback(Player * player, int choice, MenuLine * selected);
+		void specMenuCallback(Player * player, int choice, MenuLine * selected);
+		void kickMenuCallback(Player * player, int choice, MenuLine * selected);
+		void banMenuCallback(Player * player, int choice, MenuLine * selected);
+		void bantimeMenuCallback(Player * player, int choice, MenuLine * selected);
 
 		/** Get the match manager */
 		MatchManager * getMatch();
@@ -207,12 +250,6 @@ namespace cssmatch
 		/** Remove all pending timers */
 		void removeTimers();
 
-		/** Set the console variable accessor <br>
-		 * The accessor will be automatically deleted when the plugin is unloaded
-		 * @param convarsAccessor The console variable accessor to set
-		 */
-		void setConvarsAccessor(BaseConvarsAccessor * convarsAccessor);
-
 		// IServerPluginCallbacks methods
 		virtual bool Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory);
 		virtual void Unload();
@@ -233,7 +270,7 @@ namespace cssmatch
 
 		// Tools
 
-		/** Print a message in the logs
+		/** Print a message to the logs
 		 * @param message The message to display
 		 */
 		void log(const std::string & message) const;
@@ -248,28 +285,26 @@ namespace cssmatch
 		 */
 		void executeCommand(const std::string & command) const;
 
-		/** Check if SourceTV is connected to the server (tv_enable is not checked)
+		/** Check if SourceTV is connected to the server (ignores tv_enable)
 		 * @return <code>true</code> if SourceTV was found, <code>false</code> otherwise
 		 */
 		bool hltvConnected() const;
 
 		/** Get the current player count (ignores SourceTv)
-		 * @param team If specified, the count will be limited to a particular team
+		 * @param team If specified, only count the player from this team
 		 * @return The player count
 		 */
 		int getPlayerCount(TeamCode team = INVALID_TEAM) const;
 	};
 
-	/* Loop over all players excluding the 0 index 
+/* Loop over all players excluding the 0 index 
 #define FOREACH_PLAYER(indexVar) \
 	int maxplayers = ServerPlugin::getInstance()->getInterfaces()->gpGlobals->maxClients; \
 	for (int indexVar=1;indexVar<=maxplayers;indexVar++)*/
 
-/*#define CSSMATCH_GET_VALID_PLAYER(itPlayer,predicate) \
-	std::list<ClanMember *> * playerlist = ServerPlugin::getInstance()->getPlayerlist(); \
-	std::list<ClanMember *>::iterator invalidPlayer = playerlist->end(); \
-	itPlayer = std::find_if(playerlist->begin(),invalidPlayer,predicate); \
-	if (itPlayer != invalidPlayer)*/
+/** Search for a valid player pointer satisfying a predicat */
+#define CSSMATCH_VALID_PLAYER(Predicat,criteria,out) \
+	if (ServerPlugin::getInstance()->getPlayer<Predicat>(Predicat(criteria),out))
 }	
 
 #endif // __SERVER_PLUGIN_H__

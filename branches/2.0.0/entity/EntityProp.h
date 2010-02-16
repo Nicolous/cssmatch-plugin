@@ -48,27 +48,27 @@ namespace cssmatch
 	class EntityProp
 	{
 	private:
-		/** The prop's class */
+		/** The prop class */
 		std::string theClass;
 
-		/** The prop's path */
+		/** The prop path (e.g. step1.step2.prop) */
 		std::string path;
 
-		/** The prop's offset */
+		/** The prop offset */
 		int offset;
 
-		/** Compute the prop's offset
+		/** Compute the prop offset
 		 * @param table The table which contains the prop
 		 * @param propPathLeft Path left until the prop
 		 */
 		void getOffset(SendTable * table,  std::istringstream & propPathLeft);
 
-		/** Search the prop's offset through the server props */
+		/** Search the prop offset among the server props */
 		void initialize();
 	public:
 		/** Initialize the handler
-		 * @param propClass The prop's classe
-		 * @propPath The prop's path - Step separator is "." (e.g. step1.step2.prop)
+		 * @param propClass The prop class
+		 * @propPath The prop path - Step separator is "." (e.g. step1.step2.prop)
 		 */
 		EntityProp(const std::string & propClass, const std::string & propPath);
 
@@ -93,7 +93,7 @@ namespace cssmatch
 				throw EntityPropException(std::string("CSSMatch was unable to retrieve prop ") + theClass + "." + path + " for an entity");
 		}
 		else
-			throw EntityPropException(std::string("CSSMatch was unable to find the offset of the prop ") + theClass + "." + path);
+			throw EntityPropException(std::string("CSSMatch was unable to find the offset of prop ") + theClass + "." + path);
 
 		return *prop;
 	}

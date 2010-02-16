@@ -232,11 +232,11 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\plugin\EventListener.cpp"
+				RelativePath=".\plugin\BaseTimer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\plugin\EventListener.h"
+				RelativePath=".\plugin\BaseTimer.h"
 				>
 			</File>
 			<File
@@ -279,14 +279,6 @@
 		<Filter
 			Name="convars"
 			>
-			<File
-				RelativePath=".\convars\BaseConvarsAccessor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\convars\BaseConvarsAccessor.h"
-				>
-			</File>
 			<File
 				RelativePath=".\convars\ConVarCallbacks.cpp"
 				>
@@ -412,19 +404,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\match\BreakMatchState.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\match\BreakMatchState.h"
-				>
-			</File>
-			<File
 				RelativePath=".\match\DisabledMatchState.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\match\DisabledMatchState.h"
+				>
+			</File>
+			<File
+				RelativePath=".\match\HalfMatchState.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\match\HalfMatchState.h"
 				>
 			</File>
 			<File
@@ -444,11 +436,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\match\SetMatchState.cpp"
+				RelativePath=".\match\TimeoutMatchState.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\match\SetMatchState.h"
+				RelativePath=".\match\TimeoutMatchState.h"
 				>
 			</File>
 			<File
@@ -485,18 +477,6 @@
 			</File>
 			<File
 				RelativePath=".\player\Player.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="timer"
-			>
-			<File
-				RelativePath=".\timer\BaseTimer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\timer\BaseTimer.h"
 				>
 			</File>
 		</Filter>

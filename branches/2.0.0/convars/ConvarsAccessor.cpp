@@ -24,17 +24,21 @@
 
 using namespace cssmatch;
 
-void ConvarsAccessor::initializeInterface(CreateInterfaceFn cvarFactory) throw (BaseConvarsAccessorException)
+ConvarsAccessor::ConvarsAccessor() : cvars(NULL)
+{
+}
+
+void ConvarsAccessor::initializeInterface(CreateInterfaceFn cvarFactory) throw (ConvarsAccessorException)
 {
 	cvars = (ICvar *)cvarFactory(VENGINE_CVAR_INTERFACE_VERSION, NULL);
 
 	if (cvars != NULL)
 		ConCommandBaseMgr::OneTimeInit(this);
 	else
-		throw BaseConvarsAccessorException("Unable to initialize the console variables interface !");
+		throw ConvarsAccessorException("Unable to initialize the console variables interface !");
 }
 
-ICvar * ConvarsAccessor::getConVarAccessor()
+ICvar * ConvarsAccessor::getConVarInterface()
 {
 	return cvars;
 }

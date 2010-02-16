@@ -91,13 +91,13 @@ namespace cssmatch
 		/** The Menu the player uses */
 		Menu * menu;
 
-		/** The page of the menu the player uses */
+		/** The page the player uses */
 		int page;
 
-		/** Is the menu will have to be deleted when it will be closed */
+		/** Does the menu will have to be deleted when it will be closed */
 		bool toDelete;
 
-		/** Data associated to the selected line in the menu */
+		/** Data related to the selected lines in the menu */
 		BaseMenuLineData * data;
 
 		PlayerMenuHandler() : menu(NULL), page(1), toDelete(false), data(NULL) {}
@@ -107,7 +107,7 @@ namespace cssmatch
 	class Player
 	{
 	private:
-		// Functors (friends to accelerates the lookups)
+		// Functors
 		friend struct PlayerHavingPEntity;
 		friend struct PlayerHavingIndex;
 		friend struct PlayerHavingUserid;
@@ -116,7 +116,7 @@ namespace cssmatch
 		friend struct PlayerIsHltv;
 		friend struct PlayerToRecipient;
 	protected:
-		/** Player's identity */
+		/** Player identity */
 		PlayerIdentity identity;
 
 		/** Cash handler */
@@ -129,15 +129,16 @@ namespace cssmatch
 		PlayerMenuHandler menuHandler;
 
 	public:
-		/** Initialize the informations related to the player 
-		 * @param index The player's index (must be valid !)
+		/** 
+		 * @param index The player index (valid!)
+		 * @throws PlayerException If some player info are unavailable (edict_t, IPlayerInfo, userid, steamid, ...)
 		 */
 		Player(int index) throw(PlayerException);
 
 		virtual ~Player();
 
 		/** Get the identity informations about this player 
-		 * @return A PlayerIdentity structure pointer
+		 * @return A PlayerIdentity struct pointer
 		 * @see struct PlayerIdentity
 		 */
 		PlayerIdentity * getIdentity();
@@ -146,7 +147,7 @@ namespace cssmatch
 		 * @param usedMenu The menu
 		 * @param page The page of the menu actually used by the player
 		 * @param parameters The i18n parameters needed by the menu to send
-		 * @param toDelete If the menu has to be deleted once the player close it
+		 * @param toDelete If the menu has to be deleted once the player closes it
 		 */
 		void sendMenu(	Menu * usedMenu,
 						int page,
@@ -165,19 +166,17 @@ namespace cssmatch
 		/** Send to the player the previous page of the current menu */
 		void previousPage();
 
-		/** Quit the current menu (and delete it if asked with Player::setMenu */
+		/** Quit the current menu (and delete it if asked with Player::setMenu) */
 		void quitMenu();
 
-		/** Set the menu currently used by this player */
-
 		/** Get the current team of this player
-		 * @return The team's id of the player, or INVALID_TEAM if something was invalid
+		 * @return The team id of the player, or INVALID_TEAM if something was invalid
 		 * @see enum TeamCode
 		 */
 		TeamCode getMyTeam() const;
 
 		/** Get an IPlayerInfo instance corresponding to this entity <br>
-		 * Does not check the result with isValidPlayer !
+		 * Does not check the result with isValidPlayerInfo!
 		 * @return The IPlayerInfo instance corresponding to this entity, or NULL if something was invalid
 		 */
 		IPlayerInfo * getPlayerInfo() const;
@@ -224,7 +223,7 @@ namespace cssmatch
 		 */
 		void cexec(const std::string & command) const;
 
-		/** Remove a weapon at a specified slot 
+		/** Remove a weapon (if any) from a given slot
 		 * @param slot The slot code where is weapon can be found
 		 * @see enum WeaponSlotCode
 		 */

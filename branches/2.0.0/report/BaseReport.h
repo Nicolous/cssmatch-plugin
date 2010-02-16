@@ -32,18 +32,18 @@ namespace cssmatch
 {
 	class MatchManager;
 
-	/** Base class to write reports using any format of file */
+	/** Base class to write reports */
 	class BaseReport
 	{
 	protected:
 		/** The report path */
 		std::string reportPath;
 
-		/** Manager object of the related match */
+		/** Match manager */
 		MatchManager * match;
 	public:
 		/**
-		 * @param matchManager The Match related to the report
+		 * @param matchManager The Match concerned by the report
 		 */
 		BaseReport(MatchManager * matchManager);
 		virtual ~BaseReport();

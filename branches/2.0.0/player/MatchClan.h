@@ -35,32 +35,32 @@ namespace cssmatch
 	/** Clan stats */
 	struct ClanStats
 	{
-		/** Clan's score in Terrorist */
+		/** Score in Terrorist */
 		int scoreT;
 
-		/** Clan's score in Counter-Terrorist */
+		/** Score in Counter-Terrorist */
 		int scoreCT;
 
 		ClanStats() : scoreT(0), scoreCT(0){}
 	};
 
-	/** A CSSMatch clan */
+	/** CSSMatch clan */
 	class MatchClan
 	{
 	protected:
-		/** Clan's name */
+		/** Clan name */
 		std::string name;
 
-		/** Clan's stats in the previous half */
+		/** Clan stats in the previous half */
 		ClanStats lastSetStats;
 
-		/** Clan's stats */
+		/** Current clan stats */
 		ClanStats stats;
 
-		/** Is the clan ready to end the warmup time ? */
+		/** Is the clan ready to end the warmup time? */
 		bool ready;
 
-		/** Determine if an automatically detected clan name can be considered as valid */
+		/** Valid a clan name (used when the clan name is automatically detected) */
 		static bool isValidClanName(const std::string & newName)
 		{
 			return newName.size() >= 3;
@@ -74,22 +74,22 @@ namespace cssmatch
 		/** Set the clan name */
 		void setName(const std::string & newName);
 
-		/** Fills the list with the players of this clan */
+		/** Fill a list with the players of this clan */
 		void getMembers(std::list<ClanMember *> * members);
 
-		/** Get the clan's stats of the previous half */
+		/** Get the clan stats of the previous half */
 		ClanStats * getLastSetStats();
 
-		/** Get clan's stats */
+		/** Get clan stats */
 		ClanStats * getStats();
 
 		/** Reset the stats */
 		void resetStats();
 
-		/** Try to automatically detect the clan's name */
+		/** Try to automatically detect the clan name */
 		void detectClanName();
 
-		/** Is the clan ready to end the warmup time ? */
+		/** Is the clan ready to end the warmup time? */
 		bool isReady() const;
 
 		/** Set if this clan ready to end the warmup time */

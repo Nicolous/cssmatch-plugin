@@ -33,7 +33,7 @@ using std::vector;
 using std::map;
 using std::ostringstream;
 
-Menu::Menu(/*Menu * parentMenu, */const string & menuTitle, MenuCallback menuCallback)
+Menu::Menu(/*Menu * parentMenu, */const string & menuTitle, BaseMenuCallback * menuCallback)
 	: /*parent(parentMenu), */title(menuTitle), callback(menuCallback)
 {
 }
@@ -50,6 +50,8 @@ Menu::~Menu()
 		itLine++;
 	}
 	lines.clear();
+
+	delete callback;
 }
 
 void Menu::doCallback(Player * user, int choice)
@@ -69,7 +71,7 @@ void Menu::doCallback(Player * user, int choice)
 		user->nextPage();
 		break;
 	default:
-		callback(user,choice,selected);
+		callback->execute(user,choice,selected);
 	}
 }
 
@@ -78,7 +80,7 @@ void Menu::addLine(bool isI18nKeyword, const string & line, BaseMenuLineData * d
 	int linecount = lines.size();
 	MenuLine * toAdd = new MenuLine(NORMAL,isI18nKeyword,line,data);
 
-	if (linecount < 9) // Is the first page not full ?
+	if (linecount < 9) // Is the first page not full?
 	{
 		// Yes, no problem
 		lines.push_back(toAdd);
@@ -88,13 +90,13 @@ void Menu::addLine(bool isI18nKeyword, const string & line, BaseMenuLineData * d
 			lines.push_back(new MenuLine(BACK,true,"menu_back"));
 		}*/
 	}
-	else if (linecount == 9) // Does this lines can be added on the first page ?
+	else if (linecount == 9) // Does this lines can be added on the first page?
 	{
-		// Yes, so there are 3 options to add:
+		// Yes, so there are 3 options to change/add:
 		// - "More"
 		// - the new line
 		// - and "Back"
-		// (The last two are on a new page.)
+		// (The last two are put on a new page.)
 		
 		MenuLine * toMove = lines[8];
 		lines[8] = new MenuLine(NEXT,true,"menu_more");
@@ -103,9 +105,9 @@ void Menu::addLine(bool isI18nKeyword, const string & line, BaseMenuLineData * d
 		lines.push_back(toAdd);
 		lines.push_back(new MenuLine(BACK,true,"menu_back"));
 	}
-	else if ((linecount % 9) == 0) // Is the current page (which is not the first page) full ?
+	else if ((linecount % 9) == 0) // Is the current page (which is not the first page) full?
 	{
-		// Yes, so there are 4 option to add:
+		// Yes, so there are 4 option to change/add:
 		// - "Back"
 		// - "More"
 		// - the new line
@@ -166,7 +168,7 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 		//int iEnd = iBegin+9; // multi-page => bad sensibility
 		int iEnd = iBegin + min(linecount-iBegin,9);
 
-		// Set the options which the player will be able to select
+		// Set the options that the player will be able to select
 		int optioncount = iEnd-iBegin;
 		int sensibilityFlags = OPTION_CANCEL;
 		if (optioncount == 9)
@@ -190,7 +192,7 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 		{
 			menu << " \n" << i18n->getTranslation(language,"menu_empty") << "\n \n";
 
-			CSSMATCH_PRINT("Empty menu");
+			CSSMATCH_PRINT("Empty menu " + title);
 		}
 		else
 		{
@@ -216,4 +218,3 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 	else
 		CSSMATCH_PRINT("Invalid menu page");
 }
-

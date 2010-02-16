@@ -40,18 +40,18 @@ namespace cssmatch
 	class TvRecord
 	{
 	protected:
-		/** Record name on the hd */
+		/** Record name */
 		std::string name;
 
-		/** Is the record in progress ? */
+		/** Is the record in progress? */
 		bool recording;
 
 		// Functors
-		struct TvRecordToRemove;
+		friend struct TvRecordToRemove;
 	public:
 		/** Prepares (but not starts) a new SourceTv record <br>
-		 * Unsupported characters (by the console or the OS) in the record name will be modified
-		 * @param recordName The name of the record (can be modified to remove the unsupported characters)
+		 * Unsupported characters in the record name will be replaced (see normalizeFileName)
+		 * @param recordName The record name (can be changed to remove the unsupported characters)
 		 * @throws TvRecordException if SourceTv is not connected
 		 */
 		TvRecord(std::string & recordName) throw (TvRecordException);
@@ -59,15 +59,15 @@ namespace cssmatch
 		/** Get the record name */
 		const std::string * getName() const;
 
-		/** Is the record in progress ? */
+		/** Is the record in progress? */
 		bool isRecording() const;
 
-		/** Starts the record
+		/** Start the record
 		 * @throws TvRecordException if the record is already in progress
 		 */
 		void start() throw (TvRecordException);
 		
-		/** Stops the record
+		/** Stop the record
 		 * @throws TvRecordException if the record isn't started
 		 */
 		void stop() throw (TvRecordException);
@@ -77,7 +77,7 @@ namespace cssmatch
 	{
 		void operator()(TvRecord * record)
 		{
-			if (record->isRecording())
+			if (record->recording)
 				record->stop();
 			delete record;
 		}

@@ -20,47 +20,53 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
-#ifndef __SET_MATCH_STATE_H__
-#define __SET_MATCH_STATE_H__
-
-class IGameEventManager2;
-class IGameEvent;
+#ifndef __HALF_MATCH_STATE_H__
+#define __HALF_MATCH_STATE_H__
 
 #include "BaseMatchState.h"
 #include "../features/BaseSingleton.h"
-#include "../timer/BaseTimer.h"
-#include "../plugin/EventListener.h"
+#include "../plugin/BaseTimer.h"
+#include "../messages/Menu.h"
+
+#include "igameevents.h" // IGameEventListener2, IGameEvent
+
+#include <map>
+#include <string>
 
 namespace cssmatch
 {
 	class MatchManager;
 	class Menu;
 
-	/** Match [round] Set in progress <br>
+	/** Half in progress <br>
 	 * Ends when the number of scheduled rounds is reached
 	 */
-	class SetMatchState : public BaseMatchState, public BaseSingleton<SetMatchState>
+	class HalfMatchState 
+		: public BaseMatchState, public BaseSingleton<HalfMatchState>, public IGameEventListener2
 	{
 	private:
-		EventListener<SetMatchState> * listener;
+		typedef void (HalfMatchState::*EventCallback)(IGameEvent * event);
 
-		/** Admin menus of this state */
-		Menu * setStateMenu;
-		Menu * menuWithAdmin;
+		/** {event => callback} map used in FireGameEvent */
+		std::map<std::string,EventCallback> eventCallbacks;
+
+		/** Menus for this state*/
+		Menu * halfMenu;
+		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
 		/** Does this state finished ? */
 		bool finished;
 
-		friend class BaseSingleton<SetMatchState>;
-		SetMatchState();
-		~SetMatchState();
+		friend class BaseSingleton<HalfMatchState>;
+		HalfMatchState();
+		~HalfMatchState();
 	public:
-		/** End the current [round] set <br>
+		/** End the current half <br>
 		 * Here is the code which musn't be executed if the match is interupted
 		 */
-		void endSet();
+		void endHalf();
 
-		/** Declare the round set finished, so the next round start will end this state */
+		/** Declare the half finished, so the next round start will end this state */
 		void finish();
 
 		// BaseMatchState methods
@@ -68,7 +74,12 @@ namespace cssmatch
 		void endState();
 		void showMenu(Player * recipient);
 
+		// Menus callbacks
+		void halfMenuCallback(Player * player, int choice, MenuLine * selected);
+		void menuWithAdminCallback(Player * player, int choice, MenuLine * selected);
+
 		// Game event callbacks
+		void FireGameEvent(IGameEvent * event); // IGameEventListener2 method
 		void player_death(IGameEvent * event);
 		void round_start(IGameEvent * event);
 		void round_end(IGameEvent * event);
@@ -85,4 +96,4 @@ namespace cssmatch
 	};
 }
 
-#endif // __SET_MATCH_STATE_H__
+#endif // __HALF_MATCH_STATE_H__

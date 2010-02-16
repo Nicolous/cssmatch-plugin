@@ -50,8 +50,8 @@ namespace cssmatch
 		/** File's path */
 		std::string filePath;
 	public:
-		/** Make sure that the string doesn't contains a Windows or Linux end line character <br>
-		 * (Typically usefull when a file is saved under Windows then read under Linux)
+		/** Make sure that the string doesn't contain a Windows/Linux end line character <br>
+		 * (Typically usefull when a file is saved under Windows then read under Linux.)
 		 * @param line The line to parse
 		 */
 		static void removeEndLine(std::string & line);
@@ -61,10 +61,10 @@ namespace cssmatch
 		 */
 		static void removeComments(std::string & line);
 
-		/** Strip the line
+		/** Trim the line
 		 * @param line The line to parse
 		 */
-		static void strip(std::string & line);
+		static void trim(std::string & line);
 
 		/** Construct a handler for a configuration file 
 		 * @param filePath The path of the file
@@ -72,14 +72,14 @@ namespace cssmatch
 		 */
 		ConfigurationFile(const std::string & filePath) throw (ConfigurationFileException);
 
-		/** Get the file's name */
+		/** Get the file name */
 		std::string getFileName() const;
 
-		/** Get the file's path from -not including- the cfg/ folder */
+		/** Get the file path from -not including- the cfg folder */
 		std::string getPatchFromCfg() const;
 
-		/** Get a list of all the file data lines (stripped, without comments)
-		 * @param out The list to receive the lines
+		/** Get a list of all the file lines (stripped, without comments)
+		 * @param out Out list
 		 */
 		void getLines(std::list<std::string> & out);
 	};

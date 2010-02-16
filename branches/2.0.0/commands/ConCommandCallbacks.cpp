@@ -27,7 +27,7 @@
 #include "../match/BaseMatchState.h"
 #include "../match/KnifeRoundMatchState.h"
 #include "../match/WarmupMatchState.h"
-#include "../match/SetMatchState.h"
+#include "../match/HalfMatchState.h"
 #include "../messages/I18nManager.h"
 #include "../plugin/ServerPlugin.h"
 #include "../configuration/RunnableConfigurationFile.h"
@@ -37,12 +37,12 @@ using namespace cssmatch;
 
 #include "../match/WarmupMatchState.h"
 #include "../player/ClanMember.h"
+
 #include <list>
 #include <algorithm>
 
 using std::list;
 using std::find;
-using std::find_if;
 using std::for_each;
 using std::istringstream;
 using std::getline;
@@ -125,7 +125,7 @@ void cssmatch::cssm_start()
 			}
 			else if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 			{
-				initialState = SetMatchState::getInstance();
+				initialState = HalfMatchState::getInstance();
 			}
 			else // Error case
 			{
@@ -187,8 +187,15 @@ void cssmatch::cssm_retag()
 
 	try
 	{
+		MatchLignup * lignup = match->getLignup();
+
 		match->detectClanName(T_TEAM);
 		match->detectClanName(CT_TEAM);
+
+		map<string,string> parameters;
+		parameters["$team1"] = *lignup->clan1.getName();
+		parameters["$team2"] = *lignup->clan2.getName();
+		i18n->i18nMsg("match_name",parameters);
 	}
 	catch(const MatchManagerException & e)
 	{
@@ -204,8 +211,8 @@ void cssmatch::cssm_go()
 	I18nManager * i18n = plugin->getI18nManager();
 
 	WarmupMatchState * warmupState = WarmupMatchState::getInstance();
-	MatchStateId currentState = match->getMatchState();
-	if (currentState == warmupState->getId())
+	BaseMatchState * currentState = match->getMatchState();
+	if (currentState == warmupState)
 	{
 		warmupState->endWarmup();
 
@@ -223,6 +230,8 @@ void cssmatch::cssm_go()
 	}
 }
 
+// Syntax: cssm_restartmanche
+// or cssm_restarthalf
 void cssmatch::cssm_restartmanche()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -231,7 +240,7 @@ void cssmatch::cssm_restartmanche()
 
 	try
 	{
-		match->restartSet();
+		match->restartHalf();
 
 		RecipientFilter recipients;
 		recipients.addAllPlayers();
@@ -318,13 +327,10 @@ void cssmatch::cssm_grant()
 			i18n->i18nMsg("admin_new_admin",parameters);
 
 			// Update the player rights if he's connected
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer =
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingSteamid(steamid));
-			if (itPlayer != invalidPlayer)
+			ClanMember * player = NULL;
+			CSSMATCH_VALID_PLAYER(PlayerHavingSteamid,steamid,player)
 			{
-				(*itPlayer)->setReferee(true);
+				player->setReferee(true);
 			}
 		}
 		else
@@ -372,13 +378,10 @@ void cssmatch::cssm_revoke()
 			i18n->i18nMsg("admin_old_admin",parameters);
 
 			// Update the player rights if he's connected
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer =
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingSteamid(steamid));
-			if (itPlayer != invalidPlayer)
+			ClanMember * player = NULL;
+			CSSMATCH_VALID_PLAYER(PlayerHavingSteamid,steamid,player)
 			{
-				(*itPlayer)->setReferee(false);
+				player->setReferee(false);
 			}
 		}
 		else
@@ -456,14 +459,11 @@ void cssmatch::cssm_swap()
 	if (interfaces->engine->Cmd_Argc() > 1)
 	{
 		I18nManager * i18n = plugin->getI18nManager();
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
 
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		list<ClanMember *>::iterator itPlayer = 
-			find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(atoi(interfaces->engine->Cmd_Argv(1))));
-		if (itPlayer != invalidPlayer)
+		ClanMember * target = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,atoi(interfaces->engine->Cmd_Argv(1)),target)
 		{
-			if (! (*itPlayer)->swap())
+			if (! target->swap())
 				i18n->i18nMsg("admin_spectator_player");
 		}
 		else
@@ -481,14 +481,11 @@ void cssmatch::cssm_spec()
 	if (interfaces->engine->Cmd_Argc() > 1)
 	{
 		I18nManager * i18n = plugin->getI18nManager();
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
 
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		list<ClanMember *>::iterator itPlayer = 
-			find_if(playerlist->begin(),invalidPlayer,PlayerHavingUserid(atoi(interfaces->engine->Cmd_Argv(1))));
-		if (itPlayer != invalidPlayer)
+		ClanMember * target = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,atoi(interfaces->engine->Cmd_Argv(1)),target)
 		{
-			if (! (*itPlayer)->spec())
+			if (! target->spec())
 				i18n->i18nMsg("admin_spectator_player");
 		}
 		else
@@ -498,19 +495,20 @@ void cssmatch::cssm_spec()
 		Msg("cssm_spec userid\n");
 }
 
-// ***************************
-// Hook callbacks and tools
-// ***************************
+// ***************
+// Hooks callbacks 
+// ***************
 
-bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
+bool cssmatch::say_hook(int userIndex)
 {
 	bool eat = false;
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 	I18nManager * i18n = plugin->getI18nManager();
 
-	istringstream commandString(engine->Cmd_Argv(1));
+	istringstream commandString(interfaces->engine->Cmd_Argv(1));
 	string chatCommand;
 	commandString >> chatCommand;
 
@@ -519,21 +517,17 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	{
 		eat = true;
 
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		list<ClanMember *>::iterator itPlayer =
-			find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
-
-		if (itPlayer != invalidPlayer)
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
 		{
-			if ((*itPlayer)->isReferee())
+			if (user->isReferee())
 			{
-				plugin->showAdminMenu((*itPlayer));
+				plugin->showAdminMenu(user);
 			}
 			else
 			{
 				RecipientFilter recipients;
-				recipients.addRecipient(*itPlayer);
+				recipients.addRecipient(user);
 				i18n->i18nChatSay(recipients,"player_you_not_admin");
 				plugin->queueCommand("cssm_adminlist\n");
 			}
@@ -541,19 +535,17 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 		else
 			CSSMATCH_PRINT("Unable to find the player who typed cssmatch");
 	}
-	// !go, ready: a clan is ready to end the warmup
+	// !go, ready: a clan wants to end the warmup
 	else if ((chatCommand == "!go") || (chatCommand == "ready"))
 	{
-		MatchStateId currentState = match->getMatchState();
-		if (currentState == WarmupMatchState::getInstance()->getId())
+		BaseMatchState * currentState = match->getMatchState();
+		if (currentState == WarmupMatchState::getInstance())
 		{
-			list<ClanMember *> * playerlist = plugin->getPlayerlist();
-			list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-			list<ClanMember *>::iterator itPlayer =
-				find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
-
-			if (itPlayer != invalidPlayer)
-				WarmupMatchState::getInstance()->doGo(*itPlayer);
+			ClanMember * user = NULL;
+			CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+			{
+				WarmupMatchState::getInstance()->doGo(user);
+			}
 			else
 				CSSMATCH_PRINT("Unable to find the player who typed !go/ready");		
 		}
@@ -571,7 +563,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 			}
 		}
 	}
-	// !scores: Display the current/last scores by clan
+	// !scores: Display the current/last scores
 	else if ((chatCommand == "!score") || (chatCommand == "!scores"))
 	{
 		MatchLignup * lignup = match->getLignup();
@@ -598,14 +590,10 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	{
 		eat = true;
 
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		list<ClanMember *>::iterator itPlayer =
-			find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
-
-		if (itPlayer != invalidPlayer)
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
 		{
-			if ((*itPlayer)->isReferee())
+			if (user->isReferee())
 			{
 				RecipientFilter recipients;
 
@@ -632,20 +620,20 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 					}
 					catch(const MatchManagerException & e)
 					{
-						recipients.addRecipient(*itPlayer);
+						recipients.addRecipient(user);
 						i18n->i18nChatSay(recipients,"match_not_in_progress");
 					}
 				}
 				else
 				{
-					recipients.addRecipient(*itPlayer);
+					recipients.addRecipient(user);
 					i18n->i18nChatSay(recipients,"admin_new_tag");
 				}
 			}
 			else
 			{
 				RecipientFilter recipients;
-				recipients.addRecipient(*itPlayer);
+				recipients.addRecipient(user);
 				i18n->i18nChatSay(recipients,"player_you_not_admin");
 				plugin->queueCommand("cssm_adminlist\n");
 			}
@@ -658,14 +646,10 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	{
 		eat = true;
 
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		list<ClanMember *>::iterator itPlayer =
-			find_if(playerlist->begin(),invalidPlayer,PlayerHavingIndex(userIndex));
-
-		if (itPlayer != invalidPlayer)
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
 		{
-			if ((*itPlayer)->isReferee())
+			if (user->isReferee())
 			{
 				RecipientFilter recipients;
 
@@ -692,20 +676,20 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 					}
 					catch(const MatchManagerException & e)
 					{
-						recipients.addRecipient(*itPlayer);
+						recipients.addRecipient(user);
 						i18n->i18nChatSay(recipients,"match_not_in_progress");
 					}
 				}
 				else
 				{
-					recipients.addRecipient(*itPlayer);
+					recipients.addRecipient(user);
 					i18n->i18nChatSay(recipients,"admin_new_tag");
 				}
 			}
 			else
 			{
 				RecipientFilter recipients;
-				recipients.addRecipient(*itPlayer);
+				recipients.addRecipient(user);
 				i18n->i18nChatSay(recipients,"player_you_not_admin");
 				plugin->queueCommand("cssm_adminlist\n");
 			}
@@ -717,7 +701,7 @@ bool cssmatch::say_hook(int userIndex, IVEngineServer * engine)
 	return eat;
 }
 
-/*bool cssmatch::tv_stoprecord_hook(int userIndex, IVEngineServer * engine)
+/*bool cssmatch::tv_stoprecord_hook(int userIndex)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
