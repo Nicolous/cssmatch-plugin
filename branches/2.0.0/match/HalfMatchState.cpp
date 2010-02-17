@@ -79,12 +79,10 @@ void HalfMatchState::startState()
 	I18nManager * i18n = plugin->getI18nManager();
 
 	// Subscribe to the needed game events
-	map<string,EventCallback>::iterator itEvent = eventCallbacks.begin();
-	map<string,EventCallback>::iterator invalidEvent = eventCallbacks.end();
-	while(itEvent != invalidEvent)
+	map<string,EventCallback>::iterator itEvent;
+	for(itEvent = eventCallbacks.begin(); itEvent != eventCallbacks.end(); itEvent++)
 	{
 		interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
-		itEvent++;
 	}
 
 	infos->roundNumber = -2; // a negative round number causes a game restart (see round_start)
@@ -268,17 +266,14 @@ void HalfMatchState::endHalf()
 
 	// Update the score history of each player
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-	while(itPlayer != invalidPlayer)
+	list<ClanMember *>::iterator itPlayer;
+	for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
 	{
 		PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
 		PlayerStats * lastSetStats = (*itPlayer)->getLastSetStats();
 
 		lastSetStats->deaths = currentStats->deaths;
 		lastSetStats->kills = currentStats->kills;
-
-		itPlayer++;
 	}
 
 	// Update the score history of each clan
@@ -417,17 +412,14 @@ void HalfMatchState::round_start(IGameEvent * event)
 		map<string,string> parameters;
 
 		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator itPlayer = playerlist->begin();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		while(itPlayer != invalidPlayer)
+		list<ClanMember *>::iterator itPlayer;
+		for (itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
 		{
 			PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
 			PlayerStats * lastRoundStats = (*itPlayer)->getLastRoundStats();
 
 			lastRoundStats->deaths = currentStats->deaths;
 			lastRoundStats->kills = currentStats->kills;
-
-			itPlayer++;
 		}
 
 		switch(infos->roundNumber++)
@@ -491,13 +483,10 @@ void SwapTimer::execute()
 	MatchManager * match = plugin->getMatch();
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-
-	while(itPlayer != invalidPlayer)
+	list<ClanMember *>::iterator itPlayer;
+	for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
 	{
 		(*itPlayer)->swap();
-		itPlayer++;
 	}
 }
 

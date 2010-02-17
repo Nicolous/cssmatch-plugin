@@ -61,7 +61,7 @@ namespace cssmatch
 		/** Reference date */
 		float date;
 
-		/** Initialize the functor
+		/** 
 		 * @param currentDate The date to compare with the timer's execution date
 		 */
 		TimerOutOfDate(float currentDate) : date(currentDate){}
@@ -83,6 +83,15 @@ namespace cssmatch
 
 			return outofdate;
 		}	
+	};
+
+	/** Functor to delete timers */
+	struct TimerToDelete
+	{
+		void operator()(BaseTimer * timer)
+		{
+			delete timer;
+		}
 	};
 }
 

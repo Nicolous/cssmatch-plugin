@@ -334,12 +334,10 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		infos.startTime = *getLocalTime();
 
 		// Start to listen some events
-		map<string,EventCallback>::iterator itEvent = eventCallbacks.begin();
-		map<string,EventCallback>::iterator invalidEvent = eventCallbacks.end();
-		while(itEvent != invalidEvent)
+		map<string,EventCallback>::iterator itEvent;
+		for(itEvent = eventCallbacks.begin(); itEvent != eventCallbacks.end(); itEvent++)
 		{
 			interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
-			itEvent++;
 		}
 
 		// Monitor some variable
@@ -482,9 +480,8 @@ void MatchManager::restartRound() throw (MatchManagerException)
 
 		// Remove all player stats related to this round
 		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator itPlayer = playerlist->begin();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		while(itPlayer != invalidPlayer)
+		list<ClanMember *>::iterator itPlayer;
+		for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
 		{
 			PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
 			PlayerStats * lastRoundStats = (*itPlayer)->getLastRoundStats();
@@ -492,8 +489,6 @@ void MatchManager::restartRound() throw (MatchManagerException)
 			currentStats->kills = lastRoundStats->kills;
 
 			// TODO: Restore the kills/deaths in the scoreboard ?
-
-			itPlayer++;
 		}
 
 		// Back to the last round (round_start will maybe increment that)
@@ -518,9 +513,8 @@ void MatchManager::restartHalf() throw (MatchManagerException)
 
 		// Restore the score of each player
 		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator itPlayer = playerlist->begin();
-		list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-		while(itPlayer != invalidPlayer)
+		list<ClanMember *>::iterator itPlayer;
+		for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
 		{
 			PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
 			PlayerStats * lastSetStats = (*itPlayer)->getLastSetStats();
@@ -528,8 +522,6 @@ void MatchManager::restartHalf() throw (MatchManagerException)
 			currentStats->kills = lastSetStats->kills;
 
 			// TODO: Restore the kills/deaths in the scoreboard ?
-
-			itPlayer++;
 		}
 
 		// Restore the score of each clan

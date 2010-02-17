@@ -174,12 +174,10 @@ void UserMessagesManager::consoleSay(RecipientFilter & recipients, const string 
 {
 	const vector<int> * playerList = recipients.getVector();
 	
-	vector<int>::const_iterator itPlayer = playerList->begin();
-	vector<int>::const_iterator lastPlayer = playerList->end();
-	while(itPlayer != lastPlayer)
+	vector<int>::const_iterator itPlayer;
+	for(itPlayer = playerList->begin(); itPlayer != playerList->end(); itPlayer++)
 	{
 		consoleTell(*itPlayer,message);
-		itPlayer++;
 	}
 }
 
@@ -189,7 +187,7 @@ void UserMessagesManager::consoleTell(int index, const string & message)
 
 	if (isValidEntity(pEntity))
 	{
-		//engine->ClientPrintf(pEntity,); // Crash if pEntity is a fake client or SourceTv
-		engine->ClientCommand(pEntity,("echo " + message + "\n").c_str());
+		engine->ClientPrintf(pEntity,message.c_str()); // Crash if pEntity is a fake client or SourceTv
+		//engine->ClientCommand(pEntity,("echo " + message + "\n").c_str());
 	}
 }

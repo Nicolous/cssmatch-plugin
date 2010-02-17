@@ -85,9 +85,8 @@ void RunnableConfigurationFile::getData()
 	list<string> lines;
 	getLines(lines);
 
-	list<string>::iterator itLine = lines.begin();
-	list<string>::iterator lastLine = lines.end();
-	while(itLine != lastLine)
+	list<string>::iterator itLine;
+	for(itLine = lines.begin(); itLine != lines.end(); itLine++)
 	{
 		pair<string, string> lineData = searchData(*itLine);
 		if ((lineData.first.size() > 0) && (lineData.second.size() > 0))
@@ -98,8 +97,6 @@ void RunnableConfigurationFile::getData()
 			if (var != NULL)
 				data.insert(pair<ConVar *, string>(var,var->GetString()));
 		}
-
-		itLine++;
 	}
 }*/
 

@@ -58,9 +58,8 @@ void MatchClan::getMembers(list<ClanMember *> * members)
 		TeamCode team = (match->getClan(CT_TEAM) == this) ? CT_TEAM : T_TEAM;
 
 		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator itMembers = playerlist->begin();
-		list<ClanMember *>::iterator endMembers = playerlist->end();
-		while(itMembers != endMembers)
+		list<ClanMember *>::iterator itMembers;
+		for(itMembers = playerlist->begin(); itMembers != playerlist->end(); itMembers++)
 		{
 			//Msg("%i team%i\n",(*itMembers)->getIdentity()->userid,(*itMembers)->getMyTeam());
 			if ((*itMembers)->getMyTeam() == team)
@@ -68,7 +67,6 @@ void MatchClan::getMembers(list<ClanMember *> * members)
 				members->push_back((*itMembers));
 				//Msg("=>> added\n");
 			}
-			itMembers++;
 		}
 	}
 	catch(const MatchManagerException & e)

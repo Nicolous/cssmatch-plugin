@@ -152,13 +152,10 @@ void WarmupMatchState::startState()
 	plugin->queueCommand("mp_restartgame 2\n");
 
 	// Subscribe to the needed game events
-	// Subscribe to the needed game events
-	map<string,EventCallback>::iterator itEvent = eventCallbacks.begin();
-	map<string,EventCallback>::iterator invalidEvent = eventCallbacks.end();
-	while(itEvent != invalidEvent)
+	map<string,EventCallback>::iterator itEvent;
+	for(itEvent = eventCallbacks.begin(); itEvent != eventCallbacks.end(); itEvent++)
 	{
 		interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
-		itEvent++;
 	}
 
 	match->getInfos()->roundNumber = -2; // negative round number causes a game restart (see round_start)

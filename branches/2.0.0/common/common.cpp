@@ -58,9 +58,8 @@ bool cssmatch::normalizeFileName(std::string & fileName)
 {
 	bool change = false;
 
-	string::iterator itChar = fileName.begin();
-	string::iterator invalidChar = fileName.end();
-	while(itChar != invalidChar)
+	string::iterator itChar;
+	for(itChar = fileName.begin(); itChar != fileName.end(); itChar++)
 	{
 		char currentChar = *itChar;
 		if (currentChar == '/' ||
@@ -84,8 +83,6 @@ bool cssmatch::normalizeFileName(std::string & fileName)
 			*itChar = '-';
 			change = true;
 		}
-
-		itChar++;
 	}
 
 	return change;

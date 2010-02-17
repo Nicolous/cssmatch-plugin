@@ -271,7 +271,7 @@ void cssmatch::cssm_restartround()
 		i18n->i18nMsg("match_not_in_progress");
 	}
 }
-
+#include <functional>
 // Syntax: cssm_adminlist
 void cssmatch::cssm_adminlist()
 {
@@ -279,14 +279,11 @@ void cssmatch::cssm_adminlist()
 
 	list<string> * adminlist = plugin->getAdminlist();
 
-	Msg("Admin list :\n");
-	list<string>::const_iterator itSteamid = adminlist->begin();
-	list<string>::const_iterator invalidSteamid = adminlist->end();
-	while(itSteamid != invalidSteamid)
+	plugin->log("Admin list :\n");
+	list<string>::const_iterator itSteamid;
+	for(itSteamid = adminlist->begin(); itSteamid != adminlist->end(); itSteamid++)
 	{
-		Msg("%s\n",itSteamid->c_str());
-
-		itSteamid++;
+		plugin->log(*itSteamid);
 	}
 }
 

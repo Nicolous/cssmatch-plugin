@@ -137,7 +137,7 @@ namespace cssmatch
 		 */
 		void centerSay(RecipientFilter & recipients, const std::string & message);
 
-		/** Send a console message
+		/** Send a console message (Will crash send to a bot)
 		 * @param recipients Recipient list
 		 * @param message The message to send
 		 */

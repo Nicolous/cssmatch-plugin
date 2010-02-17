@@ -40,14 +40,12 @@ Menu::Menu(/*Menu * parentMenu, */const string & menuTitle, BaseMenuCallback * m
 
 Menu::~Menu()
 {
-	vector<MenuLine *>::iterator itLine = lines.begin();
-	vector<MenuLine *>::iterator invalidLine = lines.end();
-	while(itLine != invalidLine)
+	vector<MenuLine *>::iterator itLine;
+	for(itLine = lines.begin(); itLine != lines.end(); itLine++)
 	{
 		if ((*itLine)->data != NULL)
 			delete (*itLine)->data;
 		delete *itLine;
-		itLine++;
 	}
 	lines.clear();
 

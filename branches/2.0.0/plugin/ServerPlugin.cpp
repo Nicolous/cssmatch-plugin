@@ -288,12 +288,10 @@ void ServerPlugin::showChangelevelMenu(Player * player)
 		list<string> maps;
 		maplistfile.getLines(maps);
 
-		list<string>::const_iterator itMap = maps.begin();
-		list<string>::const_iterator invalidMap = maps.end();
-		while(itMap != invalidMap)
+		list<string>::const_iterator itMap;
+		for(itMap = maps.begin(); itMap != maps.end(); itMap++)
 		{
 			maplist->addLine(false,*itMap);
-			itMap++;
 		}
 	}
 	catch(const ConfigurationFileException & e)
@@ -306,15 +304,12 @@ void ServerPlugin::showChangelevelMenu(Player * player)
 
 void ServerPlugin::constructPlayerlistMenu(Menu * to)
 {
-	list<ClanMember *>::const_iterator itPlayer = playerlist.begin();
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
-	while(itPlayer != invalidPlayer)
+	list<ClanMember *>::const_iterator itPlayer;
+	for(itPlayer = playerlist.begin(); itPlayer != playerlist.end(); itPlayer++)
 	{
 		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
 		if (isValidPlayerInfo(pInfo))
 			to->addLine(false,pInfo->GetName(),new UseridMenuLineData(pInfo->GetUserID()));
-			
-		itPlayer++;
 	}
 }
 
@@ -397,7 +392,7 @@ void ServerPlugin::changelevelMenuCallback(Player * player, int choice, MenuLine
 		else
 		{
 			RecipientFilter recipients;
-			recipients.addRecipient(player->getIdentity()->index);
+			recipients.addRecipient(player);
 
 			map<string,string> parameters;
 			parameters["$map"] = mapname;
@@ -435,7 +430,7 @@ void ServerPlugin::swapMenuCallback(Player * player, int choice, MenuLine * sele
 		}
 		else
 		{
-			recipients.addRecipient(pIdentity->index);
+			recipients.addRecipient(player);
 			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
 		}
 		showSwapMenu(player);
@@ -471,7 +466,7 @@ void ServerPlugin::specMenuCallback(Player * player, int choice, MenuLine * sele
 		}
 		else
 		{
-			recipients.addRecipient(pIdentity->index);
+			recipients.addRecipient(player);
 			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
 		}
 		showSpecMenu(player);
@@ -508,7 +503,7 @@ void ServerPlugin::kickMenuCallback(Player * player, int choice, MenuLine * sele
 		}
 		else
 		{
-			recipients.addRecipient(pIdentity->index);
+			recipients.addRecipient(player);
 			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
 		}
 		showKickMenu(player);
@@ -573,7 +568,7 @@ void ServerPlugin::bantimeMenuCallback(Player * player, int choice, MenuLine * s
 		}
 		else
 		{
-			recipients.addRecipient(pIdentity->index);
+			recipients.addRecipient(player);
 			i18n->i18nChatSay(recipients,"admin_is_not_connected",parameters);
 		}
 		showBanMenu(player); 
@@ -647,12 +642,10 @@ void ServerPlugin::addTimer(BaseTimer * timer)
 
 void ServerPlugin::removeTimers()
 {
-	list<BaseTimer *>::iterator itTimer = timers.begin();
-	list<BaseTimer *>::iterator invalidTimer = timers.end();
-	while(itTimer != invalidTimer)
+	list<BaseTimer *>::iterator itTimer;
+	for(itTimer = timers.begin(); itTimer != timers.end(); itTimer++)
 	{
 		delete *itTimer;
-		itTimer++;
 	}
 	timers.clear();
 }
@@ -856,19 +849,16 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 					{
 						PlayerIdentity * playerid = player->getIdentity();
 						RecipientFilter recipients;
-						recipients.addRecipient(playerid->index);
+						recipients.addRecipient(player);
 
 						i18n->i18nChatSay(recipients,"player_you_not_admin");
 						log(playerid->steamid + " is not admin");
 
 						log("Admin list:");
-						list<string>::const_iterator itAdmin = adminlist.begin();
-						list<string>::const_iterator invalidAdmin = adminlist.end();
-						while(itAdmin != invalidAdmin)
+						list<string>::const_iterator itAdmin;
+						for(itAdmin = adminlist.begin(); itAdmin != adminlist.end(); itAdmin++)
 						{
 							log(*itAdmin);
-							
-							itAdmin++;
 						}
 					}
 				}
@@ -881,7 +871,7 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 				CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
 				{
 					RecipientFilter recipients;
-					recipients.addRecipient(player->getIdentity()->index);
+					recipients.addRecipient(player);
 
 					list<ClanMember *>::const_iterator currentPlayer = playerlist.begin();
 					list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
@@ -890,11 +880,16 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 						int playerIndex = (*currentPlayer)->getIdentity()->index;
 
 						ostringstream message;
-						message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << " : " << std::endl
-								<< "\t" << "cl_updaterate  : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << std::endl
-								<< "\t" << "cl_cmdrate     : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << std::endl
-								<< "\t" << "cl_interpolate : " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << std::endl
-								<< "\t" << "rate           : " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << std::endl
+						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate"));
+						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate"));
+						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate"));
+						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"rate"));
+
+						message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << ": " << std::endl
+								<< "\t" << "cl_updaterate  = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << std::endl
+								<< "\t" << "cl_cmdrate     = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << std::endl
+								<< "\t" << "cl_interpolate = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << std::endl
+								<< "\t" << "rate           = " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << std::endl
 								<< std::endl;
 
 						i18n->consoleSay(recipients,message.str());
@@ -925,7 +920,7 @@ PLUGIN_RESULT ServerPlugin::NetworkIDValidated(const char * pszUserName, const c
 void ServerPlugin::log(const std::string & message) const
 {
 	ostringstream buffer;
-	buffer << CSSMATCH_NAME << " : " << message << "\n";
+	buffer << CSSMATCH_NAME << ": " << message << "\n";
 	interfaces.engine->LogPrint(buffer.str().c_str());
 }
 

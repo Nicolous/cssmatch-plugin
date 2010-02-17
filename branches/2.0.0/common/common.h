@@ -226,5 +226,4 @@ namespace cssmatch
  */
 #define CSSMATCH_PRINT_EXCEPTION(e) cssmatch::printException(e,__FILE__,__LINE__);
 
-
 #endif // __COMMON_H__

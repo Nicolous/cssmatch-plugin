@@ -94,9 +94,8 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	TeamCode teamLoser = (winner == T_TEAM) ? CT_TEAM : T_TEAM;
 
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::iterator invalidPlayer = playerlist->end();
-	while(itPlayer != invalidPlayer)
+	list<ClanMember *>::iterator itPlayer;
+	for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
 	{
 		PlayerIdentity * identity = (*itPlayer)->getIdentity();
 		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
@@ -115,7 +114,6 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 					pInfo->ChangeTeam(SPEC_TEAM);
 			}
 		}
-		itPlayer++;
 	}
 
 	// Prepare a time-out before starting the next match state,
@@ -163,12 +161,10 @@ void KnifeRoundMatchState::startState()
 	recipients.addAllPlayers();
 
 	// Register to the needed events
-	map<string,EventCallback>::iterator itEvent = eventCallbacks.begin();
-	map<string,EventCallback>::iterator invalidEvent = eventCallbacks.end();
-	while(itEvent != invalidEvent)
+	map<string,EventCallback>::iterator itEvent;
+	for(itEvent = eventCallbacks.begin(); itEvent != eventCallbacks.end(); itEvent++)
 	{
 		interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
-		itEvent++;
 	}
 
 	i18n->i18nChatSay(recipients,"kniferound_restarts");

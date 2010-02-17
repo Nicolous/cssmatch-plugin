@@ -36,6 +36,13 @@ using namespace cssmatch;
 
 using std::list;
 
+// FIXME: Loop ~4 times over the player list
+//  clan1->getMembers
+//		loop
+//  clan2->getMembers
+//	    loop
+//  get spectators
+
 void XmlReport::writeHeader()
 {
 	ticpp::Declaration * declaration = new ticpp::Declaration("1.0","UTF-8","yes");
@@ -163,13 +170,10 @@ void XmlReport::writeJoueurs(ticpp::Element * eTeam, MatchClan * clan)
 
 	ticpp::Element * eJoueurs = new ticpp::Element("joueurs");
 
-	list<ClanMember *>::const_iterator itPlayer = playerlist.begin();
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
-	while(itPlayer != invalidPlayer)
+	list<ClanMember *>::const_iterator itPlayer;
+	for(itPlayer = playerlist.begin(); itPlayer != playerlist.end(); itPlayer++)
 	{
 		writeJoueur(eJoueurs,*itPlayer);
-
-		itPlayer++;
 	}
 
 	eTeam->LinkEndChild(eJoueurs);
@@ -206,17 +210,14 @@ void XmlReport::writeSpectateurs(ticpp::Element * eMatch)
 	ticpp::Element * eSpectateurs = new ticpp::Element("spectateurs");
 
 	int nbSpec = 0;
-	list<ClanMember *>::const_iterator itPlayer = playerlist->begin();
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist->end();
-	while(itPlayer != invalidPlayer)
+	list<ClanMember *>::const_iterator itPlayer;
+	for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
 	{
 		if ((*itPlayer)->getMyTeam() == SPEC_TEAM)
 		{
 			writeJoueur(eSpectateurs,*itPlayer);
 			nbSpec++;
 		}
-
-		itPlayer++;
 	}
 
 	if (nbSpec > 0)
@@ -235,18 +236,16 @@ void XmlReport::writeSourcetv(ticpp::Element * eMatch)
 	{
 		ticpp::Element * eSourcetv = new ticpp::Element("sourcetv");
 
-		list<TvRecord *>::const_iterator itRecord = recordlist->begin();
-		list<TvRecord *>::const_iterator invalidRecord = recordlist->end();
-		int recordNumber = 1;
-		while(itRecord != invalidRecord)
+		int recordId = 1;
+		list<TvRecord *>::const_iterator itRecord;
+		for(itRecord = recordlist->begin(); itRecord != recordlist->end(); itRecord++)
 		{
 			ticpp::Element * eManche = new ticpp::Element("manche",*(*itRecord)->getName());
-			eManche->SetAttribute("numero",recordNumber);
+			eManche->SetAttribute("numero",recordId);
 
 			eSourcetv->LinkEndChild(eManche);
 
-			recordNumber++;
-			itRecord++;
+			recordId++;
 		}
 
 		eMatch->LinkEndChild(eSourcetv);
