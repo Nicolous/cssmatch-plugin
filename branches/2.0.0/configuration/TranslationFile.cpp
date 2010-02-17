@@ -57,7 +57,7 @@ void TranslationFile::parseHeader(list<string> & lines)
 			if (iHeaderEnds != string::npos)
 			{
 				setHeader(line.substr(iHeaderBegins,iHeaderEnds - iHeaderBegins + 1));	
-				//Msg("Found header : '%s'\n",translationFile->getHeader().c_str());
+				//Msg("Found header: '%s'\n",translationFile->getHeader().c_str());
 			}
 		}
 		// Else we ignore this invalid line
@@ -140,7 +140,7 @@ void TranslationFile::parseTranslations(list<string> & lines)
 					if ((dataName.size() > 0) && (dataValue.size() > 0))
 					{
 						addTranslation(dataName,dataValue);
-						//Msg("Found : '%s'='%s'\n",dataName.c_str(),dataValue.c_str());
+						//Msg("Found: '%s'='%s'\n",dataName.c_str(),dataValue.c_str());
 					}
 					// Else we ignore this invalid line
 				}

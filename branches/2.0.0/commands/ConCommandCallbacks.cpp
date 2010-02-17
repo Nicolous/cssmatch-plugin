@@ -40,12 +40,14 @@ using namespace cssmatch;
 
 #include <list>
 #include <algorithm>
+#include <cctype> // tolower
 
 using std::list;
 using std::find;
 using std::for_each;
 using std::istringstream;
 using std::getline;
+using std::transform;
 using std::string;
 using std::map;
 
@@ -271,7 +273,7 @@ void cssmatch::cssm_restartround()
 		i18n->i18nMsg("match_not_in_progress");
 	}
 }
-#include <functional>
+
 // Syntax: cssm_adminlist
 void cssmatch::cssm_adminlist()
 {
@@ -279,7 +281,7 @@ void cssmatch::cssm_adminlist()
 
 	list<string> * adminlist = plugin->getAdminlist();
 
-	plugin->log("Admin list :\n");
+	plugin->log("Admin list:");
 	list<string>::const_iterator itSteamid;
 	for(itSteamid = adminlist->begin(); itSteamid != adminlist->end(); itSteamid++)
 	{
@@ -508,6 +510,8 @@ bool cssmatch::say_hook(int userIndex)
 	istringstream commandString(interfaces->engine->Cmd_Argv(1));
 	string chatCommand;
 	commandString >> chatCommand;
+	std::transform(chatCommand.begin(),chatCommand.end(),chatCommand.begin(),std::tolower);
+	
 
 	// cssmatch: open the referee menu
 	if (chatCommand == "cssmatch")

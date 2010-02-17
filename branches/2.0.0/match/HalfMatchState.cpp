@@ -353,7 +353,14 @@ void HalfMatchState::finish()
 
 void HalfMatchState::FireGameEvent(IGameEvent * event)
 {
-	(this->*eventCallbacks[event->GetName()])(event);
+	try
+	{
+		(this->*eventCallbacks[event->GetName()])(event);
+	}
+	catch(const BaseException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
 }
 
 void HalfMatchState::player_death(IGameEvent * event)

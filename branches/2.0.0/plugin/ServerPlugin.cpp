@@ -56,7 +56,7 @@ using std::find;
 using std::find_if;
 using std::ostringstream;
 
-/*CON_COMMAND(cssm_test, "CSSMatch : Internal")
+/*CON_COMMAND(cssm_test, "CSSMatch: Internal")
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	int index = atoi(plugin->getInterfaces()->engine->Cmd_Argv(1));
@@ -65,7 +65,7 @@ using std::ostringstream;
 	EntityProp prop(plugin->getInterfaces()->engine->Cmd_Argv(2),plugin->getInterfaces()->engine->Cmd_Argv(3));
 	try
 	{
-		Msg("%s.%s : %i\n",plugin->getInterfaces()->engine->Cmd_Argv(2),plugin->getInterfaces()->engine->Cmd_Argv(3),prop.getProp<int>(player.getIdentity()->pEntity));
+		Msg("%s.%s: %i\n",plugin->getInterfaces()->engine->Cmd_Argv(2),plugin->getInterfaces()->engine->Cmd_Argv(3),prop.getProp<int>(player.getIdentity()->pEntity));
 	}
 	catch(const EntityPropException & e)
 	{
@@ -122,17 +122,6 @@ ServerPlugin::~ServerPlugin()
 bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
 {
 	bool success = true;
-
-	try
-	{
-		interfaces.convars = new ConvarsAccessor();
-		interfaces.convars->initializeInterface(interfaceFactory);
-	}
-	catch(const ConvarsAccessorException & e)
-	{
-		success = false;
-		Msg(CSSMATCH_NAME " : %s\n",e.what()); // Do not use printException here as interfaces.engine isn't initialized!
-	}
 
 	success &= 
 		getInterface<IPlayerInfoManager>(gameServerFactory,interfaces.playerinfomanager,INTERFACEVERSION_PLAYERINFOMANAGER) &&
@@ -191,33 +180,11 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_warmup_time","5",FCVAR_NONE,"cssmatch_warmup_time",true,0.0f,false,0.0f));
 
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_hostname","CSSMatch : %s VS %s",FCVAR_NONE,"cssmatch_hostname"));
+		addPluginConVar(new I18nConVar(i18n,"cssmatch_hostname","CSSMatch: %s VS %s",FCVAR_NONE,"cssmatch_hostname"));
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_password","inwar",FCVAR_NONE,"cssmatch_password"));
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_default_config","server.cfg",FCVAR_NONE,"cssmatch_default_config"));
 
 		addPluginConVar(new I18nConVar(i18n,"cssmatch_usermessages","28",FCVAR_NONE,"cssmatch_usermessages"));
-
-		// Grab some existing ConVars
-		ICvar * cvars = interfaces.convars->getConVarInterface();
-		ConVar * sv_cheats = cvars->FindVar("sv_cheats");
-		ConVar * sv_alltalk = cvars->FindVar("sv_alltalk");
-		ConVar * hostname = cvars->FindVar("hostname");
-		ConVar * sv_password = cvars->FindVar("sv_password");
-		ConVar * tv_enable = cvars->FindVar("tv_enable");
-		if ((sv_cheats == NULL) ||
-			(sv_alltalk == NULL) ||
-			(hostname == NULL) ||
-			(sv_password == NULL) ||
-			(tv_enable == NULL))
-		{
-			success = false;
-			CSSMATCH_PRINT("At least one game ConVars was not found");
-		}
-		addPluginConVar(sv_cheats);
-		addPluginConVar(sv_alltalk);
-		addPluginConVar(hostname);
-		addPluginConVar(sv_password);
-		addPluginConVar(tv_enable);
 		
 		// Create the plugin's commands
 		addPluginConCommand(new I18nConCommand(i18n,"cssm_help",cssm_help,"cssm_help"));
@@ -239,8 +206,45 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		// Hook needed commands
 		hookConCommand("say",say_hook);
 		hookConCommand("say_team",say_hook);
-		/*hookConCommand("tv_stoprecord",tv_stoprecord_hook);
-		hookConCommand("tv_stop",tv_stoprecord_hook);*/
+		//hookConCommand("tv_stoprecord",tv_stoprecord_hook);
+		//hookConCommand("tv_stop",tv_stoprecord_hook);
+
+		// Initialize the ConCommand/ConVar interface
+		try
+		{
+			interfaces.convars = new ConvarsAccessor();
+			interfaces.convars->initializeInterface(interfaceFactory);
+
+			// Grab some existing ConVars
+			ICvar * cvars = interfaces.convars->getConVarInterface();
+			ConVar * sv_cheats = cvars->FindVar("sv_cheats");
+			ConVar * sv_alltalk = cvars->FindVar("sv_alltalk");
+			ConVar * hostname = cvars->FindVar("hostname");
+			ConVar * sv_password = cvars->FindVar("sv_password");
+			ConVar * tv_enable = cvars->FindVar("tv_enable");
+			if ((sv_cheats == NULL) ||
+				(sv_alltalk == NULL) ||
+				(hostname == NULL) ||
+				(sv_password == NULL) ||
+				(tv_enable == NULL))
+			{
+				success = false;
+				CSSMATCH_PRINT("At least one game ConVars was not found");
+			}
+			else
+			{
+				addPluginConVar(sv_cheats);
+				addPluginConVar(sv_alltalk);
+				addPluginConVar(hostname);
+				addPluginConVar(sv_password);
+				addPluginConVar(tv_enable);
+			}
+		}
+		catch(const ConvarsAccessorException & e)
+		{
+			success = false;
+			Msg(CSSMATCH_NAME ": %s\n",e.what()); // Do not use printException here as interfaces.engine isn't initialized!
+		}
 	}
 
 	return success;
@@ -854,12 +858,7 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 						i18n->i18nChatSay(recipients,"player_you_not_admin");
 						log(playerid->steamid + " is not admin");
 
-						log("Admin list:");
-						list<string>::const_iterator itAdmin;
-						for(itAdmin = adminlist.begin(); itAdmin != adminlist.end(); itAdmin++)
-						{
-							log(*itAdmin);
-						}
+						queueCommand("cssm_adminlist\n");
 					}
 				}
 

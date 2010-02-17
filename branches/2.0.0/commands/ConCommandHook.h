@@ -35,9 +35,8 @@ namespace cssmatch
 	 */
 	typedef bool (* HookCallback)(int);
 
-	/** Hook a command at runtime 
-	 * Note that this object calls ConCommand::Init(), <br>
-	 * don't construct it before invoking ConCommandBaseMgr::OneTimeInit
+	/** Hook a command at runtime <br>
+	 * Do not instanciate this class once ConCommandBaseMgr::OneTimeInit invoked
 	 */
 	class ConCommandHook : public ConCommand
 	{

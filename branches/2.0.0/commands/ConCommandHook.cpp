@@ -34,7 +34,6 @@ using std::list;
 ConCommandHook::ConCommandHook(const char * name, HookCallback hookCallback)
 : ConCommand(name,NULL,CSSMATCH_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL), callback(hookCallback)
 {
-	Init();
 }
 
 void ConCommandHook::Init()

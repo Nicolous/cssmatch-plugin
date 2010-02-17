@@ -11,6 +11,7 @@
 * Ajout d'un menu spécifique aux temps morts
 
 * Changements sur l'arrêt des records : au round_start
+* Commandes tchat insenssibles à la casse
 
 * Bug corrigés :
 http://code.google.com/p/cssmatch-plugin/issues/detail?id=25

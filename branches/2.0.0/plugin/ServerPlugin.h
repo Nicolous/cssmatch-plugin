@@ -153,7 +153,7 @@ namespace cssmatch
 			toInitialize = (T *)factory(interfaceVersion.c_str(),NULL);
 
 			if (toInitialize == NULL)
-				Msg(std::string("CSSMatch : Unable to get the \"" + interfaceVersion + "\" interface!\n").c_str());
+				Msg(std::string(CSSMATCH_NAME ": Unable to get the \"" + interfaceVersion + "\" interface!\n").c_str());
 			else
 				success = true;
 

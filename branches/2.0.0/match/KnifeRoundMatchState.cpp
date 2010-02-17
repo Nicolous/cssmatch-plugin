@@ -277,7 +277,14 @@ void KnifeRoundMatchState::menuWithAdminCallback(Player * player, int choice, Me
 
 void KnifeRoundMatchState::FireGameEvent(IGameEvent * event)
 {
-	(this->*eventCallbacks[event->GetName()])(event);
+	try
+	{
+		(this->*eventCallbacks[event->GetName()])(event);
+	}
+	catch(const BaseException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
 }
 
 void KnifeRoundMatchState::round_start(IGameEvent * event)

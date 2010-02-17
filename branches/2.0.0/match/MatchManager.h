@@ -77,7 +77,7 @@ namespace cssmatch
 	};
 
 	/** Match manager <br>
-	 * Each match can be decomposed in somes states : <br>
+	 * Each match can be decomposed in somes states: <br>
 	 * - a knife round <br>
 	 * - a warmup time <br>
 	 * - one or more halfs of n rounds <br>

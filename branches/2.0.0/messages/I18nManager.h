@@ -40,7 +40,7 @@ namespace cssmatch
 	class TranslationFile;
 
 	/** Support for internationalized/localized messages <br>
-	 * Messages can have parameters, prefixed by $ (e.g. : "The attacker is $attackername") <br>
+	 * Messages can have parameters, prefixed by $ (e.g.: "The attacker is $attackername") <br>
 	 * These parameters are passed under the form of a {parameter => value} map <br>
 	 * <br>
 	 * Some things are cached: <br>
