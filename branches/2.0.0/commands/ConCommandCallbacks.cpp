@@ -40,7 +40,7 @@ using namespace cssmatch;
 
 #include <list>
 #include <algorithm>
-#include <cctype> // tolower
+//#include <cctype> // tolower
 
 using std::list;
 using std::find;
@@ -510,7 +510,7 @@ bool cssmatch::say_hook(int userIndex)
 	istringstream commandString(interfaces->engine->Cmd_Argv(1));
 	string chatCommand;
 	commandString >> chatCommand;
-	std::transform(chatCommand.begin(),chatCommand.end(),chatCommand.begin(),std::tolower);
+	std::transform(chatCommand.begin(),chatCommand.end(),chatCommand.begin(),tolower);
 	
 
 	// cssmatch: open the referee menu

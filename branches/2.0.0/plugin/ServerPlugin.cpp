@@ -135,7 +135,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 	{
 		interfaces.gpGlobals = interfaces.playerinfomanager->GetGlobalVars();
 
-		MathLib_Init(2.2f,2.2f,0.0f,2.0f);
+		MathLib_Init(2.2f,2.2f,0.0f,2);
 
 		// Initialize the admin menus
 		adminMenu = new Menu("menu_administration",
@@ -739,10 +739,8 @@ void ServerPlugin::ClientPutInServer(edict_t * pEntity, char const * playername)
 		// Then add the new player to the player list
         try
         {
-			list<string>::iterator itSteamid = adminlist.begin();
-			list<string>::iterator invalidSteamid = adminlist.end();
-
-			bool isReferee = find(itSteamid,invalidSteamid,interfaces.engine->GetPlayerNetworkIDString(pEntity)) != invalidSteamid;
+            list<string>::iterator invalidSteamid = adminlist.end();
+			bool isReferee = find(adminlist.begin(),invalidSteamid,interfaces.engine->GetPlayerNetworkIDString(pEntity)) != invalidSteamid;
 			playerlist.push_back(new ClanMember(index,isReferee));
         }
         catch(const PlayerException & e)
@@ -872,9 +870,8 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 					RecipientFilter recipients;
 					recipients.addRecipient(player);
 
-					list<ClanMember *>::const_iterator currentPlayer = playerlist.begin();
-					list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
-					while(currentPlayer != invalidPlayer)
+					list<ClanMember *>::const_iterator currentPlayer;
+					for(currentPlayer = playerlist.begin(); currentPlayer != playerlist.end(); currentPlayer++)
 					{
 						int playerIndex = (*currentPlayer)->getIdentity()->index;
 
@@ -892,8 +889,6 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 								<< std::endl;
 
 						i18n->consoleSay(recipients,message.str());
-							
-						currentPlayer++;
 					}
 				}
 				else
@@ -937,7 +932,7 @@ void ServerPlugin::executeCommand(const std::string & command) const
 
 bool ServerPlugin::hltvConnected() const
 {
-	list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
+    list<ClanMember *>::const_iterator invalidPlayer = playerlist.end();
 	return find_if(playerlist.begin(),invalidPlayer,PlayerIsHltv()) != invalidPlayer;
 }
 

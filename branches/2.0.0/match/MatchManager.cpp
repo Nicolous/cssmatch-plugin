@@ -168,7 +168,7 @@ void MatchManager::player_disconnect(IGameEvent * event)
 	i18n->i18nChatSay(recipients,"player_leave_game",parameters);
 
 	// If all the players have disconnected, stop the match (and thus the SourceTv record)
-	if ((plugin->getPlayerCount()-1) <= 0)
+	if ((plugin->getPlayerCount(T_TEAM) + plugin->getPlayerCount(CT_TEAM) - 1) <= 0)
 		stop();
 }
 
@@ -439,15 +439,22 @@ void MatchManager::stop() throw (MatchManagerException)
 		int timeoutDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
 		if (timeoutDuration > 0)
 		{
-			map<string,string> parametersBreak;
-			parametersBreak["$time"] = toString(timeoutDuration);
-			Countdown::getInstance()->fire(timeoutDuration);
-			plugin->addTimer(
-				new TimerI18nChatSay(	interfaces->gpGlobals->curtime + 2.0f,
-										recipients,
-										"match_dead_time",
-										parametersBreak));
-			plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + timeoutDuration + 2.0f));
+		    if (plugin->getPlayerCount() > 0) // if the server is empty, we can't add timers because GameFrame is no more executed
+		    {
+			    map<string,string> parametersBreak;
+			    parametersBreak["$time"] = toString(timeoutDuration);
+			    Countdown::getInstance()->fire(timeoutDuration);
+			    plugin->addTimer(
+				    new TimerI18nChatSay(	interfaces->gpGlobals->curtime + 2.0f,
+										    recipients,
+										    "match_dead_time",
+										    parametersBreak));
+			    plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + timeoutDuration + 2.0f));
+			}
+			else
+			{
+			    RestoreConfigTimer(0.0f).execute();
+			}
 		}
 	}
 	else

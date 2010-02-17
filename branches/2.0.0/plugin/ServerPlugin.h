@@ -182,8 +182,8 @@ namespace cssmatch
 		{
 			bool found = false;
 
-			list<ClanMember *>::iterator invalidPlayer = playerlist.end();
-			list<ClanMember *>::iterator itPlayer = std::find_if(playerlist.begin(),invalidPlayer,pred);
+			std::list<ClanMember *>::iterator invalidPlayer = playerlist.end();
+			std::list<ClanMember *>::iterator itPlayer = std::find_if(playerlist.begin(),invalidPlayer,pred);
 			if (itPlayer != invalidPlayer)
 			{
 				found = true;
