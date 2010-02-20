@@ -32,12 +32,12 @@ using namespace cssmatch;
 using std::ostringstream;
 using std::list;
 
-Countdown::CountdownTick::CountdownTick(float executionDate, int nextCount)
-	: BaseTimer(executionDate), left(nextCount)
+BaseCountdown::CountdownTick::CountdownTick(BaseCountdown * owner, float delay, int timeLeft)
+	: BaseTimer(delay), countdown(owner), left(timeLeft)
 {
 }
 
-void Countdown::CountdownTick::execute()
+void BaseCountdown::CountdownTick::execute()
 {
 	// Convert the time left to minutes/seconds values
 	int seconds = left;
@@ -63,7 +63,6 @@ void Countdown::CountdownTick::execute()
 	}
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
@@ -71,36 +70,37 @@ void Countdown::CountdownTick::execute()
 
 	i18n->hintSay(recipients,message.str());
 
-	if (Countdown::getInstance()->decTimeLeft() >= 0)
+	if (countdown->decTimeLeft() >= 0)
 	{
-		plugin->addTimer(new CountdownTick(interfaces->gpGlobals->curtime+1.0f,left-1));
+		plugin->addTimer(new CountdownTick(countdown,1.0f,left-1));
 	}
+	else
+		countdown->finish();
+
 }
 
-int Countdown::decTimeLeft()
+int BaseCountdown::decTimeLeft()
 {
 	return --left;
 }
 
-Countdown::Countdown() : left(0)
+BaseCountdown::BaseCountdown() : left(0)
 {
 }
 
-Countdown::~Countdown()
+BaseCountdown::~BaseCountdown()
 {
 }
 
-void Countdown::fire(int seconds)
+void BaseCountdown::fire(int seconds)
 {
 	left = seconds;
 
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
-
-	plugin->addTimer(new CountdownTick(interfaces->gpGlobals->curtime+1.0f,left));
+	//plugin->addTimer(new CountdownTick(this,0.0f,left));
+	CountdownTick(this,0.0f,left).execute();
 }
 
-void Countdown::stop()
+void BaseCountdown::stop()
 {
 	left = 0;
 }

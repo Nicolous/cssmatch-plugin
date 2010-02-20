@@ -157,8 +157,8 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 	int playerIndex = recipient->getIdentity()->index;
 	string language = interfaces->engine->GetClientConVarValue(playerIndex,"cl_language");
 	int linecount = lines.size();
-	RecipientFilter recipients;
-	recipients.addRecipient(recipient);
+	RecipientFilter recipientlist;
+	recipientlist.addRecipient(recipient);
 
 	int iBegin = (page-1)*9;
 	if ((iBegin >= 0) && (iBegin <= linecount))
@@ -192,6 +192,12 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 
 			CSSMATCH_PRINT("Empty menu " + title);
 		}
+		else if ((iBegin < 0) || (iEnd > linecount))
+		{
+			map<string,string> errorParam;
+			errorParam["$site"] = CSSMATCH_SITE;
+			i18n->i18nChatSay(recipientlist,"menu_cant_display",errorParam);
+		}
 		else
 		{
 			int iOption = 1;
@@ -211,7 +217,7 @@ void Menu::send(Player * recipient, int page, const map<string,string> & paramet
 			}
 		}
 		menu << "0. " << i18n->getTranslation(language,"menu_close");
-		i18n->popupSay(recipients,menu.str(),-1,sensibilityFlags);
+		i18n->popupSay(recipientlist,menu.str(),-1,sensibilityFlags);
 	}
 	else
 		CSSMATCH_PRINT("Invalid menu page");

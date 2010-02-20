@@ -20,6 +20,7 @@
  * Portions of this code are also Copyright © 1996-2005 Valve Corporation, All rights reserved
  */
 
+#include "UpdateNotifier.h" // leave it here so Source SDK can undef/redefine the microsoft's ARRAYSIZE macro
 #include "ServerPlugin.h"
 #include "BaseTimer.h"
 #include "../configuration/ConfigurationFile.h"
@@ -33,7 +34,7 @@
 #include "../messages/I18nManager.h"
 #include "../match/MatchManager.h"
 #include "../match/DisabledMatchState.h"
-#include "../match/KnifeRoundMatchState.h"
+#include "../match/HalfMatchState.h"
 
 #include "filesystem.h"
 #include "edict.h"
@@ -73,7 +74,8 @@ using std::ostringstream;
 	}
 }*/
 
-ServerPlugin::ServerPlugin() : clientCommandIndex(0), adminMenu(NULL), bantimeMenu(NULL), match(NULL), i18n(NULL)
+ServerPlugin::ServerPlugin()
+	: loaded(false), updateThread(NULL), clientCommandIndex(0), adminMenu(NULL), bantimeMenu(NULL), match(NULL), i18n(NULL)
 {
 }
 
@@ -121,132 +123,151 @@ ServerPlugin::~ServerPlugin()
 
 bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
 {
+	Msg(CSSMATCH_NAME ": loading...\n");
+
 	bool success = true;
 
-	success &= 
-		getInterface<IPlayerInfoManager>(gameServerFactory,interfaces.playerinfomanager,INTERFACEVERSION_PLAYERINFOMANAGER) &&
-		getInterface<IVEngineServer>(interfaceFactory,interfaces.engine,INTERFACEVERSION_VENGINESERVER) &&
-		getInterface<IGameEventManager2>(interfaceFactory,interfaces.gameeventmanager2,INTERFACEVERSION_GAMEEVENTSMANAGER2) &&
-		getInterface<IFileSystem>(interfaceFactory,interfaces.filesystem,FILESYSTEM_INTERFACE_VERSION) &&
-		getInterface<IServerPluginHelpers>(interfaceFactory,interfaces.helpers,INTERFACEVERSION_ISERVERPLUGINHELPERS) &&
-		getInterface<IServerGameDLL>(gameServerFactory,interfaces.serverGameDll,INTERFACEVERSION_SERVERGAMEDLL);
-
-	if (success)
+	if (! loaded)
 	{
-		interfaces.gpGlobals = interfaces.playerinfomanager->GetGlobalVars();
+		success &= 
+			getInterface<IPlayerInfoManager>(gameServerFactory,interfaces.playerinfomanager,INTERFACEVERSION_PLAYERINFOMANAGER) &&
+			getInterface<IVEngineServer>(interfaceFactory,interfaces.engine,INTERFACEVERSION_VENGINESERVER) &&
+			getInterface<IGameEventManager2>(interfaceFactory,interfaces.gameeventmanager2,INTERFACEVERSION_GAMEEVENTSMANAGER2) &&
+			getInterface<IFileSystem>(interfaceFactory,interfaces.filesystem,FILESYSTEM_INTERFACE_VERSION) &&
+			getInterface<IServerPluginHelpers>(interfaceFactory,interfaces.helpers,INTERFACEVERSION_ISERVERPLUGINHELPERS) &&
+			getInterface<IServerGameDLL>(gameServerFactory,interfaces.serverGameDll,INTERFACEVERSION_SERVERGAMEDLL);
 
-		MathLib_Init(2.2f,2.2f,0.0f,2);
-
-		// Initialize the admin menus
-		adminMenu = new Menu("menu_administration",
-			new MenuCallback<ServerPlugin>(this,&ServerPlugin::adminMenuCallback));
-		adminMenu->addLine(true,"menu_changelevel");
-		adminMenu->addLine(true,"menu_swap");
-		adminMenu->addLine(true,"menu_spec");
-		adminMenu->addLine(true,"menu_kick");
-		adminMenu->addLine(true,"menu_ban");
-
-		bantimeMenu = new Menu("menu_ban_time",
-			new MenuCallback<ServerPlugin>(this,&ServerPlugin::bantimeMenuCallback));
-		bantimeMenu->addLine(true,"menu_5_min");
-		bantimeMenu->addLine(true,"menu_1_h");
-		bantimeMenu->addLine(true,"menu_permanent");
-
-		match = new MatchManager(DisabledMatchState::getInstance());
-		
-		//	Initialize the translations tools
-		i18n = new I18nManager();
-		I18nConVar * cssmatch_language = new I18nConVar(i18n,"cssmatch_language","english",FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_language");
-		addPluginConVar(cssmatch_language);
-		i18n->setDefaultLanguage(cssmatch_language);
-
-		// Create the other convars
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_version",CSSMATCH_VERSION_LIGHT,FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_version",cssmatch_version));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_advanced","0",FCVAR_NONE,"cssmatch_advanced",true,0.0f,true,1.0f));
-
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_report","1",FCVAR_NONE,"cssmatch_report",true,0.0f,true,1.0f));
-
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_kniferound","1",FCVAR_NONE,"cssmatch_kniferound",true,0.0f,true,1.0f));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_kniferound_money","0",FCVAR_NONE,"cssmatch_kniferound_money",true,0.0f,true,16000.0f));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_kniferound_allows_c4","1",FCVAR_NONE,"cssmatch_kniferound_allows_c4",true,0.0f,true,1.0f));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_end_kniferound","20",FCVAR_NONE,"cssmatch_end_kniferound",true,5.0f,false,0.0f));
-
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_rounds","12",FCVAR_NONE,"cssmatch_rounds",true,0.0f,false,0.0f));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_sets","2",FCVAR_NONE,"cssmatch_sets",true,0.0f,false,0.0f));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_end_set","10",FCVAR_NONE,"cssmatch_end_set",true,5.0f,false,0.0f));
-
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_sourcetv","1",FCVAR_NONE,"cssmatch_sourcetv",true,0.0f,true,1.0f));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_sourcetv_path","cfg/cssmatch/sourcetv",FCVAR_NONE,"cssmatch_sourcetv_path"));
-
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_warmup_time","5",FCVAR_NONE,"cssmatch_warmup_time",true,0.0f,false,0.0f));
-
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_hostname","CSSMatch: %s VS %s",FCVAR_NONE,"cssmatch_hostname"));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_password","inwar",FCVAR_NONE,"cssmatch_password"));
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_default_config","server.cfg",FCVAR_NONE,"cssmatch_default_config"));
-
-		addPluginConVar(new I18nConVar(i18n,"cssmatch_usermessages","28",FCVAR_NONE,"cssmatch_usermessages"));
-		
-		// Create the plugin's commands
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_help",cssm_help,"cssm_help"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_start",cssm_start,"cssm_start"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_stop",cssm_stop,"cssm_stop"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_retag",cssm_retag,"cssm_retag"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_go",cssm_go,"cssm_go"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_restartmanche",cssm_restartmanche,"cssm_restartmanche")); // backward compatibility
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_restarthalf",cssm_restartmanche,"cssm_restartmanche")); // same than cssm_restartmanche
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_restartround",cssm_restartround,"cssm_restartround"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_adminlist",cssm_adminlist,"cssm_adminlist"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_grant",cssm_grant,"cssm_grant"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_revoke",cssm_revoke,"cssm_revoke"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_teamt",cssm_teamt,"cssm_teamt"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_teamct",cssm_teamct,"cssm_teamct"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_swap",cssm_swap,"cssm_swap"));
-		addPluginConCommand(new I18nConCommand(i18n,"cssm_spec",cssm_spec,"cssm_spec"));
-
-		// Hook needed commands
-		hookConCommand("say",say_hook);
-		hookConCommand("say_team",say_hook);
-		//hookConCommand("tv_stoprecord",tv_stoprecord_hook);
-		//hookConCommand("tv_stop",tv_stoprecord_hook);
-
-		// Initialize the ConCommand/ConVar interface
-		try
+		if (success)
 		{
-			interfaces.convars = new ConvarsAccessor();
-			interfaces.convars->initializeInterface(interfaceFactory);
+			interfaces.gpGlobals = interfaces.playerinfomanager->GetGlobalVars();
 
-			// Grab some existing ConVars
-			ICvar * cvars = interfaces.convars->getConVarInterface();
-			ConVar * sv_cheats = cvars->FindVar("sv_cheats");
-			ConVar * sv_alltalk = cvars->FindVar("sv_alltalk");
-			ConVar * hostname = cvars->FindVar("hostname");
-			ConVar * sv_password = cvars->FindVar("sv_password");
-			ConVar * tv_enable = cvars->FindVar("tv_enable");
-			if ((sv_cheats == NULL) ||
-				(sv_alltalk == NULL) ||
-				(hostname == NULL) ||
-				(sv_password == NULL) ||
-				(tv_enable == NULL))
+			MathLib_Init(2.2f,2.2f,0.0f,2);
+
+			// Initialize the admin menus
+			adminMenu = new Menu("menu_administration",
+				new MenuCallback<ServerPlugin>(this,&ServerPlugin::adminMenuCallback));
+			adminMenu->addLine(true,"menu_changelevel");
+			adminMenu->addLine(true,"menu_swap");
+			adminMenu->addLine(true,"menu_spec");
+			adminMenu->addLine(true,"menu_kick");
+			adminMenu->addLine(true,"menu_ban");
+
+			bantimeMenu = new Menu("menu_ban_time",
+				new MenuCallback<ServerPlugin>(this,&ServerPlugin::bantimeMenuCallback));
+			bantimeMenu->addLine(true,"menu_5_min");
+			bantimeMenu->addLine(true,"menu_1_h");
+			bantimeMenu->addLine(true,"menu_permanent");
+
+			match = new MatchManager(DisabledMatchState::getInstance());
+			
+			//	Initialize the translations tools
+			i18n = new I18nManager();
+			I18nConVar * cssmatch_language = new I18nConVar(i18n,"cssmatch_language","english",FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_language");
+			addPluginConVar(cssmatch_language);
+			i18n->setDefaultLanguage(cssmatch_language);
+
+			// Create the other convars
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_version",CSSMATCH_VERSION,FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_version",cssmatch_version));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_advanced","0",FCVAR_NONE,"cssmatch_advanced",true,0.0f,true,1.0f));
+
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_report","1",FCVAR_NONE,"cssmatch_report",true,0.0f,true,1.0f));
+
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_kniferound","1",FCVAR_NONE,"cssmatch_kniferound",true,0.0f,true,1.0f));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_kniferound_money","0",FCVAR_NONE,"cssmatch_kniferound_money",true,0.0f,true,16000.0f));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_kniferound_allows_c4","1",FCVAR_NONE,"cssmatch_kniferound_allows_c4",true,0.0f,true,1.0f));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_end_kniferound","20",FCVAR_NONE,"cssmatch_end_kniferound",true,5.0f,false,0.0f));
+
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_rounds","12",FCVAR_NONE,"cssmatch_rounds",true,0.0f,false,0.0f));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_sets","2",FCVAR_NONE,"cssmatch_sets",true,0.0f,false,0.0f));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_end_set","10",FCVAR_NONE,"cssmatch_end_set",true,5.0f,false,0.0f));
+
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_sourcetv","1",FCVAR_NONE,"cssmatch_sourcetv",true,0.0f,true,1.0f));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_sourcetv_path","cfg/cssmatch/sourcetv",FCVAR_NONE,"cssmatch_sourcetv_path"));
+
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_warmup_time","5",FCVAR_NONE,"cssmatch_warmup_time",true,0.0f,false,0.0f));
+
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_hostname","CSSMatch: %s VS %s",FCVAR_NONE,"cssmatch_hostname"));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_password","inwar",FCVAR_NONE,"cssmatch_password"));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_default_config","server.cfg",FCVAR_NONE,"cssmatch_default_config"));
+
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_usermessages","28",FCVAR_NONE,"cssmatch_usermessages"));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_updatesite","www.cssmatch.com",FCVAR_NONE,"cssmatch_updatesite"));
+			
+			// Create the plugin's commands
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_help",cssm_help,"cssm_help"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_start",cssm_start,"cssm_start"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_stop",cssm_stop,"cssm_stop"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_retag",cssm_retag,"cssm_retag"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_go",cssm_go,"cssm_go"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_restartmanche",cssm_restartmanche,"cssm_restartmanche")); // backward compatibility
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_restarthalf",cssm_restartmanche,"cssm_restartmanche")); // same than cssm_restartmanche
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_restartround",cssm_restartround,"cssm_restartround"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_adminlist",cssm_adminlist,"cssm_adminlist"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_grant",cssm_grant,"cssm_grant"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_revoke",cssm_revoke,"cssm_revoke"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_teamt",cssm_teamt,"cssm_teamt"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_teamct",cssm_teamct,"cssm_teamct"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_swap",cssm_swap,"cssm_swap"));
+			addPluginConCommand(new I18nConCommand(i18n,"cssm_spec",cssm_spec,"cssm_spec"));
+
+			// Hook needed commands
+			hookConCommand("say",say_hook);
+			hookConCommand("say_team",say_hook);
+			//hookConCommand("tv_stoprecord",tv_stoprecord_hook);
+			//hookConCommand("tv_stop",tv_stoprecord_hook);
+
+			// Initialize the ConCommand/ConVar interface
+			try
+			{
+				interfaces.convars = new ConvarsAccessor();
+				interfaces.convars->initializeInterface(interfaceFactory);
+
+				// Grab some existing ConVars
+				ICvar * cvars = interfaces.convars->getConVarInterface();
+				ConVar * sv_cheats = cvars->FindVar("sv_cheats");
+				ConVar * sv_alltalk = cvars->FindVar("sv_alltalk");
+				ConVar * hostname = cvars->FindVar("hostname");
+				ConVar * sv_password = cvars->FindVar("sv_password");
+				ConVar * tv_enable = cvars->FindVar("tv_enable");
+				if ((sv_cheats == NULL) ||
+					(sv_alltalk == NULL) ||
+					(hostname == NULL) ||
+					(sv_password == NULL) ||
+					(tv_enable == NULL))
+				{
+					success = false;
+					CSSMATCH_PRINT("At least one game ConVars was not found");
+				}
+				else
+				{
+					addPluginConVar(sv_cheats);
+					addPluginConVar(sv_alltalk);
+					addPluginConVar(hostname);
+					addPluginConVar(sv_password);
+					addPluginConVar(tv_enable);
+				}
+			}
+			catch(const ConvarsAccessorException & e)
 			{
 				success = false;
-				CSSMATCH_PRINT("At least one game ConVars was not found");
-			}
-			else
-			{
-				addPluginConVar(sv_cheats);
-				addPluginConVar(sv_alltalk);
-				addPluginConVar(hostname);
-				addPluginConVar(sv_password);
-				addPluginConVar(tv_enable);
+				CSSMATCH_PRINT_EXCEPTION(e);
 			}
 		}
-		catch(const ConvarsAccessorException & e)
-		{
-			success = false;
-			Msg(CSSMATCH_NAME ": %s\n",e.what()); // Do not use printException here as interfaces.engine isn't initialized!
-		}
+
+		loaded = true;
 	}
 
+	try
+	{
+		updateThread = new UpdateNotifier();
+		updateThread->Start();
+	}
+	catch(const UpdateNotifierException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	Msg(CSSMATCH_NAME ": loaded\n");
 	return success;
 }
 
@@ -656,6 +677,15 @@ void ServerPlugin::removeTimers()
 
 void ServerPlugin::Unload()
 {
+	Msg(CSSMATCH_NAME ": unloading...\n");
+	if (updateThread != NULL)
+	{
+		updateThread->End();
+		updateThread->Join();
+		delete updateThread;
+		updateThread = NULL;
+	}
+	Msg(CSSMATCH_NAME ": unloaded\n");
 }
 
 void ServerPlugin::Pause()
@@ -668,7 +698,7 @@ void ServerPlugin::UnPause()
 
 const char * ServerPlugin::GetPluginDescription()
 {
-	return CSSMATCH_VERSION;
+	return CSSMATCH_PLUGIN_PRINT;
 }
 
 void ServerPlugin::LevelInit(char const * pMapName)
@@ -775,12 +805,20 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 			string command = interfaces.engine->Cmd_Argv(0);
 			
 			// Stop a player from joining another team during the match 
-			// (Excepted during the kniferound, or if the player wants to join the spectators or come from the spectators)
+			// (Excepted before the first half begins, and if the player  wants to join/come from  the spectators)
 			if (command == "jointeam")
 			{
+				MatchInfo * matchInfo = match->getInfos();
 				BaseMatchState * matchState = match->getMatchState();
-				if (matchState != DisabledMatchState::getInstance() &&
-					matchState != KnifeRoundMatchState::getInstance())
+				if (matchInfo->halfNumber <= 1)
+				{
+					if (matchState == HalfMatchState::getInstance())
+						result = PLUGIN_STOP;
+				}
+				else
+					result = PLUGIN_STOP;
+
+				if (result == PLUGIN_STOP)
 				{
 					// Check for command sanity (jointeam without argument causes a error message but swap the player)
 					if (interfaces.engine->Cmd_Argc() > 1)
@@ -845,6 +883,22 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 				{
 					if (player->isReferee())
 					{
+						// Announce any update
+						if (match->getMatchState() == match->getInitialState())
+						{
+							if (updateThread != NULL) 
+							{
+								if (updateThread->getLastVer() != CSSMATCH_VERSION)
+								{
+									RecipientFilter recipients;
+									recipients.addRecipient(player);
+
+									i18n->i18nChatSay(recipients,"update_available");
+								}
+							}
+						}
+
+						// Display the menu
 						match->showMenu(player);
 					}
 					else

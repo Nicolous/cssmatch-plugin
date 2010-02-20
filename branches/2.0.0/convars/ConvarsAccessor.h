@@ -23,7 +23,7 @@
 #ifndef __CONVARS_ACCESSOR_H__
 #define __CONVARS_ACCESSOR_H__
 
-#include "../common/common.h"
+#include "../misc/common.h"
 #include "../exceptions/BaseException.h"
 
 #include "icvar.h" // IConCommandBaseAccessor, CreateInterfaceFn

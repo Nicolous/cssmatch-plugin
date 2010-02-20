@@ -23,7 +23,7 @@
 #include "I18nManager.h"
 
 #include "../configuration/TranslationFile.h"
-#include "../common/common.h"
+#include "../misc/common.h"
 #include "../plugin/ServerPlugin.h"
 
 #include "convar.h"
@@ -316,12 +316,12 @@ void I18nManager::i18nMsg(const string & keyword, const map<string,string> & par
 	// FIXME: uses the default language
 }
 
-TimerI18nChatSay::TimerI18nChatSay(	float date,
+TimerI18nChatSay::TimerI18nChatSay(	float delay,
 									RecipientFilter & recip,
 									const string & key,
 									const map<string,string> & param,
 									int pIndex)
-	: BaseTimer(date), recipients(recip), keyword(key), parameters(param), playerIndex(pIndex)
+	: BaseTimer(delay), recipients(recip), keyword(key), parameters(param), playerIndex(pIndex)
 {
 }
 
@@ -330,13 +330,13 @@ void TimerI18nChatSay::execute()
 	ServerPlugin::getInstance()->getI18nManager()->i18nChatSay(recipients,keyword,parameters,playerIndex);
 }
 
-TimerI18nPopupSay::TimerI18nPopupSay(	float date,
+TimerI18nPopupSay::TimerI18nPopupSay(	float delay,
 										RecipientFilter & recip,
 										const string & key,
 										int life,
 										const map<string,string> & param,
 										int fl)
-	:	BaseTimer(date), recipients(recip), keyword(key), lifeTime(life), parameters(param), flags(fl)
+	:	BaseTimer(delay), recipients(recip), keyword(key), lifeTime(life), parameters(param), flags(fl)
 {
 }
 

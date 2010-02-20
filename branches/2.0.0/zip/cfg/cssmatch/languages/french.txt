@@ -38,6 +38,7 @@ cssmatch_advanced =				"CSSMatch : "1" = Les menus sont construits et gérés av
 cssmatch_language =				"CSSMatch : Détermine le langage par défaut utilisé par CSSMatch (ex : "french" désignera le fichier cfg/cssmatch/languages/french.txt)"
 cssmatch_report = 				"CSSMatch : "1" = Un fichier de rapport est généré à la fin de chaque match, "0" = Aucun rapport n'est généré à la fin des matchs"
 cssmatch_usermessages =         "CSSMatch : Nombre de UserMessage du jeu - Ne pas modifier sans instructions"
+cssmatch_updatesite =           "CSSMatch : Utilisé par le notificateur de mise à jour"
 cssmatch_kniferound =			"CSSMatch : "1" = Faire un round au couteau, "0" = off"
 cssmatch_kniferound_money =		"CSSMatch : Quantité d'argent autorisée pendant le round au couteau"
 cssmatch_kniferound_allows_c4 =	"CSSMatch : "1" = Autoriser la pose du C4 pendant le round au couteau, "0" = off"
@@ -56,6 +57,7 @@ cssmatch_default_config =		"CSSMatch : Fichier de remise par défaut de la confi
 sv_alltalk =					"Le AllTalk est actif"
 sv_cheats =						"Sv_Cheats est actif"
 tv_enable =						"La map va être relancée afin de connecter SourceTV au serveur"
+update_available =              "Mise à jour disponible ! Pour plus d'info tapez !update"
 
 // Knife Round
 kniferound_announcement =		"CutRound ! GO ! GO ! GO !"
@@ -168,7 +170,6 @@ menu_close =					"Fermer ce menu"
 // Errors
 error_file_not_found =			"Impossible de trouver le fichier $file"
 error_command_not_found =		"Impossible de trouver la commande "$command""
-error_cmd =						"Erreur dans le traitement de la commande"
 error_invalid_player =			"Joueur invalide"
 error_general =					"Une erreur est survenue, veuillez en avertir l'auteur sur $site"
 error_tv_not_connected =		"Impossible de lancer l'enregistrement sourceTV car celle-ci n'est pas sur le serveur"

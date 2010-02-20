@@ -39,10 +39,9 @@ namespace cssmatch
 		bool cancelled;
 	public:
 		/** Prepare a timer
-		 * @param executionDate When (in server time seconds) the delayed function must be executed
-		 * @see CGlobalVarsBase::curtime
+		 * @param delay Delay (in seconds) before the timer callback is executed
 		 */
-		BaseTimer(float executionDate);
+		BaseTimer(float delay);
 
 		virtual ~BaseTimer();
 

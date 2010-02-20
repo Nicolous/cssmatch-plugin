@@ -22,7 +22,7 @@
 
 #include "RecipientFilter.h"
 
-#include "../common/common.h"
+#include "../misc/common.h"
 #include "../plugin/ServerPlugin.h"
 #include "../player/ClanMember.h"
 

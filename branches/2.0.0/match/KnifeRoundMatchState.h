@@ -24,7 +24,7 @@
 #define __KNIFEROUND_MATCH_STATE_H__
 
 #include "BaseMatchState.h"
-#include "../features/BaseSingleton.h"
+#include "../misc/BaseSingleton.h"
 #include "../player/Player.h" // TeamCode
 #include "../messages/Menu.h"
 

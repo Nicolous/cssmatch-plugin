@@ -24,7 +24,6 @@
 
 #include "../plugin/ServerPlugin.h"
 #include "../player/ClanMember.h"
-#include "../messages/Countdown.h"
 #include "../messages/I18nManager.h"
 #include "MatchManager.h"
 #include "DisabledMatchState.h"
@@ -36,7 +35,7 @@ using std::string;
 using std::list;
 using std::map;
 
-WarmupMatchState::WarmupMatchState() : timer(NULL)
+WarmupMatchState::WarmupMatchState()
 		
 {
 	warmupMenu = new Menu("menu_warmup",
@@ -77,12 +76,6 @@ void WarmupMatchState::endWarmup()
 	recipients.addAllPlayers();
 
 	i18n->i18nChatSay(recipients,"warmup_end");
-
-	Countdown::getInstance()->stop();
-	if (timer != NULL) // All the clans typed "!go" before the third restart ?
-	{
-		timer->cancel();
-	}
 
 	if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 	{
@@ -167,6 +160,8 @@ void WarmupMatchState::endState()
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	interfaces->gameeventmanager2->RemoveListener(this);
+
+	countdown.stop();
 }
 
 void WarmupMatchState::showMenu(Player * recipient)
@@ -315,7 +310,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 
 	RecipientFilter recipients;
 
-	switch(infos->roundNumber++)
+/*	switch(infos->roundNumber++)
 	{
 	case -2:
 		plugin->queueCommand("mp_restartgame 1\n");
@@ -324,22 +319,20 @@ void WarmupMatchState::round_start(IGameEvent * event)
 		plugin->queueCommand("mp_restartgame 2\n");
 		break;
 	case 0:
-		{
+		{*/
 			int duration = plugin->getConVar("cssmatch_warmup_time")->GetInt()*60;
 
-			Countdown::getInstance()->fire(duration);
-			timer = new WarmupTimer(interfaces->gpGlobals->curtime + (float)duration + 1.0f,this);
-			plugin->addTimer(timer);
+			countdown.fire(duration);
 
 			// Trick: Increment the round number so a restart will not re-lauch the countdown
 			infos->roundNumber++;
-		}
+	/*	}
 	//	break;
 	default:
 		recipients.addAllPlayers();
 		i18n->i18nChatSay(recipients,"warmup_announcement");
 		break;
-	}
+	}*/
 }
 
 void WarmupMatchState::bomb_beginplant(IGameEvent * event)
@@ -364,13 +357,4 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 	else
 		CSSMATCH_PRINT("Unable to find the player who plants the bomb");
 
-}
-
-WarmupTimer::WarmupTimer(float date, WarmupMatchState * state) : BaseTimer(date), warmupState(state)
-{
-}
-
-void WarmupTimer::execute()
-{
-	warmupState->endWarmup();
 }

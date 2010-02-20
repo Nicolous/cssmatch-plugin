@@ -24,7 +24,7 @@
 #define __DISABLE_MATCH_STATE_H__
 
 #include "BaseMatchState.h"
-#include "../features/BaseSingleton.h"
+#include "../misc/BaseSingleton.h"
 #include "../messages/Menu.h"
 
 namespace cssmatch

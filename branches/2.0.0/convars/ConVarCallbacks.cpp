@@ -22,7 +22,7 @@
 
 #include "ConVarCallbacks.h"
 
-#include "../common/common.h"
+#include "../misc/common.h"
 
 #include "icvar.h"
 
@@ -30,9 +30,9 @@ using namespace cssmatch;
 
 void cssmatch::cssmatch_version(ConVar * var, char const * pOldString)
 {
-	if (strcmp(var->GetString(),CSSMATCH_VERSION_LIGHT) != 0)
+	if (strcmp(var->GetString(),CSSMATCH_VERSION) != 0)
 	{
-		var->SetValue(CSSMATCH_VERSION_LIGHT);
+		var->SetValue(CSSMATCH_VERSION);
 	}
 }
 

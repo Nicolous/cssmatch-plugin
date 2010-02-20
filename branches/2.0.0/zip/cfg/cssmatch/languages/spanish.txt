@@ -38,6 +38,7 @@ cssmatch_advanced =				"CSSMatch : "1" = menú completo de administración de se
 cssmatch_language =				"CSSMatch : Lenguaje por defecto de CSSMatch (e.j. : "spanish" se usará el archivo  cfg/cssmatch/languages/spanish.txt)"
 cssmatch_report = 				"CSSMatch : "1" = Después de cada War, un informe nuevo será creado, "0" = No se creará ningún informe"
 cssmatch_usermessages =         "CSSMatch : Mod UserMessage count - Do not change without instructions"
+cssmatch_updatesite =           "CSSMatch : Used by the update notifier"
 cssmatch_kniferound =			"CSSMatch : "1" = Habilita ronda de cuchillo, "0" = No"
 cssmatch_kniferound_money =		"CSSMatch : Cantidad de dinero disponible para la ronda de cuchillo"
 cssmatch_kniferound_allows_c4 =	"CSSMatch : "1" = Habilita plantar la bomba durante la ronda de cuchillo, "0" = No"
@@ -56,6 +57,7 @@ cssmatch_default_config =		"CSSMatch : Archivo de configuración por defecto del
 sv_alltalk =					"Micros abiertos"
 sv_cheats =						"Sv_Cheats Activos"
 tv_enable =						"El mapa se reiniciará para conectar la SourceTV al servidor"
+update_available =              "Update available! For more information type !update"
 
 // Knife Round
 kniferound_announcement =		"¡ Ronda Cuchillo ! ¡ GO ! ¡ GO ! ¡ GO !"
@@ -168,7 +170,6 @@ menu_close =					"Cerrar"
 // Errors
 error_file_not_found =			"Archivo $file no se encuentra"
 error_command_not_found =		"Comando "$command" no se encuentra"
-error_cmd =						"Error utilizando comando"
 error_invalid_player =			"Jugador no válido"
 error_general =					"Ha ocurrido un error, por favor, póngase en contacto con el autor del plugin en $site"
 error_tv_not_connected =		"SourceTV no puede iniciarse porque no está conectada en el servidor"

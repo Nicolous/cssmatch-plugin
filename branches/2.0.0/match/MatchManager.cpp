@@ -25,8 +25,7 @@
 #include "BaseMatchState.h"
 #include "../configuration/RunnableConfigurationFile.h"
 #include "../plugin/ServerPlugin.h"
-#include "../common/common.h"
-#include "../messages/Countdown.h"
+#include "../misc/common.h"
 #include "../messages/I18nManager.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
@@ -60,7 +59,7 @@ MatchManager::MatchManager(BaseMatchState * iniState) throw(MatchManagerExceptio
 
 MatchManager::~MatchManager()
 {
-	Countdown::getInstance()->stop();
+	endCountdown.stop();
 }
 
 MatchLignup * MatchManager::getLignup()
@@ -167,6 +166,11 @@ void MatchManager::player_disconnect(IGameEvent * event)
 
 	i18n->i18nChatSay(recipients,"player_leave_game",parameters);
 
+	// Announce the password too
+	map<string,string> passParameters;
+	passParameters["$password"] = plugin->getConVar("cssmatch_password")->GetString();
+	plugin->addTimer(new TimerI18nChatSay(2.0f,recipients,"match_password_remember",passParameters));
+
 	// If all the players have disconnected, stop the match (and thus the SourceTv record)
 	if ((plugin->getPlayerCount(T_TEAM) + plugin->getPlayerCount(CT_TEAM) - 1) <= 0)
 		stop();
@@ -178,7 +182,6 @@ void MatchManager::player_team(IGameEvent * event)
 	// i.e. n player to less than 2 players, 0 player to 1 player, 1 player to 2 players
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->getI18nManager();
 
 	TeamCode newSide = (TeamCode)event->GetInt("team");
@@ -201,10 +204,10 @@ void MatchManager::player_team(IGameEvent * event)
 	{
 			// "< 2" because the game has not update the player's team got via IPlayerInfo yet
 			// And that's why we use a timer to redetect the clan's name
-		plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,toReDetect));
+		plugin->addTimer(new ClanNameDetectionTimer(1.0f,toReDetect));
 	}
 
-	toReDetect = INVALID_TEAM;
+/*	toReDetect = INVALID_TEAM;
 	switch(oldSide)
 	{
 	case T_TEAM:
@@ -218,8 +221,11 @@ void MatchManager::player_team(IGameEvent * event)
 	}
 	if ((toReDetect != INVALID_TEAM) && (playercount < 3)) // "< 3" see above
 	{
-		plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,toReDetect));
+		plugin->addTimer(new ClanNameDetectionTimer(1.0f,toReDetect));
 	}
+
+	http://code.google.com/p/cssmatch-plugin/issues/detail?id=75 
+	*/
 }
 
 void MatchManager::player_changename(IGameEvent * event)
@@ -228,7 +234,6 @@ void MatchManager::player_changename(IGameEvent * event)
 	// i.e. if the player is alone in his team
 
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
 	I18nManager * i18n = plugin->getI18nManager();
 
 	ClanMember * player = NULL;
@@ -236,7 +241,7 @@ void MatchManager::player_changename(IGameEvent * event)
 	{
 		TeamCode playerteam = player->getMyTeam();
 		if ((playerteam > SPEC_TEAM) && (plugin->getPlayerCount(playerteam) == 1))
-			plugin->addTimer(new ClanNameDetectionTimer(interfaces->gpGlobals->curtime+1.0f,playerteam));
+			plugin->addTimer(new ClanNameDetectionTimer(1.0f,playerteam));
 	}
 }
 
@@ -319,10 +324,8 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		infos.kniferoundWinner = NULL;
 
 		// Reset all clan related info
-		lignup.clan1.resetStats();
-		lignup.clan1.setReady(false);
-		lignup.clan2.resetStats();
-		lignup.clan2.setReady(false);
+		lignup.clan1.reset();
+		lignup.clan2.reset();
 
 		// Reset all player stats
 		list<ClanMember *> * playerlist = plugin->getPlayerlist();
@@ -348,12 +351,8 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		}
 
 		// Monitor some variable
-		plugin->addTimer(
-			new ConVarMonitorTimer(
-				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk"));
-		plugin->addTimer(
-			new ConVarMonitorTimer(
-				interfaces->gpGlobals->curtime + 1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats"));
+		plugin->addTimer(new ConVarMonitorTimer(1.0f,plugin->getConVar("sv_alltalk"),"0","sv_alltalk"));
+		plugin->addTimer(new ConVarMonitorTimer(1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats"));
 
 		// Set the new server password
 		string password = plugin->getConVar("cssmatch_password")->GetString();
@@ -361,9 +360,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 
 		map<string, string> parameters;
 		parameters["$password"] = password;
-		plugin->addTimer(
-			new TimerI18nPopupSay(
-				interfaces->gpGlobals->curtime+5.0f,recipients,"match_password_popup",5,parameters));
+		plugin->addTimer(new TimerI18nPopupSay(5.0f,recipients,"match_password_popup",5,parameters));
 
 		// Maybe no warmup is needed
 		infos.warmup = warmup;
@@ -385,7 +382,6 @@ void MatchManager::stop() throw (MatchManagerException)
 	if (currentState != initialState)
 	{
 		ServerPlugin * plugin = ServerPlugin::getInstance();
-		ValveInterfaces * interfaces = plugin->getInterfaces();
 		I18nManager * i18n = plugin->getI18nManager();
 
 		// Send all the announcements
@@ -441,19 +437,14 @@ void MatchManager::stop() throw (MatchManagerException)
 		{
 		    if (plugin->getPlayerCount() > 0) // if the server is empty, we can't add timers because GameFrame is no more executed
 		    {
-			    map<string,string> parametersBreak;
-			    parametersBreak["$time"] = toString(timeoutDuration);
-			    Countdown::getInstance()->fire(timeoutDuration);
-			    plugin->addTimer(
-				    new TimerI18nChatSay(	interfaces->gpGlobals->curtime + 2.0f,
-										    recipients,
-										    "match_dead_time",
-										    parametersBreak));
-			    plugin->addTimer(new RestoreConfigTimer(interfaces->gpGlobals->curtime + timeoutDuration + 2.0f));
+				map<string,string> timeoutParameters;
+				timeoutParameters["$time"] = toString(timeoutDuration);
+				plugin->addTimer(new TimerI18nChatSay(2.0f,recipients,"match_dead_time",timeoutParameters));
+				endCountdown.fire(timeoutDuration);
 			}
 			else
 			{
-			    RestoreConfigTimer(0.0f).execute();
+				endCountdown.finish();
 			}
 		}
 	}
@@ -560,24 +551,7 @@ void MatchManager::restartHalf() throw (MatchManagerException)
 		throw MatchManagerException("No match in progress");
 }
 
-
-ClanNameDetectionTimer::ClanNameDetectionTimer(float date, TeamCode teamCode)
-	: BaseTimer(date), team(teamCode)
-{
-}
-
-void ClanNameDetectionTimer::execute()
-{
-	ServerPlugin * plugin = ServerPlugin::getInstance(); 
-	MatchManager * manager = plugin->getMatch();
-	manager->detectClanName(team);
-}
-
-RestoreConfigTimer::RestoreConfigTimer(float date) : BaseTimer(date)
-{
-}
-
-void RestoreConfigTimer::execute()
+void MatchManager::EndOfMatchCountdown::finish()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance(); 
 	string configPatch = DEFAULT_CONFIGURATION_FILE;
@@ -602,18 +576,30 @@ void RestoreConfigTimer::execute()
 	}
 }
 
-ConVarMonitorTimer::ConVarMonitorTimer(	float date,
+
+ClanNameDetectionTimer::ClanNameDetectionTimer(float delay, TeamCode teamCode)
+	: BaseTimer(delay), team(teamCode)
+{
+}
+
+void ClanNameDetectionTimer::execute()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance(); 
+	MatchManager * manager = plugin->getMatch();
+	manager->detectClanName(team);
+}
+
+ConVarMonitorTimer::ConVarMonitorTimer(	float delay,
 										ConVar * varToWatch,
 										const string & expectedValue,
 										const string & warningMessage)
-	: BaseTimer(date), toWatch(varToWatch), value(expectedValue), message(warningMessage) 
+	: BaseTimer(delay), toWatch(varToWatch), value(expectedValue), message(warningMessage) 
 {
 }
 
 void ConVarMonitorTimer::execute()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	if (toWatch->GetString() != value)
 	{
@@ -625,5 +611,5 @@ void ConVarMonitorTimer::execute()
 		i18n->i18nCenterSay(recipients,message);
 	}
 
-	plugin->addTimer(new ConVarMonitorTimer(interfaces->gpGlobals->curtime + 1.0f,toWatch,value,message));
+	plugin->addTimer(new ConVarMonitorTimer(1.0f,toWatch,value,message));
 }

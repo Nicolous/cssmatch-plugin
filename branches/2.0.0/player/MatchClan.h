@@ -51,6 +51,9 @@ namespace cssmatch
 		/** Clan name */
 		std::string name;
 
+		/** false if the clan name musn't be automatically detected */
+		bool allowAutoDetect;
+
 		/** Clan stats in the previous half */
 		ClanStats lastSetStats;
 
@@ -71,8 +74,11 @@ namespace cssmatch
 		/** Get the clan name */
 		const std::string * getName() const;
 
-		/** Set the clan name */
-		void setName(const std::string & newName);
+		/** Set the clan name 
+		 * @param newName The new clan name
+		 * @param forbidDetection Forbid detectClanName from change the clan name
+		 */
+		void setName(const std::string & newName, bool forbidAutoDetect = false);
 
 		/** Fill a list with the players of this clan */
 		void getMembers(std::list<ClanMember *> * members);
@@ -83,8 +89,8 @@ namespace cssmatch
 		/** Get clan stats */
 		ClanStats * getStats();
 
-		/** Reset the stats */
-		void resetStats();
+		/** Prepare this clan for a new match (reset stats, etc.) */
+		void reset();
 
 		/** Try to automatically detect the clan name */
 		void detectClanName();

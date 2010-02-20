@@ -21,11 +21,13 @@
  */
 
 #include "BaseTimer.h"
+#include "ServerPlugin.h"
 
 using namespace cssmatch;
 
-BaseTimer::BaseTimer(float executionDate) : date(executionDate), cancelled(false)
+BaseTimer::BaseTimer(float delay) : cancelled(false)
 {
+	date = ServerPlugin::getInstance()->getInterfaces()->gpGlobals->curtime + delay;
 }
 
 BaseTimer::~BaseTimer()

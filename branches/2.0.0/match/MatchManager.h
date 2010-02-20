@@ -24,9 +24,9 @@
 #define __MATCH_MANAGER_H__
 
 #include "../player/MatchClan.h" // MatchClan [, ClanMember]
-#include "../common/common.h"
+#include "../misc/common.h"
 #include "../exceptions/BaseException.h"
-#include "../plugin/BaseTimer.h"
+#include "../messages/Countdown.h"
 #include "BaseMatchState.h"
 
 #include "igameevents.h" // IGameEventListener2, IGameEvent
@@ -86,6 +86,18 @@ namespace cssmatch
 	class MatchManager : public IGameEventListener2
 	{
 	private:
+		/** End of match time-out countdown */
+		class EndOfMatchCountdown : public BaseCountdown
+		{
+		private:
+			int duration;
+		public:
+			// BaseCountdown methods
+			void finish();
+		};
+
+		EndOfMatchCountdown endCountdown;
+
 		typedef void (MatchManager::*EventCallback)(IGameEvent * event);
 
 		/** {event => callback} map used in FireGameEvent */
@@ -93,7 +105,7 @@ namespace cssmatch
 
 		/** Update "hostname" according to the clan names */
 		void updateHostname();
-	protected:
+
 		/** Initial state */
 		BaseMatchState * initialState;
 
@@ -201,16 +213,6 @@ namespace cssmatch
 		TeamCode team;
 	public:
 		ClanNameDetectionTimer(float date, TeamCode teamCode);
-
-		/** @see BaseTimer */
-		void execute();
-	};
-
-	/** Timer used at the end of the match to execute the default config file */
-	class RestoreConfigTimer : public BaseTimer
-	{
-	public:
-		RestoreConfigTimer(float date);
 
 		/** @see BaseTimer */
 		void execute();

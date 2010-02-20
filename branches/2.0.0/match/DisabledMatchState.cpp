@@ -77,8 +77,6 @@ DisabledMatchState::~DisabledMatchState()
 
 void DisabledMatchState::startState()
 {
-	// Stop any countdown in progress
-	Countdown::getInstance()->stop();
 }
 
 void DisabledMatchState::endState()

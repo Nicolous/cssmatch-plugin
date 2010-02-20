@@ -22,7 +22,7 @@
 
 #include "BaseReport.h"
 
-#include "../common/common.h"
+#include "../misc/common.h"
 #include "../plugin/ServerPlugin.h"
 #include "../match/MatchManager.h"
 

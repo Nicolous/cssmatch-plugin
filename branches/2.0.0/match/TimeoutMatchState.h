@@ -25,9 +25,10 @@
 
 #include "BaseMatchState.h"
 #include "MatchManager.h"
-#include "../features/BaseSingleton.h"
-#include "../plugin/BaseTimer.h"
+#include "../misc/BaseSingleton.h"
+#include "../messages/Countdown.h"
 #include "../messages/Menu.h"
+#include "../plugin/ServerPlugin.h"
 
 namespace cssmatch
 {
@@ -39,14 +40,37 @@ namespace cssmatch
 	class TimeoutMatchState : public BaseMatchState, private BaseSingleton<TimeoutMatchState>
 	{
 	private:
+		/** Timer used for the time-out */
+		class TimeoutCountdown : public BaseCountdown
+		{
+		private:
+			/** The state to lauch once the time-out is ended */
+			BaseMatchState * nextState;
+		public:
+			// BaseCountdown method
+			/** 
+			 * @param nextState The state the lauch once the time-out ended
+			 */
+			void fire(int seconds, BaseMatchState * state)
+			{
+				nextState = state;
+				BaseCountdown::fire(seconds);
+			}
+
+			void finish()
+			{
+				ServerPlugin::getInstance()->getMatch()->setMatchState(nextState);
+			}
+		};
+
 		/** The time-out duration (in secs) before lauch the next match state */
 		int duration;
 
 		/** The state to lauch once the time-out ended */
 		BaseMatchState * nextState;
 
-		/** "end of time-out" timer */
-		TimeoutMatchTimer * timer;
+		/** "end of time-out" countdown */
+		TimeoutCountdown countdown;
 
 		/** Menus of this state */
 		Menu * timeoutMenu;
@@ -70,24 +94,6 @@ namespace cssmatch
 		// Menus callbacks
 		void timeoutMenuCallback(Player * player, int choice, MenuLine * selected);
 		void menuWithAdminCallback(Player * player, int choice, MenuLine * selected);
-	};
-
-
-	/** Timer used for the time-out */
-	class TimeoutMatchTimer : public BaseTimer
-	{
-	private:
-		/** The state to lauch once the time-out is ended */
-		BaseMatchState * nextState;
-	public:
-		/** 
-		 * @param match The state manager required to lauch the new state
-		 * @param nextState The state the lauch once the time-out ended
-		 */
-		TimeoutMatchTimer(float date, BaseMatchState * nextState);
-
-		// BaseTimer method
-		void execute();
 	};
 }
 

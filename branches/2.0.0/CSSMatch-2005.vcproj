@@ -4,6 +4,7 @@
 	Version="8,00"
 	Name="CSSMatch"
 	ProjectGUID="{B6572CBE-7C7F-4FFF-94DE-AFBBBAB11C64}"
+	RootNamespace="CSSMatch"
 	>
 	<Platforms>
 		<Platform
@@ -190,6 +191,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\hl2sdk\lib\public,..\hl2sdk\lib\common"
 				IgnoreDefaultLibraryNames="libcmtd.lib"
+				DelayLoadDLLs=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/serverplugin_empty.pdb"
 				GenerateMapFile="true"
@@ -245,6 +247,14 @@
 			</File>
 			<File
 				RelativePath=".\plugin\ServerPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\plugin\UpdateNotifier.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\plugin\UpdateNotifier.h"
 				>
 			</File>
 		</Filter>
@@ -317,34 +327,30 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="features"
+			Name="misc"
 			>
 			<File
-				RelativePath=".\features\BaseSingleton.cpp"
+				RelativePath=".\misc\BaseSingleton.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\features\BaseSingleton.h"
+				RelativePath=".\misc\BaseSingleton.h"
 				>
 			</File>
 			<File
-				RelativePath=".\features\CannotBeCopied.cpp"
+				RelativePath=".\misc\CannotBeCopied.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\features\CannotBeCopied.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="common"
-			>
-			<File
-				RelativePath=".\common\common.cpp"
+				RelativePath=".\misc\CannotBeCopied.h"
 				>
 			</File>
 			<File
-				RelativePath=".\common\common.h"
+				RelativePath=".\misc\common.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\misc\common.h"
 				>
 			</File>
 		</Filter>

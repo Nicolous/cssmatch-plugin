@@ -23,7 +23,7 @@
 #ifndef __TV_RECORD_H__
 #define __TV_RECORD_H__
 
-#include "../common/common.h" // pragma
+#include "../misc/common.h" // pragma
 #include "../exceptions/BaseException.h"
 
 #include <string>

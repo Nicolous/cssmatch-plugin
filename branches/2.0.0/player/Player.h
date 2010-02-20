@@ -26,7 +26,7 @@
 #include "../exceptions/BaseException.h"
 #include "../entity/EntityProp.h"
 #include "../messages/RecipientFilter.h"
-#include "../common/common.h"
+#include "../misc/common.h"
 #include "../messages/I18nManager.h"
 
 class IVEngineServer;

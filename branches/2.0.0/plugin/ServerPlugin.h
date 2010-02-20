@@ -24,7 +24,7 @@
 #define __SERVER_PLUGIN_H__
 
 #include "../messages/RecipientFilter.h"
-#include "../features/BaseSingleton.h"
+#include "../misc/BaseSingleton.h"
 #include "../convars/ConvarsAccessor.h" // ConvarsAccessorException
 #include "../player/Player.h"
 #include "../exceptions/BaseException.h"
@@ -57,6 +57,7 @@ namespace cssmatch
 	class I18nManager;
 	class BaseTimer;
 	class MatchManager;
+	class UpdateNotifier;
 
 	/** Valve's interface instances */
 	struct ValveInterfaces
@@ -100,6 +101,12 @@ namespace cssmatch
 			PlayerMenuLineData(const std::string & playername, int playerUserid)
 				: name(playername), userid(playerUserid){};
 		};
+
+		/** Is the plugin already loaded before? */
+		bool loaded;
+
+		/** Search-for-update thread */
+		UpdateNotifier * updateThread;
 
 		/** Valve's interfaces accessor */
 		ValveInterfaces interfaces;

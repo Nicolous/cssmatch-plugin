@@ -24,9 +24,9 @@
 #define __WARMUP_MATCH_STATE_H__
 
 #include "BaseMatchState.h"
-#include "../features/BaseSingleton.h"
-#include "../plugin/BaseTimer.h"
+#include "../misc/BaseSingleton.h"
 #include "../messages/Menu.h"
+#include "../messages/Countdown.h"
 
 #include "igameevents.h" // IGameEventListener2, IGameEvent
 
@@ -47,6 +47,19 @@ namespace cssmatch
 		: public BaseMatchState, public BaseSingleton<WarmupMatchState>, public IGameEventListener2
 	{
 	private:
+		/** "End of warmup" countdown */
+		class WarmupCountdown : public BaseCountdown
+		{
+		public:
+			// BaseCountdown method
+			void finish()
+			{
+				WarmupMatchState::getInstance()->endWarmup();
+			}
+		};
+
+		WarmupCountdown countdown;
+
 		typedef void (WarmupMatchState::*EventCallback)(IGameEvent * event);
 
 		/** {event => callback} map used in FireGameEvent */
@@ -55,9 +68,6 @@ namespace cssmatch
 		/** Menus for this state*/
 		Menu * warmupMenu;
 		Menu * menuWithAdmin; // if cssmatch_advanced == 1
-
-		/** "end of warmup" timer */
-		WarmupTimer * timer;
 
 		friend class BaseSingleton<WarmupMatchState>;
 		WarmupMatchState();
@@ -85,22 +95,6 @@ namespace cssmatch
 		void player_spawn(IGameEvent * event);
 		void round_start(IGameEvent * event);
 		void bomb_beginplant(IGameEvent * event);
-	};
-
-	/** "End of warmup" timer */
-	class WarmupTimer : public BaseTimer
-	{
-	private:
-		/** Warmup state instance */
-		WarmupMatchState * warmupState;
-	public:
-		/** 
-		 * @param warmupState The instance of the warmup state
-		 */
-		WarmupTimer(float date, WarmupMatchState * warmupState);
-		
-		// BaseTimer method
-		void execute();
 	};
 }
 

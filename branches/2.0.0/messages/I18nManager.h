@@ -25,7 +25,7 @@
 
 #include "UserMessagesManager.h"
 #include "RecipientFilter.h"
-#include "../features/CannotBeCopied.h"
+#include "../misc/CannotBeCopied.h"
 #include "../plugin/BaseTimer.h"
 
 class ConVar;

@@ -159,6 +159,26 @@ void UserMessagesManager::hintSay(RecipientFilter & recipients, const string & m
 	engine->MessageEnd();
 }
 
+void UserMessagesManager::motdSay(RecipientFilter recipients, MotdType type, const string & title, const string & message)
+{
+	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("VGUIMenu"));
+
+	pWrite->WriteString("info"); // Let give some info about this message
+	pWrite->WriteByte(1); // 1=Show this message, 0=otherwise
+	pWrite->WriteByte(3); // "title", "type" and "msg"
+
+	pWrite->WriteString("title");
+	pWrite->WriteString(title.c_str());
+
+	pWrite->WriteString("type");
+	pWrite->WriteString(toString(type).c_str());
+
+	pWrite->WriteString("msg");
+	pWrite->WriteString(message.c_str());
+
+	engine->MessageEnd();
+}
+
 void UserMessagesManager::centerSay(RecipientFilter & recipients, const string & message)
 {
 	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("TextMsg"));

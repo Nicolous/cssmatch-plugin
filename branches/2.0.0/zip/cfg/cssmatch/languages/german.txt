@@ -38,6 +38,7 @@ cssmatch_advanced =				"CSSMatch : "1" = Volles Adminmenu, "0" = Nur das Warmenu
 cssmatch_language =                "CSSMatch : Standardsprache von CSSMatch (z.B. "german" benutzt diese Datei  cfg/cssmatch/languages/german.txt)"
 cssmatch_report =                 "CSSMatch : "1" = Nach jedem Match wird eine Datei mit einem Bericht erstellt, "0" = Kein Bericht"
 cssmatch_usermessages =         "CSSMatch : Mod UserMessage count - Do not change without instructions"
+cssmatch_updatesite =           "CSSMatch : Used by the update notifier"
 cssmatch_kniferound =				"CSSMatch : "1" = Mit Messerrunde, "0" = ohne"
 cssmatch_kniferound_money =        "CSSMatch : Geld, das in der Messerrunde zur Verfügung steht"
 cssmatch_kniferound_allows_c4 =			"CSSMatch : "1" = Erlaubt das legen der Bombe während der Messerrunde, "0" = ohne"
@@ -56,6 +57,7 @@ cssmatch_default_config =			"CSSMatch : Standard Serverconfig"
 sv_alltalk =					"AllTalk ist AN"
 sv_cheats =						"Sv_Cheats sind AN"
 tv_enable =						"Maprestart damit SourceTV auf den Server connecten kann"
+update_available =              "Update available! For more information type !update"
 
 // Knife Round
 kniferound_announcement =		"Messerrunde ! Knife ! Knife ! Knife !"
@@ -168,7 +170,6 @@ menu_close =					"Schliessen"
 // Errors
 error_file_not_found =			"Datei $file kann nicht gefunden werden"
 error_command_not_found =		"Befehl "$command" wurde nicht gefunden"
-error_cmd =						"Fehler bei der Bearbeitung des Befehls aufgetreten."
 error_invalid_player =			"Ungültiger Spieler"
 error_general =					"Ein Fehler ist aufgetreten, bitte den Autor auf $site informieren !"
 error_tv_not_connected =		"SourceTV Aufnahme kann nicht gestartet werden weil SourceTV nicht mit dem Server verbunden ist."

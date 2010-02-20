@@ -22,7 +22,7 @@
 
 #include "HalfMatchState.h"
 
-#include "../common/common.h"
+#include "../misc/common.h"
 #include "../plugin/ServerPlugin.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
@@ -258,7 +258,6 @@ void HalfMatchState::menuWithAdminCallback(Player * player, int choice, MenuLine
 void HalfMatchState::endHalf()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
 	MatchManager * match = plugin->getMatch();
 	MatchInfo * infos = match->getInfos();
 
@@ -287,20 +286,31 @@ void HalfMatchState::endHalf()
 	ClanStats * lastSetStatsClanCT = clanCT->getLastSetStats();
 	lastSetStatsClanCT->scoreCT = currentStatsClanCT->scoreCT;
 
+	RecipientFilter recipients;
+	recipients.addAllPlayers();
+
+	map<string,string> parameters;
+	parameters["$password"] = plugin->getConVar("cssmatch_password")->GetString();
+	plugin->addTimer(new TimerI18nChatSay(5.0f,recipients,"match_password_popup",parameters));
+
 	if (infos->halfNumber < plugin->getConVar("cssmatch_sets")->GetInt())
 	{
 		// There is at least one more half to play
 
-		// Do a time-out (if any) before starting the next state
 		BaseMatchState * nextState = this;
 		if ((plugin->getConVar("cssmatch_warmup_time")->GetInt() > 0) && infos->warmup)
 		{
 			nextState = WarmupMatchState::getInstance();
 		}
 
+		// Do a time-out (if any) before starting the next state
 		int timeoutDuration = plugin->getConVar("cssmatch_end_set")->GetInt();
 		if (timeoutDuration > 0)
 		{
+			map<string,string> timeoutParameters;
+			timeoutParameters["$time"] = toString(timeoutDuration);
+			plugin->addTimer(new TimerI18nChatSay(2.0f,recipients,"match_dead_time",timeoutParameters));
+
 			TimeoutMatchState::doTimeout(timeoutDuration,nextState);
 		}
 		else
@@ -312,7 +322,7 @@ void HalfMatchState::endHalf()
 		infos->halfNumber++;
 
 		// Swap every players
-		plugin->addTimer(new SwapTimer(interfaces->gpGlobals->curtime + (float)timeoutDuration));
+		plugin->addTimer(new SwapTimer((float)timeoutDuration));
 	}
 	else
 	{
@@ -338,6 +348,8 @@ void HalfMatchState::finish()
 	map<string,string> parameters;
 
 	parameters["$current"] = toString(infos->halfNumber);
+
+	i18n->i18nChatSay(recipients,"match_end_current_manche",parameters);
 
 	ClanStats * statsClan1 = lignup->clan1.getStats();
 	parameters["$team1"] = *lignup->clan1.getName();
@@ -444,8 +456,7 @@ void HalfMatchState::round_start(IGameEvent * event)
 			parameters["$score1"] = toString(statsClan1->scoreCT + statsClan1->scoreT);
 			parameters["$team2"] = *lignup->clan2.getName();
 			parameters["$score2"] = toString(statsClan2->scoreCT + statsClan2->scoreT);
-			plugin->addTimer(
-				new TimerI18nPopupSay(1.0f,recipients,"match_round_popup",5,parameters));
+			plugin->addTimer(new TimerI18nPopupSay(1.5f,recipients,"match_round_popup",5,parameters));
 		}
 	}
 }
@@ -480,7 +491,7 @@ void HalfMatchState::round_end(IGameEvent * event)
 	}
 }
 
-SwapTimer::SwapTimer(float date) : BaseTimer(date)
+SwapTimer::SwapTimer(float delay) : BaseTimer(delay)
 {
 }
 

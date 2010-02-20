@@ -66,7 +66,7 @@ void XmlReport::writePlugin(ticpp::Element * cssmatch)
 {
 	ticpp::Element * ePlugin = new ticpp::Element("plugin");
 
-	ticpp::Element * eVersion = new ticpp::Element("version",CSSMATCH_VERSION_LIGHT);
+	ticpp::Element * eVersion = new ticpp::Element("version",CSSMATCH_VERSION);
 	ePlugin->LinkEndChild(eVersion);
 
 	ticpp::Element * eUrl = new ticpp::Element("url",CSSMATCH_SITE);

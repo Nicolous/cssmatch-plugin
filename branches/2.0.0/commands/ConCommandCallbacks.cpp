@@ -76,7 +76,8 @@ void cssmatch::cssm_help()
 	}
 	else
 	{
-		map<string,ConCommand *>::const_iterator itConCommand = pluginConCommands->find(interfaces->engine->Cmd_Argv(1));
+		string commandName = interfaces->engine->Cmd_Argv(1);
+		map<string,ConCommand *>::const_iterator itConCommand = pluginConCommands->find(commandName);
 		if (itConCommand != lastConCommand)
 		{
 			const char * helpText = itConCommand->second->GetHelpText();
@@ -84,7 +85,13 @@ void cssmatch::cssm_help()
 			delete helpText;
 		}
 		else
-			Msg("Command not found\n");
+		{
+			I18nManager * i18n = plugin->getI18nManager();
+
+			map<string,string> parameters;
+			parameters["$command"] = commandName;
+			i18n->i18nMsg("error_command_not_found",parameters);
+		}
 	}
 }
 
@@ -163,8 +170,6 @@ void cssmatch::cssm_stop()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	Countdown * countdown = Countdown::getInstance();
-	I18nManager * i18n = plugin->getI18nManager();
 
 	try
 	{
@@ -176,6 +181,8 @@ void cssmatch::cssm_stop()
 	}
 	catch(const MatchManagerException & e)
 	{
+		I18nManager * i18n = plugin->getI18nManager();
+
 		i18n->i18nMsg("match_not_in_progress");
 	}
 }
@@ -404,7 +411,7 @@ void cssmatch::cssm_teamt()
 			MatchClan * clan = match->getClan(T_TEAM);
 			string name = interfaces->engine->Cmd_Args();
 
-			clan->setName(name);
+			clan->setName(name,true);
 		
 			map<string,string> parameters;
 			parameters["$team"] = name;
@@ -434,7 +441,7 @@ void cssmatch::cssm_teamct()
 			MatchClan * clan = match->getClan(CT_TEAM);
 			string name = interfaces->engine->Cmd_Args();
 
-			clan->setName(name);
+			clan->setName(name,true);
 		
 			map<string,string> parameters;
 			parameters["$team"] = name;
@@ -523,7 +530,7 @@ bool cssmatch::say_hook(int userIndex)
 		{
 			if (user->isReferee())
 			{
-				plugin->showAdminMenu(user);
+				user->cexec("cssmatch");
 			}
 			else
 			{
@@ -611,7 +618,7 @@ bool cssmatch::say_hook(int userIndex)
 					try
 					{
 						MatchClan * clan = match->getClan(T_TEAM);
-						clan->setName(newName);
+						clan->setName(newName,true);
 
 						recipients.addAllPlayers();
 
@@ -667,7 +674,7 @@ bool cssmatch::say_hook(int userIndex)
 					try
 					{
 						MatchClan * clan = match->getClan(CT_TEAM);
-						clan->setName(newName);
+						clan->setName(newName,true);
 
 						recipients.addAllPlayers();
 
@@ -697,6 +704,21 @@ bool cssmatch::say_hook(int userIndex)
 		}
 		else
 			CSSMATCH_PRINT("Unable to find the player who typed !teamct");
+	}
+	// !update: consult the last update changelog
+	else if (chatCommand == "!update")
+	{
+		eat = true;
+
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+		{
+			RecipientFilter recipients;
+			recipients.addRecipient(user);
+
+			string updatesite = plugin->getConVar("cssmatch_updatesite")->GetString();
+			i18n->motdSay(recipients,URL,"CSSMatch changelog",updatesite + CSSMATCH_CHANGELOG_FILE);
+		}
 	}
 
 	return eat;

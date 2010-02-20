@@ -26,7 +26,7 @@
 #include "ConfigurationFile.h"
 
 #include "../exceptions/BaseException.h"
-#include "../features/BaseSingleton.h"
+#include "../misc/BaseSingleton.h"
 
 #include <map>
 

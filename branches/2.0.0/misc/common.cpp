@@ -91,7 +91,7 @@ bool cssmatch::normalizeFileName(std::string & fileName)
 void cssmatch::print(const string & fileName, int line, const string & message)
 {
 	ostringstream buffer;
-	buffer << CSSMATCH_NAME << " (" << fileName << " l." << line << "): " << message << "\n";
+	buffer << " (" << fileName << " l." << line << "): " << message << "\n";
 	//Msg(buffer.str().c_str());
 	ServerPlugin::getInstance()->log(buffer.str());
 }

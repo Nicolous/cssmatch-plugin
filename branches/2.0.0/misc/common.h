@@ -57,16 +57,21 @@ class IServerUnknown;
 class CBasePlayer;
 class CBaseCombatCharacter;
 
+#define CSSMATCH_BETA
+
 #define CSSMATCH_NAME "CSSMatch"
 
-#define CSSMATCH_VERSION_LIGHT "2.0.0 Alpha"
+#define CSSMATCH_PLUGIN_PRINT_BASE "2.0.1"
+#ifdef CSSMATCH_BETA
+#define CSSMATCH_VERSION CSSMATCH_PLUGIN_PRINT_BASE " BETA"
+#else
+#define CSSMATCH_VERSION CSSMATCH_PLUGIN_PRINT_BASE
+#endif // CSSMATCH_BETA
 
-#define CSSMATCH_SITE "http://code.google.com/p/cssmatch-plugin-en/"
+#define CSSMATCH_SITE "http://www.cssmatch.com"
 
-#define CSSMATCH_VERSION "Nico's " \
-		CSSMATCH_NAME ", version " \
-		CSSMATCH_VERSION_LIGHT " (" __DATE__ "), " \
-		CSSMATCH_SITE
+#define CSSMATCH_PLUGIN_PRINT \
+		"Nico's " CSSMATCH_NAME ", version " CSSMATCH_VERSION " (" __DATE__ "), " CSSMATCH_SITE
 
 /** Invalid entity index */
 #define CSSMATCH_INVALID_INDEX 0

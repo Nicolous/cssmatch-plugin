@@ -24,7 +24,7 @@
 #define __HALF_MATCH_STATE_H__
 
 #include "BaseMatchState.h"
-#include "../features/BaseSingleton.h"
+#include "../misc/BaseSingleton.h"
 #include "../plugin/BaseTimer.h"
 #include "../messages/Menu.h"
 

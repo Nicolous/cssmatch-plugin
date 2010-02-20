@@ -23,27 +23,30 @@
 #ifndef __COUNTDOWN_H__
 #define __COUNTDOWN_H__
 
-#include "../features/BaseSingleton.h"
+#include "../misc/BaseSingleton.h"
 #include "../plugin/BaseTimer.h"
 
 namespace cssmatch
 {
-	/** A countdown displayed to each player */
-	class Countdown : public BaseSingleton<Countdown>
+	/** Base countdown displayed to each player */
+	class BaseCountdown
 	{
 	private:
-		/** Countdown step */
+		/** BaseCountdown step */
 		class CountdownTick : public BaseTimer
 		{
 		private:
-			/** Current count */
+			/** Owner */
+			BaseCountdown * countdown;
+
+			/** Seconds left */
 			int left;
 		public:
 			/** 
 			 * @param executionDate see BaseTimer
-			 * @param nextCount The next count to display
+			 * @param timeLeft Seconds left
 			 */
-			CountdownTick(float executionDate, int nextCount);
+			CountdownTick(BaseCountdown * owner, float executionDate, int timeLeft);
 
 			/**
 			 * @see BaseTimer
@@ -58,11 +61,10 @@ namespace cssmatch
 		 * @return The new time left
 		 */
 		int decTimeLeft();
-
-		friend class BaseSingleton<Countdown>;
-		Countdown();
-		~Countdown();
 	public:
+		BaseCountdown();
+		virtual ~BaseCountdown();
+
 		/** Start the countdown
 		 * @param seconds Seconds left until the end of the countdown
 		 */
@@ -70,6 +72,9 @@ namespace cssmatch
 
 		/** Stop the countdown */
 		void stop();
+
+		/** Automatically executed when the countdown ends */
+		virtual void finish() = 0;
 	};
 }
 

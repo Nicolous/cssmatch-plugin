@@ -23,7 +23,13 @@
 #ifndef __CON_COMMAND_CALLBACKS_H__
 #define __CON_COMMAND_CALLBACKS_H__
 
-//class IVEngineServer;
+#include "../misc/common.h" // CSSMATCH_BETA
+
+#ifdef CSSMATCH_BETA
+#define CSSMATCH_CHANGELOG_FILE "/plugin/changelogbeta.txt"
+#else
+#define CSSMATCH_CHANGELOG_FILE "/plugin/changelog.txt"
+#endif
 
 namespace cssmatch
 {

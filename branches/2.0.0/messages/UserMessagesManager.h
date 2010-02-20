@@ -23,7 +23,7 @@
 #ifndef __USER_MESSAGES_MANAGER_H__
 #define __USER_MESSAGES_MANAGER_H__
 
-#include "../common/common.h"
+#include "../misc/common.h"
 
 class IVEngineServer;
 
@@ -70,6 +70,15 @@ namespace cssmatch
 						OPTION_8 | 
 						OPTION_9 |
 						OPTION_CANCEL
+	};
+
+	/** All MOTD type supported */
+	enum MotdType
+	{
+		/** The MOTD URL is the message */
+		TEXT = 0,
+		/** The MOTD URL is a distant/local file */
+		URL = 2
 	};
 
 	/** Send different kind of message to the players */
@@ -130,6 +139,15 @@ namespace cssmatch
 		 * @param message The message to send
 		 */
 		void hintSay(RecipientFilter & recipients, const std::string & message);
+
+		/** Send a MOTD-like message
+		 * @param recipients Recipient list
+		 * @param motd type Motd type
+		 * @param title Window title
+		 * @param message Message or URL
+		 * @see enum MotdType
+		 */
+		void motdSay(RecipientFilter recipients, MotdType type, const std::string & title, const std::string & message);
 
 		/** Send a centered message
 		 * @param recipients Recipient list

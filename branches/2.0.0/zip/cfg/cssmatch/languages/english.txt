@@ -38,6 +38,7 @@ cssmatch_advanced =				"CSSMatch : "1" = full server administration menu, "0" = 
 cssmatch_language =				"CSSMatch : Default language of CSSMatch (e.g. : "english" will use the file  cfg/cssmatch/languages/english.txt)"
 cssmatch_report = 				"CSSMatch : "1" = After each match a new report file will be created, "0" = No report file will be created"
 cssmatch_usermessages =         "CSSMatch : Mod UserMessage count - Do not change without instructions"
+cssmatch_updatesite =           "CSSMatch : Used by the update notifier"
 cssmatch_kniferound =			"CSSMatch : "1" = Enable kniferound, "0" = off"
 cssmatch_kniferound_money =		"CSSMatch : Amount of money available for the kniferound"
 cssmatch_kniferound_allows_c4 =	"CSSMatch : "1" = Enable bomb planting during kniferound, "0" = off"
@@ -56,6 +57,7 @@ cssmatch_default_config =		"CSSMatch : Default server config file"
 sv_alltalk =					"AllTalk is On"
 sv_cheats =						"Sv_Cheats are On"
 tv_enable =						"The map will restart to connect the SourceTV to the server"
+update_available =              "Update available! For more information type !update"
 
 // Knife Round
 kniferound_announcement =		"KnifeRound ! GO ! GO ! GO !"
@@ -168,7 +170,6 @@ menu_close =					"Close"
 // Errors
 error_file_not_found =			"File $file cannot be found"
 error_command_not_found =		"Command "$command" cannot be found"
-error_cmd =						"Error using command"
 error_invalid_player =			"Invalid player"
 error_general =					"Error has occured, please contact plugin author on $site"
 error_tv_not_connected =		"SourceTV record cannot start because it's not connected on server"

@@ -23,7 +23,7 @@
 #ifndef __ENTITY_PROP_H__
 #define __ENTITY_PROP_H__
 
-#include "../common/common.h"
+#include "../misc/common.h"
 
 #include <string>
 #include <fstream>

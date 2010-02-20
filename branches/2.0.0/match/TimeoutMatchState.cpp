@@ -22,9 +22,6 @@
 
 #include "TimeoutMatchState.h"
 
-#include "../messages/Countdown.h"
-#include "../plugin/ServerPlugin.h"
-
 #include <string>
 #include <map>
 
@@ -33,7 +30,7 @@ using namespace cssmatch;
 using std::string;
 using std::map;
 
-TimeoutMatchState::TimeoutMatchState() : duration(0), nextState(NULL), timer(NULL)
+TimeoutMatchState::TimeoutMatchState() : duration(0), nextState(NULL)
 {
 	timeoutMenu = new Menu("menu_time-out",
 		new MenuCallback<TimeoutMatchState>(this,&TimeoutMatchState::timeoutMenuCallback));
@@ -55,7 +52,7 @@ TimeoutMatchState::~TimeoutMatchState()
 	delete menuWithAdmin;
 }
 
-void TimeoutMatchState::doTimeout(int timeoutDuration, BaseMatchState * state)
+void TimeoutMatchState::doTimeout(int timeoutDuration, BaseMatchState * state) // I'm static
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
@@ -69,23 +66,12 @@ void TimeoutMatchState::doTimeout(int timeoutDuration, BaseMatchState * state)
 
 void TimeoutMatchState::startState()
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ValveInterfaces * interfaces = plugin->getInterfaces();
-
-	timer = new TimeoutMatchTimer(interfaces->gpGlobals->curtime + (float)duration,nextState);
-	plugin->addTimer(timer);
-	Countdown::getInstance()->fire(duration);
+	countdown.fire(duration,nextState);
 }
 
 void TimeoutMatchState::endState()
 {
-	//Countdown::getInstance()->stop(); // in case of interuption ?
-
-	if (timer != NULL)
-	{
-		timer->cancel();
-		timer = NULL;
-	}
+	countdown.stop();
 }
 
 void TimeoutMatchState::showMenu(Player * recipient)
@@ -157,18 +143,3 @@ void TimeoutMatchState::menuWithAdminCallback(Player * player, int choice, MenuL
 		plugin->showAdminMenu(player);
 	}
 }
-
-
-TimeoutMatchTimer::TimeoutMatchTimer(float date, BaseMatchState * state)
-	: BaseTimer(date), nextState(state)
-{
-}
-
-void TimeoutMatchTimer::execute()
-{
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	MatchManager * match = plugin->getMatch();
-
-	match->setMatchState(nextState);
-}
-

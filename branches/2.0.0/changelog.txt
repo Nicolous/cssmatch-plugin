@@ -1,33 +1,12 @@
-* Erreur de config n'entraine pas de génération de rapport
-* retrait du "status" exécuté au début des rounds : ça ne servait à personne, et dans certains cas ça buguait : http://code.google.com/p/cssmatch-plugin/issues/detail?id=9
-* Commande cssm_start : 
-	- ajout d'une option -kniferound pour le cas où le round au couteau ne devrait pas être joué
-	- ajout d'une option -warmup pour le cas où le strats time ne devrait pas être joué
-* Les teamkills seront maintenant pris en compte dans les rapports
-* La description des commandes est maintenant directement accessible sans avoir à recourir à cssm_help
-* cssm_help prend maintenant un argument optionnel, le nom d'une commande dont on veut une description
-* SourceTv reçoit maintenant les messages de CSSMatch
-* La notification de la redétection des tags n'est maintenant visible que par l'arbitre qui l'a demandé
-* Ajout d'un menu spécifique aux temps morts
-
-* Changements sur l'arrêt des records : au round_start
-* Commandes tchat insenssibles à la casse
-
-* Bug corrigés :
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=25
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=51
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=53
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=72
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=76
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=77
+* Il était parfois impossible de choisir son camp à la fin du cutround
+* La fenêtre annonçant les scores en début de round était opaque
+* Ajout d'annonces manquantes (temps mort, rappels du mot de passe, etc.)
+* Synchronisation entre les décomptes et leurs effets
+* Retrait du message "error_cmd" des fichiers de langage
+* Ajout des messages "update_available" et "cssmatch_updatesite" dans les fichiers de langage
+* "cssmatch" écrit dans le tchat n'affichait pas le bon menu
 
 * Suggestions de la communauté implémentées :
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=64
-http://code.google.com/p/cssmatch-plugin/issues/detail?id=80
-
-* Lorsqu'aucun match n'est en cours, le plugin ne consomme plus rien (pas d'écoute d'évènements, mais recherche de timers)
-* Si aucune traduction n'est disponible, un message d'explication sera affiché (plutôt qu'un message vide)
-* Retrait du messages match_retag dans les fichiers de langage
-* Retrait du messages error_default.cfg dans les fichiers de langage
-* Retrait des messages error_tv_enable_not_found et error_tv_enable_0 dans les fichiers de langage
-* Ajout du message menu_breaktime dans les fichiers de langage
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=37
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=69
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=75
