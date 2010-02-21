@@ -109,7 +109,7 @@ INCLUDE = 	-I. \
 			-I$(SDK_PUBLIC_DIR) \
 			-I$(SDK_PUBLIC_DIR)/dlls \
 			-I$(SDK_PUBLIC_DIR)/engine \
-			-I$(SDK_PUBLIC_DIR)tier0 \
+			-I$(SDK_PUBLIC_DIR)/tier0 \
 			-I$(SDK_PUBLIC_DIR)/tier1 \
 			-I$(SDK_PUBLIC_DIR)/vstdlib \
 			-I$(SDK_SRC_DIR)/tier1 \
