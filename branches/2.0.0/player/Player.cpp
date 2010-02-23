@@ -134,7 +134,7 @@ TeamCode Player::getMyTeam() const
 	{
 		team = (TeamCode)pInfo->GetTeamIndex();
 	
-		if ((! pInfo->IsHLTV()) && (team == INVALID_TEAM))
+		if ((team == INVALID_TEAM) && (! pInfo->IsHLTV()))
 			CSSMATCH_PRINT("The plugin was unable to find the team of a Player");
 	}
 

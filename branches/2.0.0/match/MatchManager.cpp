@@ -269,7 +269,17 @@ void MatchManager::updateHostname()
 	ConVar * hostname = plugin->getConVar("hostname");
 
 	ConVar * cssmatch_hostname = plugin->getConVar("cssmatch_hostname");
-	string newHostname = cssmatch_hostname->GetString();
+	string newHostname;
+	if (strcmp(cssmatch_hostname->GetString(),"") == 0)
+	{
+		// cssmatch_hostname not used (because deprecated)
+		newHostname = hostname->GetString();
+	}
+	else
+	{
+		// cssmatch_hostname used: old config file, backward compatibility
+		newHostname = cssmatch_hostname->GetString();
+	}
 
 	// Replace %s by the clan names
 	size_t clanNameSlot = newHostname.find("%s");
@@ -335,6 +345,13 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		plugin->removeTimers();
 
 		// Execute the configuration file
+		ConVar * hostname = plugin->getConVar("hostname");
+		ConVar * sv_password = plugin->getConVar("sv_password");
+		ConVar * cssmatch_hostname = plugin->getConVar("cssmatch_hostname");
+		cssmatch_hostname->Revert();
+		ConVar * cssmatch_password = plugin->getConVar("cssmatch_password");
+		cssmatch_password->Revert();
+		string oldPassword = sv_password->GetString();
 		config.execute();
 
 		// Print the plugin list to the server log
@@ -355,8 +372,18 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 		plugin->addTimer(new ConVarMonitorTimer(1.0f,plugin->getConVar("sv_cheats"),"0","sv_cheats"));
 
 		// Set the new server password
-		string password = plugin->getConVar("cssmatch_password")->GetString();
-		plugin->getConVar("sv_password")->SetValue(password.c_str());
+		string password;
+		if ((strcmp(cssmatch_password->GetString(),"") != 0) || (sv_password->GetString() == oldPassword))
+		{
+			// cssmatch_password used or sv_password not used: old config file? backward compatibility
+			password = plugin->getConVar("cssmatch_password")->GetString();
+			sv_password->SetValue(password.c_str());
+		}
+		else
+		{
+			// cssmatch_password not use (because deprecated) or sv_password used, so ignore cssmatch_password
+			password = sv_password->GetString();
+		}
 
 		map<string, string> parameters;
 		parameters["$password"] = password;

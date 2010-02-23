@@ -192,16 +192,15 @@ void UserMessagesManager::centerSay(RecipientFilter & recipients, const string &
 
 void UserMessagesManager::consoleSay(RecipientFilter & recipients, const string & message)
 {
-	const vector<int> * playerList = recipients.getVector();
-	
-	vector<int>::const_iterator itPlayer;
-	for(itPlayer = playerList->begin(); itPlayer != playerList->end(); itPlayer++)
-	{
-		consoleTell(*itPlayer,message);
-	}
+	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("TextMsg"));
+
+	pWrite->WriteByte(HUD_PRINTNOTIFY);
+	pWrite->WriteString(message.c_str()); 
+
+	engine->MessageEnd();
 }
 
-void UserMessagesManager::consoleTell(int index, const string & message)
+/*void UserMessagesManager::consoleTell(int index, const string & message)
 {
 	edict_t * pEntity = engine->PEntityOfEntIndex(index);
 
@@ -210,4 +209,4 @@ void UserMessagesManager::consoleTell(int index, const string & message)
 		engine->ClientPrintf(pEntity,message.c_str()); // Crash if pEntity is a fake client or SourceTv
 		//engine->ClientCommand(pEntity,("echo " + message + "\n").c_str());
 	}
-}
+}*/

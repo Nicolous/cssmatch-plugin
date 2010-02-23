@@ -105,7 +105,9 @@ void UpdateNotifier::query(const SOCKADDR_IN & serv, const SOCKET & socketfd, co
 
 int UpdateNotifier::Run()
 {
-    wake.Wait(1);
+#ifndef _WIN32
+	wake.Wait(1); // REVIEW ME: The first wait does not work under Linux?
+#endif // ! _WIN32
 
 	while(alive)
 	{

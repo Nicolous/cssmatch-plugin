@@ -635,7 +635,7 @@ bool cssmatch::say_hook(int userIndex)
 				else
 				{
 					recipients.addRecipient(user);
-					i18n->i18nChatSay(recipients,"admin_new_tag");
+					i18n->i18nChatSay(recipients,"admin_please_specify_tag");
 				}
 			}
 			else
@@ -691,7 +691,7 @@ bool cssmatch::say_hook(int userIndex)
 				else
 				{
 					recipients.addRecipient(user);
-					i18n->i18nChatSay(recipients,"admin_new_tag");
+					i18n->i18nChatSay(recipients,"admin_please_specify_tag");
 				}
 			}
 			else
@@ -718,6 +718,37 @@ bool cssmatch::say_hook(int userIndex)
 
 			string updatesite = plugin->getConVar("cssmatch_updatesite")->GetString();
 			i18n->motdSay(recipients,URL,"CSSMatch changelog",updatesite + CSSMATCH_CHANGELOG_FILE);
+		}
+	}
+	// !password the new server password
+	else if (chatCommand == "!password")
+	{
+		eat = true;
+
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+		{
+			if (user->isReferee())
+			{
+				// Get the new password
+				string password;
+				getline(commandString,password);
+
+				if (! password.empty())
+				{
+					// Remove the space at the begin of the password
+					//string::iterator itSpace = password.begin();
+					//password.erase(itSpace,itSpace+1);
+
+					plugin->queueCommand("sv_password" + password + "\n");
+				}
+				else
+				{
+					RecipientFilter recipients;
+					recipients.addRecipient(user);
+					i18n->i18nChatSay(recipients,"admin_please_specify_password");
+				}
+			}
 		}
 	}
 

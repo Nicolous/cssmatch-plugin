@@ -97,11 +97,11 @@ namespace cssmatch
 		 */
 		int findMessageType(const std::string & typeName);
 
-		/** Send a console message to a single client 
+		/* Send a console message to a single client 
 		 * @param index The client index
 		 * @param message The message to send
 		 */
-		void consoleTell(int index, const std::string & message);
+		//void consoleTell(int index, const std::string & message);
 	public:
 		UserMessagesManager();
 		virtual ~UserMessagesManager();
@@ -155,7 +155,7 @@ namespace cssmatch
 		 */
 		void centerSay(RecipientFilter & recipients, const std::string & message);
 
-		/** Send a console message (Will crash send to a bot)
+		/** Send a console message
 		 * @param recipients Recipient list
 		 * @param message The message to send
 		 */

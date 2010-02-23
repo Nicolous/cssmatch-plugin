@@ -3,11 +3,17 @@
 * Ajout d'annonces manquantes (temps mort, rappels du mot de passe, etc.)
 * Synchronisation entre les décomptes et leurs effets
 * Retrait du message "error_cmd" des fichiers de langage
+* Retrait du message "admin_new_tag" des fichiers de langage
 * Ajout des messages "update_available" et "cssmatch_updatesite" dans les fichiers de langage
 * "cssmatch" écrit dans le tchat n'affichait pas le bon menu
 * cssm_rates affichait des messages de déboguage
 
 * Suggestions de la communauté implémentées :
 http://code.google.com/p/cssmatch-plugin/issues/detail?id=37
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=65
 http://code.google.com/p/cssmatch-plugin/issues/detail?id=69
 http://code.google.com/p/cssmatch-plugin/issues/detail?id=75
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=81
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=82
+http://code.google.com/p/cssmatch-plugin/issues/detail?id=83
+

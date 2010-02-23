@@ -184,7 +184,7 @@ void XmlReport::writeJoueur(ticpp::Element * eJoueurs, ClanMember * player)
 	IPlayerInfo * pInfo = player->getPlayerInfo();
 	PlayerStats * stats = player->getCurrentStats();
 
-	if (isValidPlayerInfo(pInfo))
+	if (isValidPlayerInfo(pInfo)) // excludes SourceTv
 	{
 		ticpp::Element * eJoueur = new ticpp::Element("joueur");
 		eJoueur->SetAttribute("steamid",pInfo->GetNetworkIDString());

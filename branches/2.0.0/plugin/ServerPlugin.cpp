@@ -56,6 +56,7 @@ using std::count_if;
 using std::find;
 using std::find_if;
 using std::ostringstream;
+using std::endl;
 
 /*CON_COMMAND(cssm_test, "CSSMatch: Internal")
 {
@@ -73,6 +74,16 @@ using std::ostringstream;
 		plugin->CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }*/
+
+CON_COMMAND(cssm_test, "CSSMatch: Internal")
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	RecipientFilter recipients;
+	recipients.addAllPlayers();
+	i18n->consoleSay(recipients,"voici un message!");
+}
 
 ServerPlugin::ServerPlugin()
 	: loaded(false), updateThread(NULL), clientCommandIndex(0), adminMenu(NULL), bantimeMenu(NULL), match(NULL), i18n(NULL)
@@ -168,7 +179,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 			// Create the other convars
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_version",CSSMATCH_VERSION,FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_version",cssmatch_version));
-			addPluginConVar(new I18nConVar(i18n,"cssmatch_advanced","0",FCVAR_NONE,"cssmatch_advanced",true,0.0f,true,1.0f));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_advanced","1",FCVAR_NONE,"cssmatch_advanced",true,0.0f,true,1.0f));
 
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_report","1",FCVAR_NONE,"cssmatch_report",true,0.0f,true,1.0f));
 
@@ -186,8 +197,8 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_warmup_time","5",FCVAR_NONE,"cssmatch_warmup_time",true,0.0f,false,0.0f));
 
-			addPluginConVar(new I18nConVar(i18n,"cssmatch_hostname","CSSMatch: %s VS %s",FCVAR_NONE,"cssmatch_hostname"));
-			addPluginConVar(new I18nConVar(i18n,"cssmatch_password","inwar",FCVAR_NONE,"cssmatch_password"));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_hostname","",FCVAR_NONE,"cssmatch_hostname")); // Deprecated, use hostname instead
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_password","",FCVAR_NONE,"cssmatch_password")); // Deprecated, use sv_password instead
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_default_config","server.cfg",FCVAR_NONE,"cssmatch_default_config"));
 
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_usermessages","28",FCVAR_NONE,"cssmatch_usermessages"));
@@ -221,7 +232,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			{
 				interfaces.convars = new ConvarsAccessor();
 				interfaces.convars->initializeInterface(interfaceFactory);
-
+				
 				// Grab some existing ConVars
 				ICvar * cvars = interfaces.convars->getConVarInterface();
 				ConVar * sv_cheats = cvars->FindVar("sv_cheats");
@@ -229,11 +240,13 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 				ConVar * hostname = cvars->FindVar("hostname");
 				ConVar * sv_password = cvars->FindVar("sv_password");
 				ConVar * tv_enable = cvars->FindVar("tv_enable");
+				ConVar * ip = cvars->FindVar("ip");
 				if ((sv_cheats == NULL) ||
 					(sv_alltalk == NULL) ||
 					(hostname == NULL) ||
 					(sv_password == NULL) ||
-					(tv_enable == NULL))
+					(tv_enable == NULL) ||
+					(ip == NULL))
 				{
 					success = false;
 					CSSMATCH_PRINT("At least one game ConVars was not found");
@@ -245,6 +258,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 					addPluginConVar(hostname);
 					addPluginConVar(sv_password);
 					addPluginConVar(tv_enable);
+					addPluginConVar(ip);
 				}
 			}
 			catch(const ConvarsAccessorException & e)
@@ -931,14 +945,15 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 
 						ostringstream message;
 
-						message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << ": " << std::endl
-								<< "\t" << "cl_updaterate  = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << std::endl
-								<< "\t" << "cl_cmdrate     = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << std::endl
-								<< "\t" << "cl_interpolate = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << std::endl
-								<< "\t" << "rate           = " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << std::endl
-								<< std::endl;
+						message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << ": " << endl
+								<< "  " << "cl_updaterate  = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << endl
+								<< "  " << "cl_cmdrate     = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << endl
+								<< "  " << "cl_interpolate = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << endl
+								<< "  " << "rate           = " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << endl
+								<< endl;
 
-						i18n->consoleSay(recipients,message.str());
+						const string & finalMsg = message.str();
+						i18n->consoleSay(recipients,finalMsg);
 					}
 				}
 				else
@@ -965,7 +980,8 @@ void ServerPlugin::log(const std::string & message) const
 {
 	ostringstream buffer;
 	buffer << CSSMATCH_NAME << ": " << message << "\n";
-	interfaces.engine->LogPrint(buffer.str().c_str());
+	const string & toLog = buffer.str();
+	interfaces.engine->LogPrint(toLog.c_str());
 }
 
 void ServerPlugin::queueCommand(const string & command) const
@@ -997,6 +1013,12 @@ int ServerPlugin::getPlayerCount(TeamCode team) const
 
 	return playerCount;
 }
+/*string ServerPlugin::getGameDir() const
+{
+	char buffer[30];
+	interfaces.engine->GetGameDir(buffer,sizeof(buffer));
+	return buffer;
+}*/
 
 EXPOSE_SINGLE_INTERFACE_GLOBALVAR(	ServerPlugin, 
 									IServerPluginCallbacks,

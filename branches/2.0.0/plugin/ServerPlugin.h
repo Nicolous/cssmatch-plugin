@@ -302,6 +302,9 @@ namespace cssmatch
 		 * @return The player count
 		 */
 		int getPlayerCount(TeamCode team = INVALID_TEAM) const;
+
+		/* Returns the game directory name */
+		//std::string getGameDir() const;
 	};
 
 /* Loop over all players excluding the 0 index 
