@@ -70,21 +70,24 @@ void BaseCountdown::CountdownTick::execute()
 
 	i18n->hintSay(recipients,message.str());
 
-	if (countdown->decTimeLeft() >= 0)
+	countdown->tick();
+}
+
+void BaseCountdown::tick()
+{
+	if (--left >= 0)
 	{
-		plugin->addTimer(new CountdownTick(countdown,1.0f,left-1));
+		nextTick = new CountdownTick(this,1.0f,left);
+		ServerPlugin::getInstance()->addTimer(nextTick);
 	}
 	else
-		countdown->finish();
-
+	{
+		nextTick = NULL;
+		finish();
+	}
 }
 
-int BaseCountdown::decTimeLeft()
-{
-	return --left;
-}
-
-BaseCountdown::BaseCountdown() : left(0)
+BaseCountdown::BaseCountdown() : left(0), nextTick(NULL)
 {
 }
 
@@ -95,12 +98,15 @@ BaseCountdown::~BaseCountdown()
 void BaseCountdown::fire(int seconds)
 {
 	left = seconds;
-
-	//plugin->addTimer(new CountdownTick(this,0.0f,left));
 	CountdownTick(this,0.0f,left).execute();
 }
 
 void BaseCountdown::stop()
 {
-	left = -1;
+	if (left >= 0)
+	{
+		left = -1;
+		nextTick->cancel();
+		nextTick = NULL;
+	}
 }

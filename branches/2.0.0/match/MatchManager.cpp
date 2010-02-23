@@ -377,10 +377,10 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 
 		// Set the new server password
 		string password;
-		if ((strcmp(cssmatch_password->GetString(),"") != 0) || (sv_password->GetString() == oldPassword))
+		if ((strcmp(cssmatch_password->GetString(),"") != 0) && (sv_password->GetString() == oldPassword))
 		{
 			// cssmatch_password used or sv_password not used: old config file? backward compatibility
-			password = plugin->getConVar("cssmatch_password")->GetString();
+			password = cssmatch_password->GetString();
 			sv_password->SetValue(password.c_str());
 		}
 		else

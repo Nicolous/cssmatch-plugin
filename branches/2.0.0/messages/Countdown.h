@@ -31,7 +31,7 @@ namespace cssmatch
 	/** Base countdown displayed to each player */
 	class BaseCountdown
 	{
-	private:
+	protected:
 		/** BaseCountdown step */
 		class CountdownTick : public BaseTimer
 		{
@@ -53,14 +53,17 @@ namespace cssmatch
 			 */
 			virtual void execute();
 		};
+		/** Next countdown step */
+		CountdownTick * nextTick;
 
 		/** Seconds left before the end of the countdown */
 		int left;
 
-		/** Decrement the time left 
-		 * @return The new time left
-		 */
-		int decTimeLeft();
+		/** Decrement/Continue the countdown */
+		void tick();
+
+		/** Automatically executed when the countdown ends */
+		virtual void finish() = 0;
 	public:
 		BaseCountdown();
 		virtual ~BaseCountdown();
@@ -72,9 +75,6 @@ namespace cssmatch
 
 		/** Stop the countdown */
 		void stop();
-
-		/** Automatically executed when the countdown ends */
-		virtual void finish() = 0;
 	};
 }
 
