@@ -26,13 +26,15 @@
 #include "../configuration/RunnableConfigurationFile.h"
 #include "../plugin/ServerPlugin.h"
 #include "../misc/common.h"
-#include "../messages/I18nManager.h"
 #include "../player/Player.h"
 #include "../player/ClanMember.h"
 #include "../sourcetv/TvRecord.h"
 #include "../report/XmlReport.h"
 
 #include <algorithm>
+#include <sstream>
+
+#include "icommandline.h"
 
 using namespace cssmatch;
 
@@ -40,6 +42,8 @@ using std::string;
 using std::list;
 using std::for_each;
 using std::map;
+using std::endl;
+using std::ostringstream;
 
 MatchManager::MatchManager(BaseMatchState * iniState) throw(MatchManagerException)
 	: initialState(iniState), currentState(NULL)
@@ -576,6 +580,33 @@ void MatchManager::restartHalf() throw (MatchManagerException)
 	}
 	else
 		throw MatchManagerException("No match in progress");
+}
+
+void MatchManager::sendStatus(RecipientFilter & recipients) const
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	I18nManager * i18n = plugin->getI18nManager();
+
+	// Send a status-like to all players (and SourceTv)
+	ostringstream status;
+	status	<< endl << "CSSMatch Status" << endl
+					<< "  Server IP: " << plugin->getConVar("ip")->GetString() << endl
+					<< "  VAC: " << ((CommandLine()->FindParm("-insecure") == 0) ? "on" : "off") << endl
+					<< "  Players:" << endl;
+	i18n->consoleSay(recipients,status.str());
+
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	list<ClanMember *>::const_iterator itPlayer;
+	for (itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
+	{
+		status.str("");
+		IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
+		if (isValidPlayerInfo(pInfo))
+		{
+			status << "  - " << pInfo->GetName() << " (" << pInfo->GetNetworkIDString() << ")" << endl;
+		}
+		i18n->consoleSay(recipients,status.str());
+	}
 }
 
 void MatchManager::EndOfMatchCountdown::finish()

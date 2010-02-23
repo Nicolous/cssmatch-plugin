@@ -35,15 +35,12 @@
 
 #include <ctime>
 
-#include "icommandline.h"
-
 using namespace cssmatch;
 
 using std::string;
 using std::list;
 using std::map;
 using std::ostringstream;
-using std::endl;
 
 HalfMatchState::HalfMatchState() : finished(false)
 {
@@ -452,25 +449,11 @@ void HalfMatchState::round_start(IGameEvent * event)
 		case -1:
 			plugin->queueCommand("mp_restartgame 2\n");
 			break;
+		case 0:
+			match->sendStatus(recipients);
+			break;
 		default:
 			{
-				// Send a status-like to all players (and SourceTv)
-				ostringstream status;
-				status	<< endl << "CSSMatch Status" << endl
-								<< "  Server IP: " << plugin->getConVar("ip")->GetString() << endl
-								<< "  VAC: " << ((CommandLine()->FindParm("-insecure") == 0) ? "on" : "off") << endl
-								<< "  Players:" << endl;
-				for (itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
-				{
-					IPlayerInfo * pInfo = (*itPlayer)->getPlayerInfo();
-					if (isValidPlayerInfo(pInfo))
-					{
-						status << "  - " << pInfo->GetName() << " (" << pInfo->GetNetworkIDString() << ")" << endl;
-					}
-				}
-				status << endl;
-				i18n->consoleSay(recipients,status.str());
-
 				parameters["$current"] = toString(infos->roundNumber);
 				parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();
 				parameters["$team1"] = *lignup->clan1.getName();

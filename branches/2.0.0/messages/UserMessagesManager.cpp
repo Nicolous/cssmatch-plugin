@@ -139,7 +139,7 @@ void UserMessagesManager::popupSay(	RecipientFilter & recipients,
 		pBuffer->WriteChar(lifeTime); // set the lifetime
 
 		moreToSend = iBegin < popupSize;
-		pBuffer->WriteByte(moreToSend); // Is the message completed ?
+		pBuffer->WriteByte(moreToSend); // Is the message completed?
 		
 		pBuffer->WriteString(toSend.c_str()); // set the text
 

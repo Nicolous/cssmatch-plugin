@@ -102,5 +102,5 @@ void BaseCountdown::fire(int seconds)
 
 void BaseCountdown::stop()
 {
-	left = 0;
+	left = -1;
 }

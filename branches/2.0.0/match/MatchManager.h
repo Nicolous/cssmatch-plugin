@@ -27,6 +27,7 @@
 #include "../misc/common.h"
 #include "../exceptions/BaseException.h"
 #include "../messages/Countdown.h"
+#include "../messages/I18nManager.h"
 #include "BaseMatchState.h"
 
 #include "igameevents.h" // IGameEventListener2, IGameEvent
@@ -202,6 +203,9 @@ namespace cssmatch
 		 * @throws MatchManagerException if no match is running	
 		 */
 		void restartHalf() throw (MatchManagerException);
+
+		/** Send to all players a status-like message */
+		void sendStatus(RecipientFilter & recipients) const;
 	};
 
 
