@@ -930,10 +930,6 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 						int playerIndex = (*currentPlayer)->getIdentity()->index;
 
 						ostringstream message;
-						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate"));
-						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate"));
-						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate"));
-						CSSMATCH_PRINT(interfaces.engine->GetClientConVarValue(playerIndex,"rate"));
 
 						message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << ": " << std::endl
 								<< "\t" << "cl_updaterate  = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << std::endl

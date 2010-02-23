@@ -75,11 +75,11 @@ OPT_FLAGS = -O3 \
 			-funroll-loops \
 			-s \
 			-pipe
-#			-fno-rtti \
+#			-fno-rtti
 DEBUG_FLAGS = 	-g \
 				-ggdb3 \
 				-O0 \
-				-D_DeBuG
+				-D_DEBUG				
 
 
 ############

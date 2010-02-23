@@ -105,6 +105,8 @@ void UpdateNotifier::query(const SOCKADDR_IN & serv, const SOCKET & socketfd, co
 
 int UpdateNotifier::Run()
 {
+    wake.Wait(1);
+
 	while(alive)
 	{
 		wake.Reset();

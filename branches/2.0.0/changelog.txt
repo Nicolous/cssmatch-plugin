@@ -5,6 +5,7 @@
 * Retrait du message "error_cmd" des fichiers de langage
 * Ajout des messages "update_available" et "cssmatch_updatesite" dans les fichiers de langage
 * "cssmatch" écrit dans le tchat n'affichait pas le bon menu
+* cssm_rates affichait des messages de déboguage
 
 * Suggestions de la communauté implémentées :
 http://code.google.com/p/cssmatch-plugin/issues/detail?id=37
