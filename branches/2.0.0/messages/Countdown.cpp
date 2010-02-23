@@ -87,7 +87,7 @@ void BaseCountdown::tick()
 	}
 }
 
-BaseCountdown::BaseCountdown() : left(0), nextTick(NULL)
+BaseCountdown::BaseCountdown() : left(-1), nextTick(NULL)
 {
 }
 
