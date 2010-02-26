@@ -172,7 +172,7 @@ void MatchManager::player_disconnect(IGameEvent * event)
 
 	// Announce the password too
 	map<string,string> passParameters;
-	passParameters["$password"] = plugin->getConVar("cssmatch_password")->GetString();
+	passParameters["$password"] = plugin->getConVar("sv_password")->GetString();
 	plugin->addTimer(new TimerI18nChatSay(2.0f,recipients,"match_password_remember",passParameters));
 
 	// If all the players have disconnected, stop the match (and thus the SourceTv record)

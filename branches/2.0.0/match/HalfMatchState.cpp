@@ -290,7 +290,7 @@ void HalfMatchState::endHalf()
 	recipients.addAllPlayers();
 
 	map<string,string> parameters;
-	parameters["$password"] = plugin->getConVar("cssmatch_password")->GetString();
+	parameters["$password"] = plugin->getConVar("sv_password")->GetString();
 	plugin->addTimer(new TimerI18nChatSay(5.0f,recipients,"match_password_popup",parameters));
 
 	if (infos->halfNumber < plugin->getConVar("cssmatch_sets")->GetInt())

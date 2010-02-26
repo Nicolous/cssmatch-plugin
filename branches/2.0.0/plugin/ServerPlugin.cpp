@@ -822,17 +822,18 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 			// (Excepted before the first half begins, and if the player  wants to join/come from  the spectators)
 			if (command == "jointeam")
 			{
+				bool controlJointeam = false;
 				MatchInfo * matchInfo = match->getInfos();
 				BaseMatchState * matchState = match->getMatchState();
 				if (matchInfo->halfNumber <= 1)
 				{
 					if (matchState == HalfMatchState::getInstance())
-						result = PLUGIN_STOP;
+						controlJointeam = true;
 				}
 				else
-					result = PLUGIN_STOP;
+					controlJointeam = true;
 
-				if (result == PLUGIN_STOP)
+				if (controlJointeam)
 				{
 					// Check for command sanity (jointeam without argument causes a error message but swap the player)
 					if (interfaces.engine->Cmd_Argc() > 1)

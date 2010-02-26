@@ -46,7 +46,7 @@ char const * I18nConCommand::GetHelpText() const
 
 	string translation = i18n->getTranslation(i18n->getDefaultLanguage(),ConCommand::GetHelpText());
 
-	char * text = new char [translation.size()];
+	char * text = new char [translation.size()+1];
 	V_strcpy(text,translation.c_str());
 
 	return text;

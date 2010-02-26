@@ -82,7 +82,7 @@ char const * I18nConVar::GetHelpText() const
 
 	string translation = i18n->getTranslation(i18n->getDefaultLanguage(),ConVar::GetHelpText());
 
-	char * text = new char [translation.size()];
+	char * text = new char [translation.size()+1];
 	V_strcpy(text,translation.c_str());
 
 	return text;
