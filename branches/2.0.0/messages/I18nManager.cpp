@@ -174,12 +174,13 @@ string I18nManager::getTranslation(	const string & lang,
 		}
 		catch(const TranslationException & e)
 		{
-			CSSMATCH_PRINT_EXCEPTION(e);
+			//CSSMATCH_PRINT_EXCEPTION(e);
+			message = "Missing translation, please update your translation files";
 		}
 	}
 	else
 	{
-		message = "Missing translation, please update your translation files";
+		message = "Missing default translation file, please update cssmatch_language";
 	}
 
 	return message;

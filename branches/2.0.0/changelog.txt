@@ -1,3 +1,6 @@
 * Correction d'un crash lié aux variables/commandes
 * Correction du rappel du mot de passe
 * Correction du système de restriction des changements de team
+
+
+Si on supprime le message annonçant qui lance le match, comment différencier les admins?

@@ -232,15 +232,13 @@ void DisabledMatchState::configQuestionCallback(Player * player, int choice, Men
 		DisabledMatchState * state = DisabledMatchState::getInstance();
 		ServerPlugin * plugin = ServerPlugin::getInstance();
 		MatchManager * match = plugin->getMatch();
-		I18nManager * i18n = plugin->getI18nManager();
 		MatchMenuLineData * const matchSettings = static_cast<MatchMenuLineData * const>(player->getMenuData());
 
-		map<string,string> parameters;
 		try
 		{
 			RunnableConfigurationFile config(CFG_FOLDER_PATH MATCH_CONFIGURATIONS_PATH + selected->text);
 
-			RecipientFilter recipients;
+			/*RecipientFilter recipients;
 			recipients.addAllPlayers();
 
 			PlayerIdentity * identity = player->getIdentity();
@@ -251,12 +249,14 @@ void DisabledMatchState::configQuestionCallback(Player * player, int choice, Men
 				i18n->i18nChatSay(recipients,"match_started_by",parameters,identity->index);
 			}
 			else
-				i18n->i18nChatSay(recipients,"match_started");
+				i18n->i18nChatSay(recipients,"match_started");*/
 
 			match->start(config,matchSettings->warmup,matchSettings->state);
 		}
 		catch(const ConfigurationFileException & e)
 		{
+			I18nManager * i18n = plugin->getI18nManager();
+			map<string,string> parameters;
 			parameters["$file"] = selected->text;
 
 			i18n->i18nMsg("error_file_not_found",parameters);

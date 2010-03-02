@@ -38,11 +38,13 @@
 
 #include <sstream>
 #include <ctime>
+#include <map>
 
 #include "../plugin/ServerPlugin.h"
 
 using namespace cssmatch;
 
+using std::map;
 using std::string;
 using std::ostringstream;
 using std::exception;
@@ -98,9 +100,21 @@ void cssmatch::print(const string & fileName, int line, const string & message)
 
 void cssmatch::printException(const exception & e, const string & fileName, int line)
 {
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	I18nManager * i18n = plugin->getI18nManager();
+
 	ostringstream buffer;
 	buffer << e.what() << " (" << fileName << ", l." << line << ")";
-	ServerPlugin::getInstance()->log(buffer.str());
+	plugin->log(buffer.str());
+
+	// ?
+	RecipientFilter recipients;
+	recipients.addAllPlayers();
+
+	map<string,string> parameters;
+	parameters["$site"] = CSSMATCH_SITE;
+
+	i18n->i18nChatWarning(recipients,"error_general",parameters);
 }
 
 IServerEntity * cssmatch::getServerEntity(edict_t * entity)

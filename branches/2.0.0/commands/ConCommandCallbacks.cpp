@@ -144,9 +144,9 @@ void cssmatch::cssm_start()
 			}
 			match->start(configuration,warmup,initialState);
 
-			RecipientFilter recipients;
+			/*RecipientFilter recipients;
 			recipients.addAllPlayers();
-			i18n->i18nChatSay(recipients,"match_started");
+			i18n->i18nChatSay(recipients,"match_started");*/
 		}
 		catch(const ConfigurationFileException & e)
 		{
@@ -546,30 +546,31 @@ bool cssmatch::say_hook(int userIndex)
 	// !go, ready: a clan wants to end the warmup
 	else if ((chatCommand == "!go") || (chatCommand == "ready"))
 	{
-		BaseMatchState * currentState = match->getMatchState();
-		if (currentState == WarmupMatchState::getInstance())
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
 		{
-			ClanMember * user = NULL;
-			CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+			BaseMatchState * currentState = match->getMatchState();
+			if (currentState == WarmupMatchState::getInstance())
 			{
 				WarmupMatchState::getInstance()->doGo(user);
 			}
 			else
-				CSSMATCH_PRINT("Unable to find the player who typed !go/ready");		
+			{
+				RecipientFilter recipients;
+				//recipients.addAllPlayers();	
+				recipients.addRecipient(user);
+				if (currentState != match->getInitialState())
+				{
+					i18n->i18nChatSay(recipients,"warmup_disable");
+				}
+				else
+				{
+					i18n->i18nChatSay(recipients,"match_not_in_progress");
+				}
+			}
 		}
 		else
-		{
-			RecipientFilter recipients;
-			recipients.addAllPlayers();	
-			if (currentState != match->getInitialState())
-			{
-				i18n->i18nChatSay(recipients,"warmup_disable");
-			}
-			else
-			{
-				i18n->i18nChatSay(recipients,"match_not_in_progress");
-			}
-		}
+			CSSMATCH_PRINT("Unable to find the player who typed !go/ready");		
 	}
 	// !scores: Display the current/last scores
 	else if ((chatCommand == "!score") || (chatCommand == "!scores"))

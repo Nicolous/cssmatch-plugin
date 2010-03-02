@@ -56,7 +56,6 @@ cssmatch_default_config =		"CSSMatch : Archivo de configuración por defecto del
 // Warnings
 sv_alltalk =					"Micros abiertos"
 sv_cheats =						"Sv_Cheats Activos"
-tv_enable =						"El mapa se reiniciará para conectar la SourceTV al servidor"
 update_available =              "Update available! For more information type !update"
 
 // Knife Round
@@ -79,11 +78,10 @@ warmup_end =					"¡ Fin Estrategia !"
 match_in_progress =				"La War ya está en proceso..."
 match_not_in_progress =			"La War no está en proceso..."
 match_round_popup =				"Ronda $current / $total\n$team1 : $score1\n$team2 : $score2"
-match_plugin_list =				"Instalado Estado y Lista de Plugin :"
 match_password_popup =			"Contraseña Servidor : $password"
 match_password_remember =		"¡ RECUERDA ! La contraseña del servidor es $password"
-match_started_by =				"War iniciada por $admin..."
-match_started =					"La War comenzó..."
+//match_started_by =				"War iniciada por $admin..."
+//match_started =					"La War comenzó..."
 match_name =					"$team1 VS $team2"
 match_config_error =			"¡ Error : el archivo de configuración no tiene la información de war !"
 match_scores =					"Scores :"
@@ -176,10 +174,10 @@ error_tv_not_connected =		"SourceTV no puede iniciarse porque no está conectada
 
 // Players
 player_join_game =				"$username se une a la partida"
-player_match_hosted_popup =		"¡ La Wat está en proceso en este servidor !\n \nSi no eres una de las personas que forman parte, por favor, váyase"
+//player_match_hosted_popup =		"¡ La Wat está en proceso en este servidor !\n \nSi no eres una de las personas que forman parte, por favor, váyase"
 player_no_swap_in_match =		"Sólo CSSMatch y admins pueden mover jugadores"
 player_you_not_admin =			"¡ Tú no eres un Admin !"
-player_leave_game =				"¡ $username abandonó el juego ! (razón : $reason)"
+//player_leave_game =				"¡ $username abandonó el juego ! (razón : $reason)"
 player_username =				"Nickname del jugador"
 player_nobody =					"Nadie"
 player_thetime =				"$hoursh$minutes"

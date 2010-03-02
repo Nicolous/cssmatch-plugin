@@ -148,10 +148,10 @@ void MatchManager::player_activate(IGameEvent * event)
 			i18n->i18nChatSay(recipients,"player_join_game",parameters);
 		}
 
-		RecipientFilter newplayerRecipient;
+		/*RecipientFilter newplayerRecipient;
 		newplayerRecipient.addRecipient(player);
 	
-		i18n->i18nPopupSay(newplayerRecipient,"player_match_hosted_popup",0);
+		i18n->i18nPopupSay(newplayerRecipient,"player_match_hosted_popup",0);*/
 	}
 }
 
@@ -164,11 +164,11 @@ void MatchManager::player_disconnect(IGameEvent * event)
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
-	map<string, string> parameters;
+	/*map<string, string> parameters;
 	parameters["$username"] = event->GetString("name");
 	parameters["$reason"] = event->GetString("reason");
 
-	i18n->i18nChatSay(recipients,"player_leave_game",parameters);
+	i18n->i18nChatSay(recipients,"player_leave_game",parameters);*/
 
 	// Announce the password too
 	map<string,string> passParameters;

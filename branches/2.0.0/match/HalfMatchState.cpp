@@ -289,9 +289,9 @@ void HalfMatchState::endHalf()
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
 
-	map<string,string> parameters;
+	/*map<string,string> parameters;
 	parameters["$password"] = plugin->getConVar("sv_password")->GetString();
-	plugin->addTimer(new TimerI18nChatSay(5.0f,recipients,"match_password_popup",parameters));
+	plugin->addTimer(new TimerI18nChatSay(5.0f,recipients,"match_password_popup",parameters));*/
 
 	if (infos->halfNumber < plugin->getConVar("cssmatch_sets")->GetInt())
 	{

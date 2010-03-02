@@ -70,12 +70,12 @@ void WarmupMatchState::endWarmup()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	MatchManager * match = plugin->getMatch();
-	I18nManager * i18n = plugin->getI18nManager();
+	/*I18nManager * i18n = plugin->getI18nManager();
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
 
-	i18n->i18nChatSay(recipients,"warmup_end");
+	i18n->i18nChatSay(recipients,"warmup_end");*/
 
 	if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
 	{
@@ -106,24 +106,26 @@ void WarmupMatchState::doGo(Player * player)
 		MatchClan * otherClan = (&lignup->clan1 != clan) ? &lignup->clan1 : &lignup->clan2;
 
 		parameters["$team"] = *clan->getName();
-		string message;
 		if (clan->isReady())
 		{
 			// Clan already "ready"
-			message = "warmup_already_ready";
+			i18n->i18nChatSay(recipients,"warmup_already_ready",parameters,player->getIdentity()->index);
 		}
 		else
 		{
 			clan->setReady(true);
-			message = "warmup_ready";
-		}
-		i18n->i18nChatSay(recipients,message,parameters,player->getIdentity()->index);
 
-		// If both clan1 and clan2 are ready, end the warmup
-		if (clan->isReady() && otherClan->isReady())
-		{
-			i18n->i18nChatSay(recipients,"warmup_all_ready");
-			endWarmup();
+			// If both clan1 and clan2 are ready, end the warmup
+			if (otherClan->isReady())
+			{
+				i18n->i18nChatSay(recipients,"warmup_all_ready");
+				endWarmup();
+			}
+			// Ohterwise just announce that this clan is ready
+			else
+			{
+				i18n->i18nChatSay(recipients,"warmup_ready",parameters,player->getIdentity()->index);
+			}
 		}
 	}
 	catch(const MatchManagerException & e)
