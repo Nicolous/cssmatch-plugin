@@ -48,6 +48,8 @@ namespace cssmatch
 	class EntityProp
 	{
 	private:
+		bool initialized;
+
 		/** The prop class */
 		std::string theClass;
 
@@ -73,7 +75,7 @@ namespace cssmatch
 		EntityProp(const std::string & propClass, const std::string & propPath);
 
 		/** Retrieve a prop reference about a given entity
-		 * @param entity The entity
+		 * @param entity The VALID entity 
 		 * @throws EntityPropException If the prop was not found
 		 */
 		template<typename T>
@@ -83,6 +85,12 @@ namespace cssmatch
 	template<typename T>
 	T & EntityProp::getProp(edict_t * entity) throw(EntityPropException)
 	{
+		if (! initialized)
+		{
+			initialize();
+			initialized = true;
+		}
+
 		T * prop = NULL;
 
 		if (offset > 0)

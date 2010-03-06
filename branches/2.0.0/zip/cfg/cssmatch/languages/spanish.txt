@@ -169,7 +169,7 @@ menu_close =					"Cerrar"
 error_file_not_found =			"Archivo $file no se encuentra"
 error_command_not_found =		"Comando "$command" no se encuentra"
 error_invalid_player =			"Jugador no válido"
-error_general =					"Ha ocurrido un error, por favor, póngase en contacto con el autor del plugin en $site"
+//error_general =					"Ha ocurrido un error, por favor, póngase en contacto con el autor del plugin en $site"
 error_tv_not_connected =		"SourceTV no puede iniciarse porque no está conectada en el servidor"
 
 // Players

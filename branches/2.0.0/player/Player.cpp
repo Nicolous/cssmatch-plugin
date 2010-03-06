@@ -32,8 +32,22 @@ using std::string;
 using std::map;
 using std::ostringstream;
 
+EntityProp Player::accountHandler("CCSPlayer","m_iAccount");
+EntityProp Player::lifeStateHandler("CBasePlayer","m_lifeState");
+EntityProp Player::hasHelmetHandler("CCSPlayer","m_bHasHelmet");
+EntityProp Player::vecOriginHandler("CCSPlayer","baseclass.baseclass.baseclass.baseclass.baseclass.baseclass.m_vecOrigin");
+EntityProp Player::hasDefuserHandler("CCSPlayer","m_bHasDefuser");
+EntityProp Player::hasNightVisionHandler("CCSPlayer","m_bHasNightVision");
+EntityProp Player::angRotationHandler("CBaseEntity","m_angRotation");
+EntityProp Player::eyeAngles0Handler("CCSPlayer","m_angEyeAngles[0]");
+EntityProp Player::eyeAngles1Handler("CCSPlayer","m_angEyeAngles[1]");
+EntityProp Player::armorHandler("CCSPlayer","m_ArmorValue");
+EntityProp Player::healthHandler("CCSPlayer","baseclass.m_iHealth");
+EntityProp Player::hegrenadeHandler("CBasePlayer","localdata.m_iAmmo.011");
+EntityProp Player::flashbangHandler("CBasePlayer","localdata.m_iAmmo.012");
+EntityProp Player::smokegrenadeHandler("CBasePlayer","localdata.m_iAmmo.013");
+
 Player::Player(int index) throw (PlayerException)
-	: cashHandler("CCSPlayer","m_iAccount"), lifeStateHandler("CBasePlayer","m_lifeState")
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -154,7 +168,7 @@ CBasePlayer * Player::getBasePlayer() const
 		CSSMATCH_PRINT("The plugin was unable to find the base player pointer of a Player");
 		bPlayer = NULL;
 	}
-
+	
 	return bPlayer;
 }
 
@@ -292,6 +306,14 @@ void Player::cexec(const std::string & command) const
 	interfaces->engine->ClientCommand(identity.pEntity,command.c_str());
 }
 
+void Player::sexec(const std::string & command) const
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	interfaces->helpers->ClientCommand(identity.pEntity,command.c_str());
+}
+
 void Player::removeWeapon(WeaponSlotCode slot)
 {
 	CBaseCombatWeapon * weapon = getWeaponFromWeaponSlot(slot);
@@ -299,11 +321,11 @@ void Player::removeWeapon(WeaponSlotCode slot)
 		weapon->Kill();
 }
 
-void Player::setCash(unsigned int newCash)
+void Player::setAccount(int newCash)
 {
 	try
 	{
-		cashHandler.getProp<unsigned int>(identity.pEntity) = newCash;
+		accountHandler.getProp<int>(identity.pEntity) = newCash;
 	}
 	catch(const EntityPropException & e)
 	{
@@ -311,14 +333,342 @@ void Player::setCash(unsigned int newCash)
 	}
 }
 
-void Player::setLifeState(unsigned int newState)
+int Player::getAccount()
 {
+	int account = -1;
+
 	try
 	{
-		lifeStateHandler.getProp<unsigned int>(identity.pEntity) = newState;
+		account = accountHandler.getProp<int>(identity.pEntity);
 	}
 	catch(const EntityPropException & e)
 	{
 		CSSMATCH_PRINT_EXCEPTION(e);
 	}
+
+	return account;
+}
+
+void Player::setLifeState(int newState)
+{
+	try
+	{
+		lifeStateHandler.getProp<int>(identity.pEntity) = newState;
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+}
+
+int Player::getLifeState()
+{
+	int lifeState = -1;
+
+	try
+	{
+		lifeState = lifeStateHandler.getProp<int>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return lifeState;
+}
+
+void Player::hasHelmet(bool hasHelmet)
+{
+	try
+	{
+		hasHelmetHandler.getProp<bool>(identity.pEntity) = hasHelmet;
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+}
+
+bool Player::hasHelmet()
+{
+	bool helmet = false;
+
+	try
+	{
+		helmet = hasHelmetHandler.getProp<bool>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return helmet;
+}
+
+
+void Player::setVecOrigin(const Vector & vec)
+{
+	/*try
+	{
+		vecOriginHandler.getProp<Vector>(identity.pEntity) = vec;
+		identity.pEntity->m_fStateFlags |= (FL_EDICT_CHANGED | FL_FULL_EDICT_CHANGED);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}*/
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
+
+	ostringstream command;
+	command << "setpos " << vec.x << " " << vec.y << " " << vec.z << "\n";
+
+	sv_cheats->m_nValue = 1;
+	sexec(command.str());
+	sv_cheats->m_nValue = 0;
+}
+
+Vector Player::getVecOrigin()
+{
+	Vector origin;
+
+	try
+	{
+		origin = vecOriginHandler.getProp<Vector>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return origin;
+}
+
+void Player::hasDefuser(bool hasDefuser)
+{
+	try
+	{
+		hasDefuserHandler.getProp<bool>(identity.pEntity) = hasDefuser;
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+}
+
+bool Player::hasDefuser()
+{
+	bool defuser = false;
+
+	try
+	{
+		defuser = hasDefuserHandler.getProp<bool>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return defuser;
+}
+
+void Player::hasNightVision(bool hasNightVision)
+{
+	try
+	{
+		hasNightVisionHandler.getProp<bool>(identity.pEntity) = hasNightVision;
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+}
+
+bool Player::hasNightVision()
+{
+	bool nightvision = false;
+
+	try
+	{
+		nightvision = hasNightVisionHandler.getProp<bool>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return nightvision;
+}
+
+Vector Player::getAngRotation()
+{
+	Vector ang;
+
+	try
+	{
+		ang = angRotationHandler.getProp<Vector>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return ang;
+}
+
+QAngle Player::getViewAngle()
+{
+	QAngle view(VEC_T_NAN,VEC_T_NAN,VEC_T_NAN);
+
+	try
+	{
+		Vector rotation = getAngRotation();
+		if (rotation.IsValid())
+		{
+			view.x = eyeAngles0Handler.getProp<float>(identity.pEntity);
+
+			float y = eyeAngles1Handler.getProp<float>(identity.pEntity);
+			if (y < 0)
+				y += 360;
+			view.y = y;
+
+			view.z = rotation.z;
+		}
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return view;
+}
+
+void Player::setHealth(int newHealth)
+{
+	try
+	{
+		healthHandler.getProp<int>(identity.pEntity) = newHealth;
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+}
+
+int Player::getHealth()
+{
+	int health = -1;
+
+	try
+	{
+		health = healthHandler.getProp<int>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return health;
+}
+
+void Player::setArmor(int newArmor)
+{
+	try
+	{
+		armorHandler.getProp<int>(identity.pEntity) = newArmor;
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+}
+
+int Player::getArmor()
+{
+	int armor = -1;
+
+	try
+	{
+		armor = healthHandler.getProp<int>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return armor;
+}
+
+int Player::getHeCount()
+{
+	int he = -1;
+
+	try
+	{
+		he = hegrenadeHandler.getProp<int>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return he;
+}
+
+int Player::getFbCount()
+{
+	int fb = -1;
+
+	try
+	{
+		fb = flashbangHandler.getProp<int>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return fb;
+}
+
+int Player::getSgCount()
+{
+	int sg = -1;
+
+	try
+	{
+		sg = smokegrenadeHandler.getProp<int>(identity.pEntity);
+	}
+	catch(const EntityPropException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
+	}
+
+	return sg;
+}
+
+void Player::give(const string & item)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
+
+	ostringstream command;
+	command << "give " << item << "\n";
+
+	sv_cheats->m_nValue = 1;
+	sexec(command.str());
+	sv_cheats->m_nValue = 0;
+}
+
+void Player::setang(const QAngle & angle)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
+
+	ostringstream command;
+	command << "setang " << angle.x << " " << angle.y << " " << angle.z << "\n";
+
+	sv_cheats->m_nValue = 1;
+	sexec(command.str());
+	sv_cheats->m_nValue = 0;
 }

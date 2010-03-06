@@ -169,7 +169,7 @@ menu_close =					"Close"
 error_file_not_found =			"File $file cannot be found"
 error_command_not_found =		"Command "$command" cannot be found"
 error_invalid_player =			"Invalid player"
-error_general =					"Error has occured, please contact plugin author on $site"
+//error_general =					"Error has occured, please contact plugin author on $site"
 error_tv_not_connected =		"SourceTV record cannot start because it's not connected on server"
 
 // Players

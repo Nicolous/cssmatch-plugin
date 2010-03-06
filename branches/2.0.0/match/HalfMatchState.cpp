@@ -34,6 +34,7 @@
 #include "WarmupMatchState.h"
 
 #include <ctime>
+#include <algorithm>
 
 using namespace cssmatch;
 
@@ -41,8 +42,9 @@ using std::string;
 using std::list;
 using std::map;
 using std::ostringstream;
+using std::for_each;
 
-HalfMatchState::HalfMatchState() : finished(false)
+HalfMatchState::HalfMatchState() : finished(false), roundRestarted(false), halfRestarted(false)
 {
 	halfMenu = new Menu("menu_match",new MenuCallback<HalfMatchState>(this,&HalfMatchState::halfMenuCallback));
 	halfMenu->addLine(true,"menu_alltalk");
@@ -142,6 +144,56 @@ void HalfMatchState::endState()
 		if (refLastRecord->isRecording())
 			refLastRecord->stop();
 	}
+}
+
+void HalfMatchState::restartRound()
+{
+	roundRestarted = true; // see round_start
+
+	ServerPlugin * plugin = ServerPlugin::getInstance(); 
+	MatchManager * match = plugin->getMatch();
+	MatchInfo * infos = match->getInfos();
+
+	// Restore the score of each player // see round_start
+
+	// Back to the last round (round_start will maybe increment that)
+	if (infos->roundNumber == 1)
+		infos->roundNumber = -2; 
+		// a negative round number causes game restarts until the round number reaches 1
+	else
+		infos->roundNumber -= 1;
+
+	// Do the restart
+	plugin->queueCommand("mp_restartgame 2\n");
+}
+
+void HalfMatchState::restartState()
+{
+	halfRestarted = true; // see round_start
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	MatchInfo * infos = match->getInfos();
+
+	// Restore the score of each player // see round_start
+
+	// Restore the score of each clan
+	MatchClan * clanT = match->getClan(T_TEAM);
+	ClanStats * currentScoreClanT = clanT->getStats();
+	ClanStats * lastHalfStatsClanT = clanT->getLastHalfState();
+	currentScoreClanT->scoreT = lastHalfStatsClanT->scoreT;
+
+	MatchClan * clanCT = match->getClan(CT_TEAM);
+	ClanStats * currentScoreClanCT = clanCT->getStats();
+	ClanStats * lastHalfStatsClanCT = clanCT->getLastHalfState();
+	currentScoreClanCT->scoreCT = lastHalfStatsClanCT->scoreCT;
+
+	// Back to the first round (round_start will maybe increment that)
+	infos->roundNumber = -2;
+	// a negative round number causes game restarts until the round number reaches 1
+
+	// Do the restart
+	plugin->queueCommand("mp_restartgame 2\n");
 }
 
 void HalfMatchState::showMenu(Player * recipient)
@@ -263,28 +315,20 @@ void HalfMatchState::endHalf()
 
 	plugin->queueCommand("plugin_print\n");
 
-	// Update the score history of each player
+	// Update the state of each player
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	list<ClanMember *>::iterator itPlayer;
-	for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
-	{
-		PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
-		PlayerStats * lastSetStats = (*itPlayer)->getLastSetStats();
-
-		lastSetStats->deaths = currentStats->deaths;
-		lastSetStats->kills = currentStats->kills;
-	}
+	for_each(playerlist->begin(),playerlist->end(),SaveHalfPlayerState());
 
 	// Update the score history of each clan
 	MatchClan * clanT = match->getClan(T_TEAM);
-	ClanStats * currentStatsClanT = clanT->getStats();
-	ClanStats * lastSetStatsClanT = clanT->getLastSetStats();
-	lastSetStatsClanT->scoreT = currentStatsClanT->scoreT;
+	ClanStats * currentScoreClanT = clanT->getStats();
+	ClanStats * lastHalfStatsClanT = clanT->getLastHalfState();
+	lastHalfStatsClanT->scoreT = currentScoreClanT->scoreT;
 
 	MatchClan * clanCT = match->getClan(CT_TEAM);
-	ClanStats * currentStatsClanCT = clanCT->getStats();
-	ClanStats * lastSetStatsClanCT = clanCT->getLastSetStats();
-	lastSetStatsClanCT->scoreCT = currentStatsClanCT->scoreCT;
+	ClanStats * currentScoreClanCT = clanCT->getStats();
+	ClanStats * lastHalfStatsClanCT = clanCT->getLastHalfState();
+	lastHalfStatsClanCT->scoreCT = currentScoreClanCT->scoreCT;
 
 	RecipientFilter recipients;
 	recipients.addAllPlayers();
@@ -385,8 +429,8 @@ void HalfMatchState::player_death(IGameEvent * event)
 	ClanMember * victim = NULL;
 	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,idVictim,victim)
 	{
-		PlayerStats * currentStats = victim->getCurrentStats();
-		currentStats->deaths++;
+		PlayerScore * currentScore = victim->getCurrentScore();
+		currentScore->deaths++;
 	}
 
 	int idAttacker = event->GetInt("attacker");
@@ -395,11 +439,11 @@ void HalfMatchState::player_death(IGameEvent * event)
 		ClanMember * attacker = NULL;
 		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,idAttacker,attacker)
 		{
-			PlayerStats * currentStats = attacker->getCurrentStats();
+			PlayerScore * currentScore = attacker->getCurrentScore();
 			if (attacker->getMyTeam() != attacker->getMyTeam())
-				currentStats->kills++;
+				currentScore->kills++;
 			else
-				currentStats->kills--;
+				currentScore->kills--;
 		}
 	}
 }
@@ -414,11 +458,13 @@ void HalfMatchState::round_start(IGameEvent * event)
 	}
 	else
 	{
-		// Update the score history of each player, do the restart and announce the begin of a new round
-
 		ServerPlugin * plugin = ServerPlugin::getInstance();
 		MatchManager * match = plugin->getMatch();
 		I18nManager * i18n = plugin->getI18nManager();
+
+		list<ClanMember *> * playerlist = plugin->getPlayerlist();
+
+		// Do the restart and announce the begin of a new round
 
 		MatchInfo * infos = match->getInfos();
 
@@ -430,17 +476,6 @@ void HalfMatchState::round_start(IGameEvent * event)
 		recipients.addAllPlayers();
 		map<string,string> parameters;
 
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator itPlayer;
-		for (itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
-		{
-			PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
-			PlayerStats * lastRoundStats = (*itPlayer)->getLastRoundStats();
-
-			lastRoundStats->deaths = currentStats->deaths;
-			lastRoundStats->kills = currentStats->kills;
-		}
-
 		switch(infos->roundNumber++)
 		{
 		case -2:
@@ -451,9 +486,29 @@ void HalfMatchState::round_start(IGameEvent * event)
 			break;
 		case 0:
 			match->sendStatus(recipients);
-			break;
 		default:
 			{
+				// If there was a restart, restore the players equipement/score
+				if (roundRestarted)
+				{
+					for_each(playerlist->begin(),playerlist->end(),RestoreRoundPlayerState());
+					roundRestarted = false;
+				}
+				else
+				{
+					if (halfRestarted)
+					{
+						for_each(playerlist->begin(),playerlist->end(),RestoreHalfPlayerScore());
+						halfRestarted = false;
+					}
+					else
+					{
+						list<ClanMember *> * playerlist = plugin->getPlayerlist();
+						for_each(playerlist->begin(),playerlist->end(),SaveHalfPlayerState());
+					}
+					for_each(playerlist->begin(),playerlist->end(),SaveRoundPlayerState());
+				}
+
 				parameters["$current"] = toString(infos->roundNumber);
 				parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();
 				parameters["$team1"] = *lignup->clan1.getName();

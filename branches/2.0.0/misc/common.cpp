@@ -31,7 +31,7 @@
 #include "dlls/iplayerinfo.h"
 #include "eiface.h"
 #include "igameevents.h"
-#include "convar.h"
+#include "../convars/convar.h"
 #include "icvar.h"
 #include "bitbuf.h"
 #include "baseentity.h"
@@ -108,13 +108,13 @@ void cssmatch::printException(const exception & e, const string & fileName, int 
 	plugin->log(buffer.str());
 
 	// ?
-	RecipientFilter recipients;
+	/*RecipientFilter recipients;
 	recipients.addAllPlayers();
 
 	map<string,string> parameters;
 	parameters["$site"] = CSSMATCH_SITE;
 
-	i18n->i18nChatWarning(recipients,"error_general",parameters);
+	i18n->i18nChatWarning(recipients,"error_general",parameters);*/
 }
 
 IServerEntity * cssmatch::getServerEntity(edict_t * entity)

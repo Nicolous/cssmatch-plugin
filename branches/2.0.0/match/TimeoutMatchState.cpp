@@ -74,6 +74,16 @@ void TimeoutMatchState::endState()
 	countdown.stop();
 }
 
+void TimeoutMatchState::restartRound()
+{
+	ServerPlugin::getInstance()->queueCommand("mp_restartgame 2\n");
+}
+
+void TimeoutMatchState::restartState()
+{
+	restartRound();
+}
+
 void TimeoutMatchState::showMenu(Player * recipient)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();

@@ -41,7 +41,7 @@
 #include "eiface.h"
 #include "dlls/iplayerinfo.h"
 #include "igameevents.h"
-#include "convar.h"
+#include "../convars/convar.h"
 #include "interface.h"
 
 #include <sstream>
@@ -61,29 +61,22 @@ using std::endl;
 /*CON_COMMAND(cssm_test, "CSSMatch: Internal")
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	int index = atoi(plugin->getInterfaces()->engine->Cmd_Argv(1));
-	Player player(plugin->getInterfaces()->engine,plugin->getInterfaces()->playerinfomanager,index);
-
-	EntityProp prop(plugin->getInterfaces()->engine->Cmd_Argv(2),plugin->getInterfaces()->engine->Cmd_Argv(3));
-	try
+	ClanMember * member = NULL;
+	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,atoi(plugin->getInterfaces()->engine->Cmd_Argv(1)),member)
 	{
-		Msg("%s.%s: %i\n",plugin->getInterfaces()->engine->Cmd_Argv(2),plugin->getInterfaces()->engine->Cmd_Argv(3),prop.getProp<int>(player.getIdentity()->pEntity));
-	}
-	catch(const EntityPropException & e)
-	{
-		plugin->CSSMATCH_PRINT_EXCEPTION(e);
+		try
+		{
+			float x = atof(plugin->getInterfaces()->engine->Cmd_Argv(2));
+			float y = atof(plugin->getInterfaces()->engine->Cmd_Argv(3));
+			float z = atof(plugin->getInterfaces()->engine->Cmd_Argv(4));
+			member->setVecOrigin(Vector(x,y,z));
+		}
+		catch(const EntityPropException & e)
+		{
+			CSSMATCH_PRINT_EXCEPTION(e);
+		}
 	}
 }*/
-
-CON_COMMAND(cssm_test, "CSSMatch: Internal")
-{
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	I18nManager * i18n = plugin->getI18nManager();
-
-	RecipientFilter recipients;
-	recipients.addAllPlayers();
-	i18n->consoleSay(recipients,"voici un message!");
-}
 
 ServerPlugin::ServerPlugin()
 	: loaded(false), updateThread(NULL), clientCommandIndex(0), adminMenu(NULL), bantimeMenu(NULL), match(NULL), i18n(NULL)

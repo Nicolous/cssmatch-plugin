@@ -183,6 +183,24 @@ void KnifeRoundMatchState::endState()
 	interfaces->gameeventmanager2->RemoveListener(this);
 }
 
+void KnifeRoundMatchState::restartRound()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	MatchManager * match = plugin->getMatch();
+	MatchInfo * infos = match->getInfos();
+
+	// Back to the first round (round_start will maybe increment that)
+	infos->roundNumber = -2;
+	// a negative round number causes game restarts until the round number reaches 1
+
+	plugin->queueCommand("mp_restartgame 2\n");
+}
+
+void KnifeRoundMatchState::restartState()
+{
+	restartRound();
+}
+
 void KnifeRoundMatchState::showMenu(Player * recipient)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -346,7 +364,7 @@ void KnifeRoundMatchState::player_spawn(IGameEvent * event)
 	ClanMember * player = NULL;
 	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 	{
-		player->setCash(plugin->getConVar("cssmatch_kniferound_money")->GetInt());
+		player->setAccount(plugin->getConVar("cssmatch_kniferound_money")->GetInt());
 	}
 	else
 		CSSMATCH_PRINT("Unable to find the player who spawns");

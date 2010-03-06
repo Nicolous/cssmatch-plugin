@@ -76,9 +76,9 @@ void MatchClan::getMembers(list<ClanMember *> * members)
 	}
 }
 
-ClanStats * MatchClan::getLastSetStats()
+ClanStats * MatchClan::getLastHalfState()
 {
-	return &lastSetStats;
+	return &lastHalfStats;
 }
 
 ClanStats * MatchClan::getStats()
@@ -88,8 +88,8 @@ ClanStats * MatchClan::getStats()
 
 void MatchClan::reset()
 {
-	lastSetStats.scoreT = 0;
-	lastSetStats.scoreCT = 0;
+	lastHalfStats.scoreT = 0;
+	lastHalfStats.scoreCT = 0;
 	stats.scoreT = 0;
 	stats.scoreCT = 0;
 	ready = false;

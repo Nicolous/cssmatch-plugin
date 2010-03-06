@@ -182,7 +182,7 @@ void XmlReport::writeJoueurs(ticpp::Element * eTeam, MatchClan * clan)
 void XmlReport::writeJoueur(ticpp::Element * eJoueurs, ClanMember * player)
 {
 	IPlayerInfo * pInfo = player->getPlayerInfo();
-	PlayerStats * stats = player->getCurrentStats();
+	PlayerScore * stats = player->getCurrentScore();
 
 	if (isValidPlayerInfo(pInfo)) // excludes SourceTv
 	{

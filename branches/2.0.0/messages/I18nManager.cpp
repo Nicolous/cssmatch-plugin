@@ -26,7 +26,7 @@
 #include "../misc/common.h"
 #include "../plugin/ServerPlugin.h"
 
-#include "convar.h"
+#include "../convars/convar.h"
 #include "eiface.h"
 
 #include <vector>

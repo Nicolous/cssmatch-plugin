@@ -57,6 +57,9 @@ namespace cssmatch
 		/** Does this state finished ? */
 		bool finished;
 
+		// The last round/half has been restarted?
+		bool roundRestarted, halfRestarted;
+
 		friend class BaseSingleton<HalfMatchState>;
 		HalfMatchState();
 		~HalfMatchState();
@@ -72,6 +75,8 @@ namespace cssmatch
 		// BaseMatchState methods
 		void startState();
 		void endState();
+		void restartRound();
+		void restartState();
 		void showMenu(Player * recipient);
 
 		// Menus callbacks

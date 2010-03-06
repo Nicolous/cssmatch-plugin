@@ -23,7 +23,7 @@
 #ifndef __I18N_CON_COMMAND_H__
 #define __I18N_CON_COMMAND_H__
 
-#include "convar.h" // ConCommand, FnCommandCallback, FnCommandCompletionCallback
+#include "../convars/convar.h" // ConCommand, FnCommandCallback, FnCommandCompletionCallback
 
 namespace cssmatch
 {

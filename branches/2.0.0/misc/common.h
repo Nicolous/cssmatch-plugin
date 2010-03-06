@@ -40,6 +40,7 @@
 
 struct tm; // will be defined in <ctime>
 
+#include "../convars/convar.h" // define our version of convar.h first so the valve's one will not be
 
 #define GAME_DLL 1 // required by cbase.h
 #include "cbase.h" // TEAM_INVALID, TEAM_UNASSIGNED, TEAM_SPECTATOR + some headers

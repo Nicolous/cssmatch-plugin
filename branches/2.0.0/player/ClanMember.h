@@ -25,10 +25,12 @@
 
 #include "Player.h"
 
+#include <string>
+
 namespace cssmatch
 {
 	/** Player stats */
-	struct PlayerStats
+	struct PlayerScore
 	{
 		/** Score */
 		int kills;
@@ -36,28 +38,58 @@ namespace cssmatch
 		/** Deaths */
 		int deaths;
 
-		PlayerStats() : kills(0), deaths(0){}
+		PlayerScore() : kills(0), deaths(0){}
+	};
 
+	/** Player state (used when the round restarts) */
+	struct PlayerState
+	{
+		PlayerScore score;
+
+		unsigned int health, armor;
+		bool hasHelmet;
+
+		unsigned int account;
+
+		/** Primary/Secondary weapon */
+		std::string primary, secondary;
+		int hegrenades, flashbangs, smokegrenades;
+		bool c4;
+
+		/** Player coords */
+		Vector vecOrigin;
+
+		/* Player angle */
+		QAngle angle;
+
+		bool hasDefuser, hasNightVision;
+
+		PlayerState()
+			: health(0), armor(0), hasHelmet(false), account(0), hasDefuser(false), hasNightVision(false){}
 	};
 
 	/** CSSMatch player */
 	class ClanMember : public Player
 	{
 	protected:
-		/** Player stats for the previous round (used if the round restarts) */
-		PlayerStats lastRoundStats;
+		/** Player state for the previous round (used if the round restarts) */
+		PlayerState lastRoundState;
 
-		/** Player stats for the previous half (used if the half is restarted) */
-		PlayerStats lastSetStats;
+		/** Player state for the previous half (used if the half is restarted) */
+		PlayerState lastHalfState;
 
 		/** Current players stats */
-		PlayerStats currentStats;
+		PlayerScore currentScore;
 
 		/** Is this player a referee (admin)? */
 		bool referee;
 
 		// Functors
-		friend struct ResetStats;
+		friend struct ResetClanMember;
+		friend struct SaveHalfPlayerState;
+		friend struct SaveRoundPlayerState;
+		friend struct RestoreHalfPlayerScore;
+		friend struct RestoreRoundPlayerState;
 	public:
 		/** 
 		 * @param index The player index
@@ -65,24 +97,66 @@ namespace cssmatch
 		 */
 		ClanMember(int index, bool referee = false);
 
-		// Accessors to the differents stats
-		PlayerStats * getLastRoundStats();
-		PlayerStats * getLastSetStats();
-		PlayerStats * getCurrentStats();
+		// Accessors to the differents stats/states
+		PlayerState * getLastRoundState();
+		PlayerState * getLastHalfState();
+		PlayerScore * getCurrentScore();
+
+		// Save/Restore the current state to/from a given state var
+		void saveState(PlayerState * state);
+		void restoreState(PlayerState * state);
 
 		// Rights management
 		bool isReferee() const;
 		void setReferee(bool isReferee);
 	};
 
-	/** Functor to quickly reset the stats of a player */
-	struct ResetStats
+	/** Functor to quickly reset the player infos */
+	struct ResetClanMember
 	{
 		void operator()(ClanMember * member)
 		{
-			member->lastRoundStats = PlayerStats();
-			member->lastSetStats = PlayerStats();
-			member->currentStats = PlayerStats();
+			member->lastRoundState = PlayerState();
+			member->lastHalfState = PlayerState();
+			member->currentScore = PlayerScore();
+		}
+	};
+
+	/** Functor to quickly save the player infos */
+	struct SaveHalfPlayerState
+	{
+		void operator()(ClanMember * member)
+		{
+			member->saveState(&member->lastHalfState);
+		}
+	};
+
+
+	/** Functor to quickly restore the player infos */
+	struct RestoreHalfPlayerScore
+	{
+		void operator()(ClanMember * member)
+		{
+			member->restoreState(&member->lastHalfState);
+				
+		}
+	};
+
+	/** Functor to quickly save the player infos */
+	struct SaveRoundPlayerState
+	{
+		void operator()(ClanMember * member)
+		{
+			member->saveState(&member->lastRoundState);
+		}
+	};
+
+	/** Functor to quickly restore the player infos */
+	struct RestoreRoundPlayerState
+	{
+		void operator()(ClanMember * member)
+		{
+			member->restoreState(&member->lastRoundState);
 		}
 	};
 }

@@ -23,7 +23,7 @@
 #ifndef __I18N_CONVAR_H__
 #define __I18N_CONVAR_H__
 
-#include "convar.h"
+#include "../convars/convar.h"
 
 #include <string>
 

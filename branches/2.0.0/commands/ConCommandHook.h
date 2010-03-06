@@ -23,14 +23,14 @@
 #ifndef __CONCOMMAND_HOOK_H__
 #define __CONCOMMAND_HOOK_H__
 
-#include "convar.h"
+#include "../convars/convar.h"
 
 #include <string>
 
 namespace cssmatch
 {
 	/** Callback for a hook <br>
-	 * The first parameter is the user who used the hooked command <br>
+	 * The first parameter is the user index <br>
 	 * Returns <code>true</code> to eat the command
 	 */
 	typedef bool (* HookCallback)(int);
@@ -48,7 +48,7 @@ namespace cssmatch
 		HookCallback callback;
 	public:
 		/** Similar to the ConCommand's constructor
-		 * @param name The name must be dynamically allocated with new !
+		 * @param name The name must be dynamically allocated with new!
 		 * @param hookCallback The function to call when the hooked command is used
 		 */
 		ConCommandHook(const char * name, HookCallback hookCallback);

@@ -83,6 +83,16 @@ void DisabledMatchState::endState()
 {
 }
 
+void DisabledMatchState::restartRound()
+{
+	ServerPlugin::getInstance()->queueCommand("mp_restartgame 2\n");
+}
+
+void DisabledMatchState::restartState()
+{
+	restartRound();
+}
+
 void DisabledMatchState::showMenu(Player * recipient)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();

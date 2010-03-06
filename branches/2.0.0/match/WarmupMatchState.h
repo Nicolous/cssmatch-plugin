@@ -84,6 +84,8 @@ namespace cssmatch
 		// BaseMatchState methods
 		void startState();
 		void endState();
+		void restartRound();
+		void restartState();
 		void showMenu(Player * recipient);
 
 		// Menus callbacks

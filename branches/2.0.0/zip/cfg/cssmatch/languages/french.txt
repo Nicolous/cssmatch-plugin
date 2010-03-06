@@ -169,7 +169,7 @@ menu_close =					"Fermer ce menu"
 error_file_not_found =			"Impossible de trouver le fichier $file"
 error_command_not_found =		"Impossible de trouver la commande "$command""
 error_invalid_player =			"Joueur invalide"
-error_general =					"Une erreur est survenue, demandez de l'aide sur $site"
+//error_general =					"Une erreur est survenue, demandez de l'aide sur $site"
 error_tv_not_connected =		"Impossible de lancer l'enregistrement sourceTV car celle-ci n'est pas sur le serveur"
 
 // Players

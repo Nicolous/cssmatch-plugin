@@ -41,6 +41,12 @@ namespace cssmatch
 		/** Automatically called by the context (MatchManager) when this state ends */
 		virtual void endState() = 0;
 
+		/** Automatically called by the context (MatchManager) when the current round has to restart */
+		virtual void restartRound() = 0;
+
+		/** Automatically called by the context (MatchManager) when the current state has to restart */
+		virtual void restartState() = 0;
+
 		/** Send the menu to a player */
 		virtual void showMenu(Player * recipient) = 0;
 	};

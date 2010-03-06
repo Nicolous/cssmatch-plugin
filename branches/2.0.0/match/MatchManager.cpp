@@ -343,7 +343,7 @@ void MatchManager::start(RunnableConfigurationFile & config, bool warmup, BaseMa
 
 		// Reset all player stats
 		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		for_each(playerlist->begin(),playerlist->end(),ResetStats());
+		for_each(playerlist->begin(),playerlist->end(),ResetClanMember());
 
 		// Cancel any timers in progress
 		plugin->removeTimers();
@@ -512,30 +512,7 @@ void MatchManager::restartRound() throw (MatchManagerException)
 {
 	if (currentState != initialState)
 	{
-		ServerPlugin * plugin = ServerPlugin::getInstance(); 
-
-		// Remove all player stats related to this round
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator itPlayer;
-		for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
-		{
-			PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
-			PlayerStats * lastRoundStats = (*itPlayer)->getLastRoundStats();
-			currentStats->deaths = lastRoundStats->deaths;
-			currentStats->kills = lastRoundStats->kills;
-
-			// TODO: Restore the kills/deaths in the scoreboard ?
-		}
-
-		// Back to the last round (round_start will maybe increment that)
-		if (infos.roundNumber == 1)
-			infos.roundNumber = -2; 
-			// by convention, a negative round number causes game restarts until the round number reaches 1
-		else
-			infos.roundNumber -= 1;
-
-		// Do the restart
-		plugin->queueCommand("mp_restartgame 2\n");
+		currentState->restartRound();
 	}
 	else
 		throw MatchManagerException("No match in progress");
@@ -545,38 +522,7 @@ void MatchManager::restartHalf() throw (MatchManagerException)
 {
 	if (currentState != initialState)
 	{
-		ServerPlugin * plugin = ServerPlugin::getInstance();
-
-		// Restore the score of each player
-		list<ClanMember *> * playerlist = plugin->getPlayerlist();
-		list<ClanMember *>::iterator itPlayer;
-		for(itPlayer = playerlist->begin(); itPlayer != playerlist->end(); itPlayer++)
-		{
-			PlayerStats * currentStats = (*itPlayer)->getCurrentStats();
-			PlayerStats * lastSetStats = (*itPlayer)->getLastSetStats();
-			currentStats->deaths = lastSetStats->deaths;
-			currentStats->kills = lastSetStats->kills;
-
-			// TODO: Restore the kills/deaths in the scoreboard ?
-		}
-
-		// Restore the score of each clan
-		MatchClan * clanT = getClan(T_TEAM);
-		ClanStats * currentStatsClanT = clanT->getStats();
-		ClanStats * lastSetStatsClanT = clanT->getLastSetStats();
-		currentStatsClanT->scoreT = lastSetStatsClanT->scoreT;
-
-		MatchClan * clanCT = getClan(CT_TEAM);
-		ClanStats * currentStatsClanCT = clanCT->getStats();
-		ClanStats * lastSetStatsClanCT = clanCT->getLastSetStats();
-		currentStatsClanCT->scoreCT = lastSetStatsClanCT->scoreCT;
-
-		// Back to the first round (round_start will maybe increment that)
-		infos.roundNumber = -2;
-		// by convention,  a negative round number causes game restarts until the round number reaches 1
-
-		// Do the restart
-		plugin->queueCommand("mp_restartgame 2\n");
+		currentState->restartState();
 	}
 	else
 		throw MatchManagerException("No match in progress");

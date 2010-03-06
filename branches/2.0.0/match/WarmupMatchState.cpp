@@ -166,6 +166,16 @@ void WarmupMatchState::endState()
 	countdown.stop();
 }
 
+void WarmupMatchState::restartRound()
+{
+	ServerPlugin::getInstance()->queueCommand("mp_restartgame 2\n");
+}
+
+void WarmupMatchState::restartState()
+{
+	restartRound();
+}
+
 void WarmupMatchState::showMenu(Player * recipient)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();

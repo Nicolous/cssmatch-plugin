@@ -290,6 +290,10 @@
 			Name="convars"
 			>
 			<File
+				RelativePath=".\convars\convar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\convars\ConVarCallbacks.cpp"
 				>
 			</File>

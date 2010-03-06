@@ -119,12 +119,22 @@ namespace cssmatch
 		/** Player identity */
 		PlayerIdentity identity;
 
-		/** Cash handler */
-		EntityProp cashHandler;
-
-		/** Life state handler */
-		EntityProp lifeStateHandler;
-
+		// Entity prop handler
+		static EntityProp accountHandler;
+		static EntityProp lifeStateHandler;
+		static EntityProp hasHelmetHandler;
+		static EntityProp vecOriginHandler;
+		static EntityProp hasDefuserHandler;
+		static EntityProp hasNightVisionHandler;
+		static EntityProp angRotationHandler;
+		static EntityProp eyeAngles0Handler;
+		static EntityProp eyeAngles1Handler;
+		static EntityProp armorHandler;
+		static EntityProp healthHandler;
+		static EntityProp hegrenadeHandler;
+		static EntityProp flashbangHandler;
+		static EntityProp smokegrenadeHandler;
+	
 		/** Menus handler */
 		PlayerMenuHandler menuHandler;
 
@@ -223,21 +233,75 @@ namespace cssmatch
 		 */
 		void cexec(const std::string & command) const;
 
+		/** Run a command for a player 
+		* @param command The command line to execute
+		*/
+		void sexec(const std::string & command) const;
+
 		/** Remove a weapon (if any) from a given slot
 		 * @param slot The slot code where is weapon can be found
 		 * @see enum WeaponSlotCode
 		 */
 		void removeWeapon(WeaponSlotCode slot);
 			
-		/** Set the cash account of this player 
-		 * @param newCash New cash amount
-		 */
-		void setCash(unsigned int newCash);
+		/** Set the player account */
+		void setAccount(int newCash);
+		/** Get the player account (returns -1 if it fails) */
+		int getAccount();
 
-		/** Set the life state of this player 
-		 * @param newState New life state
+		/** Set the player life state */
+		void setLifeState(int newState);
+		/** Get the life state (returns -1 if it fails) */
+		int getLifeState();		
+
+		// Player has helmet accessors
+		void hasHelmet(bool hasHelmet);
+		bool hasHelmet();
+
+		/** Set the player location */
+		void setVecOrigin(const Vector & vec);
+		/** Get the player location (x,y,z are VEC_T_NAN if it fails) */
+		Vector getVecOrigin();
+
+		// Player has defuser accessors
+		void hasDefuser(bool hasDefuser);
+		bool hasDefuser();
+
+		// Player has night vision accessors
+		void hasNightVision(bool hasNightVision);
+		bool hasNightVision();
+
+		/** Get the player rotation angle (x,y,z are VEC_T_NAN if it fails) */
+		Vector getAngRotation();
+		/** Get the player view angle (x,y,z are VEC_T_NAN if it fails) */
+		QAngle getViewAngle(); 
+
+		/** Set the player health */
+		void setHealth(int newHealth);
+		/** Get the player health (returns -1 if it fails) */
+		int getHealth();
+
+		/** Set the player armor value */
+		void setArmor(int newArmor);
+		/** Get the player armor value (returns -1 if it fails) */
+		int getArmor();
+
+		/** Get the player's hegrenade amount (returns -1 if it fails) */
+		int getHeCount();
+		/** Get the player's flashbang amount (returns -1 if it fails) */
+		int getFbCount();
+		/** Get the player's smokegrenade amount (returns -1 if it fails) */
+		int getSgCount();
+
+		/** Give an named item to the player 
+		 * @param item Item to give
 		 */
-		void setLifeState(unsigned int newState);
+		void give(const std::string & item);
+
+		/** Set the view angle of the player
+		 * @param angle New view angle
+		 */
+		void setang(const QAngle & angle);
 	};
 
 	/** Functor to quickly find a Player instance by his edict_t instance */

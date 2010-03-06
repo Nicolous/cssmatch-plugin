@@ -55,7 +55,7 @@ namespace cssmatch
 		bool allowAutoDetect;
 
 		/** Clan stats in the previous half */
-		ClanStats lastSetStats;
+		ClanStats lastHalfStats;
 
 		/** Current clan stats */
 		ClanStats stats;
@@ -84,7 +84,7 @@ namespace cssmatch
 		void getMembers(std::list<ClanMember *> * members);
 
 		/** Get the clan stats of the previous half */
-		ClanStats * getLastSetStats();
+		ClanStats * getLastHalfState();
 
 		/** Get clan stats */
 		ClanStats * getStats();

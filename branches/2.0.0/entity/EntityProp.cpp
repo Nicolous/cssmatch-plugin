@@ -78,26 +78,31 @@ void EntityProp::getOffset(SendTable * table,  istringstream & propPathLeft)
 void EntityProp::initialize()
 {
 	// Get all server classes
-	ServerClass * classes = ServerPlugin::getInstance()->getInterfaces()->serverGameDll->GetAllServerClasses();
-
-	// Search the suitable class
-	while (classes != NULL)
+	IServerGameDLL * serverGameDll = ServerPlugin::getInstance()->getInterfaces()->serverGameDll;
+	if (serverGameDll != NULL)
 	{
-		if (theClass == classes->GetName())
+		ServerClass * classes = serverGameDll->GetAllServerClasses();
+
+		// Search the suitable class
+		while (classes != NULL)
 		{
-			istringstream pathToProp(path);
+			if (theClass == classes->GetName())
+			{
+				istringstream pathToProp(path);
 
-			getOffset(classes->m_pTable,pathToProp);
+				getOffset(classes->m_pTable,pathToProp);
 
-			classes = NULL; // break
+				break;
+			}
+			else
+				classes = classes->m_pNext; // until m_pNext is NULL
 		}
-		else
-			classes = classes->m_pNext; // until m_pNext is NULL
 	}
+	else
+		CSSMATCH_PRINT(string("Unable to find the offset of prop ") + theClass + ", IServerGameDll instance not ready")
 }
 
 EntityProp::EntityProp(const string & propClass, const string & propPath)
-	: offset(0), theClass(propClass), path(propPath)
+	: initialized(false), offset(0), theClass(propClass), path(propPath)
 {
-	initialize();
 }
