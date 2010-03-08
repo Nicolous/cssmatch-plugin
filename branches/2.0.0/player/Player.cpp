@@ -47,7 +47,7 @@ EntityProp Player::hegrenadeHandler("CBasePlayer","localdata.m_iAmmo.011");
 EntityProp Player::flashbangHandler("CBasePlayer","localdata.m_iAmmo.012");
 EntityProp Player::smokegrenadeHandler("CBasePlayer","localdata.m_iAmmo.013");
 
-Player::Player(int index) throw (PlayerException)
+Player::Player(int index) throw (PlayerException) : lastCommandDate(0.0f)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -79,6 +79,22 @@ Player::~Player()
 PlayerIdentity * Player::getIdentity()
 {
 	return &identity;
+}
+
+bool Player::canUseCommand()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();	
+
+	bool can = false;
+
+	if (interfaces->gpGlobals->curtime - lastCommandDate  > 1.0f) // max 1 command/s
+	{
+		can = true;
+		lastCommandDate = interfaces->gpGlobals->curtime;
+	}
+
+	return can;
 }
 
 void Player::sendMenu(Menu * usedMenu, int page, const map<string,string> & parameters, bool toDelete)

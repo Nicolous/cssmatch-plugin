@@ -29,11 +29,13 @@
 
 namespace cssmatch
 {
+	class ClanMember;
+
 	/** Callback for a hook <br>
-	 * The first parameter is the user index <br>
+	 * The first parameter is the user <br>
 	 * Returns <code>true</code> to eat the command
 	 */
-	typedef bool (* HookCallback)(int);
+	typedef bool (* HookCallback)(ClanMember *);
 
 	/** Hook a command at runtime <br>
 	 * Do not instanciate this class once ConCommandBaseMgr::OneTimeInit invoked

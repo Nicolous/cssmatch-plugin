@@ -22,6 +22,7 @@
 
 #include "ConCommandHook.h"
 #include "../plugin/ServerPlugin.h"
+#include "../player/ClanMember.h"
 
 #include <string>
 #include <list>
@@ -80,11 +81,26 @@ void ConCommandHook::Init()
 void ConCommandHook::Dispatch()
 {
 	// Call the corresponding callback, and eat the command call if asked
-
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-
-	if (! callback(plugin->GetCommandClient()+1))
+	try
 	{
-		hooked->Dispatch();
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,plugin->GetCommandClient()+1,user)
+		{
+			if (user->canUseCommand() && (! callback(user)))
+			{
+				hooked->Dispatch();
+			}
+		}
+	#ifdef _DEBUG
+		else
+		{
+			CSSMATCH_PRINT("Unable to find the user");
+		}
+	#endif // _DEBUG
+	}
+	catch(const BaseException & e)
+	{
+		CSSMATCH_PRINT_EXCEPTION(e);
 	}
 }

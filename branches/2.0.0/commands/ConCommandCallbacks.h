@@ -33,6 +33,8 @@
 
 namespace cssmatch
 {
+	class ClanMember;
+
 	/** Help for commands use */
 	void cssm_help();
 
@@ -76,7 +78,7 @@ namespace cssmatch
 	void cssm_spec();
 
 	/** !go, !score, !teamt, etc. */
-	bool say_hook(int userIndex);
+	bool say_hook(ClanMember * user);
 
 	/* Want to stop the current record ? */
 	//bool tv_stoprecord_hook(int userIndex);

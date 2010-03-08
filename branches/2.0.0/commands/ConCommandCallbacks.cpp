@@ -505,7 +505,7 @@ void cssmatch::cssm_spec()
 // Hooks callbacks 
 // ***************
 
-bool cssmatch::say_hook(int userIndex)
+bool cssmatch::say_hook(ClanMember * user)
 {
 	bool eat = false;
 
@@ -525,52 +525,40 @@ bool cssmatch::say_hook(int userIndex)
 	{
 		eat = true;
 
-		ClanMember * user = NULL;
-		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+		if (user->isReferee())
 		{
-			if (user->isReferee())
-			{
-				user->cexec("cssmatch");
-			}
-			else
-			{
-				RecipientFilter recipients;
-				recipients.addRecipient(user);
-				i18n->i18nChatSay(recipients,"player_you_not_admin");
-				plugin->queueCommand("cssm_adminlist\n");
-			}
+			user->cexec("cssmatch");
 		}
 		else
-			CSSMATCH_PRINT("Unable to find the player who typed cssmatch");
+		{
+			RecipientFilter recipients;
+			recipients.addRecipient(user);
+			i18n->i18nChatSay(recipients,"player_you_not_admin");
+			plugin->queueCommand("cssm_adminlist\n");
+		}
 	}
 	// !go, ready: a clan wants to end the warmup
 	else if ((chatCommand == "!go") || (chatCommand == "ready"))
 	{
-		ClanMember * user = NULL;
-		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+		BaseMatchState * currentState = match->getMatchState();
+		if (currentState == WarmupMatchState::getInstance())
 		{
-			BaseMatchState * currentState = match->getMatchState();
-			if (currentState == WarmupMatchState::getInstance())
+			WarmupMatchState::getInstance()->doGo(user);
+		}
+		else
+		{
+			RecipientFilter recipients;
+			//recipients.addAllPlayers();	
+			recipients.addRecipient(user);
+			if (currentState != match->getInitialState())
 			{
-				WarmupMatchState::getInstance()->doGo(user);
+				i18n->i18nChatSay(recipients,"warmup_disable");
 			}
 			else
 			{
-				RecipientFilter recipients;
-				//recipients.addAllPlayers();	
-				recipients.addRecipient(user);
-				if (currentState != match->getInitialState())
-				{
-					i18n->i18nChatSay(recipients,"warmup_disable");
-				}
-				else
-				{
-					i18n->i18nChatSay(recipients,"match_not_in_progress");
-				}
+				i18n->i18nChatSay(recipients,"match_not_in_progress");
 			}
-		}
-		else
-			CSSMATCH_PRINT("Unable to find the player who typed !go/ready");		
+		}	
 	}
 	// !scores: Display the current/last scores
 	else if ((chatCommand == "!score") || (chatCommand == "!scores"))
@@ -599,156 +587,136 @@ bool cssmatch::say_hook(int userIndex)
 	{
 		eat = true;
 
-		ClanMember * user = NULL;
-		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+		if (user->isReferee())
 		{
-			if (user->isReferee())
+			RecipientFilter recipients;
+
+			// Get the new clan name
+			string newName;
+			getline(commandString,newName);
+
+			if (! newName.empty())
 			{
-				RecipientFilter recipients;
+				// Remove the space at the begin of the clan name
+				string::iterator itSpace = newName.begin();
+				newName.erase(itSpace,itSpace+1);
 
-				// Get the new clan name
-				string newName;
-				getline(commandString,newName);
-
-				if (! newName.empty())
+				try
 				{
-					// Remove the space at the begin of the clan name
-					string::iterator itSpace = newName.begin();
-					newName.erase(itSpace,itSpace+1);
+					MatchClan * clan = match->getClan(T_TEAM);
+					clan->setName(newName,true);
 
-					try
-					{
-						MatchClan * clan = match->getClan(T_TEAM);
-						clan->setName(newName,true);
+					recipients.addAllPlayers();
 
-						recipients.addAllPlayers();
-
-						map<string,string> parameters;
-						parameters["$team"] = newName;
-						i18n->i18nChatSay(recipients,"admin_new_t_team_name",parameters);
-					}
-					catch(const MatchManagerException & e)
-					{
-						recipients.addRecipient(user);
-						i18n->i18nChatSay(recipients,"match_not_in_progress");
-					}
+					map<string,string> parameters;
+					parameters["$team"] = newName;
+					i18n->i18nChatSay(recipients,"admin_new_t_team_name",parameters);
 				}
-				else
+				catch(const MatchManagerException & e)
 				{
 					recipients.addRecipient(user);
-					i18n->i18nChatSay(recipients,"admin_please_specify_tag");
+					i18n->i18nChatSay(recipients,"match_not_in_progress");
 				}
 			}
 			else
 			{
-				RecipientFilter recipients;
 				recipients.addRecipient(user);
-				i18n->i18nChatSay(recipients,"player_you_not_admin");
-				plugin->queueCommand("cssm_adminlist\n");
+				i18n->i18nChatSay(recipients,"admin_please_specify_tag");
 			}
 		}
 		else
-			CSSMATCH_PRINT("Unable to find the player who typed !teamt");
+		{
+			RecipientFilter recipients;
+			recipients.addRecipient(user);
+			i18n->i18nChatSay(recipients,"player_you_not_admin");
+			plugin->queueCommand("cssm_adminlist\n");
+		}
 	}
 	// !teamct: cf cssm_teamct
 	else if (chatCommand == "!teamct")
 	{
 		eat = true;
 
-		ClanMember * user = NULL;
-		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+		if (user->isReferee())
 		{
-			if (user->isReferee())
+			RecipientFilter recipients;
+
+			// Get the new clan name
+			string newName;
+			getline(commandString,newName);
+
+			if (! newName.empty())
 			{
-				RecipientFilter recipients;
+				// Remove the space at the begin of the clan name
+				string::iterator itSpace = newName.begin();
+				newName.erase(itSpace,itSpace+1);
 
-				// Get the new clan name
-				string newName;
-				getline(commandString,newName);
-
-				if (! newName.empty())
+				try
 				{
-					// Remove the space at the begin of the clan name
-					string::iterator itSpace = newName.begin();
-					newName.erase(itSpace,itSpace+1);
+					MatchClan * clan = match->getClan(CT_TEAM);
+					clan->setName(newName,true);
 
-					try
-					{
-						MatchClan * clan = match->getClan(CT_TEAM);
-						clan->setName(newName,true);
+					recipients.addAllPlayers();
 
-						recipients.addAllPlayers();
-
-						map<string,string> parameters;
-						parameters["$team"] = newName;
-						i18n->i18nChatSay(recipients,"admin_new_ct_team_name",parameters);
-					}
-					catch(const MatchManagerException & e)
-					{
-						recipients.addRecipient(user);
-						i18n->i18nChatSay(recipients,"match_not_in_progress");
-					}
+					map<string,string> parameters;
+					parameters["$team"] = newName;
+					i18n->i18nChatSay(recipients,"admin_new_ct_team_name",parameters);
 				}
-				else
+				catch(const MatchManagerException & e)
 				{
 					recipients.addRecipient(user);
-					i18n->i18nChatSay(recipients,"admin_please_specify_tag");
+					i18n->i18nChatSay(recipients,"match_not_in_progress");
 				}
 			}
 			else
 			{
-				RecipientFilter recipients;
 				recipients.addRecipient(user);
-				i18n->i18nChatSay(recipients,"player_you_not_admin");
-				plugin->queueCommand("cssm_adminlist\n");
+				i18n->i18nChatSay(recipients,"admin_please_specify_tag");
 			}
 		}
 		else
-			CSSMATCH_PRINT("Unable to find the player who typed !teamct");
+		{
+			RecipientFilter recipients;
+			recipients.addRecipient(user);
+			i18n->i18nChatSay(recipients,"player_you_not_admin");
+			plugin->queueCommand("cssm_adminlist\n");
+		}
 	}
 	// !update: consult the last update changelog
 	else if (chatCommand == "!update")
 	{
 		eat = true;
 
-		ClanMember * user = NULL;
-		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
-		{
-			RecipientFilter recipients;
-			recipients.addRecipient(user);
+		RecipientFilter recipients;
+		recipients.addRecipient(user);
 
-			string updatesite = plugin->getConVar("cssmatch_updatesite")->GetString();
-			i18n->motdSay(recipients,URL,"CSSMatch changelog",updatesite + CSSMATCH_CHANGELOG_FILE);
-		}
+		string updatesite = plugin->getConVar("cssmatch_updatesite")->GetString();
+		i18n->motdSay(recipients,URL,"CSSMatch changelog",updatesite + CSSMATCH_CHANGELOG_FILE);
 	}
 	// !password the new server password
 	else if (chatCommand == "!password")
 	{
 		eat = true;
 
-		ClanMember * user = NULL;
-		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,userIndex,user)
+		if (user->isReferee())
 		{
-			if (user->isReferee())
+			// Get the new password
+			string password;
+			getline(commandString,password);
+
+			if (! password.empty())
 			{
-				// Get the new password
-				string password;
-				getline(commandString,password);
+				// Remove the space at the begin of the password
+				//string::iterator itSpace = password.begin();
+				//password.erase(itSpace,itSpace+1);
 
-				if (! password.empty())
-				{
-					// Remove the space at the begin of the password
-					//string::iterator itSpace = password.begin();
-					//password.erase(itSpace,itSpace+1);
-
-					plugin->queueCommand("sv_password" + password + "\n");
-				}
-				else
-				{
-					RecipientFilter recipients;
-					recipients.addRecipient(user);
-					i18n->i18nChatSay(recipients,"admin_please_specify_password");
-				}
+				plugin->queueCommand("sv_password" + password + "\n");
+			}
+			else
+			{
+				RecipientFilter recipients;
+				recipients.addRecipient(user);
+				i18n->i18nChatSay(recipients,"admin_please_specify_password");
 			}
 		}
 	}

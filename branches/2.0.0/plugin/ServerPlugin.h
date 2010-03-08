@@ -26,9 +26,10 @@
 #include "../messages/RecipientFilter.h"
 #include "../misc/BaseSingleton.h"
 #include "../convars/ConvarsAccessor.h" // ConvarsAccessorException
-#include "../player/Player.h"
+#include "../player/ClanMember.h"
 #include "../exceptions/BaseException.h"
 #include "../commands/ConCommandCallbacks.h"
+#include "../commands/ClientCommandCallbacks.h"
 #include "../commands/ConCommandHook.h"
 #include "../messages/Menu.h"
 
@@ -139,6 +140,9 @@ namespace cssmatch
 		/** Hook console command list */
 		std::map<std::string,ConCommandHook *> hookConCommands;
 
+		/** Client command callbacks */
+		std::map<std::string,ClientCmdCallback> clientCommands;
+
 		/** Internationalization tool */
 		I18nManager * i18n;
 
@@ -178,6 +182,9 @@ namespace cssmatch
 
 		/** Get the global playerlist */
 		std::list<ClanMember *> * getPlayerlist();
+
+		/** Get the update notifier thread (maybe NULL) */
+		UpdateNotifier * getUpdateThread() const;
 
 		/** Get a player
 		 * @param pred Predicat to use
@@ -236,7 +243,7 @@ namespace cssmatch
 		 */
 		ConVar * getConVar(const std::string & name)/* throw(ServerPluginException)*//* but std::exception */;
 
-		/** Add a plugin console command */
+		/** Add a plugin server command */
 		void addPluginConCommand(ConCommand * command);
 
 		/** Get the plugin command list */
@@ -247,6 +254,9 @@ namespace cssmatch
 		 * @param callback Callback to invoke when the hooked command is used
 		 */
 		void hookConCommand(const std::string & commandName, HookCallback callback);
+
+		/** Add a plugin console command */
+		void addPluginClientCommand(const std::string & commandName, ClientCmdCallback callback);
 
 		/** Get the internationalization tool */
 		I18nManager * getI18nManager();

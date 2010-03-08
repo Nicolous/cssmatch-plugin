@@ -26,15 +26,12 @@
 #include "../configuration/ConfigurationFile.h"
 #include "../convars/I18nConVar.h"
 #include "../commands/I18nConCommand.h"
-#include "../commands/ConCommandCallbacks.h"
-#include "../commands/ConCommandHook.h"
 #include "../convars/ConVarCallbacks.h"
-#include "../entity/EntityProp.h"
+//#include "../entity/EntityProp.h"
 #include "../player/ClanMember.h"
 #include "../messages/I18nManager.h"
 #include "../match/MatchManager.h"
 #include "../match/DisabledMatchState.h"
-#include "../match/HalfMatchState.h"
 
 #include "filesystem.h"
 #include "edict.h"
@@ -220,6 +217,11 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			//hookConCommand("tv_stoprecord",tv_stoprecord_hook);
 			//hookConCommand("tv_stop",tv_stoprecord_hook);
 
+			addPluginClientCommand("jointeam",clientcmd_jointeam);
+			addPluginClientCommand("menuselect",clientcmd_menuselect);
+			addPluginClientCommand("cssmatch",clientcmd_cssmatch);
+			addPluginClientCommand("cssm_rates",clientcmd_rates);
+
 			// Initialize the ConCommand/ConVar interface
 			try
 			{
@@ -296,6 +298,11 @@ void ServerPlugin::SetCommandClient(int index)
 list<ClanMember *> * ServerPlugin::getPlayerlist()
 {
 	return &playerlist;
+}
+
+UpdateNotifier * ServerPlugin::getUpdateThread() const
+{
+	return updateThread;
 }
 
 list<string> * ServerPlugin::getAdminlist()
@@ -661,6 +668,21 @@ void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback 
 	}
 }
 
+void ServerPlugin::addPluginClientCommand(const std::string & commandName, ClientCmdCallback callback)
+{
+	map<string,ClientCmdCallback>::iterator invalidCmd = clientCommands.end();
+	map<string,ClientCmdCallback>::iterator itCmd = clientCommands.find(commandName);
+
+	if (itCmd == invalidCmd)
+	{
+		clientCommands[commandName] = callback;
+	}
+	else
+	{
+		CSSMATCH_PRINT(commandName + " already exists");
+	}	
+}
+
 I18nManager * ServerPlugin::getI18nManager()
 {
 	return i18n;
@@ -807,155 +829,31 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 
 	try
 	{
-		if (isValidEntity(pEntity))
+		ClanMember * user = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,user)
 		{
 			string command = interfaces.engine->Cmd_Argv(0);
 			
-			// Stop a player from joining another team during the match 
-			// (Excepted before the first half begins, and if the player  wants to join/come from  the spectators)
-			if (command == "jointeam")
+			map<string,ClientCmdCallback>::iterator invalidCmd = clientCommands.end();
+			map<string,ClientCmdCallback>::iterator itCmd = clientCommands.find(command);
+
+			if (itCmd != invalidCmd)
 			{
-				bool controlJointeam = false;
-				MatchInfo * matchInfo = match->getInfos();
-				BaseMatchState * matchState = match->getMatchState();
-				if (matchInfo->halfNumber <= 1)
+				if (user->canUseCommand())
 				{
-					if (matchState == HalfMatchState::getInstance())
-						controlJointeam = true;
+					//ClientCmdCallback callback = ;
+					result = (*itCmd->second)(user);
 				}
 				else
-					controlJointeam = true;
-
-				if (controlJointeam)
-				{
-					// Check for command sanity (jointeam without argument causes a error message but swap the player)
-					if (interfaces.engine->Cmd_Argc() > 1)
-					{
-						string arg1 = interfaces.engine->Cmd_Argv(1);
-
-						// If the team the player wants to join is a non-spectator team
-						if ((arg1 == "2") || (arg1 == "3"))
-						{
-							ClanMember * player = NULL;
-							CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
-							{
-								// If the team is not a spectator team
-								if (player->getMyTeam() > SPEC_TEAM)
-								{
-									RecipientFilter recipients;
-									recipients.addRecipient(player);
-
-									i18n->i18nChatSay(recipients,"player_no_swap_in_match");
-									result = PLUGIN_STOP;
-								}
-							}
-							else
-								CSSMATCH_PRINT("Unable to find the player who typed jointeam");
-						}
-						// Now test if the command is not invalid ("jointeam bla" will swap the player)
-						else if (atoi(arg1.c_str()) == 0)
-						{
-							//Msg("Never trust the user input\n");
-							result = PLUGIN_STOP;
-						}
-						// arg1 < 0 and arg1 > 3 is refused by the game
-					}
-					else
-						result = PLUGIN_STOP;
-				}
-			}
-			else if (command == "menuselect")
-			{
-				ClanMember * player = NULL;
-				CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
-				{
-					Menu * menu = player->getMenu();
-					if (menu != NULL)
-					{
-						if (interfaces.engine->Cmd_Argc() == 2)
-						{
-							int choice = atoi(interfaces.engine->Cmd_Argv(1));
-							if (choice != 0)
-							{
-								player->cexec("playgamesound UI/buttonrollover.wav\n");
-								menu->doCallback(player,choice);
-							}
-						}
-					}
-				}
-			}
-			else if (command == "cssmatch")
-			{
-				ClanMember * player = NULL;
-				CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
-				{
-					if (player->isReferee())
-					{
-						// Announce any update
-						if (match->getMatchState() == match->getInitialState())
-						{
-							if (updateThread != NULL) 
-							{
-								if (updateThread->getLastVer() != CSSMATCH_VERSION)
-								{
-									RecipientFilter recipients;
-									recipients.addRecipient(player);
-
-									i18n->i18nChatSay(recipients,"update_available");
-								}
-							}
-						}
-
-						// Display the menu
-						match->showMenu(player);
-					}
-					else
-					{
-						PlayerIdentity * playerid = player->getIdentity();
-						RecipientFilter recipients;
-						recipients.addRecipient(player);
-
-						i18n->i18nChatSay(recipients,"player_you_not_admin");
-						log(playerid->steamid + " is not admin");
-
-						queueCommand("cssm_adminlist\n");
-					}
-				}
-
-				result = PLUGIN_STOP;
-			}
-			else if (command == "cssm_rates")
-			{
-				ClanMember * player = NULL;
-				CSSMATCH_VALID_PLAYER(PlayerHavingPEntity,pEntity,player)
-				{
-					RecipientFilter recipients;
-					recipients.addRecipient(player);
-
-					list<ClanMember *>::const_iterator currentPlayer;
-					for(currentPlayer = playerlist.begin(); currentPlayer != playerlist.end(); currentPlayer++)
-					{
-						int playerIndex = (*currentPlayer)->getIdentity()->index;
-
-						ostringstream message;
-
-						message << string(interfaces.engine->GetClientConVarValue(playerIndex,"name")) << ": " << endl
-								<< "  " << "cl_updaterate  = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_updaterate") << endl
-								<< "  " << "cl_cmdrate     = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_cmdrate") << endl
-								<< "  " << "cl_interpolate = " << interfaces.engine->GetClientConVarValue(playerIndex,"cl_interpolate") << endl
-								<< "  " << "rate           = " << interfaces.engine->GetClientConVarValue(playerIndex,"rate") << endl
-								<< endl;
-
-						const string & finalMsg = message.str();
-						i18n->consoleSay(recipients,finalMsg);
-					}
-				}
-				else
-					CSSMATCH_PRINT("Unable to find the player who typed jointeam");
-
-				result = PLUGIN_STOP;
+					result = PLUGIN_STOP;
 			}
 		}
+#ifdef _DEBUG
+		else
+		{
+			CSSMATCH_PRINT("Unable to find the user");
+		}
+#endif // _DEBUG
 	}
 	catch(const BaseException & e)
 	{

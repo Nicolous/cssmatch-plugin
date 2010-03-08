@@ -119,6 +119,9 @@ namespace cssmatch
 		/** Player identity */
 		PlayerIdentity identity;
 
+		/** Last date when the player sent a command to the server  */
+		float lastCommandDate;
+
 		// Entity prop handler
 		static EntityProp accountHandler;
 		static EntityProp lifeStateHandler;
@@ -152,6 +155,14 @@ namespace cssmatch
 		 * @see struct PlayerIdentity
 		 */
 		PlayerIdentity * getIdentity();
+
+		// Anti-flood
+		/** Determines if the player is allowed to use a command then update <br>
+		 * Update the last command date
+		 * @return <code>true</code> if the player can use the command, <code>false</code> otherwise
+		 */
+		bool canUseCommand();
+
 
 		/** Send a menu to the player
 		 * @param usedMenu The menu

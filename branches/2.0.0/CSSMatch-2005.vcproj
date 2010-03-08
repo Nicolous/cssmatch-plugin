@@ -522,6 +522,14 @@
 			Name="commands"
 			>
 			<File
+				RelativePath=".\commands\ClientCommandCallbacks.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\commands\ClientCommandCallbacks.h"
+				>
+			</File>
+			<File
 				RelativePath=".\commands\ConCommandCallbacks.cpp"
 				>
 			</File>
