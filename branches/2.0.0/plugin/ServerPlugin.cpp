@@ -212,15 +212,15 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_spec",cssm_spec,"cssm_spec"));
 
 			// Hook needed commands
-			hookConCommand("say",say_hook);
-			hookConCommand("say_team",say_hook);
+			hookConCommand("say",say_hook,true);
+			hookConCommand("say_team",say_hook,true);
 			//hookConCommand("tv_stoprecord",tv_stoprecord_hook);
 			//hookConCommand("tv_stop",tv_stoprecord_hook);
 
-			addPluginClientCommand("jointeam",clientcmd_jointeam);
-			addPluginClientCommand("menuselect",clientcmd_menuselect);
-			addPluginClientCommand("cssmatch",clientcmd_cssmatch);
-			addPluginClientCommand("cssm_rates",clientcmd_rates);
+			addPluginClientCommand("jointeam",clientcmd_jointeam,false);
+			addPluginClientCommand("menuselect",clientcmd_menuselect,false);
+			addPluginClientCommand("cssmatch",clientcmd_cssmatch,true);
+			addPluginClientCommand("cssm_rates",clientcmd_rates,true);
 
 			// Initialize the ConCommand/ConVar interface
 			try
@@ -650,7 +650,7 @@ const map<string,ConCommand *> * ServerPlugin::getPluginConCommands() const
 	return &pluginConCommands;
 }
 
-void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback callback)
+void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback callback, bool antispam)
 {
 	map<string,ConCommandHook *>::iterator invalidHook = hookConCommands.end();
 	map<string,ConCommandHook *>::iterator itHook = hookConCommands.find(commandName);
@@ -660,7 +660,7 @@ void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback 
 		char * cName = new char [commandName.size()];
 		V_strcpy(cName,commandName.c_str());
 
-		hookConCommands[commandName] = new ConCommandHook(cName,callback);
+		hookConCommands[commandName] = new ConCommandHook(cName,callback,antispam);
 	}
 	else
 	{
@@ -668,14 +668,15 @@ void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback 
 	}
 }
 
-void ServerPlugin::addPluginClientCommand(const std::string & commandName, ClientCmdCallback callback)
+void ServerPlugin::addPluginClientCommand(const std::string & commandName, ClientCmdCallback callback, bool antispam)
 {
-	map<string,ClientCmdCallback>::iterator invalidCmd = clientCommands.end();
-	map<string,ClientCmdCallback>::iterator itCmd = clientCommands.find(commandName);
+	map<string,ClientCommandHook>::iterator invalidCmd = clientCommands.end();
+	map<string,ClientCommandHook>::iterator itCmd = clientCommands.find(commandName);
 
 	if (itCmd == invalidCmd)
 	{
-		clientCommands[commandName] = callback;
+		clientCommands[commandName].callback = callback;
+		clientCommands[commandName].nospam = antispam;
 	}
 	else
 	{
@@ -834,15 +835,14 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 		{
 			string command = interfaces.engine->Cmd_Argv(0);
 			
-			map<string,ClientCmdCallback>::iterator invalidCmd = clientCommands.end();
-			map<string,ClientCmdCallback>::iterator itCmd = clientCommands.find(command);
+			map<string,ClientCommandHook>::iterator invalidCmd = clientCommands.end();
+			map<string,ClientCommandHook>::iterator itCmd = clientCommands.find(command);
 
 			if (itCmd != invalidCmd)
 			{
-				if (user->canUseCommand())
+				if (user->isReferee() || (itCmd->second.nospam && user->canUseCommand()))
 				{
-					//ClientCmdCallback callback = ;
-					result = (*itCmd->second)(user);
+					result = (*itCmd->second.callback)(user);
 				}
 				else
 					result = PLUGIN_STOP;

@@ -48,12 +48,16 @@ namespace cssmatch
 
 		/** Callback for this hook */
 		HookCallback callback;
+
+		/** Is this command protected against spam? */
+		bool nospam;
 	public:
 		/** Similar to the ConCommand's constructor
 		 * @param name The name must be dynamically allocated with new!
 		 * @param hookCallback The function to call when the hooked command is used
+		 * @param antispam Does this command need to be protected against spam?
 		 */
-		ConCommandHook(const char * name, HookCallback hookCallback);
+		ConCommandHook(const char * name, HookCallback hookCallback, bool antispam);
 
 		/**
 		 * @see ConCommand

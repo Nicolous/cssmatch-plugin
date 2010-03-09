@@ -83,6 +83,16 @@ namespace cssmatch
 				serverGameDll(NULL){}
 	};
 
+	/** Client command */
+	struct ClientCommandHook
+	{
+		/** Command callback */
+		ClientCmdCallback callback;
+
+		/** Is this command protected against spam? */
+		bool nospam;
+	};
+
 	/** Source plugin IServerPluginCallbacks implementation */
 	class ServerPlugin : public BaseSingleton<ServerPlugin>, public IServerPluginCallbacks
 	{
@@ -141,7 +151,7 @@ namespace cssmatch
 		std::map<std::string,ConCommandHook *> hookConCommands;
 
 		/** Client command callbacks */
-		std::map<std::string,ClientCmdCallback> clientCommands;
+		std::map<std::string,ClientCommandHook> clientCommands;
 
 		/** Internationalization tool */
 		I18nManager * i18n;
@@ -252,11 +262,16 @@ namespace cssmatch
 		/** Hook a ConCommand (one hook = one callback)
 		 * @param commandName The name of the ConCommand to hook
 		 * @param callback Callback to invoke when the hooked command is used
+		 * @param antispam Does this command need to be protected against spam?
 		 */
-		void hookConCommand(const std::string & commandName, HookCallback callback);
+		void hookConCommand(const std::string & commandName, HookCallback callback, bool antispam);
 
-		/** Add a plugin console command */
-		void addPluginClientCommand(const std::string & commandName, ClientCmdCallback callback);
+		/** Add a plugin console command 
+		 * @param commandName The name of the ConCommand to hook
+		 * @param callback Callback to invoke when the command is used
+		 * @param antispam Does this command need to be protected against spam?		
+		*/
+		void addPluginClientCommand(const std::string & commandName, ClientCmdCallback callback, bool antispam);
 
 		/** Get the internationalization tool */
 		I18nManager * getI18nManager();

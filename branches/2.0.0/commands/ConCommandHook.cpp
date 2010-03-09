@@ -32,8 +32,8 @@ using namespace cssmatch;
 using std::string;
 using std::list;
 
-ConCommandHook::ConCommandHook(const char * name, HookCallback hookCallback)
-: ConCommand(name,NULL,CSSMATCH_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL), callback(hookCallback)
+ConCommandHook::ConCommandHook(const char * name, HookCallback hookCallback, bool antispam)
+: ConCommand(name,NULL,CSSMATCH_NAME " Hook",FCVAR_GAMEDLL), hooked(NULL), callback(hookCallback), nospam(antispam)
 {
 }
 
@@ -87,9 +87,10 @@ void ConCommandHook::Dispatch()
 		ClanMember * user = NULL;
 		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,plugin->GetCommandClient()+1,user)
 		{
-			if (user->canUseCommand() && (! callback(user)))
+			if (user->isReferee() || (nospam && user->canUseCommand()))
 			{
-				hooked->Dispatch();
+				if (! callback(user))
+					hooked->Dispatch();
 			}
 		}
 	#ifdef _DEBUG
