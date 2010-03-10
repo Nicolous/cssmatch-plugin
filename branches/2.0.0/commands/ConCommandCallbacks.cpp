@@ -296,6 +296,7 @@ void cssmatch::cssm_adminlist()
 	}
 }
 
+#ifdef _DEBUG
 // Syntax: cssm_grant steamid
 void cssmatch::cssm_grant()
 {
@@ -396,6 +397,7 @@ void cssmatch::cssm_revoke()
 	else
 		Msg("cssm_revoke steamid\n");
 }
+#endif // _DEBUG
 
 void cssmatch::cssm_teamt()
 {

@@ -58,13 +58,13 @@ namespace cssmatch
 
 	/** Print the referee steamid list */
 	void cssm_adminlist();
-
+#ifdef _DEBUG
 	/** Make a player referee by steamid (until the next map change) */
 	void cssm_grant();
 
 	/** Remove a referee by steamid (until the next map change) */
 	void cssm_revoke();
-
+#endif // _DEBUG
 	/** Change the name of the terrorist clan */
 	void cssm_teamt();
 

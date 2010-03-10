@@ -2,6 +2,6 @@
 * Correction du rappel du mot de passe
 * Correction du système de restriction des changements de team
 * Ajout d'un système de restauration de l'équipement des joueurs en cas de restart
-
-
-Si on supprime le message annonçant qui lance le match, comment différencier les admins?
+* Retrait des commandes cssm_grant et cssm_revoke
+* La bombe est maintenant supprimée lorsqu'elle est interdite
+* Correction : Les kills comptaient comme des tk dans les rapports

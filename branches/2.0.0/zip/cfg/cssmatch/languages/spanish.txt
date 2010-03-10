@@ -60,14 +60,14 @@ update_available =              "Update available! For more information type !u
 
 // Knife Round
 kniferound_announcement =		"¡ Ronda Cuchillo ! ¡ GO ! ¡ GO ! ¡ GO !"
-kniferound_c4 =					"¡ Plantar la bomba durante la ronda de cuchillo está prohibido !"
+//kniferound_c4 =					"¡ Plantar la bomba durante la ronda de cuchillo está prohibido !"
 kniferound_restarts =			"¡ 3 reinicios, luego empieza la ronda a cuchillo !"
 kniferound_winner =				"¡ KnifeRound ganada por el equipo $team !"
 kniferound_dead_time =			"$team tiene $time segundos para elegir un lado, el otro equipo espera como espectador."
 
 // Warmup
 warmup_announcement =			"¡ Estrategia !"
-warmup_c4 =						"¡ Plantar la bomba durante la ronda de estrategia está prohibido !"
+//warmup_c4 =						"¡ Plantar la bomba durante la ronda de estrategia está prohibido !"
 warmup_ready =					"$team está listo"
 warmup_already_ready =			"$team ya avisó que está listo"
 warmup_all_ready =				"¡ Los dos equipos están listos para empezar !"

@@ -170,6 +170,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			// Create the other convars
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_version",CSSMATCH_VERSION,FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_version",cssmatch_version));
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_advanced","1",FCVAR_NONE,"cssmatch_advanced",true,0.0f,true,1.0f));
+			//addPluginConVar(new I18nConVar(i18n,"cssmatch_gather","0",FCVAR_NONE,"cssmatch_gather",true,0.0f,true,1.0f));
 
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_report","1",FCVAR_NONE,"cssmatch_report",true,0.0f,true,1.0f));
 
@@ -204,8 +205,10 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_restarthalf",cssm_restartmanche,"cssm_restartmanche")); // same than cssm_restartmanche
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_restartround",cssm_restartround,"cssm_restartround"));
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_adminlist",cssm_adminlist,"cssm_adminlist"));
+#ifdef _DEBUG
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_grant",cssm_grant,"cssm_grant"));
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_revoke",cssm_revoke,"cssm_revoke"));
+#endif // _DEBUG
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_teamt",cssm_teamt,"cssm_teamt"));
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_teamct",cssm_teamct,"cssm_teamct"));
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_swap",cssm_swap,"cssm_swap"));

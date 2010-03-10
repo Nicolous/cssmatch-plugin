@@ -60,7 +60,7 @@ KnifeRoundMatchState::KnifeRoundMatchState()
 	eventCallbacks["item_pickup"] = &KnifeRoundMatchState::item_pickup;
 	eventCallbacks["player_spawn"] = &KnifeRoundMatchState::player_spawn;
 	eventCallbacks["round_end"] = &KnifeRoundMatchState::round_end;
-	eventCallbacks["bomb_beginplant"] = &KnifeRoundMatchState::bomb_beginplant;
+	//eventCallbacks["bomb_beginplant"] = &KnifeRoundMatchState::bomb_beginplant;
 }
 
 KnifeRoundMatchState::~KnifeRoundMatchState()
@@ -349,6 +349,11 @@ void KnifeRoundMatchState::item_pickup(IGameEvent * event)
 			player->removeWeapon(WEAPON_SLOT1);
 			player->removeWeapon(WEAPON_SLOT2);
 			player->removeWeapon(WEAPON_SLOT4);
+
+			if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
+			{
+				player->removeWeapon(WEAPON_SLOT5);
+			}
 		}
 		else
 			CSSMATCH_PRINT("Unable to find the player who pickups an item");
@@ -381,6 +386,7 @@ void KnifeRoundMatchState::round_end(IGameEvent * event)
 	}
 }
 
+/* cf item_pickup
 void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 {
 	// Prevent the bomb from being planted if needed
@@ -405,4 +411,4 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 		else
 			CSSMATCH_PRINT("Unable to find the player who plants the bomb");
 	}
-}
+}*/

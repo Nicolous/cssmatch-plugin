@@ -96,7 +96,7 @@ namespace cssmatch
 		void FireGameEvent(IGameEvent * event); // IGameEventListener2 method
 		void player_spawn(IGameEvent * event);
 		void round_start(IGameEvent * event);
-		void bomb_beginplant(IGameEvent * event);
+		//void bomb_beginplant(IGameEvent * event);
 	};
 }
 

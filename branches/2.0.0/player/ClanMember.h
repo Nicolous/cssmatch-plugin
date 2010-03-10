@@ -46,10 +46,10 @@ namespace cssmatch
 	{
 		PlayerScore score;
 
-		unsigned int health, armor;
+		int health, armor;
 		bool hasHelmet;
 
-		unsigned int account;
+		int account;
 
 		/** Primary/Secondary weapon */
 		std::string primary, secondary;

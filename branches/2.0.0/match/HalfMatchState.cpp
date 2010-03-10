@@ -440,7 +440,7 @@ void HalfMatchState::player_death(IGameEvent * event)
 		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,idAttacker,attacker)
 		{
 			PlayerScore * currentScore = attacker->getCurrentScore();
-			if (attacker->getMyTeam() != attacker->getMyTeam())
+			if (attacker->getMyTeam() != victim->getMyTeam())
 				currentScore->kills++;
 			else
 				currentScore->kills--;

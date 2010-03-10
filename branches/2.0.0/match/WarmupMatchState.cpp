@@ -57,7 +57,7 @@ WarmupMatchState::WarmupMatchState()
 
 	eventCallbacks["player_spawn"] = &WarmupMatchState::player_spawn;
 	eventCallbacks["round_start"] = &WarmupMatchState::round_start;
-	eventCallbacks["bomb_beginplant"] = &WarmupMatchState::bomb_beginplant;
+	//eventCallbacks["bomb_beginplant"] = &WarmupMatchState::bomb_beginplant;
 }
 
 WarmupMatchState::~WarmupMatchState()
@@ -301,12 +301,14 @@ void WarmupMatchState::FireGameEvent(IGameEvent * event)
 
 void WarmupMatchState::player_spawn(IGameEvent * event)
 {
-	// Make each player impervious to bullets
+	// Make each player impervious to bullets & remove c4
 
 	ClanMember * player = NULL;
 	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 	{
 		player->setLifeState(0);
+
+		player->removeWeapon(WEAPON_SLOT5);
 	}
 }
 
@@ -347,6 +349,7 @@ void WarmupMatchState::round_start(IGameEvent * event)
 	}*/
 }
 
+/* cf : item_pickup
 void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 {
 	// Prevent the bomb from being planted if needed
@@ -369,4 +372,4 @@ void WarmupMatchState::bomb_beginplant(IGameEvent * event)
 	else
 		CSSMATCH_PRINT("Unable to find the player who plants the bomb");
 
-}
+}*/
