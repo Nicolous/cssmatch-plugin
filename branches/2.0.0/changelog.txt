@@ -1,4 +1,4 @@
-* Correction : bombe absente lors du cutround
+* Correction : bombe présente pendant les strats
 * Correction : impossible de rejoindre une team ou d'utiliser un menu si non admin
 * Correction : les manches pouvaient se lancer en double
 * Correction : un restart en strats faisait déconner le décompte

@@ -57,6 +57,7 @@ WarmupMatchState::WarmupMatchState() : finished(false)
 
 	eventCallbacks["player_spawn"] = &WarmupMatchState::player_spawn;
 	eventCallbacks["round_start"] = &WarmupMatchState::round_start;
+	eventCallbacks["item_pickup"] = &WarmupMatchState::item_pickup;
 	//eventCallbacks["bomb_beginplant"] = &WarmupMatchState::bomb_beginplant;
 }
 
@@ -357,6 +358,27 @@ void WarmupMatchState::round_start(IGameEvent * event)
 		i18n->i18nChatSay(recipients,"warmup_announcement");
 		break;
 	}*/
+}
+
+void WarmupMatchState::item_pickup(IGameEvent * event)
+{
+	// Restrict C4
+
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	string item = event->GetString("item");
+
+	if (item == "c4")
+	{
+		ClanMember * player = NULL;
+		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
+		{
+			player->removeWeapon(WEAPON_SLOT5);
+		}
+		else
+			CSSMATCH_PRINT("Unable to find the player who pickups an item");
+	}
 }
 
 /* cf : item_pickup
