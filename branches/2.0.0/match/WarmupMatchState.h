@@ -69,6 +69,9 @@ namespace cssmatch
 		Menu * warmupMenu;
 		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
+		/** Does this state finished ? */
+		bool finished;
+
 		friend class BaseSingleton<WarmupMatchState>;
 		WarmupMatchState();
 		~WarmupMatchState();

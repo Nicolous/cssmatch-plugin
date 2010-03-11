@@ -1,7 +1,4 @@
-* Correction d'un crash lié aux variables/commandes
-* Correction du rappel du mot de passe
-* Correction du système de restriction des changements de team
-* Ajout d'un système de restauration de l'équipement des joueurs en cas de restart
-* Retrait des commandes cssm_grant et cssm_revoke
-* La bombe est maintenant supprimée lorsqu'elle est interdite
-* Correction : Les kills comptaient comme des tk dans les rapports
+* Correction : bombe absente lors du cutround
+* Correction : impossible de rejoindre une team ou d'utiliser un menu si non admin
+* Correction : les manches pouvaient se lancer en double
+* Correction : un restart en strats faisait déconner le décompte

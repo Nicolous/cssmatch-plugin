@@ -163,7 +163,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			
 			//	Initialize the translations tools
 			i18n = new I18nManager();
-			I18nConVar * cssmatch_language = new I18nConVar(i18n,"cssmatch_language","english",FCVAR_NOTIFY|FCVAR_REPLICATED,"cssmatch_language");
+			I18nConVar * cssmatch_language = new I18nConVar(i18n,"cssmatch_language","english",FCVAR_NONE,"cssmatch_language");
 			addPluginConVar(cssmatch_language);
 			i18n->setDefaultLanguage(cssmatch_language);
 
@@ -843,12 +843,15 @@ PLUGIN_RESULT ServerPlugin::ClientCommand(edict_t * pEntity)
 
 			if (itCmd != invalidCmd)
 			{
-				if (user->isReferee() || (itCmd->second.nospam && user->canUseCommand()))
+				if (itCmd->second.nospam)
 				{
-					result = (*itCmd->second.callback)(user);
+					if (user->isReferee() || user->canUseCommand())
+						result = (*itCmd->second.callback)(user);
+					else
+						result = PLUGIN_STOP;
 				}
 				else
-					result = PLUGIN_STOP;
+					result = (*itCmd->second.callback)(user);
 			}
 		}
 #ifdef _DEBUG

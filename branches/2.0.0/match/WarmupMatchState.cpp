@@ -35,7 +35,7 @@ using std::string;
 using std::list;
 using std::map;
 
-WarmupMatchState::WarmupMatchState()
+WarmupMatchState::WarmupMatchState() : finished(false)
 		
 {
 	warmupMenu = new Menu("menu_warmup",
@@ -68,22 +68,27 @@ WarmupMatchState::~WarmupMatchState()
 
 void WarmupMatchState::endWarmup()
 {
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	MatchManager * match = plugin->getMatch();
-	/*I18nManager * i18n = plugin->getI18nManager();
-
-	RecipientFilter recipients;
-	recipients.addAllPlayers();
-
-	i18n->i18nChatSay(recipients,"warmup_end");*/
-
-	if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
+	if (! finished) // cssm_go after the warmup finished?
 	{
-		match->setMatchState(HalfMatchState::getInstance());
-	}
-	else
-	{
-		match->stop();
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+		MatchManager * match = plugin->getMatch();
+		/*I18nManager * i18n = plugin->getI18nManager();
+
+		RecipientFilter recipients;
+		recipients.addAllPlayers();
+
+		i18n->i18nChatSay(recipients,"warmup_end");*/
+
+		finished = true;
+
+		if (plugin->getConVar("cssmatch_sets")->GetInt() > 0)
+		{
+			match->setMatchState(HalfMatchState::getInstance());
+		}
+		else
+		{
+			match->stop();
+		}
 	}
 }
 
@@ -144,6 +149,8 @@ void WarmupMatchState::startState()
 	lignup->clan1.setReady(false); // override any previous warmup settings
 	lignup->clan2.setReady(false);
 
+	finished = false; // (Warmup not finished yet)
+
 	plugin->queueCommand("mp_restartgame 2\n");
 
 	// Subscribe to the needed game events
@@ -153,7 +160,7 @@ void WarmupMatchState::startState()
 		interfaces->gameeventmanager2->AddListener(this,itEvent->first.c_str(),true);
 	}
 
-	match->getInfos()->roundNumber = -2; // negative round number causes a game restart (see round_start)
+	match->getInfos()->roundNumber = 1;
 }
 
 void WarmupMatchState::endState()
@@ -334,12 +341,15 @@ void WarmupMatchState::round_start(IGameEvent * event)
 		break;
 	case 0:
 		{*/
+	if (infos->roundNumber == 1)
+	{
 			int duration = plugin->getConVar("cssmatch_warmup_time")->GetInt()*60;
 
 			countdown.fire(duration);
 
-			// Trick: Increment the round number so a restart will not re-lauch the countdown
+			// Increment the round number so a restart will not re-lauch the countdown
 			infos->roundNumber++;
+	}
 	/*	}
 	//	break;
 	default:
