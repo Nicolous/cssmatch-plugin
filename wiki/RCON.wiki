@@ -14,15 +14,15 @@ Depuis la version 1.2, l'authentification par RCON de l'arbitre n'est plus néce
 =Présentation des commandes=
 
 ----
-==cssm_help==
+==cssm_help commande==
 
 ====Description====
 
-Cette commande liste toutes les commandes du plugin avec une brève description de chacune d'elles.
+Affiche une brève description de la commande passée en paramètre.
 
 ====Exemple====
 
-`cssm_help`
+`cssm_help cssm_start`
 
 ----
 ==cssm_start <fichier de config>==
