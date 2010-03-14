@@ -87,18 +87,21 @@ void ConCommandHook::Dispatch()
 		ClanMember * user = NULL;
 		CSSMATCH_VALID_PLAYER(PlayerHavingIndex,plugin->GetCommandClient()+1,user)
 		{
-			if (user->isReferee() || (nospam && user->canUseCommand()))
+			if (nospam)
 			{
-				if (! callback(user))
+				if (user->isReferee() || user->canUseCommand())
+				{
+					if (! callback(user))
+						hooked->Dispatch();
+				}
+				else
 					hooked->Dispatch();
 			}
+			else if (! callback(user))
+				hooked->Dispatch();
 		}
-	#ifdef _DEBUG
-		else
-		{
-			CSSMATCH_PRINT("Unable to find the user");
-		}
-	#endif // _DEBUG
+		else // console?
+			hooked->Dispatch();
 	}
 	catch(const BaseException & e)
 	{

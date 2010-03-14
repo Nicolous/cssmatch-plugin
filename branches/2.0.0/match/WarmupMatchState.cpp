@@ -352,11 +352,11 @@ void WarmupMatchState::round_start(IGameEvent * event)
 			infos->roundNumber++;
 	}
 	/*	}
-	//	break;
-	default:
-		recipients.addAllPlayers();
-		i18n->i18nChatSay(recipients,"warmup_announcement");
 		break;
+	default:*/
+	recipients.addAllPlayers();
+	i18n->i18nChatSay(recipients,"warmup_announcement");
+	/*	break;
 	}*/
 }
 

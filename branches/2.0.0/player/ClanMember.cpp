@@ -67,8 +67,8 @@ void ClanMember::saveState(PlayerState * state)
 
 	state->c4 = getWeaponFromWeaponSlot(WEAPON_SLOT5) != NULL;
 
-	state->vecOrigin = getVecOrigin();
-	state->angle = getViewAngle();
+	//state->vecOrigin = getVecOrigin();
+	//state->angle = getViewAngle();
 	state->hasDefuser = hasDefuser();
 	state->hasNightVision = hasNightVision();
 }
@@ -88,8 +88,8 @@ void ClanMember::restoreState(PlayerState * state)
 	if (state->account > -1)
 		setAccount(state->account);
 
-	if (state->vecOrigin.IsValid())
-		setVecOrigin(state->vecOrigin);
+	/*if (state->vecOrigin.IsValid())
+		setVecOrigin(state->vecOrigin);*/
 
 	if (! state->primary.empty())
 	{
@@ -126,8 +126,8 @@ void ClanMember::restoreState(PlayerState * state)
 	hasDefuser(state->hasDefuser);
 	hasNightVision(state->hasNightVision);
 
-	if (state->angle.IsValid())
-		setang(state->angle);
+	/*if (state->angle.IsValid())
+		setang(state->angle);*/
 
 	// TODO: Restore the kills/deaths in the scoreboard ?			
 }

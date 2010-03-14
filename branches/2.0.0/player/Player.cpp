@@ -605,7 +605,7 @@ int Player::getArmor()
 
 	try
 	{
-		armor = healthHandler.getProp<int>(identity.pEntity);
+		armor = armorHandler.getProp<int>(identity.pEntity);
 	}
 	catch(const EntityPropException & e)
 	{

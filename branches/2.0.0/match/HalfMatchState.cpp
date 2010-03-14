@@ -315,9 +315,9 @@ void HalfMatchState::endHalf()
 
 	plugin->queueCommand("plugin_print\n");
 
-	// Update the state of each player
+	/*// Update the state of each player
 	list<ClanMember *> * playerlist = plugin->getPlayerlist();
-	for_each(playerlist->begin(),playerlist->end(),SaveHalfPlayerState());
+	for_each(playerlist->begin(),playerlist->end(),SaveHalfPlayerState());*/
 
 	// Update the score history of each clan
 	MatchClan * clanT = match->getClan(T_TEAM);
@@ -486,6 +486,12 @@ void HalfMatchState::round_start(IGameEvent * event)
 			break;
 		case 0:
 			match->sendStatus(recipients);
+
+			if (! halfRestarted)
+			{
+				list<ClanMember *> * playerlist = plugin->getPlayerlist();
+				for_each(playerlist->begin(),playerlist->end(),SaveHalfPlayerState());
+			}
 		default:
 			{
 				// If there was a restart, restore the players equipement/score
@@ -500,11 +506,6 @@ void HalfMatchState::round_start(IGameEvent * event)
 					{
 						for_each(playerlist->begin(),playerlist->end(),RestoreHalfPlayerScore());
 						halfRestarted = false;
-					}
-					else
-					{
-						list<ClanMember *> * playerlist = plugin->getPlayerlist();
-						for_each(playerlist->begin(),playerlist->end(),SaveHalfPlayerState());
 					}
 					for_each(playerlist->begin(),playerlist->end(),SaveRoundPlayerState());
 				}

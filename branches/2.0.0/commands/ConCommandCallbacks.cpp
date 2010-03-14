@@ -726,6 +726,13 @@ bool cssmatch::say_hook(ClanMember * user)
 	return eat;
 }
 
+/*bool cssmatch::status_hook(ClanMember * user)
+{
+	Msg("===>>> %i\n",user->getIdentity()->userid);
+
+	return false;
+}*/
+
 /*bool cssmatch::tv_stoprecord_hook(int userIndex)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();

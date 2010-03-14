@@ -138,7 +138,6 @@ namespace cssmatch
 		void operator()(ClanMember * member)
 		{
 			member->restoreState(&member->lastHalfState);
-				
 		}
 	};
 

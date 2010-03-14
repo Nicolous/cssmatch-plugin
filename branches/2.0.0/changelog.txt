@@ -1,4 +1,3 @@
-* Correction : bombe présente pendant les strats
-* Correction : impossible de rejoindre une team ou d'utiliser un menu si non admin
-* Correction : les manches pouvaient se lancer en double
-* Correction : un restart en strats faisait déconner le décompte
+* Correction : Message manquant au lancement des strats
+* Corrections sur le système de restauration de l'équipement
+* Correction : Les "say" par rcon ou dans le fichier cfg n'avaient plus d'effet

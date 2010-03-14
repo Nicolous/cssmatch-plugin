@@ -80,6 +80,8 @@ namespace cssmatch
 	/** !go, !score, !teamt, etc. */
 	bool say_hook(ClanMember * user);
 
+	//bool status_hook(ClanMember * user);
+
 	/* Want to stop the current record ? */
 	//bool tv_stoprecord_hook(int userIndex);
 }
