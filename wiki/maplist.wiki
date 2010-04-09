@@ -2,7 +2,7 @@
 
 Lorsque vous activez [Administration les options basiques d'administration], vous pouvez changer de map via le menu d'arbitrage.
 
-Le fichier *maplist.txt* contient les maps proposées dans le menu permettant de changer de map. Il permet de restreindre le nombres de choix dans le menu pour un changement de map plus rapide et plus facile.
+Le fichier *maplist.txt* situé dans le dossier *cfg/cssmatch* contient les maps proposées dans le menu permettant de changer de map. Il permet de restreindre le nombres de choix dans le menu pour un changement de map plus rapide et plus facile.
 
 Modifiez ce fichier à volonté ;)
 
