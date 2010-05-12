@@ -22,11 +22,8 @@ Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure tou
 
 == Préparation de la première compilation ==
  * A l'aide d'un terminal, placez-vous dans le dossier qui va contenir le projet
- * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc :
-{{{
-svn checkout svn://alliedmods.net/svnroot/sourcemm/hl2sdk hl2sdk
-}}}
- _*Note :* Le dossier contenant le SDK est nommé "hl2sdk"._ 
+ * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk-ob/?root=sourcemm
+ _*Note :* Décompressez le fichier dans un dossier nommé "hl2sdk"._ 
  * Récupérez la dernière version du code source de CSSMatch :
 {{{
 svn checkout http://cssmatch-plugin.googlecode.com/svn/trunk/ cssmatch-plugin-read-only
@@ -76,7 +73,7 @@ make clean
   ** pour XP, Vista et probablement Seven : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en Plateform SDK]
   ** pour Windows 2000 : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en#filelist PSDK-x86.exe] + [http://www.01net.com/telecharger/windows/Programmation/creation/fiches/25232.html .NET Framework]
  * Placez-vous dans le dossier qui va contenir le projet
- * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc (Avec TortoiseSVN : clique-droit > "SVN Checkout" sur le lien svn://alliedmods.net/svnroot/sourcemm/hl2sdk -voir note ci-dessous-)
+ * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk-ob/?root=sourcemm
  _*Note :* Pour éviter d'avoir à modifier les options du projet Visual C++, arrangez-vous pour que le dossier contenant le SDK soit nommé "hl2sdk"._ 
  * Récupérez la dernière version du code source de CSSMatch. (Avec TortoiseSVN : clique-droit > "SVN Checkout" sur le lien http://cssmatch-plugin.googlecode.com/svn/trunk/ dans le dossier de votre choix)
  _*Note :* Si vous ne comptez pas développer CSSMatch, téléchargez plutôt [http://code.google.com/p/cssmatch-plugin/source/browse/#svn/tags une version stable] archivée (ex : [http://code.google.com/p/cssmatch-plugin/source/browse/#svn/tags/1.3.6])_
@@ -91,11 +88,10 @@ make clean
 = Notes communes à la compilation sur Linux et Windows =
  * Le fichier "cssmatch.vdf" est un fichier texte qui n'est pas généré par le processus de compilation. (Ouvrez le ! Il indique au serveur quel fichier charger.)
 
- * Si une mise à jour du jeu casse le plugin ou si Valve change quelque chose au SDK des jeux _Episode 1_, mettez à jour à jour votre version locale du SDK :
+ * Pour synchroniser votre version locale du code source avec celle disponible sur Google Code :
   # Placez-vous dans le dossier "hl2sdk"
   # Exécutez :
 {{{
 svn update
 }}}
  (Avec TortoiseSVN : clique-droit, "SVN Update".) <br>
- De même, vous pouvez mettre à jour votre version locale du code source de CSSMatch si une mise à jour est publiée.
