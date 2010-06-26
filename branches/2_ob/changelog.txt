@@ -1,0 +1,3 @@
+* Correction : Message manquant au lancement des strats
+* Corrections sur le système de restauration de l'équipement
+* Correction : Les "say" par rcon ou dans le fichier cfg n'avaient plus d'effet
