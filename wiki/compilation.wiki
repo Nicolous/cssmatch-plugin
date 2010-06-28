@@ -21,33 +21,32 @@ Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure tou
  * La version 4.1 du compilateur "gcc/g++"
 
 == Préparation de la première compilation ==
- * A l'aide d'un terminal, placez-vous dans le dossier qui va contenir le projet
- * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk/?root=sourcemm
- _*Note :* Décompressez le fichier dans un dossier nommé "hl2sdk"._ 
+ * Commencez par créer un dossier pour le projet.
+ * A l'aide d'un terminal, placez-vous dans ce dossier
+ * Récupérez le SDK des jeux _Episode 2_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk-ob/?root=sourcemm&view=tar (34 MB)
+ _*Note :* Décompressez le fichier dans un dossier nommé "hl2sdk-ob"._ 
  * Récupérez la dernière version du code source de CSSMatch :
 {{{
-svn checkout http://cssmatch-plugin.googlecode.com/svn/trunk/ cssmatch-plugin-read-only
-}}}
- _*Note :* Si vous ne comptez pas développer CSSMatch, téléchargez plutôt [http://code.google.com/p/cssmatch-plugin/source/browse/#svn/tags une version stable] archivée (ex : [http://code.google.com/p/cssmatch-plugin/source/browse/#svn/tags/1.3.6])_
- * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : cssmatch-plugin-read-only), et exécutez :
-{{{
-chmod +x compile.sh
+svn checkout http://cssmatch-plugin.googlecode.com/svn/branches/2_ob/ cssmatch2-ob-plugin-read-only
 }}}
 
 == Compilation ==
- * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : cssmatch-plugin-read-only)
+ * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : cssmatch2-ob-plugin-read-only)
  * Lancez la compilation :
 {{{
 make
 }}} 
  Vous constaterez que de nombreux avertissements sont affichés. Hélas, c'est normal, et vous ne pourrez rien y changer. Ils proviennent du SDK fourni par Valve, mais ils sont inoffensifs.
- Pour évitez d'être noyé dans tous ces avertissements, vous pouvez utiliser le script "compile.sh" :
+ Pour évitez d'être noyé dans tous ces avertissements, vous pouvez rediriger les erreurs vers un fichier pour qu'elles ne s'affichent pas:
  {{{
-./compile.sh
+make 2> debug_make.txt
 }}}
- Les messages d'erreurs résultants de la compilation seront alors redirigés vers un fichier "debug_make.txt". Si la compilation échoue, les messages d'erreurs (mais pas les avertissements) seront affichés dès que "make" a fini son travail.
+ Les messages d'erreurs résultants de la compilation seront alors redirigés vers un fichier "debug_make.txt". Si la compilation échoue, vous pourrez alors afficher les messages d'erreur via cette commande :
+ {{{
+more debug_make.txt | grep "\(\(e|E\)rror\|\(e|E\)rreur\)"
+}}}
 
- _*Note :* La compilation peut prendre quelques minutes, surtout si vous n'utilisez pas le script "compile.sh"._
+ _*Note :* La compilation peut prendre quelques minutes, surtout si vous ne supprimez pas les affichages d'erreur._
 
  _*Note :* Le fichier "cssmatch_i486.so" est généré dans le sous-dossier "zip/addons"._
  * Quelques cibles utiles du Makefile :
@@ -69,14 +68,14 @@ make clean
  _*Note :* Par ailleurs, vous pouvez décider d'utiliser le compilateur de Visual Studio/C++ avec un IDE tel que [http://www.codeblocks.org/ Code::Blocks].
 
 == Préparation de la première compilation ==
+ * Commencez par créer un dossier pour le projet.
  * Si vous utiliser une version de Visual C++ Express, vous devez télécharger et installer le SDK de Windows approprié :
   ** pour XP, Vista et probablement Seven : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en Plateform SDK]
   ** pour Windows 2000 : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en#filelist PSDK-x86.exe] + [http://www.01net.com/telecharger/windows/Programmation/creation/fiches/25232.html .NET Framework]
  * Placez-vous dans le dossier qui va contenir le projet
- * Récupérez le SDK des jeux _Episode 1_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk/?root=sourcemm
- _*Note :* Pour éviter d'avoir à modifier les options du projet Visual C++, arrangez-vous pour que le dossier contenant le SDK soit nommé "hl2sdk"._ 
- * Récupérez la dernière version du code source de CSSMatch. (Avec TortoiseSVN : clique-droit > "SVN Checkout" sur le lien http://cssmatch-plugin.googlecode.com/svn/trunk/ dans le dossier de votre choix)
- _*Note :* Si vous ne comptez pas développer CSSMatch, téléchargez plutôt [http://code.google.com/p/cssmatch-plugin/source/browse/#svn/tags une version stable] archivée (ex : [http://code.google.com/p/cssmatch-plugin/source/browse/#svn/tags/1.3.6])_
+ * Récupérez le SDK des jeux _Episode 2_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk-ob/?root=sourcemm&view=tar (34 MB)
+ _*Note :* Pour éviter d'avoir à modifier les options du projet Visual C++, arrangez-vous pour que le dossier contenant le SDK soit nommé "hl2sdk-ob"._ 
+ * Récupérez la dernière version du code source de CSSMatch. (Avec TortoiseSVN : clique-droit > "SVN Checkout" sur le lien http://cssmatch-plugin.googlecode.com/svn/branches/2_ob/ dans le dossier de votre choix)
 
 == Compilation ==
  * Placez-vous dans le dossier contenant le code source de CSSMatch
@@ -89,7 +88,7 @@ make clean
  * Le fichier "cssmatch.vdf" est un fichier texte qui n'est pas généré par le processus de compilation. (Ouvrez le ! Il indique au serveur quel fichier charger.)
 
  * Pour synchroniser votre version locale du code source avec celle disponible sur Google Code :
-  # Placez-vous dans le dossier "hl2sdk"
+  # Placez-vous dans le dossier contenant les fichiers du projets (cssmatch2-ob-plugin-read-only par exemple)
   # Exécutez :
 {{{
 svn update
