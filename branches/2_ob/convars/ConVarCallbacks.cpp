@@ -28,16 +28,11 @@
 
 using namespace cssmatch;
 
-void cssmatch::cssmatch_version(ConVar * var, char const * pOldString, float flOldValue)
+void cssmatch::cssmatch_version(IConVar * var, char const * pOldString, float flOldValue)
 {
-	if (strcmp(var->GetString(),CSSMATCH_VERSION) != 0)
+	ConVar * versionVar = static_cast<ConVar *>(var);
+	if (strcmp(versionVar->GetString(),CSSMATCH_VERSION) != 0)
 	{
-		var->SetValue(CSSMATCH_VERSION);
+		versionVar->SetValue(CSSMATCH_VERSION);
 	}
 }
-
-/*void cssmatch::cssmatch_advanced(ConVar * var, char const * pOldString, float flOldValue)
-{
-
-}*/
-

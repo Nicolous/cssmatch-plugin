@@ -23,12 +23,12 @@
 #ifndef __CON_VAR_CALLBACKS_H__
 #define __CON_VAR_CALLBACKS_H__
 
-class ConVar;
+class IConVar;
 
 namespace cssmatch
 {
 	/** Make cssmatch_version constant */
-	void cssmatch_version(ConVar * var, char const * pOldString, float flOldValue);
+	void cssmatch_version(IConVar * var, char const * pOldString, float flOldValue);
 
 	/* Apply changes related to cssmatch_advanced */
 	//void cssmatch_advanced(ConVar * var, char const * pOldString, float flOldValue);
