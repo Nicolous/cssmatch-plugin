@@ -262,7 +262,7 @@
 			Name="valve"
 			>
 			<File
-				RelativePath="..\hl2sdk\public\tier0\memoverride.cpp"
+				RelativePath="..\hl2sdk-ob\public\tier0\memoverride.cpp"
 				>
 			</File>
 		</Filter>

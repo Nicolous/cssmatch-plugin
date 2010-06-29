@@ -228,8 +228,9 @@ CBaseCombatWeapon * Player::getWeaponFromWeaponSlot(WeaponSlotCode slot) const
 	CBaseCombatWeapon * bCombatWeapon = NULL;
 	CBaseCombatCharacter * bCombatCharacter = getBaseCombatCharacter();
 
-	if (isValidBaseCombatCharacter(bCombatCharacter))
-		bCombatWeapon = bCombatCharacter->Weapon_GetSlot((int)slot);
+	/*if (isValidBaseCombatCharacter(bCombatCharacter))
+		bCombatWeapon = bCombatCharacter->Weapon_GetSlot((int)slot);*/
+	// FIXME: I'm broken since CS:S OB
 
 	/*if (bCombatWeapon == NULL)
 		print("");*/
