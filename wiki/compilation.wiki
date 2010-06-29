@@ -23,7 +23,7 @@ Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure tou
 == Préparation de la première compilation ==
  * Commencez par créer un dossier pour le projet.
  * A l'aide d'un terminal, placez-vous dans ce dossier
- * Récupérez le SDK des jeux _Episode 2_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk-ob/?root=sourcemm&view=tar (34 MB)
+ * Récupérez le SDK des jeux _Episode 2_ compatible avec la version 4.1 de gcc : http://hg.alliedmods.net/hl2sdks/hl2sdk-ob-valve/archive/tip.tar.gz (38 MB)
  _*Note :* Décompressez le fichier dans un dossier nommé "hl2sdk-ob"._ 
  * Récupérez la dernière version du code source de CSSMatch :
 {{{
@@ -73,7 +73,7 @@ make clean
   ** pour XP, Vista et probablement Seven : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en Plateform SDK]
   ** pour Windows 2000 : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en#filelist PSDK-x86.exe] + [http://www.01net.com/telecharger/windows/Programmation/creation/fiches/25232.html .NET Framework]
  * Placez-vous dans le dossier qui va contenir le projet
- * Récupérez le SDK des jeux _Episode 2_ compatible avec la version 4.1 de gcc : http://svn.alliedmods.net/viewvc.cgi/hl2sdk-ob/?root=sourcemm&view=tar (34 MB)
+ * Récupérez le SDK des jeux _Episode 2_ compatible avec la version 4.1 de gcc : http://hg.alliedmods.net/hl2sdks/hl2sdk-ob-valve/archive/tip.zip (38 MB)
  _*Note :* Pour éviter d'avoir à modifier les options du projet Visual C++, arrangez-vous pour que le dossier contenant le SDK soit nommé "hl2sdk-ob"._ 
  * Récupérez la dernière version du code source de CSSMatch. (Avec TortoiseSVN : clique-droit > "SVN Checkout" sur le lien http://cssmatch-plugin.googlecode.com/svn/branches/2_ob/ dans le dossier de votre choix)
 
