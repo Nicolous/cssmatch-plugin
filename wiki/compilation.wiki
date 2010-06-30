@@ -93,4 +93,5 @@ make clean
 {{{
 svn update
 }}}
- (Avec TortoiseSVN : clique-droit, "SVN Update".) <br>
+ (Avec TortoiseSVN : clique-droit, "SVN Update".) <br><br>
+ _*Note :* Vous pouvez vous tenir au courant de l'activité du dépôt SVN en vous abonnant à la liste de diffusion [http://groups.google.com/group/cssmatch-repository]_
