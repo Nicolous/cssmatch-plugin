@@ -28,7 +28,7 @@ ConvarsAccessor::ConvarsAccessor() : cvars(NULL)
 {
 }
 
-void ConvarsAccessor::initializeInterface(CreateInterfaceFn cvarFactory) throw (ConvarsAccessorException)
+void ConvarsAccessor::accessRegister(CreateInterfaceFn cvarFactory) throw (ConvarsAccessorException)
 {
     g_pCVar = (ICvar *)cvarFactory(CVAR_INTERFACE_VERSION, NULL);
 	cvars = g_pCVar;
@@ -37,6 +37,11 @@ void ConvarsAccessor::initializeInterface(CreateInterfaceFn cvarFactory) throw (
 		ConVar_Register(0,this);
 	else
 		throw ConvarsAccessorException("Unable to initialize the console variables interface !");
+}
+
+void ConvarsAccessor::accessUnregister()
+{
+	ConVar_Unregister();
 }
 
 ICvar * ConvarsAccessor::getConVarInterface()

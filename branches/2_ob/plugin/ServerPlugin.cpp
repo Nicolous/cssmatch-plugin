@@ -229,7 +229,7 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			try
 			{
 				interfaces.convars = new ConvarsAccessor();
-				interfaces.convars->initializeInterface(interfaceFactory);
+				interfaces.convars->accessRegister(interfaceFactory);
 				
 				// Grab some existing ConVars
 				ICvar * cvars = interfaces.convars->getConVarInterface();
@@ -711,6 +711,9 @@ void ServerPlugin::removeTimers()
 void ServerPlugin::Unload()
 {
 	Msg(CSSMATCH_NAME ": unloading...\n");
+
+	interfaces.convars->accessUnregister();
+
 	if (updateThread != NULL)
 	{
 		updateThread->End();

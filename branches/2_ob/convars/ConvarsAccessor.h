@@ -48,11 +48,14 @@ namespace cssmatch
 	public:
 		ConvarsAccessor();
 
-		/** Initialize the interface
+		/** Register this accessor and init the interface
 		 * @param cvarFactory The factory used to retrieve the accessor
 		 * @throws ConvarsAccessorException If the console variable/command accessor cannot be initialized
 		 */
-		void initializeInterface(CreateInterfaceFn cvarFactory) throw (ConvarsAccessorException);
+		void accessRegister(CreateInterfaceFn cvarFactory) throw (ConvarsAccessorException);
+
+		/** Unregister this accessor */
+		void accessUnregister();
 
 		/** Get the plugin's console variables/commands accessor
 		 * @return The console commands/variables interface

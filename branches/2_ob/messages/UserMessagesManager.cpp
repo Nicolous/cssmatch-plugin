@@ -152,9 +152,8 @@ void UserMessagesManager::hintSay(RecipientFilter & recipients, const string & m
 {
 	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("HintText"));
 
-	pWrite->WriteByte(1); // DOCUMENT ME
+	pWrite->WriteByte(-1); // DOCUMENT ME
 	pWrite->WriteString(message.c_str());
-	pWrite->WriteByte(0); // DOCUMENT ME
 
 	engine->MessageEnd();
 }
