@@ -267,19 +267,25 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 		}
 
 		loaded = true;
+		
+		try
+		{
+			updateThread = new UpdateNotifier();
+			updateThread->Start();
+		}
+		catch(const UpdateNotifierException & e)
+		{
+			CSSMATCH_PRINT_EXCEPTION(e);
+		}
+
+		Msg(CSSMATCH_NAME ": loaded\n");
+	}
+	else
+	{
+		Msg(CSSMATCH_NAME ": Plugin already loaded!\n");
+		success = false;
 	}
 
-	try
-	{
-		updateThread = new UpdateNotifier();
-		updateThread->Start();
-	}
-	catch(const UpdateNotifierException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	Msg(CSSMATCH_NAME ": loaded\n");
 	return success;
 }
 
