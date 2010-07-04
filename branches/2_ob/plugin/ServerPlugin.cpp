@@ -654,7 +654,7 @@ void ServerPlugin::hookConCommand(const std::string & commandName, HookCallback 
 
 	if (itHook == invalidHook)
 	{
-		char * cName = new char [commandName.size()];
+		char * cName = new char [commandName.size() + 1];
 		V_strcpy(cName,commandName.c_str());
 
 		hookConCommands[commandName] = new ConCommandHook(cName,callback,antispam);

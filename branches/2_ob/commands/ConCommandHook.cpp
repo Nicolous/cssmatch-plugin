@@ -44,6 +44,7 @@ void ConCommandHook::Init()
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 	ICvar * cvars = interfaces->convars->getConVarInterface();
+	const char * name = GetName();
 
 	if (cvars != NULL)
 	{
@@ -54,7 +55,7 @@ void ConCommandHook::Init()
 		{
 			if (listedCommand->IsCommand() &&
 				(listedCommand != this) &&
-				(V_strcmp(listedCommand->GetName(),GetName()) == 0))
+				(V_strcmp(listedCommand->GetName(),name) == 0))
 			{
 				hooked = static_cast<ConCommand *>(const_cast<ConCommandBase *>(listedCommand));
 				success = true;
@@ -65,16 +66,17 @@ void ConCommandHook::Init()
 		
 		if (success)
 		{
+			Msg(CSSMATCH_NAME ": %s hooked\n",name);
 			ConCommand::Init();
 		}
 		else
 		{
-			CSSMATCH_PRINT(string("Unable to hook ") + GetName() + ": command not found");
+			Msg(CSSMATCH_NAME ": failed to hook %s\n",name);
 		}
 	}
 	else
 	{
-		CSSMATCH_PRINT(string("Unable to hook ") + GetName() + ": the interface is not ready");
+		Msg(CSSMATCH_NAME ": failed to hook %s (interface not ready)\n",name);
 	}
 }
 
