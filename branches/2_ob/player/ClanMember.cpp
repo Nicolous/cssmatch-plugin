@@ -21,8 +21,13 @@
  */
 
 #include "ClanMember.h"
+#include "../plugin/ServerPlugin.h"
 
 using namespace cssmatch;
+using std::list;
+using std::string;
+
+EntityProp ClanMember::ownerHandler("CBaseCombatWeapon","m_hOwner");
 
 ClanMember::ClanMember(int index, bool ref) : Player(index), referee(ref)
 {
@@ -45,32 +50,43 @@ PlayerScore * ClanMember::getCurrentScore()
 
 void ClanMember::saveState(PlayerState * state)
 {
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
+	// Get the handle id of this player
+	IHandleEntity * handle = identity.pEntity->GetNetworkable()->GetEntityHandle();
+	const CBaseHandle & bHandle = handle->GetRefEHandle();
+	int handleid = bHandle.ToInt();
+
+	state->objects.clear();
+
+	// FIXME: Ouch! (playercount * entitycount) iterations!
+	for (int i = interfaces->gpGlobals->maxClients + 1; i < interfaces->engine->GetEntityCount(); i++)
+	{
+		edict_t * entity = interfaces->engine->PEntityOfEntIndex(i);
+		if (isValidEntity(entity))
+		{
+			int tempHandleid = entity->GetNetworkable()->GetEntityHandle()->GetRefEHandle().ToInt();
+
+			if ((strstr(entity->GetClassName(),"item_") != NULL) ||
+				(strstr(entity->GetClassName(),"weapon_") != NULL))
+			{
+				if (ownerHandler.getProp<int>(entity) == handleid)
+				{
+					state->objects.push_back(entity->GetClassName());
+				}
+			}
+		}
+	}
+
 	state->score.deaths = currentScore.deaths;
 	state->score.kills = currentScore.kills;
 
-	state->health = getHealth();
 	state->armor = getArmor();
-
-	state->hasHelmet = hasHelmet();
 	state->account = getAccount();
-
-	CBaseCombatWeapon * primary = getWeaponFromWeaponSlot(WEAPON_SLOT1);
-	if (primary != NULL)
-		state->primary = primary->GetName();
-	CBaseCombatWeapon * secondary = getWeaponFromWeaponSlot(WEAPON_SLOT2);
-	if (secondary != NULL)
-		state->secondary =  secondary->GetName();
-	
-	state->hegrenades = getHeCount();
-	state->flashbangs = getFbCount();
-	state->smokegrenades = getSgCount();
-
-	state->c4 = getWeaponFromWeaponSlot(WEAPON_SLOT5) != NULL;
 
 	//state->vecOrigin = getVecOrigin();
 	//state->angle = getViewAngle();
-	state->hasDefuser = hasDefuser();
-	state->hasNightVision = hasNightVision();
 }
 
 void ClanMember::restoreState(PlayerState * state)
@@ -78,53 +94,20 @@ void ClanMember::restoreState(PlayerState * state)
 	currentScore.deaths = state->score.deaths;
 	currentScore.kills = state->score.kills;
 
-	if (state->health > 0)
-		setHealth(state->health);
-
 	if (state->armor > 0)
 		setArmor(state->armor);
 
-	hasHelmet(state->hasHelmet);
 	if (state->account > -1)
 		setAccount(state->account);
 
+	list<string>::const_iterator itObject;
+	for(itObject = state->objects.begin(); itObject != state->objects.end(); itObject++)
+	{
+		give(*itObject);
+	}
+
 	/*if (state->vecOrigin.IsValid())
 		setVecOrigin(state->vecOrigin);*/
-
-	if (! state->primary.empty())
-	{
-		removeWeapon(WEAPON_SLOT1);
-		give(state->primary);
-	}
-	if (! state->secondary.empty())
-	{
-		removeWeapon(WEAPON_SLOT2);
-		give(state->secondary);
-	}
-
-	if (state->hegrenades > 0)
-	{
-		give("weapon_hegrenade");
-	}
-	int fb = state->flashbangs;
-	while(fb > 0)
-	{
-		give("weapon_flashbang");
-		fb--;
-	}
-	if (state->smokegrenades > 0)
-	{
-		give("weapon_smokegrenade");
-	}
-
-	removeWeapon(WEAPON_SLOT5);
-	if (state->c4)
-	{
-		give("weapon_c4");
-	}
-
-	hasDefuser(state->hasDefuser);
-	hasNightVision(state->hasNightVision);
 
 	/*if (state->angle.IsValid())
 		setang(state->angle);*/

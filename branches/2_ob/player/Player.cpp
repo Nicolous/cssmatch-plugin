@@ -34,20 +34,13 @@ using std::ostringstream;
 
 EntityProp Player::accountHandler("CCSPlayer","m_iAccount");
 EntityProp Player::lifeStateHandler("CBasePlayer","m_lifeState");
-EntityProp Player::hasHelmetHandler("CCSPlayer","m_bHasHelmet");
-EntityProp Player::vecOriginHandler("CCSPlayer","baseclass.baseclass.baseclass.baseclass.baseclass.baseclass.m_vecOrigin");
-EntityProp Player::hasDefuserHandler("CCSPlayer","m_bHasDefuser");
-EntityProp Player::hasNightVisionHandler("CCSPlayer","m_bHasNightVision");
-EntityProp Player::angRotationHandler("CBaseEntity","m_angRotation");
-EntityProp Player::eyeAngles0Handler("CCSPlayer","m_angEyeAngles[0]");
-EntityProp Player::eyeAngles1Handler("CCSPlayer","m_angEyeAngles[1]");
+//EntityProp Player::vecOriginHandler("CCSPlayer","baseclass.baseclass.baseclass.baseclass.baseclass.baseclass.m_vecOrigin");
+//EntityProp Player::angRotationHandler("CBaseEntity","m_angRotation");
+//EntityProp Player::eyeAngles0Handler("CCSPlayer","m_angEyeAngles[0]");
+//EntityProp Player::eyeAngles1Handler("CCSPlayer","m_angEyeAngles[1]");
 EntityProp Player::armorHandler("CCSPlayer","m_ArmorValue");
-EntityProp Player::healthHandler("CCSPlayer","baseclass.m_iHealth");
-EntityProp Player::hegrenadeHandler("CBasePlayer","localdata.m_iAmmo.011");
-EntityProp Player::flashbangHandler("CBasePlayer","localdata.m_iAmmo.012");
-EntityProp Player::smokegrenadeHandler("CBasePlayer","localdata.m_iAmmo.013");
 
-Player::Player(int index) throw (PlayerException) : lastCommandDate(0.0f)
+Player::Player(int index) throw (PlayerException) : lastCommandDate(0.0f), menuTimer(NULL)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -99,11 +92,17 @@ bool Player::canUseCommand()
 
 void Player::sendMenu(Menu * usedMenu, int page, const map<string,string> & parameters, bool toDelete)
 {
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
 	quitMenu();
+
+	menuTimer = new MenuReSendTimer(4.0f,this);
+	plugin->addTimer(menuTimer);
 
 	menuHandler.menu = usedMenu;
 	menuHandler.page = page;
 	menuHandler.toDelete = toDelete;
+	menuHandler.parameters = parameters;
 
 	menuHandler.menu->send(this,page,parameters);
 }
@@ -149,6 +148,8 @@ void Player::quitMenu()
 {
 	if (menuHandler.menu != NULL)
 	{
+		menuTimer->cancel();
+
 		if (menuHandler.toDelete)
 			delete menuHandler.menu;
 		menuHandler.menu = NULL;
@@ -171,7 +172,7 @@ TeamCode Player::getMyTeam() const
 	return team;
 }
 
-CBasePlayer * Player::getBasePlayer() const
+/*CBasePlayer * Player::getBasePlayer() const
 {
 	CBasePlayer * bPlayer = NULL;
 	IServerUnknown * sUnknown = getServerUnknow(identity.pEntity);
@@ -186,9 +187,9 @@ CBasePlayer * Player::getBasePlayer() const
 	}
 	
 	return bPlayer;
-}
+}*/
 
-CBaseCombatCharacter * Player::getBaseCombatCharacter() const
+/*CBaseCombatCharacter * Player::getBaseCombatCharacter() const
 {
 	CBaseCombatCharacter * bCombatCharacter = NULL;
 	CBaseEntity * bEntity = getBaseEntity(identity.pEntity);
@@ -203,7 +204,7 @@ CBaseCombatCharacter * Player::getBaseCombatCharacter() const
 	}
 
 	return bCombatCharacter;
-}
+}*/
 
 IPlayerInfo * Player::getPlayerInfo() const
 {
@@ -214,29 +215,13 @@ IPlayerInfo * Player::getPlayerInfo() const
 
 	//if (! isValidPlayerInfo(pInfo))
 	// Don't use isValidPlayerInfo here because it excludes SourceTv
-	// For now SourceTV is added to the playerlist, because it should be able to recieve the message from CSSMatch
+	// For now SourceTV is added to the playerlist because it should be able to recieve our messages
 	if (pInfo == NULL)
 	{
 		CSSMATCH_PRINT("The plugin was unable to find the player's infos of a Player");
 	}
 
 	return pInfo;
-}
-
-CBaseCombatWeapon * Player::getWeaponFromWeaponSlot(WeaponSlotCode slot) const
-{
-	CBaseCombatWeapon * bCombatWeapon = NULL;
-	CBaseCombatCharacter * bCombatCharacter = getBaseCombatCharacter();
-
-	/*if (isValidBaseCombatCharacter(bCombatCharacter))
-		bCombatWeapon = bCombatCharacter->Weapon_GetSlot((int)slot);*/
-	// FIXME: I'm broken since CS:S OB
-
-	/*if (bCombatWeapon == NULL)
-		print("");*/
-	// NULL is not abnormal here
-
-	return bCombatWeapon;
 }
 
 void Player::kick(const string & reason) const
@@ -258,7 +243,7 @@ void Player::kick(const string & reason) const
 	plugin->queueCommand(command.str());
 }
 
-void Player::ban(int duration, const std::string & reason) const
+void Player::ban(int duration, const string & reason) const
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 
@@ -315,7 +300,7 @@ bool Player::spec()
 	return success;
 }
 
-void Player::cexec(const std::string & command) const
+void Player::cexec(const string & command) const
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
@@ -323,19 +308,12 @@ void Player::cexec(const std::string & command) const
 	interfaces->engine->ClientCommand(identity.pEntity,command.c_str());
 }
 
-void Player::sexec(const std::string & command) const
+void Player::sexec(const string & command) const
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ValveInterfaces * interfaces = plugin->getInterfaces();
 
 	interfaces->helpers->ClientCommand(identity.pEntity,command.c_str());
-}
-
-void Player::removeWeapon(WeaponSlotCode slot)
-{
-	CBaseCombatWeapon * weapon = getWeaponFromWeaponSlot(slot);
-	if (weapon != NULL)
-		weapon->Kill();
 }
 
 void Player::setAccount(int newCash)
@@ -394,37 +372,8 @@ int Player::getLifeState()
 	return lifeState;
 }
 
-void Player::hasHelmet(bool hasHelmet)
-{
-	try
-	{
-		hasHelmetHandler.getProp<bool>(identity.pEntity) = hasHelmet;
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-}
-
-bool Player::hasHelmet()
-{
-	bool helmet = false;
-
-	try
-	{
-		helmet = hasHelmetHandler.getProp<bool>(identity.pEntity);
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	return helmet;
-}
-
-
-void Player::setVecOrigin(const Vector & vec)
-{
+/*void Player::setVecOrigin(const Vector & vec)
+{*/
 	/*try
 	{
 		vecOriginHandler.getProp<Vector>(identity.pEntity) = vec;
@@ -434,7 +383,7 @@ void Player::setVecOrigin(const Vector & vec)
 	{
 		CSSMATCH_PRINT_EXCEPTION(e);
 	}*/
-	ServerPlugin * plugin = ServerPlugin::getInstance();
+/*	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
 
 	ostringstream command;
@@ -443,9 +392,9 @@ void Player::setVecOrigin(const Vector & vec)
 	sv_cheats->m_nValue = 1;
 	sexec(command.str());
 	sv_cheats->m_nValue = 0;
-}
+}*/
 
-Vector Player::getVecOrigin()
+/*Vector Player::getVecOrigin()
 {
 	Vector origin;
 
@@ -459,65 +408,9 @@ Vector Player::getVecOrigin()
 	}
 
 	return origin;
-}
+}*/
 
-void Player::hasDefuser(bool hasDefuser)
-{
-	try
-	{
-		hasDefuserHandler.getProp<bool>(identity.pEntity) = hasDefuser;
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-}
-
-bool Player::hasDefuser()
-{
-	bool defuser = false;
-
-	try
-	{
-		defuser = hasDefuserHandler.getProp<bool>(identity.pEntity);
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	return defuser;
-}
-
-void Player::hasNightVision(bool hasNightVision)
-{
-	try
-	{
-		hasNightVisionHandler.getProp<bool>(identity.pEntity) = hasNightVision;
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-}
-
-bool Player::hasNightVision()
-{
-	bool nightvision = false;
-
-	try
-	{
-		nightvision = hasNightVisionHandler.getProp<bool>(identity.pEntity);
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	return nightvision;
-}
-
-Vector Player::getAngRotation()
+/*Vector Player::getAngRotation()
 {
 	Vector ang;
 
@@ -531,9 +424,9 @@ Vector Player::getAngRotation()
 	}
 
 	return ang;
-}
+}*/
 
-QAngle Player::getViewAngle()
+/*QAngle Player::getViewAngle()
 {
 	QAngle view(VEC_T_NAN,VEC_T_NAN,VEC_T_NAN);
 
@@ -558,35 +451,7 @@ QAngle Player::getViewAngle()
 	}
 
 	return view;
-}
-
-void Player::setHealth(int newHealth)
-{
-	try
-	{
-		healthHandler.getProp<int>(identity.pEntity) = newHealth;
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-}
-
-int Player::getHealth()
-{
-	int health = -1;
-
-	try
-	{
-		health = healthHandler.getProp<int>(identity.pEntity);
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	return health;
-}
+}*/
 
 void Player::setArmor(int newArmor)
 {
@@ -616,54 +481,6 @@ int Player::getArmor()
 	return armor;
 }
 
-int Player::getHeCount()
-{
-	int he = -1;
-
-	try
-	{
-		he = hegrenadeHandler.getProp<int>(identity.pEntity);
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	return he;
-}
-
-int Player::getFbCount()
-{
-	int fb = -1;
-
-	try
-	{
-		fb = flashbangHandler.getProp<int>(identity.pEntity);
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	return fb;
-}
-
-int Player::getSgCount()
-{
-	int sg = -1;
-
-	try
-	{
-		sg = smokegrenadeHandler.getProp<int>(identity.pEntity);
-	}
-	catch(const EntityPropException & e)
-	{
-		CSSMATCH_PRINT_EXCEPTION(e);
-	}
-
-	return sg;
-}
-
 void Player::give(const string & item)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -677,7 +494,20 @@ void Player::give(const string & item)
 	sv_cheats->m_nValue = 0;
 }
 
-void Player::setang(const QAngle & angle)
+void Player::remove(const string & item)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
+
+	ostringstream command;
+	command << "ent_remove " << item << "\n";
+
+	sv_cheats->m_nValue = 1;
+	sexec(command.str());
+	sv_cheats->m_nValue = 0;
+}
+
+/*void Player::setang(const QAngle & angle)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
 	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
@@ -688,4 +518,20 @@ void Player::setang(const QAngle & angle)
 	sv_cheats->m_nValue = 1;
 	sexec(command.str());
 	sv_cheats->m_nValue = 0;
+}*/
+
+MenuReSendTimer::MenuReSendTimer(float delay, Player * pl) : BaseTimer(delay), player(pl)
+{
+}
+
+void MenuReSendTimer::execute()
+{
+	if (player->menuHandler.menu != NULL)
+	{
+		ServerPlugin * plugin = ServerPlugin::getInstance();
+
+		player->menuHandler.menu->send(player,player->menuHandler.page,player->menuHandler.parameters);
+		player->menuTimer = new MenuReSendTimer(4.0f,player);
+		plugin->addTimer(player->menuTimer);
+	}
 }

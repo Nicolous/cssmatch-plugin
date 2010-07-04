@@ -54,6 +54,9 @@ namespace cssmatch
 		Menu * kniferoundMenu;	
 		Menu * menuWithAdmin; // if cssmatch_advanced == 1
 
+		/** Remove a weapon from the world (uses Player::remove) */
+		void removeWeapon(const std::string & weapon);
+
 		friend class BaseSingleton<KnifeRoundMatchState>;
 		KnifeRoundMatchState();
 		~KnifeRoundMatchState();

@@ -487,14 +487,14 @@ void HalfMatchState::round_start(IGameEvent * event)
 		case 0:
 			match->sendStatus(recipients);
 
-			if (! halfRestarted)
+			/*if (! halfRestarted)
 			{
 				list<ClanMember *> * playerlist = plugin->getPlayerlist();
 				for_each(playerlist->begin(),playerlist->end(),SaveHalfPlayerState());
-			}
+			}*/
 		default:
 			{
-				// If there was a restart, restore the players equipement/score
+				/*// If there was a restart, restore the players equipement/score
 				if (roundRestarted)
 				{
 					for_each(playerlist->begin(),playerlist->end(),RestoreRoundPlayerState());
@@ -508,7 +508,7 @@ void HalfMatchState::round_start(IGameEvent * event)
 						halfRestarted = false;
 					}
 					for_each(playerlist->begin(),playerlist->end(),SaveRoundPlayerState());
-				}
+				}*/
 
 				parameters["$current"] = toString(infos->roundNumber);
 				parameters["$total"] = plugin->getConVar("cssmatch_rounds")->GetString();

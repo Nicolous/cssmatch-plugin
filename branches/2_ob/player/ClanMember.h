@@ -26,6 +26,7 @@
 #include "Player.h"
 
 #include <string>
+#include <list>
 
 namespace cssmatch
 {
@@ -46,26 +47,20 @@ namespace cssmatch
 	{
 		PlayerScore score;
 
-		int health, armor;
-		bool hasHelmet;
-
+		int armor;
 		int account;
 
-		/** Primary/Secondary weapon */
-		std::string primary, secondary;
-		int hegrenades, flashbangs, smokegrenades;
-		bool c4;
+		/** Weapons and items the player owns */
+		std::list<std::string> objects; 
 
-		/** Player coords */
-		Vector vecOrigin;
+		/* Player coords */
+		//Vector vecOrigin;
 
 		/* Player angle */
-		QAngle angle;
-
-		bool hasDefuser, hasNightVision;
+		//QAngle angle;
 
 		PlayerState()
-			: health(0), armor(0), hasHelmet(false), account(0), hasDefuser(false), hasNightVision(false){}
+			: armor(0), account(0){}
 	};
 
 	/** CSSMatch player */
@@ -83,6 +78,9 @@ namespace cssmatch
 
 		/** Is this player a referee (admin)? */
 		bool referee;
+
+		/** Entity prop used to know who owns an object */
+		static EntityProp ownerHandler;
 
 		// Functors
 		friend struct ResetClanMember;

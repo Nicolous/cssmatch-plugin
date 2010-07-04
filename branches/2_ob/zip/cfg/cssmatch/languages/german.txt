@@ -39,6 +39,7 @@ cssmatch_language =                "CSSMatch : Standardsprache von CSSMatch (z.B
 cssmatch_report =                 "CSSMatch : "1" = Nach jedem Match wird eine Datei mit einem Bericht erstellt, "0" = Kein Bericht"
 cssmatch_usermessages =         "CSSMatch : Mod UserMessage count - Do not change without instructions"
 cssmatch_updatesite =           "CSSMatch : Used by the update notifier"
+cssmatch_weapons = 		        "CSSMatch : CS:S weapon list"
 cssmatch_kniferound =				"CSSMatch : "1" = Mit Messerrunde, "0" = ohne"
 cssmatch_kniferound_money =        "CSSMatch : Geld, das in der Messerrunde zur Verfügung steht"
 cssmatch_kniferound_allows_c4 =			"CSSMatch : "1" = Erlaubt das legen der Bombe während der Messerrunde, "0" = ohne"

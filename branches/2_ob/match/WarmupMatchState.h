@@ -72,6 +72,9 @@ namespace cssmatch
 		/** Does this state finished ? */
 		bool finished;
 
+		/** Remove the C4 */
+		void removeC4();
+
 		friend class BaseSingleton<WarmupMatchState>;
 		WarmupMatchState();
 		~WarmupMatchState();

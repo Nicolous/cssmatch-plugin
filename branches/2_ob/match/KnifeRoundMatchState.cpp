@@ -149,6 +149,25 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	}
 }
 
+void KnifeRoundMatchState::removeWeapon(const std::string & weapon)
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+
+	// We need a player to remove the item entities
+	ClanMember * randomPlayer = NULL;
+	if (! plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(T_TEAM),randomPlayer))
+	{
+		plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(CT_TEAM),randomPlayer);
+	}
+
+	if (randomPlayer != NULL)
+	{
+		randomPlayer->remove(weapon);
+	}
+	else
+		CSSMATCH_PRINT("Can't remove weapon, no active player found")
+}
+
 void KnifeRoundMatchState::startState()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -344,15 +363,15 @@ void KnifeRoundMatchState::item_pickup(IGameEvent * event)
 		ClanMember * player = NULL;
 		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 		{
-			interfaces->helpers->ClientCommand(player->getIdentity()->pEntity,"use weapon_knife");
-			// Kill any other weapon entity the player has
-			player->removeWeapon(WEAPON_SLOT1);
-			player->removeWeapon(WEAPON_SLOT2);
-			player->removeWeapon(WEAPON_SLOT4);
-
-			if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
+			if (item == "c4")
 			{
-				player->removeWeapon(WEAPON_SLOT5);
+				if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
+					removeWeapon("weapon_c4");
+			}
+			else if (strstr(plugin->getConVar("cssmatch_weapons")->GetString(),item.c_str()) != NULL)
+			{
+				interfaces->helpers->ClientCommand(player->getIdentity()->pEntity,"use weapon_knife");
+				removeWeapon("weapon_" + item);
 			}
 		}
 		else

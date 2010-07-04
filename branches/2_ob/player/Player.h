@@ -28,6 +28,7 @@
 #include "../messages/RecipientFilter.h"
 #include "../misc/common.h"
 #include "../messages/I18nManager.h"
+#include "../plugin/BaseTimer.h"
 
 class IVEngineServer;
 class CBasePlayer;
@@ -97,6 +98,9 @@ namespace cssmatch
 		/** Does the menu will have to be deleted when it will be closed */
 		bool toDelete;
 
+		/** Menu parameters */
+		std::map<std::string,std::string> parameters;
+
 		/** Data related to the selected lines in the menu */
 		BaseMenuLineData * data;
 
@@ -115,6 +119,9 @@ namespace cssmatch
 		friend struct PlayerHavingTeam;
 		friend struct PlayerIsHltv;
 		friend struct PlayerToRecipient;
+
+		// Timer
+		friend class MenuReSendTimer;
 	protected:
 		/** Player identity */
 		PlayerIdentity identity;
@@ -125,21 +132,15 @@ namespace cssmatch
 		// Entity prop handler
 		static EntityProp accountHandler;
 		static EntityProp lifeStateHandler;
-		static EntityProp hasHelmetHandler;
-		static EntityProp vecOriginHandler;
-		static EntityProp hasDefuserHandler;
-		static EntityProp hasNightVisionHandler;
-		static EntityProp angRotationHandler;
-		static EntityProp eyeAngles0Handler;
-		static EntityProp eyeAngles1Handler;
+		//static EntityProp vecOriginHandler;
+		//static EntityProp angRotationHandler;
+		//static EntityProp eyeAngles0Handler;
+		//static EntityProp eyeAngles1Handler;
 		static EntityProp armorHandler;
-		static EntityProp healthHandler;
-		static EntityProp hegrenadeHandler;
-		static EntityProp flashbangHandler;
-		static EntityProp smokegrenadeHandler;
 	
 		/** Menus handler */
 		PlayerMenuHandler menuHandler;
+		MenuReSendTimer * menuTimer;
 
 	public:
 		/** 
@@ -202,21 +203,15 @@ namespace cssmatch
 		 */
 		IPlayerInfo * getPlayerInfo() const;
 
-		/** Get a base player instance corresponding to this entity
+		/* Get a base player instance corresponding to this entity
 		 * @return The base player instance corresponding to this entity, or NULL if something was invalid
 		 */
-		CBasePlayer * getBasePlayer() const;
+		//CBasePlayer * getBasePlayer() const;
 
-		/** Get a base combat character instance corresponding to this entity
+		/* Get a base combat character instance corresponding to this entity
 		 * @return The base combat character instance corresponding to this entity, or NULL if something was invalid
 		 */
-		CBaseCombatCharacter * getBaseCombatCharacter() const;
-
-		/** Get the CBaseCombatWeapon instance corresponding to a player entity's weapon slot 
-		 * @param slot The slot code where is weapon can be found
-		 * @return The CBaseCombatWeapon instance found, or NULL if something was invalid
-		 */
-		CBaseCombatWeapon * getWeaponFromWeaponSlot(WeaponSlotCode slot) const;
+		//CBaseCombatCharacter * getBaseCombatCharacter() const;
 
 		/** Kick this player
 		 * @param reason Reason for the kick (i18n keyword)
@@ -248,12 +243,6 @@ namespace cssmatch
 		* @param command The command line to execute
 		*/
 		void sexec(const std::string & command) const;
-
-		/** Remove a weapon (if any) from a given slot
-		 * @param slot The slot code where is weapon can be found
-		 * @see enum WeaponSlotCode
-		 */
-		void removeWeapon(WeaponSlotCode slot);
 			
 		/** Set the player account */
 		void setAccount(int newCash);
@@ -265,54 +254,36 @@ namespace cssmatch
 		/** Get the life state (returns -1 if it fails) */
 		int getLifeState();		
 
-		// Player has helmet accessors
-		void hasHelmet(bool hasHelmet);
-		bool hasHelmet();
-
 		/** Set the player location */
 		void setVecOrigin(const Vector & vec);
 		/** Get the player location (x,y,z are VEC_T_NAN if it fails) */
 		Vector getVecOrigin();
 
-		// Player has defuser accessors
-		void hasDefuser(bool hasDefuser);
-		bool hasDefuser();
-
-		// Player has night vision accessors
-		void hasNightVision(bool hasNightVision);
-		bool hasNightVision();
-
-		/** Get the player rotation angle (x,y,z are VEC_T_NAN if it fails) */
-		Vector getAngRotation();
-		/** Get the player view angle (x,y,z are VEC_T_NAN if it fails) */
-		QAngle getViewAngle(); 
-
-		/** Set the player health */
-		void setHealth(int newHealth);
-		/** Get the player health (returns -1 if it fails) */
-		int getHealth();
+		/* Get the player rotation angle (x,y,z are VEC_T_NAN if it fails) */
+		//Vector getAngRotation();
+		/* Get the player view angle (x,y,z are VEC_T_NAN if it fails) */
+		//QAngle getViewAngle(); 
 
 		/** Set the player armor value */
 		void setArmor(int newArmor);
 		/** Get the player armor value (returns -1 if it fails) */
 		int getArmor();
 
-		/** Get the player's hegrenade amount (returns -1 if it fails) */
-		int getHeCount();
-		/** Get the player's flashbang amount (returns -1 if it fails) */
-		int getFbCount();
-		/** Get the player's smokegrenade amount (returns -1 if it fails) */
-		int getSgCount();
 
 		/** Give an named item to the player 
 		 * @param item Item to give
 		 */
 		void give(const std::string & item);
 
-		/** Set the view angle of the player
+		/** Remove an entity
+		 * @param entity Entity class or entity index
+		 */
+		void remove(const std::string & entity);
+
+		/* Set the view angle of the player
 		 * @param angle New view angle
 		 */
-		void setang(const QAngle & angle);
+		//void setang(const QAngle & angle);
 	};
 
 	/** Functor to quickly find a Player instance by his edict_t instance */
@@ -411,6 +382,23 @@ namespace cssmatch
 		{
 			delete player;
 		}
+	};
+
+	/** Timer to resend popup the player is viewing */
+	class MenuReSendTimer : public BaseTimer
+	{
+	private:
+		/** Player to resend the popup */
+		Player * player;
+	public:
+		/**
+		 * @param pl The player who views the popup
+		 * @see BaseTimer 
+		 */
+		MenuReSendTimer(float delay, Player * pl);
+
+		/** @see BaseTimer */
+		void execute();
 	};
 }
 

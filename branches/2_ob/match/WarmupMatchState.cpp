@@ -93,6 +93,24 @@ void WarmupMatchState::endWarmup()
 	}
 }
 
+void WarmupMatchState::removeC4()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+
+	// We need a player to remove the C4 entity
+	ClanMember * randomPlayer = NULL;
+	if (! plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(T_TEAM),randomPlayer))
+	{
+		plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(CT_TEAM),randomPlayer);
+	}
+
+	if (randomPlayer != NULL)
+	{
+		randomPlayer->remove("weapon_c4");
+	}
+}
+
 void WarmupMatchState::doGo(Player * player)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
@@ -309,14 +327,12 @@ void WarmupMatchState::FireGameEvent(IGameEvent * event)
 
 void WarmupMatchState::player_spawn(IGameEvent * event)
 {
-	// Make each player impervious to bullets & remove c4
+	// Make each player impervious to bullets
 
 	ClanMember * player = NULL;
 	CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
 	{
 		player->setLifeState(0);
-
-		player->removeWeapon(WEAPON_SLOT5);
 	}
 }
 
@@ -371,13 +387,7 @@ void WarmupMatchState::item_pickup(IGameEvent * event)
 
 	if (item == "c4")
 	{
-		ClanMember * player = NULL;
-		CSSMATCH_VALID_PLAYER(PlayerHavingUserid,event->GetInt("userid"),player)
-		{
-			player->removeWeapon(WEAPON_SLOT5);
-		}
-		else
-			CSSMATCH_PRINT("Unable to find the player who pickups an item");
+		removeC4();
 	}
 }
 

@@ -101,25 +101,9 @@ ServerPlugin::~ServerPlugin()
 	if (i18n != NULL)
 		delete i18n;
 
-	// TODO: Unlink and delete all ConVar/ConCommand when unloading
+	// Unlink and delete all ConVar/ConCommand when unloading ?
 	// https://forums.alliedmods.net/showthread.php?p=319104#post319104 ?
-	/*std::list<ConVar *>::iterator itConVar = pluginConVars.begin();
-	std::list<ConVar *>::iterator lastConVar = pluginConVars.end();
-	while (itConVar != lastConVar)
-	{
-		delete (*itConVar);
-
-		itConVar++;
-	}
-
-	std::list<ConCommand *>::iterator itConCommand = pluginConCommands.begin();
-	std::list<ConCommand *>::iterator lastConCommand = pluginConCommands.end();
-	while (itConCommand != lastConCommand)
-	{
-		delete (*itConCommand);
-
-		itConCommand++;
-	}*/
+	// Edit : ConVar_Unregister unlink them, and ConVar_Register link them again when loading
 }
 
 bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn gameServerFactory)
@@ -194,6 +178,10 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_usermessages","28",FCVAR_NONE,"cssmatch_usermessages"));
 			addPluginConVar(new I18nConVar(i18n,"cssmatch_updatesite","www.cssmatch.com",FCVAR_NONE,"cssmatch_updatesite"));
+			addPluginConVar(new I18nConVar(i18n,"cssmatch_weapons",
+				"awp g3sg1 sg550 galil ak47 scout sg552 famas m4a1 aug glock usp p228 deagle elite fiveseven m3 xm1014 mac10 tmp mp5navy ump45"
+				"p90 m249 flashbang hegrenade smokegrenade"
+				,FCVAR_NONE,"cssmatch_weapons"));
 			
 			// Create the plugin's commands
 			addPluginConCommand(new I18nConCommand(i18n,"cssm_help",cssm_help,"cssm_help"));
