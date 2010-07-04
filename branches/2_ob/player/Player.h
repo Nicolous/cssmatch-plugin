@@ -43,6 +43,7 @@ namespace cssmatch
 	class RecipientFilter;
 	class Menu;
 	struct BaseMenuLineData;
+	class MenuReSendTimer;
 
 	class PlayerException : public BaseException
 	{
