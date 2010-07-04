@@ -152,7 +152,9 @@ void UserMessagesManager::hintSay(RecipientFilter & recipients, const string & m
 {
 	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("HintText"));
 
-	pWrite->WriteByte(-1); // DOCUMENT ME
+	pWrite->WriteByte(1); // number of lines (WriteString)?
+	// What is the good value? http://code.google.com/p/cssmatch-plugin/issues/detail?id=99
+
 	pWrite->WriteString(message.c_str());
 
 	engine->MessageEnd();
