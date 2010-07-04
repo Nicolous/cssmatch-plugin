@@ -216,10 +216,11 @@ IPlayerInfo * Player::getPlayerInfo() const
 	//if (! isValidPlayerInfo(pInfo))
 	// Don't use isValidPlayerInfo here because it excludes SourceTv
 	// For now SourceTV is added to the playerlist because it should be able to recieve our messages
-	if (pInfo == NULL)
-	{
-		CSSMATCH_PRINT("The plugin was unable to find the player's infos of a Player");
-	}
+	//if (pInfo == NULL)
+	//{
+	//	CSSMATCH_PRINT("The plugin was unable to find the player's infos of a Player");
+	//}
+	// => normal if the player has just been disconnected
 
 	return pInfo;
 }
