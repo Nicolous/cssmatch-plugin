@@ -40,6 +40,7 @@
 #include "igameevents.h"
 #include "../convars/convar.h"
 #include "interface.h"
+#include "IEngineSound.h" 
 
 #include <sstream>
 
@@ -120,7 +121,8 @@ bool ServerPlugin::Load(CreateInterfaceFn interfaceFactory, CreateInterfaceFn ga
 			getInterface<IGameEventManager2>(interfaceFactory,interfaces.gameeventmanager2,INTERFACEVERSION_GAMEEVENTSMANAGER2) &&
 			getInterface<IFileSystem>(interfaceFactory,interfaces.filesystem,FILESYSTEM_INTERFACE_VERSION) &&
 			getInterface<IServerPluginHelpers>(interfaceFactory,interfaces.helpers,INTERFACEVERSION_ISERVERPLUGINHELPERS) &&
-			getInterface<IServerGameDLL>(gameServerFactory,interfaces.serverGameDll,"ServerGameDLL006");
+			getInterface<IServerGameDLL>(gameServerFactory,interfaces.serverGameDll,"ServerGameDLL006") &&
+			getInterface<IEngineSound>(interfaceFactory,interfaces.sounds,IENGINESOUND_SERVER_INTERFACE_VERSION);
 
 		if (success)
 		{

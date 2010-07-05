@@ -26,6 +26,8 @@
 #include "../plugin/ServerPlugin.h"
 
 #include "bitbuf.h"
+#include "IEngineSound.h"
+#include "soundflags.h" // CHAN_STATIC
 
 #include <algorithm>
 #include <sstream>
@@ -150,6 +152,9 @@ void UserMessagesManager::popupSay(	RecipientFilter & recipients,
 
 void UserMessagesManager::hintSay(RecipientFilter & recipients, const string & message)
 {
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ValveInterfaces * interfaces = plugin->getInterfaces();
+
 	bf_write * pWrite = engine->UserMessageBegin(&recipients,findMessageType("HintText"));
 
 	pWrite->WriteByte(1); // number of lines (WriteString)?
@@ -158,6 +163,14 @@ void UserMessagesManager::hintSay(RecipientFilter & recipients, const string & m
 	pWrite->WriteString(message.c_str());
 
 	engine->MessageEnd();
+
+	// Stop the HintText annoying sound
+	const vector<int> * recipientlist = recipients.getVector();
+	vector<int>::const_iterator itIndex;
+	for (itIndex = recipientlist->begin(); itIndex != recipientlist->end(); itIndex++)
+	{
+		interfaces->sounds->StopSound(*itIndex,CHAN_STATIC,"UI/hint.wav");
+	}
 }
 
 void UserMessagesManager::motdSay(RecipientFilter recipients, MotdType type, const string & title, const string & message)

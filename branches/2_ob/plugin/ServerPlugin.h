@@ -42,6 +42,7 @@ class IPlayerInfoManager;
 class IServerPluginHelpers;
 class CGlobalVars;
 class IServerGameDLL;
+class IEngineSound;
 class ConVar;
 struct edict_t;
 class ConCommand;
@@ -71,6 +72,7 @@ namespace cssmatch
 		CGlobalVars * gpGlobals; // global vars
 		ConvarsAccessor * convars; // console vars
 		IServerGameDLL * serverGameDll; // Access to some DLL infos
+		IEngineSound * sounds;
 
 		ValveInterfaces()
 			:	engine(NULL),
@@ -80,7 +82,8 @@ namespace cssmatch
 				helpers(NULL),
 				gpGlobals(NULL),
 				convars(NULL),
-				serverGameDll(NULL){}
+				serverGameDll(NULL),
+				sounds(NULL){}
 	};
 
 	/** Client command */
