@@ -96,19 +96,11 @@ void WarmupMatchState::endWarmup()
 void WarmupMatchState::removeC4()
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();
-	list<ClanMember *> * playerlist = plugin->getPlayerlist();
+	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
 
-	// We need a player to remove the C4 entity
-	ClanMember * randomPlayer = NULL;
-	if (! plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(T_TEAM),randomPlayer))
-	{
-		plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(CT_TEAM),randomPlayer);
-	}
-
-	if (randomPlayer != NULL)
-	{
-		randomPlayer->remove("weapon_c4");
-	}
+	sv_cheats->m_nValue = 1;
+	plugin->executeCommand("ent_remove weapon_c4\n");
+	sv_cheats->m_nValue = 0;	
 }
 
 void WarmupMatchState::doGo(Player * player)

@@ -276,10 +276,6 @@ namespace cssmatch
 		 */
 		void give(const std::string & item);
 
-		/** Remove an entity
-		 * @param entity Entity class or entity index
-		 */
-		void remove(const std::string & entity);
 
 		/* Set the view angle of the player
 		 * @param angle New view angle

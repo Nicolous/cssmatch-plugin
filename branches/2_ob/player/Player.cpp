@@ -495,19 +495,6 @@ void Player::give(const string & item)
 	sv_cheats->m_nValue = 0;
 }
 
-void Player::remove(const string & item)
-{
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
-
-	ostringstream command;
-	command << "ent_remove " << item << "\n";
-
-	sv_cheats->m_nValue = 1;
-	sexec(command.str());
-	sv_cheats->m_nValue = 0;
-}
-
 /*void Player::setang(const QAngle & angle)
 {
 	ServerPlugin * plugin = ServerPlugin::getInstance();

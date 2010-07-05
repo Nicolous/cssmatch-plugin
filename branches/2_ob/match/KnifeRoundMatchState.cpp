@@ -35,9 +35,12 @@
 
 using namespace cssmatch;
 
+#include <iostream>
+
 using std::string;
 using std::list;
 using std::map;
+using std::ostringstream;
 
 KnifeRoundMatchState::KnifeRoundMatchState()
 {
@@ -147,25 +150,6 @@ void KnifeRoundMatchState::endKniferound(TeamCode winner)
 	{
 		match->stop();
 	}
-}
-
-void KnifeRoundMatchState::removeWeapon(const std::string & weapon)
-{
-	ServerPlugin * plugin = ServerPlugin::getInstance();
-
-	// We need a player to remove the item entities
-	ClanMember * randomPlayer = NULL;
-	if (! plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(T_TEAM),randomPlayer))
-	{
-		plugin->getPlayer<PlayerHavingTeam>(PlayerHavingTeam(CT_TEAM),randomPlayer);
-	}
-
-	if (randomPlayer != NULL)
-	{
-		randomPlayer->remove(weapon);
-	}
-	else
-		CSSMATCH_PRINT("Can't remove weapon, no active player found")
 }
 
 void KnifeRoundMatchState::startState()
@@ -366,12 +350,11 @@ void KnifeRoundMatchState::item_pickup(IGameEvent * event)
 			if (item == "c4")
 			{
 				if (! plugin->getConVar("cssmatch_kniferound_allows_c4")->GetBool())
-					removeWeapon("weapon_c4");
+					plugin->addTimer(new ItemRemoveTimer(player,"weapon_c4",false));
 			}
 			else if (strstr(plugin->getConVar("cssmatch_weapons")->GetString(),item.c_str()) != NULL)
 			{
-				interfaces->helpers->ClientCommand(player->getIdentity()->pEntity,"use weapon_knife");
-				removeWeapon("weapon_" + item);
+				plugin->addTimer(new ItemRemoveTimer(player,"weapon_" + item,true));
 			}
 		}
 		else
@@ -431,3 +414,27 @@ void KnifeRoundMatchState::bomb_beginplant(IGameEvent * event)
 			CSSMATCH_PRINT("Unable to find the player who plants the bomb");
 	}
 }*/
+
+ItemRemoveTimer::ItemRemoveTimer(Player * player, const string & item, bool switchKnife)
+	: BaseTimer(0.1f), owner(player), toRemove(item), useKnife(switchKnife)
+{
+}
+
+void ItemRemoveTimer::execute()
+{
+	ServerPlugin * plugin = ServerPlugin::getInstance();
+	ConVar * sv_cheats = plugin->getConVar("sv_cheats");
+
+	ostringstream command;
+	command << "ent_remove_all " << toRemove << "\n";
+
+	sv_cheats->m_nValue = 1;
+	plugin->executeCommand(command.str());
+	sv_cheats->m_nValue = 0;	
+
+	if (useKnife)
+	{
+		ValveInterfaces * interfaces = plugin->getInterfaces();
+		interfaces->helpers->ClientCommand(owner->getIdentity()->pEntity,"use weapon_knife");
+	}
+}

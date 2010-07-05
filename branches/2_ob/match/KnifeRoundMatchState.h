@@ -27,6 +27,7 @@
 #include "../misc/BaseSingleton.h"
 #include "../player/Player.h" // TeamCode
 #include "../messages/Menu.h"
+#include "../plugin/BaseTimer.h"
 
 #include "igameevents.h" // IGameEventListener2, IGameEvent
 
@@ -53,9 +54,6 @@ namespace cssmatch
 		/** Menus for this state*/
 		Menu * kniferoundMenu;	
 		Menu * menuWithAdmin; // if cssmatch_advanced == 1
-
-		/** Remove a weapon from the world (uses Player::remove) */
-		void removeWeapon(const std::string & weapon);
 
 		friend class BaseSingleton<KnifeRoundMatchState>;
 		KnifeRoundMatchState();
@@ -86,6 +84,25 @@ namespace cssmatch
 		void round_end(IGameEvent * event);
 		//void bomb_beginplant(IGameEvent * event);
 	};
+
+	/** Removes an item the player has */
+	class ItemRemoveTimer : public BaseTimer
+	{
+	private:
+		/** Who owns the item */
+		Player * owner;
+
+		/** Item to remove */
+		std::string toRemove;
+
+		/** Force the player to take knife? */
+		bool useKnife;
+	public:
+		ItemRemoveTimer(Player * player, const std::string & item, bool switchKnife);
+
+		void execute();
+	};
+
 }
 
 #endif // __KNIFEROUND_MATCH_STATE_H__
