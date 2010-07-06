@@ -155,7 +155,7 @@ void XmlReport::writeTeam(ticpp::Element * eTeams, MatchClan * clan)
 	ticpp::Element * eScoret = new ticpp::Element("scoret",stats->scoreT);
 	eTeam->LinkEndChild(eScoret);
 
-	ticpp::Element * eScorect = new ticpp::Element("scoret",stats->scoreCT);
+	ticpp::Element * eScorect = new ticpp::Element("scorect",stats->scoreCT);
 	eTeam->LinkEndChild(eScorect);
 
 	writeJoueurs(eTeam,clan);
