@@ -49,7 +49,7 @@ more debug_make.txt | grep "\(\(e|E\)rror\|\(e|E\)rreur\)"
 
  _*Note :* La compilation peut prendre quelques minutes, surtout si vous ne supprimez pas les affichages d'erreur._
 
- _*Note :* Le fichier "cssmatch_i486.so" est généré dans le sous-dossier "zip/addons"._
+ _*Note :* Le fichier "cssmatch.so" est généré dans le sous-dossier "zip/addons"._
  * Quelques cibles utiles du Makefile :
 {{{
 # Compiler en mode debug
