@@ -25,7 +25,7 @@ Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure tou
 
 ====Avec un script shell====
  * Créez un nouveau dossier pour le projet
- * Placez-vous dans ce dossier, et places-y le script suivant : [http://www.cssmatch.com/temp/get_cssmatch.sh]
+ * Placez-vous dans ce dossier, et places-y le script suivant : [http://www.cssmatch.com/temp/get_cssmatch.sh get_cssmatch.sh]
  * A l'aide d'un terminal, autorisez l'exécution du script
  {{{
 chmod +x get_cssmatch.sh
