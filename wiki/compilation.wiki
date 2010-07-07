@@ -19,26 +19,49 @@ Que vous souhaitiez contribuer ou non, compiler soi-même un logiciel assure tou
  * Le logiciel "svn"
  * Le logiciel "make"
  * La version 4.1 du compilateur "gcc/g++"
- * Un serveur dédié CS:S
+ * Un serveur dédié CS:S (srcds)
 
 == Préparation de la première compilation ==
- * Commencez par créer un dossier pour le projet.
+
+====Avec un script shell====
+ * Créez un nouveau dossier pour le projet
+ * Placez-vous dans ce dossier, et places-y le script suivant : [http://www.cssmatch.com/temp/get_cssmatch.sh]
+ * A l'aide d'un terminal, autorisez l'exécution du script
+ {{{
+chmod +x get_cssmatch.sh
+}}}
+ * Le script prend en paramètre le chemin vers le dossier d'installation de SRCDS. Par exemple :
+ {{{
+./get_cssmatch.sh ~/srcds
+}}}
+ Le script téléchargera alors pour vous le SDK du jeu et le code source de CSSMatch, puis créera un lien symbolique vers le dossier _srcds_/orangebox/bin
+
+ _*Note :* Par défaut le script ira chercher la version code source de CSSMatch qui est en cours de développement (dossier *trunk* du SVN). Ce genre de choses (et d'autres !) peut être changé en modifiant la partie configuration du fichier *get_cssmatch.sh*._
+
+====Sans script shell====
+ * Créez un nouveau dossier pour le projet
  * A l'aide d'un terminal, placez-vous dans ce dossier
  * Récupérez le SDK des jeux _Source 2009 (alias Orange Box)_ compatible avec la version 4.1 de gcc : http://hg.alliedmods.net/hl2sdks/hl2sdk-ob-valve/archive/tip.tar.gz (38 MB)
  _*Note :* Décompressez le fichier dans un dossier nommé *hl2sdk-ob*._ 
  * Récupérez la dernière version du code source de CSSMatch :
-{{{
+ {{{
 svn checkout http://cssmatch-plugin.googlecode.com/svn/trunk cssmatch-plugin-read-only
 }}}
- Vous devriez maintenant avoir sous les yeux un dossier *hl2sdk-ob* et un dossier "cssmatch-plugin-read-only", tous deux placés dans le dossier que vous avez créé au début de cette section.
- * Copiez les fichiers *libtier0.so*, *libvstdlib.so* et *libsteam_api.so* du dossier *orangebox/bin* de SRCDS dans le dossier *cssmatch2-ob-plugin-read-only/bin*.
+ Vous devriez maintenant avoir sous les yeux un dossier *hl2sdk-ob* et un dossier *cssmatch-plugin-read-only*, tous deux placés dans le dossier que vous avez créé au début de cette section.
+ * Dans le dossier *cssmatch-plugin-read-only*, créez un lien symbolique nommé *bin* pointant sur le dossier *orangebox/bin* de SRCDS
+ {{{
+ln -s ~/srcds/orangebox/bin bin 
+}}}
+ (où *~/srcds* est à adapter en fonction de votre installation de SRCDS)
 
 == Compilation ==
- * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : cssmatch-plugin-read-only)
+ * Placez-vous dans le dossier contenant le code source de CSSMatch (ex : *cssmatch-plugin-read-only*)
  * Lancez la compilation :
-{{{
+ {{{
 make
 }}} 
+ _*Note :* Le makefile utilise *g++-4.1* pour compiler les sources. Adaptez le si nécessaire._
+
  Vous constaterez que de nombreux avertissements sont affichés. Hélas, c'est normal, et vous ne pourrez rien y changer. Ils proviennent du SDK fourni par Valve, mais ils sont inoffensifs.
  Pour évitez d'être noyé dans tous ces avertissements, vous pouvez rediriger les erreurs vers un fichier pour qu'elles ne s'affichent pas:
  {{{
@@ -72,7 +95,7 @@ make clean
 
 == Préparation de la première compilation ==
  * Commencez par créer un dossier pour le projet.
- * Si vous utiliser une version de Visual C++ Express, vous devez télécharger et installer le SDK de Windows approprié :
+ * Si vous utilisez Visual C++ Express, vous devez télécharger et installer le SDK de Windows approprié :
   ** pour XP, Vista et probablement Seven : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en Plateform SDK]
   ** pour Windows 2000 : [http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en#filelist PSDK-x86.exe] + [http://www.01net.com/telecharger/windows/Programmation/creation/fiches/25232.html .NET Framework]
  * Placez-vous dans le dossier qui va contenir le projet
