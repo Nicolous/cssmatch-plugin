@@ -1,0 +1,21 @@
+#summary Commandes clientes
+
+= Introduction =
+
+Les commandes clientes sont des commandes à taper dans la console d'un joueur. Typiquement, vous ferez un bind pour les utiliser en appuyant sur une touche :
+{{{
+bind e cssmatch
+}}}
+
+
+= Présentation des commandes =
+----
+==cssmatch==
+Cette commande permet aux arbitres d'accéder au menu d'administration. 
+
+----
+==cssm_rates==
+Cette commande affiche dans la console de l'utilisateur la valeur des variables clientes *cl_updaterate*, *cl_cmdrate*, *cl_interpolate* et *rate* de tous les joueurs. 
+Les valeurs affichées sont les valeurs que les joueurs ont attribué à ces variables, elles ne sont pas mesurées. 
+
+----
