@@ -11,6 +11,7 @@
     * [lancer_un_match Lancer un match]
     * [sourcetv Enregistrer avec SourceTv]
     * [TCHAT Commandes tchat]
+    * [console Commandes clientes]
     * [xml Lire les rapports de match]
     * [server Exemple de server.cfg complet]
   * Utilisation avancée
