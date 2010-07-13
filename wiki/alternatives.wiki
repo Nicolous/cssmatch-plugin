@@ -15,7 +15,7 @@ Notez qu'il n'y a aucune forme de concurrence entre CSSMatch et l'une de ses alt
  * [http://www.siekhe-trophy.de/ ClanMatch], de Roger Devil
 
 <br>
-=== [http://fr.wikipedia.org/wiki/Interpr%C3%A8te_%28informatique%29 Script]s [http://www.eventscripts.com/pages/Main_Page/fr EventScripts] ===
+=== [http://fr.wikipedia.org/wiki/Script Script]s [http://www.eventscripts.com/pages/Main_Page/fr EventScripts] ===
 
  * http://addons.eventscripts.com/
 
