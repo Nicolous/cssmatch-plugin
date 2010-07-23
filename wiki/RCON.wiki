@@ -9,7 +9,7 @@ CSSMatch peut entièrement être administré via le [Arbitrage le menu d'arbitra
 
 =Pour les arbitres=
 
-Depuis la version 1.2, l'authentification par RCON de l'arbitre n'est plus nécessaire pour utiliser ces commandes. N'importe quel arbitre peut directement utiliser l'une de ces commandes sans passer par la commande "rcon" : les commandes sont dites "clientes".
+Depuis CSSMatch 2, l'authentification par RCON de l'arbitre est nécessaire pour utiliser ces commandes. Tandis qu'avant, n'importe quel arbitre pouvait alors utiliser l'une de ces commandes sans passer par la commande "rcon". Nous sommes au courant de cette régression et une correction pourra voir le jour dans une prochaine version de CSSMatch.
 
 =Présentation des commandes=
 
@@ -18,20 +18,21 @@ Depuis la version 1.2, l'authentification par RCON de l'arbitre n'est plus néce
 
 ====Description====
 
-Affiche une brève description de la commande passée en paramètre.
+Affiche une brève description de la commande passée en paramètre. Si aucun nom de commande n'est spécifié, toutes les commandes sont listées.
 
 ====Exemple====
 
 `cssm_help cssm_start`
 
 ----
-==cssm_start <fichier de config>==
+==cssm_start fichier-de-config -kniferound -warmup==
 
 ====Description====
 
-Cette commande permet de lancer un match. Ce qui est entre chevrons est un paramètre optionnel. 
+Cette commande permet de lancer un match.
   * Si aucun fichier fichier de configuration n'est spécifié, le fichier *default.cfg* est recherché. Le match ne sera pas lancé si ce fichier n'existe pas.
   * Si un fichier de configuration est spécifié, le match sera lancé avec la configuration définie par ce fichier
+Les options "-kniferound" et "-warmup" sont optionnelles. Elles permettent respectivement de ne pas jouer de round au couteau et de ne pas jouer de strats.
 
 ====Exemple===
 
@@ -44,20 +45,12 @@ Cette commande permet de lancer un match. Ce qui est entre chevrons est un param
 
 Cette commande stoppe le match en cours.
 
-====Exemple====
-
-`cssm_stop`
-
 ----
 ==cssm_retag==
 
 ====Description====
 
-Déclenche la redétection des tags des teams. Particulièrement utile si CSSMatch n'a pas su détecter les tags au bon moment.
-
-====Exemple====
-
-`cssm_retag`
+Déclenche la redétection des tags des teams. Utile si CSSMatch n'a pas su détecter les tags au bon moment.
 
 ----
 ==cssm_go==
@@ -66,12 +59,8 @@ Déclenche la redétection des tags des teams. Particulièrement utile si CSSMat
 
 Force la fin du Strats Time.
 
-====Exemple====
-
-`cssm_go`
-
 ----
-==cssm_restartmanche==
+==cssm_restarthalf==
 
 ====Description====
 
@@ -79,6 +68,8 @@ Permet de relancer la manche en cours. Les scores des équipes et des joueurs so
 
 ====Exemple====
 
+`cssm_restarthalf` 
+ou
 `cssm_restartmanche` 
 
 ----
@@ -86,28 +77,7 @@ Permet de relancer la manche en cours. Les scores des équipes et des joueurs so
 
 ====Description====
 
-Permet de relancer le round en cours. Les scores des joueurs sont rétablis comme lors du début du round.
-
-==cssm_grant "steamID"==
-
-====Description====
-
-Donner temporairement les droits d'arbitrage à un joueur. Ces droits sont perdus à la fin de la map.
-
-====Exemple====
-
-`cssm_grant "SteamID"`
-
-----
-==cssm_revoke "steamID"==
-
-====Description====
-
-Suspend temporairement les droits d'un arbitre. Ses droits sont rétablis dès la fin de la map.
-
-====Exemple====
-
-`cssm_revoke "STEAM_0:1:454545"`
+Permet de relancer le round en cours. Les scores des joueurs sont rétablis comme lors du début du round. (Mais pas dans le tableau des scores.)
 
 ----
 ==cssm_teamt tag de la team terroriste==
@@ -129,7 +99,7 @@ Permet d'éditer le tag de la team anti-terroriste.
 
 ====Exemple====
 
-`cssm_teamct *Fragueurs*`
+`cssm_teamct Les oufs`
 
 
 ----
@@ -137,7 +107,7 @@ Permet d'éditer le tag de la team anti-terroriste.
 
 ====Description====
 
-Envoi un joueur dans le camp opposé. L'UserID du joueur peut être trouvé en tapant `status` dans votre console.
+Envoie un joueur dans le camp opposé. L'UserID du joueur peut être trouvé en tapant `status` dans votre console.
 
 ====Exemple====
 
@@ -159,8 +129,6 @@ Permet d'envoyer un joueur en spectateur. L'UserID du joueur peut être trouvé 
 
 ====Description====
 
-Liste les steamids de tous les arbitres.
+Liste le steamid de tous les arbitres.
 
-====Exemple====
-
-`cssm_adminlist`
+----
