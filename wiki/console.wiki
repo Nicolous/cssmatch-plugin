@@ -15,7 +15,7 @@ Cette commande permet aux arbitres d'accéder au menu d'administration.
 
 ----
 ==cssm_rates==
-Cette commande affiche dans la console de l'utilisateur la valeur des variables clientes *cl_updaterate*, *cl_cmdrate*, *cl_interpolate* et *rate* de tous les joueurs. 
-Les valeurs affichées sont les valeurs que les joueurs ont attribué à ces variables, elles ne sont pas mesurées. 
+Cette commande affiche dans la console de l'utilisateur la valeur des variables clientes *cl_updaterate*, *cl_cmdrate*, *cl_interp* et *rate* de tous les joueurs. 
+Les valeurs affichées sont les valeurs que les joueurs ont attribué à ces variables, elles ne sont pas mesurées. Toutefois, si le serveur a forcé ces valeurs, la commande affichera les valeurs forcées chez chaque joueur en fonction de leur configuration.
 
 ----
