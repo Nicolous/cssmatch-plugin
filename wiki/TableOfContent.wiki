@@ -16,7 +16,6 @@
     * [server Exemple de server.cfg complet]
   * Utilisation avancée
     * [Administration Options d'administration]
-    * [Console Déclarer un arbitre par RCON]
     * [RCON Commandes RCON]
     * [maplist Le fichier maplist.txt]
     * [scripts Réactiver ses scripts EventScripts]
