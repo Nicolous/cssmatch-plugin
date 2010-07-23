@@ -28,15 +28,13 @@ En effet comme dit précédemment, les configs fournies par ESL sont faites pour
 
 Vous pouvez modifier dans ces fichiers de configuration selon vos désirs : 
 
-_ cssmatch_end_cutround _ pour la durée (en secondes) entre la fin du CutRound et le début du StratsTime
+_ cssmatch_end_kniferound _ pour la durée (en secondes) entre la fin du CutRound et le début du StratsTime
 
-_cssmatch_end_manche_ pour la durée (en secondes) entre la fin d'une manche et la suite du match (c-à-d strats, nouvelle manche ou fin de match)
+_cssmatch_end_set_ pour la durée (en secondes) entre la fin d'une manche et la suite du match (c-à-d strats, nouvelle manche ou fin de match)
 
 _cssmatch_sourcetv_path_ si vous voulez stocker vos démos ailleurs que l'endroit par défaut : cfg/cssmatch/sourcetv
 
-_cssmatch_strats_time_ pour la durée maximale (en minutes) du StratsTime
-
-_cssmatch_password_ pour le mot de passe du serveur pendant le match
+_cssmatch_warmup_time_ pour la durée maximale (en minutes) du StratsTime
 
 Il n'est pas nécessaire et même conseillé de ne pas toucher au reste.
 
