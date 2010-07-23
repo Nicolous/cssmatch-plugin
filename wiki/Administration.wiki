@@ -1,12 +1,8 @@
 #summary Activer les options basiques d'administration
 
-Par défaut le plugin ne permet pas d'administrer le serveur. 
+Par défaut, CSSMatch fournit quelques options basiques d'administration (changelevel, kick, ban, swap et mise en spectateur). Cela permet de ne pas avoir de plugin d'administration sur votre serveur war juste pour kicker ou changer de map de temps en temps.
 
-Toutefois si vous souhaitez ne plus avoir de plugin d'administration sur votre serveur consacré aux wars juste pour un kick ou un changement de map de temps en temps, CSSMatch peut vous fournir quelques options basiques d'administration (changelevel, kick, ban, swap et mise en spectateur).
-
-Pour cela vous devez ajouter ceci dans l'autoexec.cfg de votre serveur :
+Si vous souhaitez désactiver ces options, ajoutez ceci dans le fichier autoexec.cfg de votre serveur :
 {{{
-cssmatch_advanced 1
+cssmatch_advanced 0
 }}}
-
-Rebootez votre serveur. Le menu d'arbitrage vous propose alors une nouvelle branche nommée "Options d'administration".
