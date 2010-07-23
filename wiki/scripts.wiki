@@ -70,7 +70,7 @@ Vous allez être déçu, mais il n'y a que deux "solutions" qui n'en sont pas vr
 
 = Scripts installés automatiquement par votre hébergeur =
 
-Pensez à désactiver ou réactiver les scripts que vous avez installés de manière automatique via votre espace client. Par exemple, il se peut que vous trouviez ceci dans votre *autoexec.cfg* :
+Pensez à désactiver ou réactiver les scripts que vous avez installés de manière automatique via votre espace client. Par exemple, il se peut que vous trouviez ceci dans votre [http://code.google.com/p/cssmatch-plugin/wiki/autoexec autoexec.cfg] :
 {{{
 exec pluginserv.cfg
 }}}
