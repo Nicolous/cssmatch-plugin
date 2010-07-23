@@ -23,7 +23,7 @@ sv_rcon_maxfailures 10
 
 
 // Téléchargements
-// sv_downloadurl "your_mirror_ended_by_/cstrike"
+// sv_downloadurl "votre-mirroir/cstrike"
 sv_allowdownload 1
 
 
@@ -92,4 +92,10 @@ sv_timeout 120
 sv_voiceenable 1
 phys_pushscale 1
 phys_timescale 1
+
+// Si vous avez "ma_war 1" dans votre config de match
+ma_war 0
+
+// Si vous avez "mattie_eventscripts 0" dans votre config de match
+mattie_eventscripts 1
 }}}
