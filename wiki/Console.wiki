@@ -1,8 +1,10 @@
 #summary Déclarer un arbitre via la console
 
+*<font color="red">Note : Pour des raisons de sécurité, cette fonctionnalité a été supprimée dans CSSMatch 2.</font>*
+
 Il est parfois pratique d'ajouter un arbitre au dernier moment sans avoir à retourner sur le FTP modifier un fichier puis changer de map.
 
-Pour celà il existe la commande "*cssmatch_grant*". Cette commande permet d'ajouter un arbitre via le RCON. 
+Pour cela il existe la commande "*cssmatch_grant*". Cette commande permet d'ajouter un arbitre via le RCON. 
 
 Exemple d'utilisation :
 {{{
