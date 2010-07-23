@@ -11,18 +11,18 @@ La première chose qu'il faut savoir est qu'il y a trois catégories de scripts 
 Ces différentes catégories sont le reflet des différentes façons dont les scripts ont été programmés. Le script idéal est celui qui prévoit que l'on puisse le désactiver puis le réactiver sans soucis, mais personnellement je n'en ai encore jamais vu :-)
 
 Si vous ne voulez pas vous prendre la tête avec tout ça, considérez vos scripts comme faisant partie de la première première catégorie. Vous utiliserez alors la méthode la plus simple et (je pense) la plus utilisée, même si parfois derrière des scripts en souffrent jusqu'à ce que toute la population du serveur soit complètement renouvelée. 
-Malgré tout, si vous ne voulez vraiment pas vous prendre la tête la solution idéale reste de posséder un serveur dédié aux wars :-(
+Malgré tout, si vous ne voulez vraiment pas vous prendre la tête la solution idéale reste de posséder un serveur dédié aux wars :-/
 
 <br>
 = Première catégorie =
 
-Pour les scripts de la première catégorie, il sera inutile de charger et décharger les scripts un par un dans les fichiers de configuration. L'utilisation de la variable *mattie_eventscripts* suffit à ordonner à EventScripts désactiver ou activer les scripts sur demande.
+Pour les scripts de la première catégorie, il sera inutile de charger et décharger les scripts un par un dans les fichiers de configuration. L'utilisation de la variable *mattie_eventscripts* suffit à désactiver ou activer les scripts sur demande.
 
-Pour désactiver ces scripts, dans le fichier *cfg/cssmatch/configurations/default.cfg* :
+Pour désactiver ses scripts, dans le fichier *cfg/cssmatch/configurations/default.cfg* :
 {{{
 mattie_eventscripts 0
 }}}
-Pour réactiver ces scripts, dans le fichier *cfg/[server server.cfg]* :
+Pour réactiver ses scripts, dans le fichier *cfg/[server server.cfg]* :
 {{{
 mattie_eventscripts 1
 }}}
@@ -41,7 +41,6 @@ Pour recharger ces scripts, il se peut qu'il suffise d'utiliser la commande _es_
 {{{
 es_load le_script
 }}}
-_*Note :* Pour éviter de copier/coller tous les es_load de votre fichier *autoexec.cfg* et donc entretenir 2 listes de es_load identiques, créez vous un fichier CFG contenant tous les es_load que votre serveur doit exécuter et exécuter ce fichier dans votre fichier *server.cfg*._
 
 Attention toutefois, il se peut que le script en question fasse partie de la dernière catégorie de scripts que je vais présenter maintenant.
 
