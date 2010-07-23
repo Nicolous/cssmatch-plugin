@@ -14,12 +14,8 @@ Les commandes du TCHAT sont des commandes à taper dans la zone de dialogue. Ces
 
 ==== Description ====
 
-Disponible depuis la version 1.2 du plugin, cette commande permet aux arbitres d'accéder au menu d'administration. 
-Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
-
-==== Exemple ====
-
-`cssmatch`
+Cette commande permet aux arbitres d'accéder au menu d'administration. 
+Son utilisation n'apparaitra pas dans le TCHAT si elle est correctement tapée.
 
 ----
 == !teamt Le nouveau tag de la team actuellement terroriste ==
@@ -27,7 +23,7 @@ Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
 ==== Description ====
 
 Cette commande permet aux arbitres de personnaliser le tag de la team actuellement terroriste. Son utilité réside surtout dans le fait que la détection automatique des tags ne peut pas être parfaite dans tous les cas. 
-Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
+Son utilisation n'apparaitra pas dans le TCHAT si elle est correctement tapée.
 
 ==== Exemple ====
 
@@ -39,7 +35,7 @@ Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
 ==== Description ====
 
 Cette commande permet aux arbitres de personnaliser le tag de la team actuellement anti-terroriste. Son utilité réside surtout dans le fait que la détection automatique des tags ne peut pas être parfaite dans tous les cas. 
-Cette commande n'apparaitra pas dans le TCHAT si elle est correctement tapée.
+Son utilisation n'apparaitra pas dans le TCHAT si elle est correctement tapée.
 
 ==== Exemple ====
 
@@ -79,3 +75,24 @@ ready
 }}}
 
 ----
+== !password Nouveau mot de passe==
+
+==== Description ====
+Cette commande permet de modifier le mot de passe du serveur.
+
+==== Exemple ====
+{{{
+!password inwar
+}}}
+
+----
+== !thetime ==
+
+==== Description ====
+Cette commande affiche la date et l'heure.
+
+----
+== !update ==
+
+==== Description ====
+Cette commande affiche des informations sur la dernière version de CSSMatch disponible.
