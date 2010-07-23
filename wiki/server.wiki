@@ -43,12 +43,12 @@ exec mani_server.cfg
 
 // Réglages pour un tickrate 100
 sv_allowupload 1
-sv_minupdaterate 100
-sv_maxupdaterate 100
+sv_minupdaterate 66
+sv_maxupdaterate 66
 sv_minrate 30000
 sv_maxrate 35000
-sv_mincmdrate 100
-sv_maxcmdrate 100
+sv_mincmdrate 66
+sv_maxcmdrate 66
 decalfrequency 10
 fps_max 0
 
