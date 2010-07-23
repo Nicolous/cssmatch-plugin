@@ -37,7 +37,7 @@ Pour visualiser le premier rapport, je me rend à l'adresse _www.ma-team.fr/rapp
 
 Voici un aperçu de ce que ça donne : [http://cssmatch.com/reports/2009-04-04_23h23_de_prodigy.xml 2009-04-04_23h23_de_prodigy.xml]
 
-*_Note :* Pour que sur votre site la page soit en français, télécharger la traduction française du fichier _cssmatch.xsl_ disponible ici : [http://cssmatch.com/translations/french/reports/cssmatch.xsl cssmatch.xsl] (clique-droit > enregistrer la cible du lien sous)._
+*_Note :* Pour que la page soit affichée en français, téléchargez la traduction française du fichier _cssmatch.xsl_ ici : [http://cssmatch.com/translations/french/reports/cssmatch.xsl cssmatch.xsl] (clique-droit > enregistrer la cible du lien sous)._
 
 
 <br>
@@ -55,4 +55,4 @@ Si tout cela vous a donné envie d'apprendre à modifier vous-même le fichier _
 
 Certains systèmes seront développés pour automatiser la récupération des rapports, ainsi que des enregistrements SourceTV (et plus !). Ces systèmes en sont encore au stade de développement, comme vous aurez pu le constater sur [http://www.cssmatch.com/forums/viewforum.php?f=35 le forum des outils].
 
-Un tutoriel d'installation sera écrit pour chacun de ces systèmes.
+Un tutoriel d'installation pourra être écrit pour chacun de ces systèmes.
