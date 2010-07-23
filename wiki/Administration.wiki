@@ -2,7 +2,7 @@
 
 Par défaut, CSSMatch fournit quelques options basiques d'administration (changelevel, kick, ban, swap et mise en spectateur). Cela permet de ne pas avoir de plugin d'administration sur votre serveur war juste pour kicker ou changer de map de temps en temps.
 
-Si vous souhaitez désactiver ces options, ajoutez ceci dans le fichier autoexec.cfg de votre serveur :
+Si vous souhaitez désactiver ces options, ajoutez ceci dans le fichier [http://code.google.com/p/cssmatch-plugin/wiki/autoexec autoexec.cfg] de votre serveur :
 {{{
 cssmatch_advanced 0
 }}}
