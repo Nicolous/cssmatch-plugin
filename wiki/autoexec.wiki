@@ -4,7 +4,8 @@ Le fichier *autoexec.cfg* est automatiquement exécuté par le jeu au démarrage
 
 Il se peut que ce fichier n'existe pas sur votre serveur. Dans ce cas, créez-le dans le dossier *cstrike/cfg*.
 Pour le créer :
- # Créez un nouveau fichier texte
+ # Sur votre ordinateur, créez un nouveau fichier texte
  # Ouvrez ce fichier texte, et "enregistrez-sous" le nom *autoexec.cfg*
  # Fermer le fichier
+ # Envoyez le fichier dans le dossier *cstrike/cfg* sur votre serveur
 Le fait de spécifier ".cfg" à la fin du nom du fichier modifie l'extension (le format) du fichier.
