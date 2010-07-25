@@ -30,13 +30,13 @@ Affiche une brève description de la commande passée en paramètre. Si aucun no
 ====Description====
 
 Cette commande permet de lancer un match.
-  * Si aucun fichier fichier de configuration n'est spécifié, le fichier *default.cfg* est recherché. Le match ne sera pas lancé si ce fichier n'existe pas.
+  * Si aucun fichier fichier de configuration n'est spécifié, le fichier *mr15.cfg* est recherché. Le match ne sera pas lancé si ce fichier n'existe pas.
   * Si un fichier de configuration est spécifié, le match sera lancé avec la configuration définie par ce fichier
 Les options "-kniferound" et "-warmup" sont optionnelles. Elles permettent respectivement de ne pas jouer de round au couteau et de ne pas jouer de strats.
 
 ====Exemple===
 
-`cssm_start default.cfg`
+`cssm_start mr15.cfg`
 
 ----
 ==cssm_stop==
