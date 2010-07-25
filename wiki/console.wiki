@@ -1,5 +1,7 @@
 #summary Commandes clientes
 
+<wiki:toc max_depth="2" />
+
 = Introduction =
 
 Les commandes clientes sont des commandes à taper dans la console d'un joueur. Typiquement, vous ferez un bind pour les utiliser en appuyant sur une touche :
