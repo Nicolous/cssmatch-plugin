@@ -11,7 +11,7 @@ Le plugin se configure par l'intermédiaire de vos fichiers de configuration de 
 <br>
 = Comment configurer un match ? =
   # Allez dans le dossier _cfg/cssmatch/configurations_. Ce dossier contient toutes les configurations de match. Les fichiers .cfg présents dans ce dossier sont automatiquement listés dans le menu du plugin.
-  # Ouvrez le fichier _mr12.cfg_ ou _mr15.cfg_. Ces fichiers sont des exemples de configuration de match pour 12 ou 15 rounds ([http://cssmatch.com/translations/french/configurations/default.cfg Vous pourrez trouver une traduction française de ce fichier ici].) Vous y trouverez les "variables" spécifiques au plugin, toutes préfixées par "cssmatch", ainsi qu'un exemple de configuration du serveur utilisée pendant le match.
+  # Ouvrez le fichier _mr12.cfg_ ou _mr15.cfg_. Ces fichiers sont des exemples de configuration de match pour 12 ou 15 rounds ([http://cssmatch.com/translations/french/configurations/mr12.cfg Vous pourrez trouver une traduction française de ce fichier ici].) Vous y trouverez les "variables" spécifiques au plugin, toutes préfixées par "cssmatch", ainsi qu'un exemple de configuration du serveur utilisée pendant le match.
     * Modifiez les variables du plugin comme vous le souhaitez (elles sont toutes documentées dans le fichier)
     * Ajoutez/Modifiez/Supprimez les variables du jeu comme vous le souhaitez
 
