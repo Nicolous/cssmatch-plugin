@@ -41,7 +41,7 @@ exec banned_ip.cfg
 exec mani_server.cfg
 
 
-// Réglages pour un tickrate 100
+// Réglages pour un tickrate 66
 sv_allowupload 1
 sv_minupdaterate 66
 sv_maxupdaterate 66
