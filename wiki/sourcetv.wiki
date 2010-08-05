@@ -1,33 +1,3 @@
 #summary Enregistrer un match avec SourceTv
 
-<wiki:toc max_depth="2" />
-<br>
-
-= Le plus simplement du monde =
-
-Par défaut, la seule présence de SourceTv sur le serveur suffit à ce que CSSMatch déclenche l'enregistrement des manches. Toujours par défaut, les enregistrements sont stockés dans le dossier _cstrike/cfg/cssmatch/sourcetv_.
-
-Si les enregistrements ne sont pas effectués, peut-être pourrez vous identifier le problème grâce à l'article suivant : [Erreurs#Messages_d%27erreur_color%C3%A9s_concernant_SourceTV Messages d'erreurs liés à SourceTv].<br>
-Si vous ne trouvez pas les enregistrements, lisez la suite de cet article.
-
-<br>
-= Configuration de l'enregistrement =
-
-Si vous avez désactivé l'enregistrement des matchs avec SourceTv dans la configuration de CSSMatch, voici comment rétablir les enregistrements automatiques.
-
- * Dossier _cstrike/cfg/cssmatch/configuration_ : ouvrez votre fichier de configuration de match (par exemple : default.cfg).
- _*Note :* une traduction de ce fichier peut être trouvée [http://cssmatch.com/translations/french/configurations/default.cfg ici (lien)]_ 
- * Voici les lignes que vous cherchez :
-{{{
-// 1 = activer l'enregistrement SourceTV si elle est connectée (1 vidéo par manche sera enregistrée)
-// 0 = ne pas enregistrer le match
-cssmatch_sourcetv "1"
-
-// Dossier cible des enregistrements SourceTV du match
-// - le dossier doit être un sous-dossier du dossier cstrike/ ;
-// - le dossier soit exister ;
-// - la valeur par défaut est cfg/cssmatch/sourcetv .
-cssmatch_sourcetv_path "cfg/cssmatch/sourcetv"
-}}}
-   * `cssmatch_sourcetv` doit être suivi du chiffre `1` pour que les enregistrements soient automatiquement lancés au début de chaque manche.
-   * `cssmatch_sourcetv_path` définit quel dossier stockera les enregistrements. Comme vous le voyez, par défaut, les enregistrements sont effectués dans le dossier _cstrike/cfg/cssmatch/sourcetv_
+Redirection : http://www.cssmatch.com/wiki/wiki.php?title=enregister-un-match-avec-sourcetv
