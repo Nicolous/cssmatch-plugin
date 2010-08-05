@@ -1,9 +1,3 @@
 #summary Accueil
 
-<img src="http://www.cssmatch.com/forums/styles/subsilver2/imageset/cssmatch2.png"/>
-
-*Bienvenue sur le Wiki du plugin CSSMatch !*
-
-Vous trouverez ici toute la documentation officielle du plugin : installation, configuration, dépannage et infos utiles.
-
-
+Retrouvez le Wiki de CSSMatch sur le site officiel du plugin : http://www.cssmatch.com/wiki/
