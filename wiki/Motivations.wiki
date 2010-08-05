@@ -1,3 +1,3 @@
-#summuary Pourquoi CSSMatch ?
+#summary Pourquoi CSSMatch ?
 
 Redirection : http://www.cssmatch.com/wiki/wiki.php?title=motivations
