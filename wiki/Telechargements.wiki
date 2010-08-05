@@ -1,9 +1,3 @@
 #summary Téléchargements
 
-= Dernières versions =
-
- * Version 2.1.5 : http://www.cssmatch.com/downloads/CSSMatch_2.1.5.zip
-
-<br>
-= Versions archivées =
- * http://cssmatch.com/downloads/
+Retrouvez les dernières versions de CSSMatch sur http://www.cssmatch.com/download/download.php?cat=1
