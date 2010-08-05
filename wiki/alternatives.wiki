@@ -1,25 +1,3 @@
 #summary Alternatives à CSSMatch
 
-Voici une liste non exhaustive des alternatives à CSSMatch. Ici "alternative" n'implique pas que les systèmes proposent les mêmes fonctionnalités. 
-Notez qu'il n'y a aucune forme de concurrence entre CSSMatch et l'une de ses alternatives (même non listée ici).
-
-<br>
-=== [http://fr.wikipedia.org/wiki/Plugin Plugin]s [http://fr.wikipedia.org/wiki/Stand_alone stand-alone] ===
-
- * [http://predmod.rtl-servers.co.uk/ Pred's Match Admin], de Predator^
- * [http://www.siekhe-trophy.de/ ClanMatch], de Roger Devil
-
-<br>
-=== Plugins [http://www.sourcemm.net/ MetaMod:Source] ===
-
- * [http://www.siekhe-trophy.de/ ClanMatch], de Roger Devil
-
-<br>
-=== [http://fr.wikipedia.org/wiki/Script Script]s [http://www.eventscripts.com/pages/Main_Page/fr EventScripts] ===
-
- * http://addons.eventscripts.com/
-
-<br>
-=== Scripts [http://www.sourcemod.net/ SourceMod] ===
-
- * http://www.sourcemod.net/plugins.php
+Redirection : http://www.cssmatch.com/wiki/wiki.php?title=les-alternatives-cssmatch
