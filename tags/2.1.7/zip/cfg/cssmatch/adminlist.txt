@@ -1,0 +1,23 @@
+// CSSMatch - http://www.cssmatch.com
+
+// You don't speak english? http://www.cssmatch.com/translations/
+
+// ===================================
+// Steamid allowed to manage the match
+// ===================================
+// Add here the steamid allowed to access the admin menu
+// 1 steamID by line!
+//
+// All players have their own unique "steamID".
+// To known what is your steamid:
+// - connect you to a server
+// - type the following command in your console: status
+// (If you don't know how to show your console, ask google.)
+// This command gives you some information about the server and the player connected.
+// In front of your username (in the list) you will find your steamid (e.g. STEAM_0:1:4654565) ;
+// - paste your steamID (don't forget the STEAM_ prefix!) in this file.
+// 
+// As you can see in the example below, it's possible to comment the steamID.
+//
+
+STEAM_0:1:6822537 // Nicolous - please delete this line !
