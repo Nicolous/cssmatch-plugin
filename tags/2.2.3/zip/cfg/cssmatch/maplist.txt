@@ -1,0 +1,25 @@
+// CSSMatch - http://www.cssmatch.com
+
+// You don't speak english? http://www.cssmatch.com/translations
+
+// ==========================================
+// List of maps available in the admin menu
+// ==========================================
+
+cpl_fire
+cpl_strike
+de_aztec
+de_cbble
+de_chateau
+de_contra
+de_cpl_mill
+de_dust
+de_dust2
+de_inferno
+de_nuke
+de_piranesi
+de_port
+de_prodigy
+de_tides
+de_train
+de_villa
